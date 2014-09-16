@@ -69,7 +69,7 @@
 			<form id="theForm" action="upload" method="post">
 				<input hidden="true" id="data" name="data" value=""></input>
 			</form>
-			<button class="btn btn-primary" onclick="exportSvg();">export</button>
+			<button ng-show="rows > 0" class="btn btn-primary" onclick="exportSvg();">export</button>
 			<script>
 				exportSvg = function() {
 					var theSvg = document.getElementById('radar').firstChild;
@@ -85,8 +85,33 @@
 			</script>
 		</div>
 		
-		<div>
-			
+		<div class="col-md-12">
+			<table ng-show="rows.length > 0" class="table table-striped table-hover">
+				<thead>
+					<tr>
+						<th>Technology</th>
+						<th>Quadrant</th>
+						<th>Arc</th>
+						<th>r</th>
+						<th>t</th>
+						<th>New?</th>
+						<th>Usage Count</th>
+						<th>URL</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="row in rows">
+						<td>{{row.technologyName}}</td>
+						<td>{{row.quadrantName}}</td>
+						<td>{{row.arcName}}</td>
+						<td>{{row.radius}}</td>
+						<td>{{row.theta}}</td>
+						<td>{{row.movement}}</td>
+						<td>{{row.blipSize}}</td>
+						<td>{{row.url}}</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 		
 		</div>
