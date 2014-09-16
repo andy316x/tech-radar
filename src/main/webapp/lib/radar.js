@@ -87,7 +87,9 @@ var Radar = {
 				link.append('text')
 					.attr({'x':x,'y':textY,'font-size':14,'font-style':'italic','font-weight':'bold','fill':'white'})
 					.text(quadrant.items[j].id)
-					.style({'text-anchor':'middle'});
+					.style({'text-anchor':'middle'})
+					.append("svg:title")
+					.text(quadrant.items[j].name);
 				
 				var onmouseenter = (function(blip){
 					return function() {
