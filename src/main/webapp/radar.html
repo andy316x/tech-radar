@@ -73,7 +73,7 @@
 			<form id="theForm" action="upload" method="post">
 				<input hidden="true" id="data" name="data" value=""></input>
 			</form>
-			<button ng-show="rows > 0" class="btn btn-primary" onclick="exportSvg();">export</button>
+			<button ng-show="rows.length > 0" class="btn btn-primary" onclick="exportSvg();">export</button>
 			<script>
 				exportSvg = function() {
 					var theSvg = document.getElementById('radar').firstChild;
