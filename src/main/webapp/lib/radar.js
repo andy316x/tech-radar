@@ -20,6 +20,7 @@ var Radar = {
 		
 		var svg=d3.select(element)
 			.insert('svg',':first-child')
+			.attr('xmlns:xmlns:xlink','http://www.w3.org/1999/xlink')
 			.attr('width',w)
 			.attr('height',h);
 		svg.selectAll('*').remove();

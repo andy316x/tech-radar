@@ -52,6 +52,7 @@ techRadarApp.controller('RadarCtrl', function ($scope) {
 
 	var quadrantColours = ['#3DB5BE', '#83AD78', '#E88744', '#8D2145'];
 	var arcColours = ['#BFC0BF', '#CBCCCB', '#D7D8D6', '#E4E5E4'];
+	var arcWidths = [150, 125, 75, 50];
 
 	$scope.mouseOver = function(item) {
 		$scope.selectedItem = angular.copy(item);
@@ -99,7 +100,7 @@ techRadarApp.controller('RadarCtrl', function ($scope) {
 										arc = {
 												id: arcName,
 												name: arcName,
-												r: 100,
+												r: arcWidths[$scope.radar.arcs.length],
 												color: arcColours[$scope.radar.arcs.length]
 										};
 										arcMap[arcName] = arc;

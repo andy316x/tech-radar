@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="techRadar">
+<html xmlns:xlink="http://www.w3.org/1999/xlink" lang="en" ng-app="techRadar">
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -64,7 +64,25 @@
 		</div>
 
 		<div class="col-md-8">
-			<div ng-radar="" radar="radar" selected-blip="selectedItem"></div>
+			<div id="radar" ng-radar="" radar="radar" selected-blip="selectedItem"></div>
+			
+			<form id="theForm" action="upload" method="post">
+				<input hidden="true" id="data" name="data" value=""></input>
+			</form>
+			<button class="btn btn-primary" onclick="exportSvg();">export</button>
+			<script>
+				exportSvg = function() {
+					var theSvg = document.getElementById('radar').firstChild;
+					console.log(theSvg);
+					var s = new XMLSerializer();
+					var str = s.serializeToString(theSvg);
+					console.log(str);
+					
+					var form = document.getElementById('theForm');
+					form['data'].value = str;
+					form.submit();
+				}
+			</script>
 		</div>
 		
 		<div>
