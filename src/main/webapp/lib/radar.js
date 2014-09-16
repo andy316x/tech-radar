@@ -72,10 +72,10 @@ var Radar = {
 			
 			for(var j = 0; j < quadrant.items.length; j++) {
 				var arc = arcMap[quadrant.items[j].arc];
-				var r = ((quadrant.items[j].pc.r/100)*(arc.outerRadius-arc.innerRadius)+arc.innerRadius)/totalArc;
+				var r = (quadrant.items[j].pc.r/100)*(arc.outerRadius-arc.innerRadius)+arc.innerRadius;
 				
-				var x = (w/2) + r*(w/2)*Math.cos(rad(quadrant.items[j].pc.t + angle));
-				var y = (h/2) + r*(w/2)*Math.sin(rad(quadrant.items[j].pc.t + angle));
+				var x = (w/2) + r*Math.cos(rad(quadrant.items[j].pc.t + angle));
+				var y = (h/2) + r*Math.sin(rad(quadrant.items[j].pc.t + angle));
 				
 				var link=svg.append('svg:a')
 					.attr({'id':'blip-'+quadrant.items[j].id,'xlink:href':quadrant.items[j].url})
