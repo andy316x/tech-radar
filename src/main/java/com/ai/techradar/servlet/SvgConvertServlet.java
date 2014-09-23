@@ -21,19 +21,19 @@ public class SvgConvertServlet extends HttpServlet {
 	@Override
 	public void doPost(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
 		final String data = request.getParameter("data");
-		
+
 		response.setContentType("application/pdf");
 		response.addHeader("Content-Disposition","attachment;filename=\"export.pdf\"");
-		
+
 		final Transcoder transcoder = new PDFTranscoder();
 		transcoder.addTranscodingHint(PDFTranscoder.KEY_XML_PARSER_VALIDATING, new Boolean(false));
-        final TranscoderInput transcoderInput = new TranscoderInput(new ByteArrayInputStream(data.getBytes()));
-        final TranscoderOutput transcoderOutput = new TranscoderOutput(response.getOutputStream());
-        try {
+		final TranscoderInput transcoderInput = new TranscoderInput(new ByteArrayInputStream(data.getBytes()));
+		final TranscoderOutput transcoderOutput = new TranscoderOutput(response.getOutputStream());
+		try {
 			transcoder.transcode(transcoderInput, transcoderOutput);
 		} catch (final TranscoderException e) {
 			System.out.println("TranscoderException: " + e.getMessage());
 		}
 	}
-	
+
 }
