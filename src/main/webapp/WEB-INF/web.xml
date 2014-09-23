@@ -4,20 +4,58 @@
 
 <web-app>
 
-	<display-name>Technology Radar</display-name>
+	<context-param>
+		<param-name>resteasy.scan</param-name>
+		<param-value>true</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>resteasy.servlet.mapping.prefix</param-name>
+		<param-value>/rest</param-value>
+	</context-param>
+
+	<listener>
+		<listener-class>com.ai.techradar.database.hibernate.HibernateStarter</listener-class>
+	</listener>
+
+	<listener>
+		<listener-class>org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap</listener-class>
+	</listener>
 
 	<servlet>
 		<servlet-name>SvgConverter</servlet-name>
 		<servlet-class>com.ai.techradar.servlet.SvgConvertServlet</servlet-class>
 	</servlet>
+	
+	<servlet>
+		<servlet-name>RadarPreview</servlet-name>
+		<servlet-class>com.ai.techradar.servlet.RadarPreviewServlet</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>Resteasy</servlet-name>
+		<servlet-class>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Resteasy</servlet-name>
+		<url-pattern>/rest/*</url-pattern>
+	</servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>SvgConverter</servlet-name>
 		<url-pattern>/upload/*</url-pattern>
 	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>RadarPreview</servlet-name>
+		<url-pattern>/preview/*</url-pattern>
+	</servlet-mapping>
+
+	<display-name>Technology Radar</display-name>
 
 	<welcome-file-list>
-		<welcome-file>radar.html</welcome-file>
+		<welcome-file>home.html</welcome-file>
 	</welcome-file-list>
 
 </web-app>

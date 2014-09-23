@@ -67,8 +67,6 @@ var Radar = {
 			var quadrant = radar.quadrants[i];
 			quadrantMap[quadrant.id] = quadrant;
 			quadrant.startAngle = angle;
-			angle = angle + 90;
-			quadrant.endAngle = angle;
 			
 			for(var j = 0; j < quadrant.items.length; j++) {
 				var arc = arcMap[quadrant.items[j].arc];
@@ -107,6 +105,9 @@ var Radar = {
 				link.on('mouseenter',onmouseenter);
 				link.on('mouseleave',onmouseleave);
 			}
+			
+			angle = angle + 90;
+			quadrant.endAngle = angle;
 		}
 		
 		return {
