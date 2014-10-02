@@ -48,14 +48,14 @@ var Radar = {
 			.attr('x',0)
 			.attr('y',(h/2)-(axisWidth/2))
 			.attr('width',w)
-			.attr('height',10)
+			.attr('height',scaleFactor*axisWidth)
 			.attr('fill','white')
 			.attr('opacity',0.5);
 		
 		svg.append('rect')
 			.attr('x',(w/2)-(axisWidth/2))
 			.attr('y',0)
-			.attr('width',10)
+			.attr('width',scaleFactor*axisWidth)
 			.attr('height',h)
 			.attr('fill','white')
 			.attr('opacity',0.5);
@@ -149,7 +149,7 @@ var Radar = {
 		var x = (totalWidth/2)+innerRadius+((outerRadius-innerRadius)/2);
 		var y = totalHeight/2;
 		svg.append('text')
-			.attr({'x':x,'y':y+sf*2,'text-anchor':'middle','fill':'#000'})
+			.attr({'x':x,'y':y+sf*1,'text-anchor':'middle','fill':'#000'})
 			.style({'font-size':(sf*10) + 'px','font-weight':900})
 			.text(text.toUpperCase());
 	},
