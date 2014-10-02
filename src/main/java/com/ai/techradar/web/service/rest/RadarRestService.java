@@ -84,7 +84,7 @@ public class RadarRestService {
 	public Object getRadarById(@PathParam("radarId") final String radarId) {
 		return Response.ok(readRadar(radarId)).build();
 	}
-	
+
 	public static final RadarTO readRadar(final String radarId) {
 		final Session session = HibernateUtil.getSessionFactory().openSession();
 		session.beginTransaction();
@@ -120,32 +120,29 @@ public class RadarRestService {
 		return r;
 	}
 
-	private static final String SERVER_UPLOAD_LOCATION_FOLDER = "/Users/Andy/Desktop";
-
 	@POST
 	@Path("/upload")
 	@Consumes("multipart/form-data")
 	@Produces("text/html")
 	public String uploadFile(
 			@Context HttpServletResponse response,
-	        @Context HttpServletRequest request,
+			@Context HttpServletRequest request,
 			MultipartFormDataInput input) {
 
 		final Session session = HibernateUtil.getSessionFactory().openSession();
 		session.beginTransaction();
 
 		try {
-			String fileName = "";
-			Map<String, List<InputPart>> formParts = input.getFormDataMap();
-			List<InputPart> inPart = formParts.get("file");
+			final Map<String, List<InputPart>> formParts = input.getFormDataMap();
+			final List<InputPart> inPart = formParts.get("file");
 			for (InputPart inputPart : inPart) {
 				try {
 
 					// Retrieve headers, read the Content-Disposition header to obtain the original name of the file
-					MultivaluedMap<String, String> headers = inputPart.getHeaders();
-					fileName = parseFileName(headers);
+					final MultivaluedMap<String, String> headers = inputPart.getHeaders();
+					final String fileName = parseFileName(headers);
 					// Handle the body of that part with an InputStream
-					InputStream istream = inputPart.getBody(InputStream.class,null);
+					final InputStream istream = inputPart.getBody(InputStream.class,null);
 
 					final Radar r = new Radar();
 					r.setDateUploaded(new Date());
@@ -185,22 +182,21 @@ public class RadarRestService {
 					}
 					r.setTechnologies(technologies);
 
-					fileName = SERVER_UPLOAD_LOCATION_FOLDER + fileName;
-
 					session.persist(r);
 
 					session.getTransaction().commit();
 					session.close();
 				} catch (final IOException e) {
 					e.printStackTrace();
-					session.getTransaction().commit();
+					session.getTransaction().rollback();
+				} finally {
 					session.close();
 				}
 			}
-			
+
 			return "<html><head><meta http-equiv=\"refresh\" content=\"0; url=/radar/\" /></head></html>";
 
-		}catch(Exception e) {
+		}catch(final Exception e) {
 			return "error";
 		}
 	}
