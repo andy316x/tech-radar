@@ -29,16 +29,22 @@ var Radar = {
 		
 		var cumulativeArc = 0;
 		var arcMap = {};
+		var arcs = [];
+		var rails = [2, 2, 1, 1];
 		for(var i = 0; i < radar.arcs.length; i++) {
 			var r = (radar.arcs[i].r / totalArc)*(w/2);
 			
 			this._drawArc(svg, cumulativeArc, cumulativeArc + r, w/2, h/2, radar.arcs[i].color);
 			this._drawArcAxisText(svg, cumulativeArc, cumulativeArc + r, w, h, radar.arcs[i].name, scaleFactor);
 			
-			arcMap[radar.arcs[i].id] = {
+			var arc = {
 				innerRadius: cumulativeArc,
-				outerRadius: cumulativeArc + r
+				outerRadius: cumulativeArc + r,
+				rails: rails[i],
+				index: i
 			};
+			arcMap[radar.arcs[i].id] = arc;
+			arcs.push(arc);
 			
 			cumulativeArc = cumulativeArc + r;
 		}
@@ -79,42 +85,65 @@ var Radar = {
 				.style({'text-anchor':'middle'})
 				.text(quadrant.name);
 			
+			var arcRails = [];
+			for(var j = 0; j < arcs.length; j++) {
+				var arc = arcs[j];
+				var rails = [];
+				for(var k = 0; k < arc.rails; k++) {
+					rails.push([]);
+				}
+				arcRails.push(rails);
+			}
+			
 			for(var j = 0; j < quadrant.items.length; j++) {
 				var arc = arcMap[quadrant.items[j].arc];
-				var r = (quadrant.items[j].pc.r/100)*(arc.outerRadius-arc.innerRadius)+arc.innerRadius;
-				
-				var x = (w/2) + r*Math.cos(rad(quadrant.items[j].pc.t + angle));
-				var y = (h/2) + r*Math.sin(rad(quadrant.items[j].pc.t + angle));
-				
-				var link=svg.append('svg:a')
-					.attr({'id':'blip-'+quadrant.items[j].id,'xlink:href':quadrant.items[j].url})
-					.style({'text-decoration':'none','cursor':'pointer'});
-				
-				this._drawBlip(link, x, y, scaleFactor*30, quadrant.items[j].movement, quadrant.color);
-				
-				var textY = quadrant.items[j].movement=='c'?y+(scaleFactor*6):y+(scaleFactor*4);
-				link.append('text')
-					.attr({'x':x,'y':textY,'font-size':scaleFactor*14,'font-style':'italic','font-weight':'bold','fill':'white'})
-					.text(quadrant.items[j].id)
-					.style({'text-anchor':'middle'})
-					.append("svg:title")
-					.text(quadrant.items[j].name);
-				
-				var onmouseenter = (function(blip){
-					return function() {
-						d3.selectAll('a circle, a path').attr('opacity',0.3);
-						d3.select('#blip-'+blip.id).selectAll('circle, path').attr('opacity',1.0);
-						callback.onbliphover(blip);
-					};
-				})(quadrant.items[j]);
-				var onmouseleave = (function(blip){
-					return function() {
-						d3.selectAll('a circle, a path').attr('opacity',1.0);
-						callback.onblipleave(blip);
-					};
-				})(quadrant.items[j]);
-				link.on('mouseenter',onmouseenter);
-				link.on('mouseleave',onmouseleave);
+				arcRails[arc.index][Math.floor(j%arc.rails)].push(quadrant.items[j]);
+			}
+			
+			for(var j = 0; j < arcRails.length; j++) {
+				var rails = arcRails[j];
+				for(var k = 0; k < rails.length; k++) {
+					for(var l = 0; l < rails[k].length; l++) {
+						var item = rails[k][l];
+						
+						var arc = arcMap[item.arc];
+						var r = (((arc.outerRadius-arc.innerRadius)/((rails.length)+1))*(k+1))+arc.innerRadius;
+						
+						var segmentWidth = 90/(rails[k].length+1);
+						var x = (w/2) + r*Math.cos(rad(segmentWidth*(l+1) + angle));
+						var y = (h/2) + r*Math.sin(rad(segmentWidth*(l+1) + angle));
+						
+						var link=svg.append('svg:a')
+							.attr({'id':'blip-'+item.id,'xlink:href':item.url})
+							.style({'text-decoration':'none','cursor':'pointer'});
+						
+						this._drawBlip(link, x, y, scaleFactor*30, item.movement, quadrant.color);
+						
+						var textY = item.movement=='c'?y+(scaleFactor*6):y+(scaleFactor*4);
+						link.append('text')
+							.attr({'x':x,'y':textY,'font-size':scaleFactor*14,'font-style':'italic','font-weight':'bold','fill':'white'})
+							.text(item.id)
+							.style({'text-anchor':'middle'})
+							.append("svg:title")
+							.text(item.name);
+						
+						var onmouseenter = (function(blip){
+							return function() {
+								d3.selectAll('a circle, a path').attr('opacity',0.3);
+								d3.select('#blip-'+blip.id).selectAll('circle, path').attr('opacity',1.0);
+								callback.onbliphover(blip);
+							};
+						})(item);
+						var onmouseleave = (function(blip){
+							return function() {
+								d3.selectAll('a circle, a path').attr('opacity',1.0);
+								callback.onblipleave(blip);
+							};
+						})(item);
+						link.on('mouseenter',onmouseenter);
+						link.on('mouseleave',onmouseleave);
+					}
+				}
 			}
 			
 			angle = angle + 90;

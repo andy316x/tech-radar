@@ -2,10 +2,13 @@ package com.ai.techradar.servlet;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Stack;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -79,13 +82,21 @@ public class RadarPreviewServlet extends HttpServlet {
 		}
 
 		float cumulativeArc = 0;
+		int count = 0;
 		for(final Arc arc : arcMap.values()) {
 			final float segmentWidth = ((float)arc.getRadius() / totalArc)*((float)w/2);
 
 			arc.setInnerRadius((int)cumulativeArc);
 			arc.setOuterRadius((int)(cumulativeArc + segmentWidth));
+			if(count < 2) {
+				arc.setRails(2);
+			} else {
+				arc.setRails(1);
+			}
 
+			arc.setIndex(count);
 			cumulativeArc = cumulativeArc + segmentWidth;
+			count++;
 		}
 
 
@@ -121,63 +132,98 @@ public class RadarPreviewServlet extends HttpServlet {
 
 
 		final Map<String, Quadrant> quadrantMap = new HashMap<String, Quadrant>();
-		int count = 0;
-		final Random rand = new Random();
-		for(final TechnologyTO technology : radar.getTechnologies()) {
-
-			Quadrant techQuadrant = quadrantMap.get(technology.getQuadrantName());
+		for(final TechnologyTO item : radar.getTechnologies()) {
+			Quadrant techQuadrant = quadrantMap.get(item.getQuadrantName());
 			if(techQuadrant==null) {
-				techQuadrant = new Quadrant(technology.getQuadrantName(), QUADRANT_COLOURS[quadrantMap.size()]);
+				techQuadrant = new Quadrant(item.getQuadrantName(), QUADRANT_COLOURS[quadrantMap.size()]);
 				techQuadrant.setStartTheta(quadrantMap.size()*90);
-				quadrantMap.put(technology.getQuadrantName(), techQuadrant);
+				quadrantMap.put(item.getQuadrantName(), techQuadrant);
+			}
+			techQuadrant.getItems().add(item);
+		}
+
+		for(final Quadrant quadrant : quadrantMap.values()) {
+
+			final Stack<Stack<Stack<TechnologyTO>>> arcRails = new Stack<Stack<Stack<TechnologyTO>>>();
+			for(final Arc arc : arcMap.values()) {
+				final Stack<Stack<TechnologyTO>> rails = new Stack<Stack<TechnologyTO>>();
+				for(int k = 0; k < arc.getRails(); k++) {
+					rails.push(new Stack<TechnologyTO>());
+				}
+				arcRails.push(rails);
 			}
 
-			final Arc arc = arcMap.get(technology.getArcName());
-
-			final float r = ((float)0.5)*(arc.getOuterRadius()-arc.getInnerRadius())+arc.getInnerRadius();
-
-			final int randomRadius = showRandomInteger(1, 90, rand);
-			final double x = (w/2) + r*Math.cos(rad(randomRadius + techQuadrant.getStartTheta()));
-			final double y = (h/2) + r*Math.sin(rad(randomRadius + techQuadrant.getStartTheta()));
-
-			if(technology.getMovement().equals(MovementEnum.c)) {
-				final Element triangle = doc.createElementNS(svgNS, "path");
-				triangle.setAttribute("d", "M412.201,311.406c0.021,0,0.042,0,0.063,0c0.067,0,0.135,0,0.201,0c4.052,0,6.106-0.051,8.168-0.102c2.053-0.051,4.115-0.102,8.176-0.102h0.103c6.976-0.183,10.227-5.306,6.306-11.53c-3.988-6.121-4.97-5.407-8.598-11.224c-1.631-3.008-3.872-4.577-6.179-4.577c-2.276,0-4.613,1.528-6.48,4.699c-3.578,6.077-3.26,6.014-7.306,11.723C402.598,306.067,405.426,311.406,412.201,311.406");
-				triangle.setAttribute("stroke", "white");
-				triangle.setAttribute("stroke-width", "2");
-				triangle.setAttribute("fill", techQuadrant.getColour());
-				triangle.setAttribute("transform", "scale("+((float)blipWidth/34)+") translate("+(-404+x*((float)34/blipWidth)-17)+", "+(-282+y*((float)34/blipWidth)-17)+")");
-				svgRoot.appendChild(triangle);
-
-				final Text tn = doc.createTextNode(""+(count+1));
-				final Element textElement = doc.createElementNS(svgNS, "text");
-				textElement.setAttribute("x", "" + x);
-				textElement.setAttribute("y", "" + (y+(scaleFactor*6)));
-				textElement.setAttribute("text-anchor", "middle");
-				textElement.setAttribute("fill", "white");
-				textElement.setAttribute("style", "font-size:" + scaleFactor*14 + "px;font-style:italic;font-weight:bold;");
-				textElement.appendChild(tn);
-				svgRoot.appendChild(textElement);
-			} else {
-				final Element circle = doc.createElementNS(svgNS, "path");
-				circle.setAttribute("d", "M420.084,282.092c-1.073,0-2.16,0.103-3.243,0.313c-6.912,1.345-13.188,8.587-11.423,16.874c1.732,8.141,8.632,13.711,17.806,13.711c0.025,0,0.052,0,0.074-0.003c0.551-0.025,1.395-0.011,2.225-0.109c4.404-0.534,8.148-2.218,10.069-6.487c1.747-3.886,2.114-7.993,0.913-12.118C434.379,286.944,427.494,282.092,420.084,282.092");
-				circle.setAttribute("stroke", "white");
-				circle.setAttribute("stroke-width", "2");
-				circle.setAttribute("fill", techQuadrant.getColour());
-				circle.setAttribute("transform", "scale("+((float)blipWidth/34)+") translate("+(-404+x*((float)34/blipWidth)-17)+", "+(-282+y*((float)34/blipWidth)-17)+")");
-				svgRoot.appendChild(circle);
-
-				final Text tnCircle = doc.createTextNode(""+(count+1));
-				final Element circleTextElement = doc.createElementNS(svgNS, "text");
-				circleTextElement.setAttribute("x", "" + x);
-				circleTextElement.setAttribute("y", "" + (y+(scaleFactor*4)));
-				circleTextElement.setAttribute("text-anchor", "middle");
-				circleTextElement.setAttribute("fill", "white");
-				circleTextElement.setAttribute("style", "font-size:" + scaleFactor*14 + "px;font-style:italic;font-weight:bold;");
-				circleTextElement.appendChild(tnCircle);
-				svgRoot.appendChild(circleTextElement);
+			count = 0;
+			for(final TechnologyTO technology : quadrant.getItems()) {
+				final Arc arc = arcMap.get(technology.getArcName());
+				arcRails.get(arc.getIndex()).get((int)Math.floor(count%arc.getRails())).push(technology);
+				count++;
 			}
-			count++;
+
+			count = 0;
+			for(int j = 0; j < arcRails.size(); j++) {
+				final Stack<Stack<TechnologyTO>> rails = arcRails.get(j);
+				for(int k = 0; k < rails.size(); k++) {
+					final Stack<TechnologyTO> techs = rails.get(k);
+					for(int l = 0; l < techs.size(); l++) {
+						final TechnologyTO item = techs.get(l);
+
+						Quadrant techQuadrant = quadrantMap.get(item.getQuadrantName());
+						if(techQuadrant==null) {
+							techQuadrant = new Quadrant(item.getQuadrantName(), QUADRANT_COLOURS[quadrantMap.size()]);
+							techQuadrant.setStartTheta(quadrantMap.size()*90);
+							quadrantMap.put(item.getQuadrantName(), techQuadrant);
+						}
+
+						final Arc arc = arcMap.get(item.getArcName());
+						final float r = (((arc.getOuterRadius()-arc.getInnerRadius())/((rails.size())+1))*(k+1))+arc.getInnerRadius();
+
+						final float segmentWidth = 90/(techs.size()+1);
+						final double x = (w/2) + r*Math.cos(rad(segmentWidth*(l+1) + techQuadrant.getStartTheta()));
+						final double y = (h/2) + r*Math.sin(rad(segmentWidth*(l+1) + techQuadrant.getStartTheta()));
+
+						if(item.getMovement().equals(MovementEnum.c)) {
+							final Element triangle = doc.createElementNS(svgNS, "path");
+							triangle.setAttribute("d", "M412.201,311.406c0.021,0,0.042,0,0.063,0c0.067,0,0.135,0,0.201,0c4.052,0,6.106-0.051,8.168-0.102c2.053-0.051,4.115-0.102,8.176-0.102h0.103c6.976-0.183,10.227-5.306,6.306-11.53c-3.988-6.121-4.97-5.407-8.598-11.224c-1.631-3.008-3.872-4.577-6.179-4.577c-2.276,0-4.613,1.528-6.48,4.699c-3.578,6.077-3.26,6.014-7.306,11.723C402.598,306.067,405.426,311.406,412.201,311.406");
+							triangle.setAttribute("stroke", "white");
+							triangle.setAttribute("stroke-width", "2");
+							triangle.setAttribute("fill", techQuadrant.getColour());
+							triangle.setAttribute("transform", "scale("+((float)blipWidth/34)+") translate("+(-404+x*((float)34/blipWidth)-17)+", "+(-282+y*((float)34/blipWidth)-17)+")");
+							svgRoot.appendChild(triangle);
+
+							final Text tn = doc.createTextNode(""+(count+1));
+							final Element textElement = doc.createElementNS(svgNS, "text");
+							textElement.setAttribute("x", "" + x);
+							textElement.setAttribute("y", "" + (y+(scaleFactor*6)));
+							textElement.setAttribute("text-anchor", "middle");
+							textElement.setAttribute("fill", "white");
+							textElement.setAttribute("style", "font-size:" + scaleFactor*14 + "px;font-style:italic;font-weight:bold;");
+							textElement.appendChild(tn);
+							svgRoot.appendChild(textElement);
+						} else {
+							final Element circle = doc.createElementNS(svgNS, "path");
+							circle.setAttribute("d", "M420.084,282.092c-1.073,0-2.16,0.103-3.243,0.313c-6.912,1.345-13.188,8.587-11.423,16.874c1.732,8.141,8.632,13.711,17.806,13.711c0.025,0,0.052,0,0.074-0.003c0.551-0.025,1.395-0.011,2.225-0.109c4.404-0.534,8.148-2.218,10.069-6.487c1.747-3.886,2.114-7.993,0.913-12.118C434.379,286.944,427.494,282.092,420.084,282.092");
+							circle.setAttribute("stroke", "white");
+							circle.setAttribute("stroke-width", "2");
+							circle.setAttribute("fill", techQuadrant.getColour());
+							circle.setAttribute("transform", "scale("+((float)blipWidth/34)+") translate("+(-404+x*((float)34/blipWidth)-17)+", "+(-282+y*((float)34/blipWidth)-17)+")");
+							svgRoot.appendChild(circle);
+
+							final Text tnCircle = doc.createTextNode(""+(count+1));
+							final Element circleTextElement = doc.createElementNS(svgNS, "text");
+							circleTextElement.setAttribute("x", "" + x);
+							circleTextElement.setAttribute("y", "" + (y+(scaleFactor*4)));
+							circleTextElement.setAttribute("text-anchor", "middle");
+							circleTextElement.setAttribute("fill", "white");
+							circleTextElement.setAttribute("style", "font-size:" + scaleFactor*14 + "px;font-style:italic;font-weight:bold;");
+							circleTextElement.appendChild(tnCircle);
+							svgRoot.appendChild(circleTextElement);
+						}
+						count++;
+					}
+				}
+			}
+
 		}
 
 		final Transcoder transcoder = new SVGTranscoder();
@@ -243,6 +289,8 @@ public class RadarPreviewServlet extends HttpServlet {
 		private final String colour;
 		private int innerRadius;
 		private int outerRadius;
+		private int rails;
+		private int index;
 		public Arc(int radius, String name, String colour) {
 			this.radius = radius;
 			this.name = name;
@@ -269,12 +317,25 @@ public class RadarPreviewServlet extends HttpServlet {
 		public void setOuterRadius(int outerRadius) {
 			this.outerRadius = outerRadius;
 		}
+		public int getRails() {
+			return rails;
+		}
+		public void setRails(int rails) {
+			this.rails = rails;
+		}
+		public int getIndex() {
+			return index;
+		}
+		public void setIndex(int index) {
+			this.index = index;
+		}
 	}
 
 	private static class Quadrant {
 		private final String name;
 		private final String colour;
 		private int startTheta;
+		private List<TechnologyTO> items = new ArrayList<TechnologyTO>();
 		public Quadrant(String name, String colour) {
 			this.name = name;
 			this.colour = colour;
@@ -291,6 +352,12 @@ public class RadarPreviewServlet extends HttpServlet {
 		public void setStartTheta(int startTheta) {
 			this.startTheta = startTheta;
 		}
+		public List<TechnologyTO> getItems() {
+			return items;
+		}
+		public void setItems(List<TechnologyTO> items) {
+			this.items = items;
+		}
 	}
 
 	private static int showRandomInteger(int aStart, int aEnd, Random aRandom){
@@ -305,7 +372,7 @@ public class RadarPreviewServlet extends HttpServlet {
 		return randomNumber;
 	}
 
-	private static double rad(final int deg){
+	private static double rad(final float deg){
 		return deg*Math.PI/180;
 	};
 
