@@ -7,7 +7,7 @@
 
 	<jsp:include page="nav.jsp"/>
 
-	<div class="container-fluid">
+	<div class="container-fluid main-content">
 	
 		<div class="row">
 		
