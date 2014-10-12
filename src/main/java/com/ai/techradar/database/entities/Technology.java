@@ -26,6 +26,12 @@ public class Technology {
 
 	private String url;
 
+	private String description;
+
+	private String detailUrl;
+
+	private boolean customerStrategic;
+
 	private Radar radar;
 
 	public Technology() {
@@ -56,7 +62,7 @@ public class Technology {
 		return quadrant;
 	}
 
-	public void setQuadrant(String quadrant) {
+	public void setQuadrant(final String quadrant) {
 		this.quadrant = quadrant;
 	}
 
@@ -64,7 +70,7 @@ public class Technology {
 		return arc;
 	}
 
-	public void setArc(String arc) {
+	public void setArc(final String arc) {
 		this.arc = arc;
 	}
 
@@ -72,7 +78,7 @@ public class Technology {
 		return movement;
 	}
 
-	public void setMovement(MovementEnum movement) {
+	public void setMovement(final MovementEnum movement) {
 		this.movement = movement;
 	}
 
@@ -80,7 +86,7 @@ public class Technology {
 		return usageCount;
 	}
 
-	public void setUsageCount(int usageCount) {
+	public void setUsageCount(final int usageCount) {
 		this.usageCount = usageCount;
 	}
 
@@ -88,8 +94,32 @@ public class Technology {
 		return url;
 	}
 
-	public void setUrl(String url) {
+	public void setUrl(final String url) {
 		this.url = url;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(final String description) {
+		this.description = description;
+	}
+
+	public String getDetailUrl() {
+		return detailUrl;
+	}
+
+	public void setDetailUrl(final String detailUrl) {
+		this.detailUrl = detailUrl;
+	}
+
+	public boolean isCustomerStrategic() {
+		return customerStrategic;
+	}
+
+	public void setCustomerStrategic(final boolean customerStrategic) {
+		this.customerStrategic = customerStrategic;
 	}
 
 	@ManyToOne

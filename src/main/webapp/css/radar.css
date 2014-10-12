@@ -23,6 +23,22 @@ li {
 	margin-left: 3px;
 }
 
+.chart:hover .radar-preview,
+.selected-radar {
+	background-color: #E4E5E4;
+	border-radius: 10px;
+	box-shadow: 3px 3px 3px #CCCCCC;
+}
+
+.more-detail {
+	padding: 10px;
+	border: 1px solid #CCCCCC
+}
+
+.row {
+	min-height: 1000px;
+}
+
 
 /* CUSTOMIZE THE NAVBAR
 -------------------------------------------------- */

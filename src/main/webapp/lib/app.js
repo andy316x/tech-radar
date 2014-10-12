@@ -52,6 +52,8 @@ techRadarApp.directive('ngRadar', function () {
 });
 
 techRadarApp.controller('RadarCtrl', function ($scope, $http, $log) {
+	
+	$scope.selectedId = document.radar.radarId;
 
 	var quadrantColours = ['#3DB5BE', '#83AD78', '#E88744', '#8D2145'];
 	var arcColours = ['#BFC0BF', '#CBCCCB', '#D7D8D6', '#E4E5E4'];
@@ -70,11 +72,14 @@ techRadarApp.controller('RadarCtrl', function ($scope, $http, $log) {
 		$scope.selectedItem = null;
 	};
 	
-	$http({method: 'GET', url: 'rest/service?nocache=' + (new Date()).getTime()}).
+	$http({method: 'GET', url: '/radar/rest/service?nocache=' + (new Date()).getTime()}).
 	success(function(data, status, headers, config) {
 		$scope.radars = data;
 		for(var j = 0; j < data.length; j++) {
-			var generateRadar = (function(theRadar) {
+			if($scope.selectedId == null) {
+				$scope.selectedId = data[j].id;
+			}
+			(function(theRadar) {
 				theRadar.arcMap = {};
 				theRadar.quadrantMap = {};
 				theRadar.radar = {
@@ -83,43 +88,50 @@ techRadarApp.controller('RadarCtrl', function ($scope, $http, $log) {
 				};
 
 				for(var i = 0; i < theRadar.technologies.length; i++) {
-					var row = theRadar.technologies[i];
+					(function(row){
+						var arc = theRadar.arcMap[row.arcName];
+						if(arc == null || typeof arc == 'undefined') {
+							arc = {
+									id: row.arcName,
+									name: row.arcName,
+									r: arcWidths[theRadar.radar.arcs.length],
+									color: arcColours[theRadar.radar.arcs.length]
+							};
+							theRadar.arcMap[row.arcName] = arc;
+							theRadar.radar.arcs.push(arc);
+						}
 
-					var arc = theRadar.arcMap[row.arcName];
-					if(arc == null || typeof arc == 'undefined') {
-						arc = {
-								id: row.arcName,
-								name: row.arcName,
-								r: arcWidths[theRadar.radar.arcs.length],
-								color: arcColours[theRadar.radar.arcs.length]
+						var quadrant = theRadar.quadrantMap[row.quadrantName];
+						if(quadrant == null || typeof quadrant == 'undefined') {
+							quadrant = {
+									id: row.quadrantName,
+									name: row.quadrantName,
+									color: quadrantColours[theRadar.radar.quadrants.length],
+									items: []
+							};
+							theRadar.quadrantMap[row.quadrantName] = quadrant;
+							theRadar.radar.quadrants.push(quadrant);
+						}
+						
+						var customerStrategic = row.customerStrategic;
+						console.log(customerStrategic);
+						var newItem = {
+							id: i+1,
+							name: row.technologyName,
+							show: false,
+							arc: row.arcName,
+							pc: {
+								r: row.radius,
+								t: Math.floor((Math.random() * 90) + 1)
+							},
+							movement: row.movement,
+							description: row.description,
+							detailUrl: row.detailUrl,
+							customerStrategic: customerStrategic,
+							url: row.url
 						};
-						theRadar.arcMap[row.arcName] = arc;
-						theRadar.radar.arcs.push(arc);
-					}
-
-					var quadrant = theRadar.quadrantMap[row.quadrantName];
-					if(quadrant == null || typeof quadrant == 'undefined') {
-						quadrant = {
-								id: row.quadrantName,
-								name: row.quadrantName,
-								color: quadrantColours[theRadar.radar.quadrants.length],
-								items: []
-						};
-						theRadar.quadrantMap[row.quadrantName] = quadrant;
-						theRadar.radar.quadrants.push(quadrant);
-					}
-
-					quadrant.items.push({
-						id: i+1,
-						name: row.technologyName,
-						arc: row.arcName,
-						pc: {
-							r: row.radius,
-							t: Math.floor((Math.random() * 90) + 1)
-						},
-						movement: row.movement,
-						url: row.url
-					});
+						quadrant.items.push(newItem);
+					})(theRadar.technologies[i]);
 				}
 			})(data[j]);
 		}

@@ -31,6 +31,11 @@
 		<servlet-name>RadarPreview</servlet-name>
 		<servlet-class>com.ai.techradar.servlet.RadarPreviewServlet</servlet-class>
 	</servlet>
+	
+	<servlet>
+		<servlet-name>RadarView</servlet-name>
+		<servlet-class>com.ai.techradar.servlet.RadarViewServlet</servlet-class>
+	</servlet>
 
 	<servlet>
 		<servlet-name>Resteasy</servlet-name>
@@ -51,11 +56,16 @@
 		<servlet-name>RadarPreview</servlet-name>
 		<url-pattern>/preview/*</url-pattern>
 	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>RadarView</servlet-name>
+		<url-pattern>/view/*</url-pattern>
+	</servlet-mapping>
 
 	<display-name>Technology Radar</display-name>
 
 	<welcome-file-list>
-		<welcome-file>home.html</welcome-file>
+		<welcome-file>radar.jsp</welcome-file>
 	</welcome-file-list>
 
 </web-app>

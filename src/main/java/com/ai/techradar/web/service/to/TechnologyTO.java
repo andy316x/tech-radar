@@ -14,15 +14,17 @@ public class TechnologyTO implements Serializable {
 
 	private String arcName;
 
-	private int radius;
-
-	private int theta;
-
 	private MovementEnum movement;
 
 	private int blipSize;
 
 	private String url;
+
+	private String description;
+
+	private String detailUrl;
+
+	private boolean customerStrategic;
 
 	public TechnologyTO() {
 
@@ -52,22 +54,6 @@ public class TechnologyTO implements Serializable {
 		this.arcName = arcName;
 	}
 
-	public int getRadius() {
-		return radius;
-	}
-
-	public void setRadius(final int radius) {
-		this.radius = radius;
-	}
-
-	public int getTheta() {
-		return theta;
-	}
-
-	public void setTheta(final int theta) {
-		this.theta = theta;
-	}
-
 	public MovementEnum getMovement() {
 		return movement;
 	}
@@ -90,6 +76,30 @@ public class TechnologyTO implements Serializable {
 
 	public void setUrl(final String url) {
 		this.url = url;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(final String description) {
+		this.description = description;
+	}
+
+	public String getDetailUrl() {
+		return detailUrl;
+	}
+
+	public void setDetailUrl(final String detailUrl) {
+		this.detailUrl = detailUrl;
+	}
+
+	public boolean isCustomerStrategic() {
+		return customerStrategic;
+	}
+
+	public void setCustomerStrategic(final boolean customerStrategic) {
+		this.customerStrategic = customerStrategic;
 	}
 
 }

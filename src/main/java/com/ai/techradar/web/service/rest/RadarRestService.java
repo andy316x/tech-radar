@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -21,6 +22,9 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
@@ -61,10 +65,11 @@ public class RadarRestService {
 				t.setQuadrantName(technology.getQuadrant());
 				t.setArcName(technology.getArc());
 				t.setMovement(technology.getMovement());
-				t.setRadius(50);
-				t.setTheta(45);
 				t.setBlipSize(technology.getUsageCount());
 				t.setUrl(technology.getUrl());
+				t.setDescription(technology.getDescription());
+				t.setDetailUrl(technology.getDetailUrl());
+				t.setCustomerStrategic(technology.isCustomerStrategic());
 				ts.add(t);
 			}
 			r.setTechnologies(ts);
@@ -106,10 +111,11 @@ public class RadarRestService {
 			t.setQuadrantName(technology.getQuadrant());
 			t.setMovement(technology.getMovement());
 			t.setArcName(technology.getArc());
-			t.setRadius(50);
-			t.setTheta(45);
 			t.setBlipSize(technology.getUsageCount());
 			t.setUrl(technology.getUrl());
+			t.setDescription(technology.getDescription());
+			t.setDetailUrl(technology.getDetailUrl());
+			t.setCustomerStrategic(technology.isCustomerStrategic());
 			ts.add(t);
 		}
 		r.setTechnologies(ts);
@@ -124,7 +130,7 @@ public class RadarRestService {
 	@Path("/upload")
 	@Consumes("multipart/form-data")
 	@Produces("text/html")
-	public String uploadFile(
+	public void uploadFile(
 			@Context HttpServletResponse response,
 			@Context HttpServletRequest request,
 			MultipartFormDataInput input) {
@@ -132,10 +138,12 @@ public class RadarRestService {
 		final Session session = HibernateUtil.getSessionFactory().openSession();
 		session.beginTransaction();
 
+		Serializable id = null;
+
 		try {
 			final Map<String, List<InputPart>> formParts = input.getFormDataMap();
 			final List<InputPart> inPart = formParts.get("file");
-			for (InputPart inputPart : inPart) {
+			for (final InputPart inputPart : inPart) {
 				try {
 
 					// Retrieve headers, read the Content-Disposition header to obtain the original name of the file
@@ -149,68 +157,100 @@ public class RadarRestService {
 					r.setFilename(fileName);
 
 					final BufferedReader in = new BufferedReader(new InputStreamReader(istream));
-					String line = null;
 
-					final StringBuilder responseData = new StringBuilder();
+					final CSVParser parser = new CSVParser(in, CSVFormat.RFC4180.withHeader());
+					final List<CSVRecord> list = parser.getRecords();
+
+					// TODO validate columns
+
 					final List<Technology> technologies = new ArrayList<Technology>();
-					while((line = in.readLine()) != null) {
-						if(!line.trim().isEmpty()) {
-							final String[] cells = line.split(",");
-							if(cells.length==8) {
-								final Technology technology = new Technology();
+					for(final CSVRecord record : list) {
+						final Technology technology = new Technology();
+						final String name = readString(record.get("Technology"));
+						final String quadrant = readString(record.get("Quadrant"));
+						final String arc = readString(record.get("Maturity"));
+						final MovementEnum movement = readMovement(record.get("moved / no change"));
+						final int usageCount = readInt(record.get("project Count"));
+						final String url = readString(record.get("Product URL"));
+						final String description = readString(record.get("Description"));
+						final String detailUrl = readString(record.get("AI URL"));
+						final boolean customerStrategic = readBoolean(record.get("Customer strategic"));
 
-								final String name = readString(cells[0].trim());
-								final String quadrant = readString(cells[1].trim());
-								final String arc = readString(cells[2].trim());
-								final MovementEnum movement = readMovement(cells[5].trim());
-								final int usageCount = readInt(cells[6].trim());
-								final String url = readString(cells[7].trim());
+						technology.setName(name);
+						technology.setQuadrant(quadrant);
+						technology.setArc(arc);
+						technology.setMovement(movement);
+						technology.setUsageCount(usageCount);
+						technology.setUrl(url);
+						technology.setDescription(description);
+						technology.setDetailUrl(detailUrl);
+						technology.setCustomerStrategic(customerStrategic);
+						technology.setRadar(r);
 
-								technology.setName(name);
-								technology.setQuadrant(quadrant);
-								technology.setArc(arc);
-								technology.setMovement(movement);
-								technology.setUsageCount(usageCount);
-								technology.setUrl(url);
-								technology.setRadar(r);
-
-								session.persist(technology);
-								technologies.add(technology);
-							}
-						}
-						responseData.append(line);
+						session.persist(technology);
+						technologies.add(technology);
 					}
 					r.setTechnologies(technologies);
 
-					session.persist(r);
+					id = session.save(r);
 
-					session.getTransaction().commit();
-					session.close();
+
 				} catch (final IOException e) {
 					e.printStackTrace();
 					session.getTransaction().rollback();
-				} finally {
-					session.close();
 				}
 			}
 
-			return "<html><head><meta http-equiv=\"refresh\" content=\"0; url=/radar/\" /></head></html>";
+			session.getTransaction().commit();
+			session.close();
+
+			request.setAttribute("result", id.toString());
+			request.getRequestDispatcher("/radar.jsp").forward(request, response);
 
 		}catch(final Exception e) {
-			return "error";
+			e.printStackTrace();
 		}
 	}
 
 	private static String readString(final String str) {
-		return str.substring(1, str.length()-1);
+		return str;
 	}
 
 	private static int readInt(final String str) {
-		return Integer.parseInt(str.substring(1, str.length()-1));
+		return Integer.parseInt(str);
 	}
 
 	private static MovementEnum readMovement(final String str) {
-		return MovementEnum.valueOf(str.substring(1, str.length()-1));
+		if(str==null) {
+			return null;
+		}
+		if(str.trim().length()==0) {
+			return null;
+		}
+
+		if(str.trim().substring(0, 1).equalsIgnoreCase("m")) {
+			return MovementEnum.c;
+		}
+		if(str.trim().substring(0, 1).equalsIgnoreCase("n")) {
+			return MovementEnum.t;
+		}
+
+		return null;
+	}
+
+	private static boolean readBoolean(final String str) {
+		if(str==null) {
+			return false;
+		}
+		if(str.trim().length()==0) {
+			return false;
+		}
+
+		if(str.trim().substring(0, 1).equalsIgnoreCase("y")) {
+			return true;
+		}
+
+		return false;
 	}
 
 	// Parse Content-Disposition header to get the original file name
