@@ -114,7 +114,6 @@ techRadarApp.controller('RadarCtrl', function ($scope, $http, $log) {
 						}
 						
 						var customerStrategic = row.customerStrategic;
-						console.log(customerStrategic);
 						var newItem = {
 							id: i+1,
 							name: row.technologyName,
@@ -135,7 +134,7 @@ techRadarApp.controller('RadarCtrl', function ($scope, $http, $log) {
 				}
 			})(data[j]);
 		}
-		$scope.selectedRadar = $scope.radars[0];
+		$scope.selectedRadar = $scope.radars[$scope.selectedId-1];
 	}).
 	error(function(data, status, headers, config) {
 		$log.log('error');

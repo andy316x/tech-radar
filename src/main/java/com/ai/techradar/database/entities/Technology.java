@@ -98,6 +98,7 @@ public class Technology {
 		this.url = url;
 	}
 
+	@Column(name = "description", length = 4000)
 	public String getDescription() {
 		return description;
 	}
