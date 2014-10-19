@@ -28,13 +28,16 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 
 import com.ai.techradar.database.entities.MovementEnum;
-import com.ai.techradar.web.service.rest.RadarRestService;
+import com.ai.techradar.service.RadarService;
+import com.ai.techradar.service.impl.RadarServiceImpl;
 import com.ai.techradar.web.service.to.RadarTO;
 import com.ai.techradar.web.service.to.TechnologyTO;
 
 public class RadarPreviewServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 5976711967719593613L;
+
+	private RadarService service = new RadarServiceImpl();
 
 	private static final int[] ARC_WIDTHS = new int[]{150, 125, 75, 50};
 
@@ -45,14 +48,31 @@ public class RadarPreviewServlet extends HttpServlet {
 	@Override
 	public void doGet(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
 
-		final float optimumWidth = 1000;
+		response.setContentType("image/svg+xml");
+
 		final String widthParam = request.getParameter("w");
-		final float w = widthParam==null ? optimumWidth : Float.parseFloat(widthParam);
 		final String radarId = request.getPathInfo().substring(1);
+		final Document doc = getSvgDoc(service, radarId, widthParam);
+
+		final Transcoder transcoder = new SVGTranscoder();
+		transcoder.addTranscodingHint(PDFTranscoder.KEY_XML_PARSER_VALIDATING, new Boolean(false));
+		final TranscoderInput transcoderInput = new TranscoderInput(doc);
+		final TranscoderOutput transcoderOutput = new TranscoderOutput(new OutputStreamWriter(response.getOutputStream()));
+		try {
+			transcoder.transcode(transcoderInput, transcoderOutput);
+		} catch (final TranscoderException e) {
+			System.out.println("TranscoderException: " + e.getMessage());
+		}
+	}
+
+	public static Document getSvgDoc(final RadarService service, final String radarId, final String widthParam) {
+
+		final float optimumWidth = 1000;
+		final float w = widthParam==null ? optimumWidth : Float.parseFloat(widthParam);
 		final float h = w;
 		final float scaleFactor = (float)w/optimumWidth;
 
-		final RadarTO radar = RadarRestService.readRadar(radarId);
+		final RadarTO radar = service.getRadarById(Long.parseLong(radarId));
 
 		final Map<String, Arc> arcMap = new LinkedHashMap<String, Arc>();
 		for(final TechnologyTO t : radar.getTechnologies()) {
@@ -62,8 +82,6 @@ public class RadarPreviewServlet extends HttpServlet {
 				arcMap.put(t.getArcName(), arc);
 			}
 		}
-
-		response.setContentType("image/svg+xml");
 
 		final DOMImplementation impl = SVGDOMImplementation.getDOMImplementation();
 		final String svgNS = SVGDOMImplementation.SVG_NAMESPACE_URI;
@@ -185,7 +203,7 @@ public class RadarPreviewServlet extends HttpServlet {
 						if(item.getMovement().equals(MovementEnum.c)) {
 							final Element triangle = doc.createElementNS(svgNS, "path");
 							triangle.setAttribute("d", "M412.201,311.406c0.021,0,0.042,0,0.063,0c0.067,0,0.135,0,0.201,0c4.052,0,6.106-0.051,8.168-0.102c2.053-0.051,4.115-0.102,8.176-0.102h0.103c6.976-0.183,10.227-5.306,6.306-11.53c-3.988-6.121-4.97-5.407-8.598-11.224c-1.631-3.008-3.872-4.577-6.179-4.577c-2.276,0-4.613,1.528-6.48,4.699c-3.578,6.077-3.26,6.014-7.306,11.723C402.598,306.067,405.426,311.406,412.201,311.406");
-							triangle.setAttribute("stroke", "white");
+							triangle.setAttribute("stroke", item.isCustomerStrategic()?"#FFDF00":"#FFFFFF");
 							triangle.setAttribute("stroke-width", "2");
 							triangle.setAttribute("fill", techQuadrant.getColour());
 							triangle.setAttribute("transform", "scale("+((float)blipWidth/34)+") translate("+(-404+x*((float)34/blipWidth)-17)+", "+(-282+y*((float)34/blipWidth)-17)+")");
@@ -203,7 +221,7 @@ public class RadarPreviewServlet extends HttpServlet {
 						} else {
 							final Element circle = doc.createElementNS(svgNS, "path");
 							circle.setAttribute("d", "M420.084,282.092c-1.073,0-2.16,0.103-3.243,0.313c-6.912,1.345-13.188,8.587-11.423,16.874c1.732,8.141,8.632,13.711,17.806,13.711c0.025,0,0.052,0,0.074-0.003c0.551-0.025,1.395-0.011,2.225-0.109c4.404-0.534,8.148-2.218,10.069-6.487c1.747-3.886,2.114-7.993,0.913-12.118C434.379,286.944,427.494,282.092,420.084,282.092");
-							circle.setAttribute("stroke", "white");
+							circle.setAttribute("stroke", item.isCustomerStrategic()?"#FFDF00":"#FFFFFF");
 							circle.setAttribute("stroke-width", "2");
 							circle.setAttribute("fill", techQuadrant.getColour());
 							circle.setAttribute("transform", "scale("+((float)blipWidth/34)+") translate("+(-404+x*((float)34/blipWidth)-17)+", "+(-282+y*((float)34/blipWidth)-17)+")");
@@ -226,15 +244,8 @@ public class RadarPreviewServlet extends HttpServlet {
 
 		}
 
-		final Transcoder transcoder = new SVGTranscoder();
-		transcoder.addTranscodingHint(PDFTranscoder.KEY_XML_PARSER_VALIDATING, new Boolean(false));
-		final TranscoderInput transcoderInput = new TranscoderInput(doc);
-		final TranscoderOutput transcoderOutput = new TranscoderOutput(new OutputStreamWriter(response.getOutputStream()));
-		try {
-			transcoder.transcode(transcoderInput, transcoderOutput);
-		} catch (final TranscoderException e) {
-			System.out.println("TranscoderException: " + e.getMessage());
-		}
+		return doc;
+
 	}
 
 	private static void drawArc(

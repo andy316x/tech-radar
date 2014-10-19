@@ -43,9 +43,7 @@
 					<li ng-repeat="item in quadrant.items">
 						<div ng-click="item.show= !item.show" ng-mouseover="mouseOver(item)" ng-mouseout="mouseOut(item)" style="{{selectedItem.id==item.id||item.show==true ? 'cursor:pointer;color:white;background-color:'+quadrant.color : ''}}">{{item.id}}.{{item.name}}<span ng-show="item.movement=='c'" class="radar-movement">new</span></div>
 						<div ng-show="item.show==true" class="more-detail">
-							<div>
-								{{item.description}}
-							</div>
+							<p ng-show="item.description!=null">{{item.description}}</p>
 							<div>
 								<a ng-show="item.detailUrl!=null" ng-href="{{item.detailUrl}}">more...</a>
 							</div>
@@ -58,7 +56,7 @@
 		<div class="col-md-8">
 			<div id="radar" ng-radar="" radar="selectedRadar.radar" selected-blip="selectedItem"></div>
 			
-			<form id="theForm" action="upload" method="post">
+			<form id="theForm" action="/radar/upload" method="post">
 				<input hidden="true" id="data" name="data" value=""></input>
 			</form>
 			<button ng-show="selectedRadar.technologies.length > 0" class="btn btn-primary" onclick="exportSvg();">export</button>

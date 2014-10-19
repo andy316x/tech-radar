@@ -12,6 +12,6 @@
 <script src="/radar/lib/jquery-1.11.1.min.js"></script>
 <script src="/radar/lib/angular.min.js"></script>
 <script src="/radar/lib/bootstrap.min.js"></script>
-<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="/radar/lib/d3.min.js" charset="utf-8"></script>
 <script src="/radar/lib/radar.js"></script>
 <script src="/radar/lib/app.js"></script>

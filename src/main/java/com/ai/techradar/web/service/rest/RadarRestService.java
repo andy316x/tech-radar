@@ -25,9 +25,7 @@ import javax.ws.rs.core.Response;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
-import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
@@ -35,50 +33,21 @@ import com.ai.techradar.database.entities.MovementEnum;
 import com.ai.techradar.database.entities.Radar;
 import com.ai.techradar.database.entities.Technology;
 import com.ai.techradar.database.hibernate.HibernateUtil;
+import com.ai.techradar.service.RadarService;
+import com.ai.techradar.service.impl.RadarServiceImpl;
 import com.ai.techradar.web.service.to.RadarTO;
-import com.ai.techradar.web.service.to.TechnologyTO;
 
 @Path("service")
 public class RadarRestService {
+
+	private RadarService service = new RadarServiceImpl();
 
 	@GET
 	@Path("/")
 	@Produces("application/json")
 	public Response getRadars() {
 
-		final Session session = HibernateUtil.getSessionFactory().openSession();
-		session.beginTransaction();
-
-		final Criteria query = session.createCriteria(Radar.class);
-
-		final List<RadarTO> rs = new ArrayList<RadarTO>();
-		for(final Radar radar : (List<Radar>)query.list()) {
-			final RadarTO r = new RadarTO();
-			r.setId(radar.getId());
-			r.setFilename(radar.getFilename());
-			r.setDateUploaded(radar.getDateUploaded());
-
-			final List<TechnologyTO> ts = new ArrayList<TechnologyTO>();
-			for(final Technology technology : radar.getTechnologies()) {
-				final TechnologyTO t = new TechnologyTO();
-				t.setTechnologyName(technology.getName());
-				t.setQuadrantName(technology.getQuadrant());
-				t.setArcName(technology.getArc());
-				t.setMovement(technology.getMovement());
-				t.setBlipSize(technology.getUsageCount());
-				t.setUrl(technology.getUrl());
-				t.setDescription(technology.getDescription());
-				t.setDetailUrl(technology.getDetailUrl());
-				t.setCustomerStrategic(technology.isCustomerStrategic());
-				ts.add(t);
-			}
-			r.setTechnologies(ts);
-
-			rs.add(r);
-		}
-
-		session.getTransaction().commit();
-		session.close();
+		final List<RadarTO> rs = service.getRadars();
 
 		return Response.ok(rs).build();
 	}
@@ -86,44 +55,13 @@ public class RadarRestService {
 	@GET
 	@Path("/{radarId}")
 	@Produces("application/json")
-	public Object getRadarById(@PathParam("radarId") final String radarId) {
-		return Response.ok(readRadar(radarId)).build();
-	}
+	public Response getRadarById(@PathParam("radarId") final String radarIdStr) {
 
-	public static final RadarTO readRadar(final String radarId) {
-		final Session session = HibernateUtil.getSessionFactory().openSession();
-		session.beginTransaction();
+		final Long id = Long.parseLong(radarIdStr);
 
-		final Criteria query = session.createCriteria(Radar.class);
-		query.add(Restrictions.eq("id", Long.parseLong(radarId)));
+		final RadarTO radar = service.getRadarById(id);
 
-		final Radar radar = (Radar)query.uniqueResult();
-
-		final RadarTO r = new RadarTO();
-		r.setId(radar.getId());
-		r.setFilename(radar.getFilename());
-		r.setDateUploaded(radar.getDateUploaded());
-
-		final List<TechnologyTO> ts = new ArrayList<TechnologyTO>();
-		for(final Technology technology : radar.getTechnologies()) {
-			final TechnologyTO t = new TechnologyTO();
-			t.setTechnologyName(technology.getName());
-			t.setQuadrantName(technology.getQuadrant());
-			t.setMovement(technology.getMovement());
-			t.setArcName(technology.getArc());
-			t.setBlipSize(technology.getUsageCount());
-			t.setUrl(technology.getUrl());
-			t.setDescription(technology.getDescription());
-			t.setDetailUrl(technology.getDetailUrl());
-			t.setCustomerStrategic(technology.isCustomerStrategic());
-			ts.add(t);
-		}
-		r.setTechnologies(ts);
-
-		session.getTransaction().commit();
-		session.close();
-
-		return r;
+		return Response.ok(radar).build();
 	}
 
 	@POST
@@ -213,6 +151,13 @@ public class RadarRestService {
 	}
 
 	private static String readString(final String str) {
+		if(str==null) {
+			return null;
+		}
+		if(str.trim().length()==0) {
+			return null;
+		}
+
 		return str;
 	}
 

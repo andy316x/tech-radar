@@ -142,7 +142,10 @@ var Radar = {
 								callback.onblipleave(blip);
 							};
 						})(item);
-						link.on('mouseenter',onmouseenter);
+						link.on('mouseenter.one',onmouseenter);
+						link.on('mouseenter.two',function() {
+							this.parentNode.appendChild(this);
+						});
 						link.on('mouseleave',onmouseleave);
 					}
 				}
