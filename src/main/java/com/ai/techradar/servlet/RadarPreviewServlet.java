@@ -342,7 +342,7 @@ public class RadarPreviewServlet extends HttpServlet {
 		}
 	}
 
-	private static class Quadrant {
+	public static class Quadrant {
 		private final String name;
 		private final String colour;
 		private int startTheta;
