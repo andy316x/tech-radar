@@ -118,17 +118,18 @@ public class RadarServiceImpl implements RadarService {
 			zto.setMovement(z_.getMovement());
 			zto.setX(x);
 			zto.setY(y);
-			
 			zs.add(zto);
 			
 			final TechnologyTO t = new TechnologyTO();
 			final Technology technology = z_.getTechnology();
+			t.setId(technology.getId());
 			t.setName(technology.getName());
 			t.setBlipSize(technology.getUsageCount());
 			t.setUrl(technology.getUrl());
 			t.setDescription(technology.getDescription());
 			t.setDetailUrl(technology.getDetailUrl());
 			t.setCustomerStrategic(technology.isCustomerStrategic());
+
 			List<ZTO> temp_Zs = new ArrayList<ZTO>();
 			temp_Zs.add(zto.clone());
 			t.setZs(temp_Zs);

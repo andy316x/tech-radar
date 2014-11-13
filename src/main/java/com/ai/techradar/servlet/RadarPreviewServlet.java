@@ -33,6 +33,7 @@ import com.ai.techradar.service.impl.RadarServiceImpl;
 import com.ai.techradar.web.service.to.RadarTO;
 import com.ai.techradar.web.service.to.TechnologyTO;
 import com.ai.techradar.web.service.to.XTO;
+import com.ai.techradar.web.service.to.YTO;
 import com.ai.techradar.web.service.to.ZTO;
 
 public class RadarPreviewServlet extends HttpServlet {
@@ -74,7 +75,7 @@ public class RadarPreviewServlet extends HttpServlet {
 		final float h = w;
 		final float scaleFactor = (float)w/optimumWidth;
 
-		final RadarTO radar = service.getRadarById(Long.parseLong(radarId));
+		final RadarTO radar = buildDataModel(service.getRadarById(Long.parseLong(radarId)));
 
 		final Map<String, Arc> arcMap = new LinkedHashMap<String, Arc>();
 		for(final XTO x : radar.getXs()) {
@@ -394,4 +395,40 @@ public class RadarPreviewServlet extends HttpServlet {
 		return deg*Math.PI/180;
 	};
 
+	private static RadarTO buildDataModel(RadarTO r){
+		for(ZTO z: r.getZs()){
+			z.setRadar(r);
+			List<ZTO> zs = new ArrayList<ZTO>();
+			zs.add(z);
+			z.getTechnology().setZs(zs);
+			
+			List<ZTO> xZs = z.getX().getZs();
+			if(xZs == null){
+				z.getX().setZs(new ArrayList<ZTO>());
+			}
+			z.getX().getZs().add(z);
+			
+			List<ZTO> yZs = z.getY().getZs();
+			if(yZs == null){
+				z.getY().setZs(new ArrayList<ZTO>());
+			}
+			z.getY().getZs().add(z);
+		}
+		
+		for(XTO x: r.getXs()){
+			x.setRadar(r);
+			List<XTO> xs = new ArrayList<XTO>();
+			xs.add(x);
+			x.getArc().setXs(xs);
+		}
+		
+		for(YTO y: r.getYs()){
+			y.setRadar(r);
+			List<YTO> ys = new ArrayList<YTO>();
+			ys.add(y);
+			y.getQuadrant().setYs(ys);
+		}
+		
+		return r;
+	}
 }
