@@ -1,11 +1,13 @@
 package com.ai.techradar.database.entities;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.CascadeType;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -15,12 +17,6 @@ public class Technology {
 	private Long id;
 
 	private String name;
-
-	private String quadrant;
-
-	private String arc;
-
-	private MovementEnum movement;
 
 	private int usageCount;
 
@@ -32,7 +28,7 @@ public class Technology {
 
 	private boolean customerStrategic;
 
-	private Radar radar;
+	private List<Z> zs;
 
 	public Technology() {
 		// this form used by Hibernate
@@ -56,30 +52,6 @@ public class Technology {
 
 	public void setName(final String name) {
 		this.name = name;
-	}
-
-	public String getQuadrant() {
-		return quadrant;
-	}
-
-	public void setQuadrant(final String quadrant) {
-		this.quadrant = quadrant;
-	}
-
-	public String getArc() {
-		return arc;
-	}
-
-	public void setArc(final String arc) {
-		this.arc = arc;
-	}
-
-	public MovementEnum getMovement() {
-		return movement;
-	}
-
-	public void setMovement(final MovementEnum movement) {
-		this.movement = movement;
 	}
 
 	public int getUsageCount() {
@@ -123,14 +95,13 @@ public class Technology {
 		this.customerStrategic = customerStrategic;
 	}
 
-	@ManyToOne
-	@JoinColumn(name="RADAR_ID")
-	public Radar getRadar() {
-		return radar;
+	@OneToMany(mappedBy="technology", cascade=CascadeType.ALL)
+	public List<Z> getZs() {
+		return zs;
 	}
 
-	public void setRadar(final Radar radar) {
-		this.radar = radar;
+	public void setZs(final List<Z> zs) {
+		this.zs = zs;
 	}
 
 }

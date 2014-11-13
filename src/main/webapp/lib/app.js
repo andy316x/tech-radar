@@ -96,51 +96,59 @@ techRadarApp.controller('RadarCtrl', function ($scope, $http, $log) {
 					arcs: [],
 					quadrants: []
 			};
-
-			for(var i = 0; i < theRadar.technologies.length; i++) {
+			
+			for(var i = 0; i < theRadar.xs.length; i++) {
 				(function(row){
-					var arc = theRadar.arcMap[row.arcName];
+					var arc = theRadar.arcMap[row.name];
 					if(arc == null || typeof arc == 'undefined') {
 						arc = {
-								id: row.arcName,
-								name: row.arcName,
+								id: row.name,
+								name: row.name,
 								r: arcWidths[theRadar.radar.arcs.length],
 								color: arcColours[theRadar.radar.arcs.length]
 						};
-						theRadar.arcMap[row.arcName] = arc;
+						theRadar.arcMap[row.name] = arc;
 						theRadar.radar.arcs.push(arc);
 					}
-
-					var quadrant = theRadar.quadrantMap[row.quadrantName];
+				})(theRadar.xs[i].arc);
+			}
+			
+			for(var i = 0; i < theRadar.ys.length; i++) {
+				(function(row){
+					var quadrant = theRadar.quadrantMap[row.name];
 					if(quadrant == null || typeof quadrant == 'undefined') {
 						quadrant = {
-								id: row.quadrantName,
-								name: row.quadrantName,
+								id: row.name,
+								name: row.name,
 								color: quadrantColours[theRadar.radar.quadrants.length],
 								items: []
 						};
-						theRadar.quadrantMap[row.quadrantName] = quadrant;
+						theRadar.quadrantMap[row.name] = quadrant;
 						theRadar.radar.quadrants.push(quadrant);
 					}
+				})(theRadar.ys[i].quadrant);
+			}
 
-					var customerStrategic = row.customerStrategic;
+			for(var i = 0; i < theRadar.zs.length; i++) {
+				(function(row){
+					var customerStrategic = row.technology.customerStrategic;
 					var newItem = {
 							id: i+1,
-							name: row.technologyName,
+							name: row.technology.name,
 							show: false,
-							arc: row.arcName,
+							arc: row.x.arc.name,
 							pc: {
 								r: row.radius,
 								t: Math.floor((Math.random() * 90) + 1)
 							},
 							movement: row.movement,
-							description: row.description,
-							detailUrl: row.detailUrl,
+							description: row.technology.description,
+							detailUrl: row.technology.detailUrl,
 							customerStrategic: customerStrategic,
-							url: row.url
+							url: row.technology.url
 					};
-					quadrant.items.push(newItem);
-				})(theRadar.technologies[i]);
+					theRadar.quadrantMap[row.y.quadrant.name].items.push(newItem);
+				})(theRadar.zs[i]);
 			}
 			$scope.selectedRadar = theRadar;
 		}).

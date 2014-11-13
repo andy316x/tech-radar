@@ -32,6 +32,8 @@ import com.ai.techradar.service.RadarService;
 import com.ai.techradar.service.impl.RadarServiceImpl;
 import com.ai.techradar.web.service.to.RadarTO;
 import com.ai.techradar.web.service.to.TechnologyTO;
+import com.ai.techradar.web.service.to.XTO;
+import com.ai.techradar.web.service.to.ZTO;
 
 public class RadarPreviewServlet extends HttpServlet {
 
@@ -75,11 +77,12 @@ public class RadarPreviewServlet extends HttpServlet {
 		final RadarTO radar = service.getRadarById(Long.parseLong(radarId));
 
 		final Map<String, Arc> arcMap = new LinkedHashMap<String, Arc>();
-		for(final TechnologyTO t : radar.getTechnologies()) {
-			Arc arc = arcMap.get(t.getArcName());
+		for(final XTO x : radar.getXs()) {
+			String arcName = x.getArc().getName();
+			Arc arc = arcMap.get(arcName);
 			if(arc == null) {
-				arc = new Arc(ARC_WIDTHS[arcMap.size()], t.getArcName(), ARC_COLOURS[arcMap.size()]);
-				arcMap.put(t.getArcName(), arc);
+				arc = new Arc(ARC_WIDTHS[arcMap.size()], arcName, ARC_COLOURS[arcMap.size()]);
+				arcMap.put(arcName, arc);
 			}
 		}
 
@@ -150,14 +153,15 @@ public class RadarPreviewServlet extends HttpServlet {
 
 
 		final Map<String, Quadrant> quadrantMap = new HashMap<String, Quadrant>();
-		for(final TechnologyTO item : radar.getTechnologies()) {
-			Quadrant techQuadrant = quadrantMap.get(item.getQuadrantName());
+		for(final ZTO z : radar.getZs()) {
+			String quadrantName = z.getY().getQuadrant().getName();
+			Quadrant techQuadrant = quadrantMap.get(quadrantName);
 			if(techQuadrant==null) {
-				techQuadrant = new Quadrant(item.getQuadrantName(), QUADRANT_COLOURS[quadrantMap.size()]);
+				techQuadrant = new Quadrant(quadrantName, QUADRANT_COLOURS[quadrantMap.size()]);
 				techQuadrant.setStartTheta(quadrantMap.size()*90);
-				quadrantMap.put(item.getQuadrantName(), techQuadrant);
+				quadrantMap.put(quadrantName, techQuadrant);
 			}
-			techQuadrant.getItems().add(item);
+			techQuadrant.getItems().add(z.getTechnology());
 		}
 
 		for(final Quadrant quadrant : quadrantMap.values()) {
@@ -173,7 +177,8 @@ public class RadarPreviewServlet extends HttpServlet {
 
 			count = 0;
 			for(final TechnologyTO technology : quadrant.getItems()) {
-				final Arc arc = arcMap.get(technology.getArcName());
+				// TODO error
+				final Arc arc = arcMap.get(technology.getZs().get(0).getX().getArc().getName());
 				arcRails.get(arc.getIndex()).get((int)Math.floor(count%arc.getRails())).push(technology);
 				count++;
 			}
@@ -185,22 +190,24 @@ public class RadarPreviewServlet extends HttpServlet {
 					final Stack<TechnologyTO> techs = rails.get(k);
 					for(int l = 0; l < techs.size(); l++) {
 						final TechnologyTO item = techs.get(l);
-
-						Quadrant techQuadrant = quadrantMap.get(item.getQuadrantName());
+						// TODO error
+						String quadrantName = item.getZs().get(0).getY().getQuadrant().getName();
+						Quadrant techQuadrant = quadrantMap.get(quadrantName);
 						if(techQuadrant==null) {
-							techQuadrant = new Quadrant(item.getQuadrantName(), QUADRANT_COLOURS[quadrantMap.size()]);
+							techQuadrant = new Quadrant(quadrantName, QUADRANT_COLOURS[quadrantMap.size()]);
 							techQuadrant.setStartTheta(quadrantMap.size()*90);
-							quadrantMap.put(item.getQuadrantName(), techQuadrant);
+							quadrantMap.put(quadrantName, techQuadrant);
 						}
-
-						final Arc arc = arcMap.get(item.getArcName());
+						
+						// TODO error
+						final Arc arc = arcMap.get(item.getZs().get(0).getX().getArc().getName());
 						final float r = (((arc.getOuterRadius()-arc.getInnerRadius())/((rails.size())+1))*(k+1))+arc.getInnerRadius();
 
 						final float segmentWidth = 90/(techs.size()+1);
 						final double x = (w/2) + r*Math.cos(rad(segmentWidth*(l+1) + techQuadrant.getStartTheta()));
 						final double y = (h/2) + r*Math.sin(rad(segmentWidth*(l+1) + techQuadrant.getStartTheta()));
 
-						if(item.getMovement().equals(MovementEnum.c)) {
+						if(item.getZs().get(0).getMovement().equals(MovementEnum.c)) {
 							final Element triangle = doc.createElementNS(svgNS, "path");
 							triangle.setAttribute("d", "M412.201,311.406c0.021,0,0.042,0,0.063,0c0.067,0,0.135,0,0.201,0c4.052,0,6.106-0.051,8.168-0.102c2.053-0.051,4.115-0.102,8.176-0.102h0.103c6.976-0.183,10.227-5.306,6.306-11.53c-3.988-6.121-4.97-5.407-8.598-11.224c-1.631-3.008-3.872-4.577-6.179-4.577c-2.276,0-4.613,1.528-6.48,4.699c-3.578,6.077-3.26,6.014-7.306,11.723C402.598,306.067,405.426,311.406,412.201,311.406");
 							triangle.setAttribute("stroke", item.isCustomerStrategic()?"#FFDF00":"#FFFFFF");

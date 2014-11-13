@@ -1,30 +1,32 @@
 package com.ai.techradar.web.service.to;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class RadarTO implements Serializable {
 
-	private static final long serialVersionUID = -5749316497100834520L;
+public class RadarTO {
 
-	private long id;
+	private Long id;
 
 	private String filename;
 
 	private Date dateUploaded;
 
-	private List<TechnologyTO> technologies;
+	private List<ZTO> zs;
+
+	private List<XTO> xs;
+
+	private List<YTO> ys;
 
 	public RadarTO() {
-
+		
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(final long id) {
+	public void setId(final Long id) {
 		this.id = id;
 	}
 
@@ -32,7 +34,7 @@ public class RadarTO implements Serializable {
 		return filename;
 	}
 
-	public void setFilename(final String filename) {
+	public void setFilename(String filename) {
 		this.filename = filename;
 	}
 
@@ -44,12 +46,27 @@ public class RadarTO implements Serializable {
 		this.dateUploaded = dateUploaded;
 	}
 
-	public List<TechnologyTO> getTechnologies() {
-		return technologies;
+	public List<ZTO> getZs() {
+		return zs;
 	}
 
-	public void setTechnologies(final List<TechnologyTO> technologies) {
-		this.technologies = technologies;
+	public void setZs(final List<ZTO> zs) {
+		this.zs = zs;
 	}
 
+	public List<XTO> getXs() {
+		return xs;
+	}
+
+	public void setXs(final List<XTO> xs) {
+		this.xs = xs;
+	}
+
+	public List<YTO> getYs() {
+		return ys;
+	}
+
+	public void setYs(final List<YTO> ys) {
+		this.ys = ys;
+	}
 }

@@ -1,20 +1,13 @@
 package com.ai.techradar.web.service.to;
 
-import java.io.Serializable;
+import java.util.List;
 
-import com.ai.techradar.database.entities.MovementEnum;
 
-public class TechnologyTO implements Serializable {
+public class TechnologyTO {
 
-	private static final long serialVersionUID = -4856383955947759556L;
+	private Long id;
 
-	private String technologyName;
-
-	private String quadrantName;
-
-	private String arcName;
-
-	private MovementEnum movement;
+	private String name;
 
 	private int blipSize;
 
@@ -26,40 +19,26 @@ public class TechnologyTO implements Serializable {
 
 	private boolean customerStrategic;
 
+	private List<ZTO> zs;
+
 	public TechnologyTO() {
-
+		
 	}
 
-	public String getTechnologyName() {
-		return technologyName;
+	public Long getId() {
+		return id;
 	}
 
-	public void setTechnologyName(final String technologyName) {
-		this.technologyName = technologyName;
+	public void setId(final Long id) {
+		this.id = id;
 	}
 
-	public String getQuadrantName() {
-		return quadrantName;
+	public String getName() {
+		return name;
 	}
 
-	public void setQuadrantName(final String quadrantName) {
-		this.quadrantName = quadrantName;
-	}
-
-	public String getArcName() {
-		return arcName;
-	}
-
-	public void setArcName(final String arcName) {
-		this.arcName = arcName;
-	}
-
-	public MovementEnum getMovement() {
-		return movement;
-	}
-
-	public void setMovement(final MovementEnum movement) {
-		this.movement = movement;
+	public void setName(final String name) {
+		this.name = name;
 	}
 
 	public int getBlipSize() {
@@ -100,6 +79,14 @@ public class TechnologyTO implements Serializable {
 
 	public void setCustomerStrategic(final boolean customerStrategic) {
 		this.customerStrategic = customerStrategic;
+	}
+
+	public List<ZTO> getZs() {
+		return zs;
+	}
+
+	public void setZs(final List<ZTO> zs) {
+		this.zs = zs;
 	}
 
 }

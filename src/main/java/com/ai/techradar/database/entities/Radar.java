@@ -21,7 +21,11 @@ public class Radar {
 
 	private Date dateUploaded;
 
-	private List<Technology> technologies;
+	private List<Z> zs;
+
+	private List<X> xs;
+
+	private List<Y> ys;
 
 	public Radar() {
 		// this form used by Hibernate
@@ -56,12 +60,29 @@ public class Radar {
 	}
 
 	@OneToMany(mappedBy="radar", cascade=CascadeType.ALL)
-	public List<Technology> getTechnologies() {
-		return technologies;
+	public List<Z> getZs() {
+		return zs;
 	}
 
-	public void setTechnologies(final List<Technology> technologies) {
-		this.technologies = technologies;
+	public void setZs(final List<Z> zs) {
+		this.zs = zs;
 	}
 
+	@OneToMany(mappedBy="radar", cascade=CascadeType.ALL)
+	public List<X> getXs() {
+		return xs;
+	}
+
+	public void setXs(final List<X> xs) {
+		this.xs = xs;
+	}
+
+	@OneToMany(mappedBy="radar", cascade=CascadeType.ALL)
+	public List<Y> getYs() {
+		return ys;
+	}
+
+	public void setYs(final List<Y> ys) {
+		this.ys = ys;
+	}
 }
