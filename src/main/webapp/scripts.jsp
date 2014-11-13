@@ -14,4 +14,6 @@
 <script src="/radar/lib/bootstrap.min.js"></script>
 <script src="/radar/lib/d3.min.js" charset="utf-8"></script>
 <script src="/radar/lib/radar.js"></script>
+<script src="/radar/lib/controller.js"></script>
 <script src="/radar/lib/app.js"></script>
+<script src="/radar/lib/angular-route.min.js"></script>
