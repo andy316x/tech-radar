@@ -21,7 +21,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
+//import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
@@ -46,6 +46,7 @@ import com.ai.techradar.service.RadarService;
 import com.ai.techradar.service.impl.RadarServiceImpl;
 import com.ai.techradar.web.service.to.RadarTO;
 
+@SuppressWarnings("unchecked")
 @Path("service")
 public class RadarRestService {
 
@@ -188,11 +189,20 @@ public class RadarRestService {
 			session.getTransaction().commit();
 			session.close();
 
-			request.setAttribute("result", id.toString());
-			request.getRequestDispatcher("/radar.jsp").forward(request, response);
+			//request.setAttribute("result", id.toString());
+			//request.getRequestDispatcher("/index.jsp").forward(request, response);
+			
+			response.sendRedirect("/radar");
+			
+			//return Response.ok().build();
 
 		}catch(final Exception e) {
 			e.printStackTrace();
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			e.printStackTrace(pw);
+			
+			//return Response.ok(sw.toString(), MediaType.TEXT_PLAIN).build();
 		}
 	}
 

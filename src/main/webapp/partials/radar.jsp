@@ -47,7 +47,7 @@
 	<div class="col-md-8">
 		<div id="radar" ng-radar="" radar="selectedRadar.radar" selected-blip="selectedItem"></div>
 			
-		<form id="theForm" action="/radar/upload" method="post">
+		<form id="theForm" action="/radar/rest/service/upload" method="post">
 			<input hidden="true" id="data" name="data" value=""></input>
 		</form>
 		<button ng-show="selectedRadar.technologies.length > 0" class="btn btn-primary" onclick="exportSvg();">export</button>

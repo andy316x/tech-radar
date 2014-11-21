@@ -37,6 +37,7 @@ import com.lowagie.text.pdf.PdfStamper;
 import com.lowagie.text.pdf.PdfTemplate;
 import com.lowagie.text.pdf.PdfWriter;
 
+@SuppressWarnings("unused")
 public class PDFGeneratorSecond extends PdfPageEventHelper {
 
 	// Will need to be changed if more than 1 chapter per page

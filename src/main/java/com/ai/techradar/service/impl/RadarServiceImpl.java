@@ -14,6 +14,7 @@ import com.ai.techradar.database.hibernate.HibernateUtil;
 import com.ai.techradar.service.RadarService;
 import com.ai.techradar.web.service.to.*;
 
+@SuppressWarnings("unchecked")
 public class RadarServiceImpl implements RadarService {
 
 	public List<RadarTO> getRadars() {

@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
+//import java.util.Random;
 import java.util.Stack;
 
 import javax.servlet.ServletException;
@@ -379,7 +379,7 @@ public class RadarPreviewServlet extends HttpServlet {
 		}
 	}
 
-	private static int showRandomInteger(int aStart, int aEnd, Random aRandom){
+	/*private static int showRandomInteger(int aStart, int aEnd, Random aRandom){
 		if (aStart > aEnd) {
 			throw new IllegalArgumentException("Start cannot exceed End.");
 		}
@@ -389,7 +389,7 @@ public class RadarPreviewServlet extends HttpServlet {
 		long fraction = (long)(range * aRandom.nextDouble());
 		int randomNumber =  (int)(fraction + aStart);
 		return randomNumber;
-	}
+	}*/
 
 	private static double rad(final float deg){
 		return deg*Math.PI/180;
