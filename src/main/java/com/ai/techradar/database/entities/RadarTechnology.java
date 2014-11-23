@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-public class Z {
+public class RadarTechnology {
 
 	private Long id;
 	
@@ -19,13 +19,13 @@ public class Z {
 
 	private Radar radar;
 
-	private X x;
+	private RadarMaturity x;
 
-	private Y y;
+	private RadarTechGrouping y;
 
 	private MovementEnum movement;
 
-	public Z() {
+	public RadarTechnology() {
 		// this form used by Hibernate
 	}
 
@@ -63,21 +63,21 @@ public class Z {
 
 	@ManyToOne
 	@JoinColumn(name="X_ID")
-	public X getX() {
+	public RadarMaturity getX() {
 		return x;
 	}
 
-	public void setX(final X x) {
+	public void setX(final RadarMaturity x) {
 		this.x = x;
 	}
 
 	@ManyToOne
 	@JoinColumn(name="Y_ID")
-	public Y getY() {
+	public RadarTechGrouping getY() {
 		return y;
 	}
 
-	public void setY(final Y y) {
+	public void setY(final RadarTechGrouping y) {
 		this.y = y;
 	}
 

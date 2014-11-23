@@ -32,9 +32,9 @@ import com.ai.techradar.service.RadarService;
 import com.ai.techradar.service.impl.RadarServiceImpl;
 import com.ai.techradar.web.service.to.RadarTO;
 import com.ai.techradar.web.service.to.TechnologyTO;
-import com.ai.techradar.web.service.to.XTO;
-import com.ai.techradar.web.service.to.YTO;
-import com.ai.techradar.web.service.to.ZTO;
+import com.ai.techradar.web.service.to.RadarMaturityTO;
+import com.ai.techradar.web.service.to.RadarTechGroupingTO;
+import com.ai.techradar.web.service.to.RadarTechnologyTO;
 
 public class RadarPreviewServlet extends HttpServlet {
 
@@ -78,7 +78,7 @@ public class RadarPreviewServlet extends HttpServlet {
 		final RadarTO radar = buildDataModel(service.getRadarById(Long.parseLong(radarId)));
 
 		final Map<String, Arc> arcMap = new LinkedHashMap<String, Arc>();
-		for(final XTO x : radar.getXs()) {
+		for(final RadarMaturityTO x : radar.getXs()) {
 			String arcName = x.getArc().getName();
 			Arc arc = arcMap.get(arcName);
 			if(arc == null) {
@@ -154,7 +154,7 @@ public class RadarPreviewServlet extends HttpServlet {
 
 
 		final Map<String, Quadrant> quadrantMap = new HashMap<String, Quadrant>();
-		for(final ZTO z : radar.getZs()) {
+		for(final RadarTechnologyTO z : radar.getZs()) {
 			String quadrantName = z.getY().getQuadrant().getName();
 			Quadrant techQuadrant = quadrantMap.get(quadrantName);
 			if(techQuadrant==null) {
@@ -396,35 +396,35 @@ public class RadarPreviewServlet extends HttpServlet {
 	};
 
 	private static RadarTO buildDataModel(RadarTO r){
-		for(ZTO z: r.getZs()){
+		for(RadarTechnologyTO z: r.getZs()){
 			z.setRadar(r);
-			List<ZTO> zs = new ArrayList<ZTO>();
+			List<RadarTechnologyTO> zs = new ArrayList<RadarTechnologyTO>();
 			zs.add(z);
 			z.getTechnology().setZs(zs);
 			
-			List<ZTO> xZs = z.getX().getZs();
+			List<RadarTechnologyTO> xZs = z.getX().getZs();
 			if(xZs == null){
-				z.getX().setZs(new ArrayList<ZTO>());
+				z.getX().setZs(new ArrayList<RadarTechnologyTO>());
 			}
 			z.getX().getZs().add(z);
 			
-			List<ZTO> yZs = z.getY().getZs();
+			List<RadarTechnologyTO> yZs = z.getY().getZs();
 			if(yZs == null){
-				z.getY().setZs(new ArrayList<ZTO>());
+				z.getY().setZs(new ArrayList<RadarTechnologyTO>());
 			}
 			z.getY().getZs().add(z);
 		}
 		
-		for(XTO x: r.getXs()){
+		for(RadarMaturityTO x: r.getXs()){
 			x.setRadar(r);
-			List<XTO> xs = new ArrayList<XTO>();
+			List<RadarMaturityTO> xs = new ArrayList<RadarMaturityTO>();
 			xs.add(x);
 			x.getArc().setXs(xs);
 		}
 		
-		for(YTO y: r.getYs()){
+		for(RadarTechGroupingTO y: r.getYs()){
 			y.setRadar(r);
-			List<YTO> ys = new ArrayList<YTO>();
+			List<RadarTechGroupingTO> ys = new ArrayList<RadarTechGroupingTO>();
 			ys.add(y);
 			y.getQuadrant().setYs(ys);
 		}

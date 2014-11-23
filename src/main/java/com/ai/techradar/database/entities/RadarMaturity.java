@@ -15,17 +15,17 @@ import javax.persistence.JoinColumn;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-public class X {
+public class RadarMaturity {
 
 	private Long id;
 	
-	private Arc arc;
+	private Maturity arc;
 
 	private Radar radar;
 
-	private List<Z> zs;
+	private List<RadarTechnology> zs;
 
-	public X() {
+	public RadarMaturity() {
 		// this form used by Hibernate
 	}
 
@@ -43,11 +43,11 @@ public class X {
 
 	@ManyToOne
 	@JoinColumn(name="ARC_ID")
-	public Arc getArc() {
+	public Maturity getArc() {
 		return arc;
 	}
 
-	public void setArc(final Arc arc) {
+	public void setArc(final Maturity arc) {
 		this.arc = arc;
 	}
 
@@ -62,11 +62,11 @@ public class X {
 	}
 
 	@OneToMany(mappedBy="x", cascade=CascadeType.ALL)
-	public List<Z> getZs() {
+	public List<RadarTechnology> getZs() {
 		return zs;
 	}
 
-	public void setZs(final List<Z> zs) {
+	public void setZs(final List<RadarTechnology> zs) {
 		this.zs = zs;
 	}
 }

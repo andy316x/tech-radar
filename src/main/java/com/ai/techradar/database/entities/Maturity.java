@@ -12,15 +12,15 @@ import javax.persistence.CascadeType;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-public class Arc {
+public class Maturity {
 
 	private Long id;
 
 	private String name;
 
-	private List<X> xs;
+	private List<RadarMaturity> xs;
 
-	public Arc() {
+	public Maturity() {
 		// this form used by Hibernate
 	}
 
@@ -45,11 +45,11 @@ public class Arc {
 	}
 
 	@OneToMany(mappedBy="arc", cascade=CascadeType.ALL)
-	public List<X> getXs() {
+	public List<RadarMaturity> getXs() {
 		return xs;
 	}
 
-	public void setXs(final List<X> xs) {
+	public void setXs(final List<RadarMaturity> xs) {
 		this.xs = xs;
 	}
 }

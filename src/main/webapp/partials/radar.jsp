@@ -1,68 +1,58 @@
 <div class="container-fluid main-content" ng-controller="RadarCtrl">
 	
 	<div class="row">
+	
+		<div class="col-md-12 clearfix" style="margin-bottom: 0;border-bottom: 1px solid #CCC;padding-bottom: 20px;">
+			<div class="col-md-6">
+				<ul class="nav nav-pills">
+					<li  class="active"><a href="#">All</a></li>
+					<li><a href="#">UK Services</a></li>
+					<li><a href="#">Cyber</a></li>
+					<li><a href="#">Communications</a></li>
+					<li><a href="#">My Radars</a></li>
+				</ul>
+			</div>
+			<div class="col-md-3">
+				<div class="left-inner-addon">
+					<i class="glyphicon glyphicon-search"></i>
+					<input type="text" class="form-control" placeholder="Search"></input>
+				</div>
+			</div>
+			<div class="col-md-3 text-right">
+				<button class="btn btn-success" ng-click="newRadarVisible=true">New Radar</button>
+			</div>
+		</div>
 		
-	<div class="col-md-12 clearfix" style="height: 238px;margin-bottom: 15px;border-bottom: 1px solid #CCC;padding-bottom: 10px;white-space: nowrap;overflow-x: auto;">
-		<div style="display:inline-block;margin: 10px;padding: 10px;" ng-repeat="radar in radars" class="chart">
-			<a ng-href="/radar/view/{{radar.id}}">
-				<div style="cursor: pointer;">
-					<div class="text-center radar-preview{{radar.id==selectedId?' selected-radar':''}}">
-						<img ng-src="/radar/preview/{{radar.id}}?w=150"></img>
+		<div ng-new-radar="" visible="newRadarVisible" radar-created="onRadarCreated()"></div>
+		
+		<div class="col-md-12" style="background-color:#EFEFEF;padding:25px 20px;">
+	
+			<div ng-repeat="radar in radars" class="radar-card">
+				<div style="margin-bottom: 20px;">
+					<div class="col-xs-6">
+						{{radar.name}}
 					</div>
-					<div class="text-center">
-						{{radar.filename}}
-					</div>
-					<div class="text-center">
-						<small>{{radar.dateUploaded | date:'dd MMM yy'}}</small>
+					<div class="col-xs-6 text-right">
+						<i class="glyphicon glyphicon-ok" style="color:green;"></i>
 					</div>
 				</div>
-			</a>
-		</div>
-	</div>
-	
-	<div class="col-md-12">
-		<form method="post" encoding="multipart/form-data" enctype="multipart/form-data" action="/radar/rest/service/upload">
-			<input id="file" name="file" type="file"></input>
-			<button type="submit" class="btn btn-primary">upload</button>
-		</form>
-	</div>
-
-	<div class="col-md-4 sidebar">
-		<div ng-repeat="quadrant in selectedRadar.radar.quadrants">
-			<h3>{{quadrant.name}}</h3>
-			<ul>
-				<li ng-repeat="item in quadrant.items">
-					<div ng-click="item.show= !item.show" ng-mouseover="mouseOver(item)" ng-mouseout="mouseOut(item)" style="{{selectedItem.id==item.id||item.show==true ? 'cursor:pointer;color:white;background-color:'+quadrant.color : ''}}">{{item.id}}.{{item.name}}<span ng-show="item.movement=='c'" class="radar-movement">new</span></div>
-					<div ng-show="item.show==true" class="more-detail">
-						<p ng-show="item.description!=null">{{item.description}}</p>
-						<div>
-							<a ng-show="item.detailUrl!=null" ng-href="{{item.detailUrl}}">more...</a>
-						</div>
+				<div style="text-align:center;">
+					<img ng-src="/radar/preview/{{radar.id}}?w=175"></img>
+				</div>
+				<div>
+					<img class="img img-rounded" src="/radar/img/128.jpg">
+					<div style="padding-left:60px;">
+						<div><strong>Ricky Winterbourne</strong></div>
+						<div><small>(UK Services)</small></div>
+						<div><small>Published <strong>{{radar.dateUploaded | date:'dd MMM yy'}}</strong></small></div>
 					</div>
-				</li>
-			</ul>
-		</div>
-	</div>
-
-	<div class="col-md-8">
-		<div id="radar" ng-radar="" radar="selectedRadar.radar" selected-blip="selectedItem"></div>
+				</div>
+				<div>
+					<button class="btn btn-primary btn-block" ng-click="go('/radar/' + radar.id)">View</button>
+				</div>
+			</div>
 			
-		<form id="theForm" action="/radar/rest/service/upload" method="post">
-			<input hidden="true" id="data" name="data" value=""></input>
-		</form>
-		<button ng-show="selectedRadar.technologies.length > 0" class="btn btn-primary" onclick="exportSvg();">export</button>
-		<script>
-			exportSvg = function() {
-				var theSvg = document.getElementById('radar').firstChild;
-				var s = new XMLSerializer();
-				var str = s.serializeToString(theSvg);
-				
-				var form = document.getElementById('theForm');
-				form['data'].value = str;
-				form.submit();
-			}
-		</script>
-	</div>
+		</div>
 		
 	</div>
 </div>

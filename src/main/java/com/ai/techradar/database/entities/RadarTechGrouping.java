@@ -15,17 +15,17 @@ import javax.persistence.JoinColumn;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-public class Y {
+public class RadarTechGrouping {
 
 	private Long id;
 	
-	private Quadrant quadrant;
+	private TechGrouping quadrant;
 
 	private Radar radar;
 
-	private List<Z> zs;
+	private List<RadarTechnology> zs;
 
-	public Y() {
+	public RadarTechGrouping() {
 		// this form used by Hibernate
 	}
 
@@ -43,11 +43,11 @@ public class Y {
 
 	@ManyToOne
 	@JoinColumn(name="QUADRANT_ID")
-	public Quadrant getQuadrant() {
+	public TechGrouping getQuadrant() {
 		return quadrant;
 	}
 
-	public void setQuadrant(final Quadrant quadrant) {
+	public void setQuadrant(final TechGrouping quadrant) {
 		this.quadrant = quadrant;
 	}
 
@@ -62,11 +62,11 @@ public class Y {
 	}
 
 	@OneToMany(mappedBy="y", cascade=CascadeType.ALL)
-	public List<Z> getZs() {
+	public List<RadarTechnology> getZs() {
 		return zs;
 	}
 
-	public void setZs(final List<Z> zs) {
+	public void setZs(final List<RadarTechnology> zs) {
 		this.zs = zs;
 	}
 }

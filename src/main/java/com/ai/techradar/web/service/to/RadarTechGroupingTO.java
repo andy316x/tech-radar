@@ -3,17 +3,17 @@ package com.ai.techradar.web.service.to;
 import java.util.List;
 
 
-public class YTO {
+public class RadarTechGroupingTO {
 
 	private Long id;
 	
-	private QuadrantTO quadrant;
+	private TechGroupingTO quadrant;
 
 	private RadarTO radar;
 
-	private List<ZTO> zs;
+	private List<RadarTechnologyTO> zs;
 
-	public YTO() {
+	public RadarTechGroupingTO() {
 		
 	}
 
@@ -25,11 +25,11 @@ public class YTO {
 		this.id = id;
 	}
 
-	public QuadrantTO getQuadrant() {
+	public TechGroupingTO getQuadrant() {
 		return quadrant;
 	}
 
-	public void setQuadrant(final QuadrantTO quadrant) {
+	public void setQuadrant(final TechGroupingTO quadrant) {
 		this.quadrant = quadrant;
 	}
 
@@ -41,11 +41,11 @@ public class YTO {
 		this.radar = radar;
 	}
 
-	public List<ZTO> getZs() {
+	public List<RadarTechnologyTO> getZs() {
 		return zs;
 	}
 
-	public void setZs(final List<ZTO> zs) {
+	public void setZs(final List<RadarTechnologyTO> zs) {
 		this.zs = zs;
 	}
 }

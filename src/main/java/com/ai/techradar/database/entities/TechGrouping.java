@@ -12,15 +12,15 @@ import javax.persistence.CascadeType;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-public class Quadrant {
+public class TechGrouping {
 
 	private Long id;
 
 	private String name;
 
-	private List<Y> ys;
+	private List<RadarTechGrouping> ys;
 
-	public Quadrant() {
+	public TechGrouping() {
 		// this form used by Hibernate
 	}
 
@@ -45,11 +45,11 @@ public class Quadrant {
 	}
 
 	@OneToMany(mappedBy="quadrant", cascade=CascadeType.ALL)
-	public List<Y> getYs() {
+	public List<RadarTechGrouping> getYs() {
 		return ys;
 	}
 
-	public void setYs(final List<Y> ys) {
+	public void setYs(final List<RadarTechGrouping> ys) {
 		this.ys = ys;
 	}
 }

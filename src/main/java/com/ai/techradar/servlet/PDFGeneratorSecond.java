@@ -17,8 +17,8 @@ import com.ai.techradar.service.impl.RadarServiceImpl;
 import com.ai.techradar.servlet.RadarPreviewServlet.Quadrant;
 import com.ai.techradar.web.service.to.RadarTO;
 import com.ai.techradar.web.service.to.TechnologyTO;
-import com.ai.techradar.web.service.to.XTO;
-import com.ai.techradar.web.service.to.ZTO;
+import com.ai.techradar.web.service.to.RadarMaturityTO;
+import com.ai.techradar.web.service.to.RadarTechnologyTO;
 import com.lowagie.text.Anchor;
 import com.lowagie.text.Chapter;
 import com.lowagie.text.Chunk;
@@ -88,7 +88,7 @@ public class PDFGeneratorSecond extends PdfPageEventHelper {
 			final RadarTO radar = service.getRadarById(new Long(1));
 
 			final Map<String, Arc> arcMap = new LinkedHashMap<String, Arc>();
-			for (final ZTO z : radar.getZs()) {
+			for (final RadarTechnologyTO z : radar.getZs()) {
 				String arcName = z.getX().getArc().getName();
 				Arc arc = arcMap.get(arcName);
 				if (arc == null) {
@@ -121,7 +121,7 @@ public class PDFGeneratorSecond extends PdfPageEventHelper {
 			}
 
 			final Map<String, Quadrant> quadrantMap = new HashMap<String, Quadrant>();
-			for (final ZTO z : radar.getZs()) {
+			for (final RadarTechnologyTO z : radar.getZs()) {
 				String quadrantName = z.getY().getQuadrant().getName();
 				Quadrant techQuadrant = quadrantMap.get(quadrantName);
 				if (techQuadrant == null) {
@@ -135,7 +135,7 @@ public class PDFGeneratorSecond extends PdfPageEventHelper {
 
 			// add technologies to quad
 
-			for (final ZTO z : r.getZs()) {
+			for (final RadarTechnologyTO z : r.getZs()) {
 				String quadrantName = z.getY().getQuadrant().getName();
 				List<TechnologyTO> quad = map.get(quadrantName);
 				if (quad == null) {
@@ -392,7 +392,7 @@ public class PDFGeneratorSecond extends PdfPageEventHelper {
 			// arcs
 
 			final Map<String, Arc> arcMap = new LinkedHashMap<String, Arc>();
-			for (final XTO x : r.getXs()) {
+			for (final RadarMaturityTO x : r.getXs()) {
 				Arc arc = arcMap.get(x.getArc().getName());
 				if (arc == null) {
 					arc = new Arc((int) ARC_WIDTHS[arcMap.size()], x.getArc().getName(),

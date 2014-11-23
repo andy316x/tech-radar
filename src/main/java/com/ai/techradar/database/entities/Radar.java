@@ -16,16 +16,18 @@ import org.hibernate.annotations.GenericGenerator;
 public class Radar {
 
 	private Long id;
+	
+	private String name;
 
 	private String filename;
 
 	private Date dateUploaded;
 
-	private List<Z> zs;
+	private List<RadarTechnology> zs;
 
-	private List<X> xs;
+	private List<RadarMaturity> xs;
 
-	private List<Y> ys;
+	private List<RadarTechGrouping> ys;
 
 	public Radar() {
 		// this form used by Hibernate
@@ -41,6 +43,14 @@ public class Radar {
 
 	public void setId(final Long id) {
 		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(final String name) {
+		this.name = name;
 	}
 
 	public String getFilename() {
@@ -60,29 +70,29 @@ public class Radar {
 	}
 
 	@OneToMany(mappedBy="radar", cascade=CascadeType.ALL)
-	public List<Z> getZs() {
+	public List<RadarTechnology> getZs() {
 		return zs;
 	}
 
-	public void setZs(final List<Z> zs) {
+	public void setZs(final List<RadarTechnology> zs) {
 		this.zs = zs;
 	}
 
 	@OneToMany(mappedBy="radar", cascade=CascadeType.ALL)
-	public List<X> getXs() {
+	public List<RadarMaturity> getXs() {
 		return xs;
 	}
 
-	public void setXs(final List<X> xs) {
+	public void setXs(final List<RadarMaturity> xs) {
 		this.xs = xs;
 	}
 
 	@OneToMany(mappedBy="radar", cascade=CascadeType.ALL)
-	public List<Y> getYs() {
+	public List<RadarTechGrouping> getYs() {
 		return ys;
 	}
 
-	public void setYs(final List<Y> ys) {
+	public void setYs(final List<RadarTechGrouping> ys) {
 		this.ys = ys;
 	}
 }

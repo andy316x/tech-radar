@@ -1,0 +1,62 @@
+{
+  "name": "Languages & Frameworks"
+}
+{
+  "name": "Tools"
+}
+{
+  "name": "Platforms"
+}
+{
+  "name": "Solutions"
+}
+
+{
+  "name": "Assess"
+}
+{
+  "name": "Adopt"
+}
+{
+  "name": "Trial"
+}
+{
+  "name": "Phase Out"
+}
+
+{
+  "name": "D3"
+}
+{
+  "name": "AngularJS"
+}
+{
+  "name": "JBoss"
+}
+{
+  "name": "JSF"
+}
+
+
+[
+{
+  "technology":{"name":"D3"},
+  "x":{"arc":{"name":"Assess"}},
+  "y":{"quadrant":{"name":"Languages & Frameworks"}}
+},
+{
+  "technology":{"name":"AngularJS"},
+  "x":{"arc":{"name":"Adopt"}},
+  "y":{"quadrant":{"name":"Tools"}}
+},
+{
+  "technology":{"name":"JBoss"},
+  "x":{"arc":{"name":"Trial"}},
+  "y":{"quadrant":{"name":"Platforms"}}
+},
+{
+  "technology":{"name":"JSF"},
+  "x":{"arc":{"name":"Phase Out"}},
+  "y":{"quadrant":{"name":"Solutions"}}
+}
+]

@@ -28,7 +28,7 @@ public class Technology {
 
 	private boolean customerStrategic;
 
-	private List<Z> zs;
+	private List<RadarTechnology> zs;
 
 	public Technology() {
 		// this form used by Hibernate
@@ -96,11 +96,11 @@ public class Technology {
 	}
 
 	@OneToMany(mappedBy="technology", cascade=CascadeType.ALL)
-	public List<Z> getZs() {
+	public List<RadarTechnology> getZs() {
 		return zs;
 	}
 
-	public void setZs(final List<Z> zs) {
+	public void setZs(final List<RadarTechnology> zs) {
 		this.zs = zs;
 	}
 

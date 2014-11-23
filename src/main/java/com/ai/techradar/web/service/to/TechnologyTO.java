@@ -19,7 +19,7 @@ public class TechnologyTO {
 
 	private boolean customerStrategic;
 
-	private List<ZTO> zs;
+	private List<RadarTechnologyTO> zs;
 
 	public TechnologyTO() {
 		
@@ -81,11 +81,11 @@ public class TechnologyTO {
 		this.customerStrategic = customerStrategic;
 	}
 
-	public List<ZTO> getZs() {
+	public List<RadarTechnologyTO> getZs() {
 		return zs;
 	}
 
-	public void setZs(final List<ZTO> zs) {
+	public void setZs(final List<RadarTechnologyTO> zs) {
 		this.zs = zs;
 	}
 

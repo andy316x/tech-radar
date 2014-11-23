@@ -1,0 +1,67 @@
+package com.ai.techradar.servlet;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
+
+import com.ai.techradar.service.RadarService;
+import com.ai.techradar.service.impl.RadarServiceImpl;
+import com.ai.techradar.web.service.to.RadarTO;
+import com.ai.techradar.web.service.to.RadarTechnologyTO;
+
+public class CSVExportServlet extends HttpServlet {
+
+	private static final long serialVersionUID = 7125431699341927732L;
+
+	private RadarService service = new RadarServiceImpl();
+
+	@Override
+	public void doPost(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
+		try {
+			response.setContentType("text/csv");
+			response.addHeader("Content-Disposition", "attachment;filename=\"export.csv\"");
+
+			final RadarTO radar = service.getRadarById(new Long(1));
+
+			final StringBuilder strBuilder = new StringBuilder();
+
+			// CSV Write Example using CSVPrinter
+			final CSVPrinter printer = new CSVPrinter(strBuilder, CSVFormat.RFC4180.withHeader());
+			printer.printRecord("Technology","Quadrant","Maturity","moved / no change","project Count","Product URL","Description","AI URL","Customer strategic");
+
+			for(final RadarTechnologyTO tech : radar.getZs()) {
+				final List<String> empData = new ArrayList<String>();
+				empData.add(tech.getTechnology().getName());
+				empData.add(tech.getY().getQuadrant().getName());
+				empData.add(tech.getX().getArc().getName());
+				empData.add("" + true);
+				empData.add("" + tech.getTechnology().getBlipSize());
+				empData.add(tech.getTechnology().getUrl());
+				empData.add(tech.getTechnology().getDescription());
+				empData.add(tech.getTechnology().getDetailUrl());
+				empData.add("" + tech.getTechnology().isCustomerStrategic());
+				printer.printRecord(empData);
+			}
+
+			// Close the printer
+			printer.close();
+
+			response.getOutputStream().print(strBuilder.toString());
+
+			response.flushBuffer();
+		} catch (Exception e) {
+			// TODO log properly
+			e.printStackTrace();
+		}
+
+	}
+
+}

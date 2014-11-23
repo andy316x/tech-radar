@@ -2,15 +2,16 @@ package com.ai.techradar.web.service.to;
 
 import java.util.List;
 
-public class ArcTO {
+
+public class TechGroupingTO {
 
 	private Long id;
 
 	private String name;
 
-	private List<XTO> xs;
+	private List<RadarTechGroupingTO> ys;
 
-	public ArcTO() {
+	public TechGroupingTO() {
 		
 	}
 
@@ -30,11 +31,11 @@ public class ArcTO {
 		this.name = name;
 	}
 
-	public List<XTO> getXs() {
-		return xs;
+	public List<RadarTechGroupingTO> getYs() {
+		return ys;
 	}
 
-	public void setXs(final List<XTO> xs) {
-		this.xs = xs;
+	public void setYs(final List<RadarTechGroupingTO> ys) {
+		this.ys = ys;
 	}
 }

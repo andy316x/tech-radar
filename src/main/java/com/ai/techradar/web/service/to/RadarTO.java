@@ -7,16 +7,18 @@ import java.util.List;
 public class RadarTO {
 
 	private Long id;
+	
+	private String name;
 
 	private String filename;
 
 	private Date dateUploaded;
 
-	private List<ZTO> zs;
+	private List<RadarTechnologyTO> zs;
 
-	private List<XTO> xs;
+	private List<RadarMaturityTO> xs;
 
-	private List<YTO> ys;
+	private List<RadarTechGroupingTO> ys;
 
 	public RadarTO() {
 		
@@ -28,6 +30,14 @@ public class RadarTO {
 
 	public void setId(final Long id) {
 		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(final String name) {
+		this.name = name;
 	}
 
 	public String getFilename() {
@@ -46,27 +56,27 @@ public class RadarTO {
 		this.dateUploaded = dateUploaded;
 	}
 
-	public List<ZTO> getZs() {
+	public List<RadarTechnologyTO> getZs() {
 		return zs;
 	}
 
-	public void setZs(final List<ZTO> zs) {
+	public void setZs(final List<RadarTechnologyTO> zs) {
 		this.zs = zs;
 	}
 
-	public List<XTO> getXs() {
+	public List<RadarMaturityTO> getXs() {
 		return xs;
 	}
 
-	public void setXs(final List<XTO> xs) {
+	public void setXs(final List<RadarMaturityTO> xs) {
 		this.xs = xs;
 	}
 
-	public List<YTO> getYs() {
+	public List<RadarTechGroupingTO> getYs() {
 		return ys;
 	}
 
-	public void setYs(final List<YTO> ys) {
+	public void setYs(final List<RadarTechGroupingTO> ys) {
 		this.ys = ys;
 	}
 }

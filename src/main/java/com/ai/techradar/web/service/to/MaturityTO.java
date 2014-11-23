@@ -2,16 +2,15 @@ package com.ai.techradar.web.service.to;
 
 import java.util.List;
 
-
-public class QuadrantTO {
+public class MaturityTO {
 
 	private Long id;
 
 	private String name;
 
-	private List<YTO> ys;
+	private List<RadarMaturityTO> xs;
 
-	public QuadrantTO() {
+	public MaturityTO() {
 		
 	}
 
@@ -31,11 +30,11 @@ public class QuadrantTO {
 		this.name = name;
 	}
 
-	public List<YTO> getYs() {
-		return ys;
+	public List<RadarMaturityTO> getXs() {
+		return xs;
 	}
 
-	public void setYs(final List<YTO> ys) {
-		this.ys = ys;
+	public void setXs(final List<RadarMaturityTO> xs) {
+		this.xs = xs;
 	}
 }

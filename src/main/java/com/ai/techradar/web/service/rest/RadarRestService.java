@@ -24,6 +24,7 @@ import javax.ws.rs.core.Context;
 //import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -33,27 +34,34 @@ import org.hibernate.Session;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
+import com.ai.techradar.database.entities.Maturity;
 import com.ai.techradar.database.entities.MovementEnum;
 import com.ai.techradar.database.entities.Radar;
+import com.ai.techradar.database.entities.RadarMaturity;
+import com.ai.techradar.database.entities.RadarTechGrouping;
+import com.ai.techradar.database.entities.RadarTechnology;
+import com.ai.techradar.database.entities.TechGrouping;
 import com.ai.techradar.database.entities.Technology;
-import com.ai.techradar.database.entities.Quadrant;
-import com.ai.techradar.database.entities.Arc;
-import com.ai.techradar.database.entities.X;
-import com.ai.techradar.database.entities.Y;
-import com.ai.techradar.database.entities.Z;
 import com.ai.techradar.database.hibernate.HibernateUtil;
 import com.ai.techradar.service.RadarService;
+import com.ai.techradar.service.ValidationException;
 import com.ai.techradar.service.impl.RadarServiceImpl;
 import com.ai.techradar.web.service.to.RadarTO;
+import com.ai.techradar.web.service.to.RadarTechnologyTO;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
 
 @SuppressWarnings("unchecked")
-@Path("service")
+@Path("radar")
+@Api(value="/radar",description="Radar service")
 public class RadarRestService {
 
 	private RadarService service = new RadarServiceImpl();
 
 	@GET
 	@Path("/")
+	@ApiOperation(value="Get radars",response=Response.class)
 	@Produces("application/json")
 	public Response getRadars() {
 
@@ -64,6 +72,7 @@ public class RadarRestService {
 
 	@GET
 	@Path("/{radarId}")
+	@ApiOperation(value="Get radar by ID",response=Response.class)
 	@Produces("application/json")
 	public Response getRadarById(@PathParam("radarId") final String radarIdStr) {
 
@@ -75,6 +84,38 @@ public class RadarRestService {
 	}
 
 	@POST
+	@Path("/")
+	@ApiOperation(value="Create a radar",response=Response.class)
+	@Produces("application/json")
+	public Response createRadar(@ApiParam("the radar") final RadarTO radar) {
+
+		try {
+			final RadarTO newRadar = service.createRadar(radar);
+			return Response.ok(newRadar).build();
+		} catch(final ValidationException ex) {
+			return Response.status(Status.BAD_REQUEST).entity(ex.getValidations()).build();
+		}
+
+	}
+	
+	@POST
+	@Path("/addtech/{radarId}")
+	@ApiOperation(value="Add technologies to radar",response=Response.class)
+	@Produces("application/json")
+	public Response addTechnologiesToRadar(
+			@PathParam("radarId") final Long radarId,
+			@ApiParam("the radar") final List<RadarTechnologyTO> radarTechnologies) {
+
+		try {
+			final RadarTO newRadar = service.addTechnologiesToRadar(radarId, radarTechnologies);
+			return Response.ok(newRadar).build();
+		} catch(final ValidationException ex) {
+			return Response.status(Status.BAD_REQUEST).entity(ex.getValidations()).build();
+		}
+
+	}
+	
+	@POST
 	@Path("/upload")
 	@Consumes("multipart/form-data")
 	@Produces("text/html")
@@ -85,13 +126,13 @@ public class RadarRestService {
 
 		final Session session = HibernateUtil.getSessionFactory().openSession();
 		session.beginTransaction();
-		
+
 		final Criteria technologyQuery = session.createCriteria(Technology.class);
-		final Criteria arcQuery = session.createCriteria(Arc.class);
-		final Criteria quadrantQuery = session.createCriteria(Quadrant.class);
+		final Criteria arcQuery = session.createCriteria(Maturity.class);
+		final Criteria quadrantQuery = session.createCriteria(TechGrouping.class);
 		final List<Technology> technologies = technologyQuery.list();
-		final List<Arc> arcs = arcQuery.list();
-		final List<Quadrant> quadrants = quadrantQuery.list();
+		final List<Maturity> arcs = arcQuery.list();
+		final List<TechGrouping> quadrants = quadrantQuery.list();
 
 		Serializable id = null;
 
@@ -110,11 +151,11 @@ public class RadarRestService {
 					final Radar r = new Radar();
 					r.setDateUploaded(new Date());
 					r.setFilename(fileName);
-					
-					final List<X> xs = new ArrayList<X>();
-					final List<Y> ys = new ArrayList<Y>();
-					final List<Z> zs = new ArrayList<Z>();
-					
+
+					final List<RadarMaturity> xs = new ArrayList<RadarMaturity>();
+					final List<RadarTechGrouping> ys = new ArrayList<RadarTechGrouping>();
+					final List<RadarTechnology> zs = new ArrayList<RadarTechnology>();
+
 					r.setXs(xs);
 					r.setYs(ys);
 					r.setZs(zs);
@@ -125,7 +166,7 @@ public class RadarRestService {
 					final List<CSVRecord> list = parser.getRecords();
 
 					// TODO validate columns
-					
+
 					for(final CSVRecord record : list) {
 						final String name = readString(record.get("Technology"));
 						final String quadrantName = readString(record.get("Quadrant"));
@@ -137,18 +178,18 @@ public class RadarRestService {
 						final String detailUrl = readString(record.get("AI URL"));
 						final boolean customerStrategic = readBoolean(record.get("Customer strategic"));
 
-						X x = getX(arcName,arcs,r,xs,session);
-						Y y = getY(quadrantName,quadrants,r,ys,session);
-						
+						RadarMaturity x = getX(arcName,arcs,r,xs,session);
+						RadarTechGrouping y = getY(quadrantName,quadrants,r,ys,session);
+
 						Technology newTechnology = null;
 						for(Technology technology: technologies){
 							if(technology.getName().equals(name)){
 								newTechnology = technology;
 							}
 						}
-						
+
 						// TODO currently won't update existing technologies etc.
-						
+
 						if(newTechnology == null){
 							newTechnology = new Technology();
 							newTechnology.setName(name);
@@ -157,11 +198,11 @@ public class RadarRestService {
 							newTechnology.setDescription(description);
 							newTechnology.setDetailUrl(detailUrl);
 							newTechnology.setCustomerStrategic(customerStrategic);
-							newTechnology.setZs(new ArrayList<Z>());
+							newTechnology.setZs(new ArrayList<RadarTechnology>());
 							technologies.add(newTechnology);
 						}
-						
-						Z z = new Z();
+
+						RadarTechnology z = new RadarTechnology();
 						z.setTechnology(newTechnology); // z -> technology
 						newTechnology.getZs().add(z); // technology -> z
 						z.setRadar(r); // z -> r
@@ -191,9 +232,9 @@ public class RadarRestService {
 
 			//request.setAttribute("result", id.toString());
 			//request.getRequestDispatcher("/index.jsp").forward(request, response);
-			
+
 			response.sendRedirect("/radar");
-			
+
 			//return Response.ok().build();
 
 		}catch(final Exception e) {
@@ -201,7 +242,7 @@ public class RadarRestService {
 			StringWriter sw = new StringWriter();
 			PrintWriter pw = new PrintWriter(sw);
 			e.printStackTrace(pw);
-			
+
 			//return Response.ok(sw.toString(), MediaType.TEXT_PLAIN).build();
 		}
 	}
@@ -266,87 +307,87 @@ public class RadarRestService {
 		}
 		return "randomName";
 	}
-	
-	private X getX(String arcName, List<Arc> arcs, Radar r, List<X> xs, Session session){
-		Arc newArc = null;
-		X newX = null;
-		for(Arc arc: arcs){
+
+	private RadarMaturity getX(String arcName, List<Maturity> arcs, Radar r, List<RadarMaturity> xs, Session session){
+		Maturity newArc = null;
+		RadarMaturity newX = null;
+		for(Maturity arc: arcs){
 			if(arc.getName().equals(arcName)){
 				newArc = arc;
 			}
 		}
-	
+
 		if(newArc == null){
-			newArc = new Arc();
+			newArc = new Maturity();
 			newArc.setName(arcName);
 			arcs.add(newArc);
-			newX = new X();
+			newX = new RadarMaturity();
 			newX.setArc(newArc); // x -> arc
-			List<X> newArcXs = new ArrayList<X>();
+			List<RadarMaturity> newArcXs = new ArrayList<RadarMaturity>();
 			newArcXs.add(newX);
 			newArc.setXs(newArcXs);  // arc -> x
 			newX.setRadar(r); // x -> r
 			r.getXs().add(newX); // r -> x
-			newX.setZs(new ArrayList<Z>());
+			newX.setZs(new ArrayList<RadarTechnology>());
 		}else{ // Arc exists but may not be added to this radar
-			for(X x : xs){
+			for(RadarMaturity x : xs){
 				if(x.getArc().equals(newArc)){
 					newX = x;
 				}
 			}	
-		
+
 			if(newX == null){
-				newX = new X();
+				newX = new RadarMaturity();
 				newX.setArc(newArc); // x -> arc
-				List<X> newArcXs = new ArrayList<X>();
+				List<RadarMaturity> newArcXs = new ArrayList<RadarMaturity>();
 				newArcXs.add(newX);
 				newArc.setXs(newArcXs);  // arc -> x
 				newX.setRadar(r); // x -> r
 				r.getXs().add(newX); // r -> x
-				newX.setZs(new ArrayList<Z>());
+				newX.setZs(new ArrayList<RadarTechnology>());
 			}
 		}
 		session.persist(newArc);
 		return newX;
 	}
 
-	private Y getY(String quadrantName, List<Quadrant> quadrants, Radar r, List<Y> ys, Session session){
-		Quadrant newQuadrant = null;
-		Y newY = null;
-		for(Quadrant quadrant: quadrants){
+	private RadarTechGrouping getY(String quadrantName, List<TechGrouping> quadrants, Radar r, List<RadarTechGrouping> ys, Session session){
+		TechGrouping newQuadrant = null;
+		RadarTechGrouping newY = null;
+		for(TechGrouping quadrant: quadrants){
 			if(quadrant.getName().equals(quadrantName)){
 				newQuadrant = quadrant;
 			}
 		}
-		
+
 		if(newQuadrant == null){
-			newQuadrant = new Quadrant();
+			newQuadrant = new TechGrouping();
 			newQuadrant.setName(quadrantName);
 			quadrants.add(newQuadrant);
-			newY = new Y();
+			newY = new RadarTechGrouping();
 			newY.setQuadrant(newQuadrant); // y -> quadrant
-			List<Y> newQuadrantYs = new ArrayList<Y>();
+			List<RadarTechGrouping> newQuadrantYs = new ArrayList<RadarTechGrouping>();
 			newQuadrantYs.add(newY);
 			newQuadrant.setYs(newQuadrantYs);  // quadrant -> y
 			newY.setRadar(r); // y -> r
 			r.getYs().add(newY); // r -> y
-			newY.setZs(new ArrayList<Z>());
+			newY.setZs(new ArrayList<RadarTechnology>());
 		}else{ // Quadrant exists but may not be added to this radar
-			for(Y y : ys){
+			for(RadarTechGrouping y : ys){
 				if(y.getQuadrant().equals(newQuadrant)){
 					newY = y;
 				}
 			}
-			
+
 			if(newY == null){
-				newY = new Y();
+				newY = new RadarTechGrouping();
 				newY.setQuadrant(newQuadrant); // y -> quadrant
-				List<Y> newQuadrantYs = new ArrayList<Y>();
+				List<RadarTechGrouping> newQuadrantYs = new ArrayList<RadarTechGrouping>();
 				newQuadrantYs.add(newY);
 				newQuadrant.setYs(newQuadrantYs);  // quadrant -> y
 				newY.setRadar(r); // y -> r
 				r.getYs().add(newY); // r -> y
-				newY.setZs(new ArrayList<Z>());
+				newY.setZs(new ArrayList<RadarTechnology>());
 			}
 		}
 		session.persist(newQuadrant);

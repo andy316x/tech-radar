@@ -3,67 +3,104 @@
  "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app>
-    <display-name>Technology Radar</display-name>
+	<display-name>Technology Radar</display-name>
 
-    <context-param>
-        <param-name>resteasy.scan</param-name>
-        <param-value>true</param-value>
-    </context-param>
+	<context-param>
+		<param-name>javax.ws.rs.core.Application</param-name>
+		<param-value>com.ai.techradar.web.service.rest.RadarApplication</param-value>
+	</context-param>
 
-    <context-param>
-        <param-name>resteasy.servlet.mapping.prefix</param-name>
-        <param-value>/rest</param-value>
-    </context-param>
-
-    <listener>
-        <listener-class>com.ai.techradar.database.hibernate.HibernateStarter</listener-class>
-    </listener>
-
-    <listener>
-        <listener-class>org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap</listener-class>
-    </listener>
-
-    <servlet>
-        <servlet-name>SvgConverter</servlet-name>
-        <servlet-class>com.ai.techradar.servlet.SvgConvertServlet</servlet-class>
-    </servlet>
+	<context-param>
+		<param-name>resteasy.servlet.mapping.prefix</param-name>
+		<param-value>/rest</param-value>
+	</context-param>
 	
-    <servlet>
-        <servlet-name>RadarPreview</servlet-name>
-        <servlet-class>com.ai.techradar.servlet.RadarPreviewServlet</servlet-class>
-    </servlet>
+	<context-param>
+		<param-name>resteasy.resources</param-name>
+		<param-value>com.wordnik.swagger.jaxrs.listing.ApiListingResourceJSON</param-value>
+	</context-param>
 
-    <servlet>
-        <servlet-name>RadarView</servlet-name>
-        <servlet-class>com.ai.techradar.servlet.RadarViewServlet</servlet-class>
-    </servlet>
+	<context-param>
+		<param-name>resteasy.providers</param-name>
+		<param-value>
+    			com.wordnik.swagger.jaxrs.listing.ApiDeclarationProvider
+    			,com.wordnik.swagger.jaxrs.listing.ResourceListingProvider
+    	</param-value>
+	</context-param>
 
-    <servlet>
-        <servlet-name>Resteasy</servlet-name>
-        <servlet-class>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet-class>
-    </servlet>
+	<listener>
+		<listener-class>com.ai.techradar.database.hibernate.HibernateStarter</listener-class>
+	</listener>
 
-    <servlet-mapping>
-        <servlet-name>Resteasy</servlet-name>
-        <url-pattern>/rest/*</url-pattern>
-    </servlet-mapping>
+	<listener>
+		<listener-class>org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap</listener-class>
+	</listener>
 
-    <servlet-mapping>
-        <servlet-name>SvgConverter</servlet-name>
-        <url-pattern>/upload/*</url-pattern>
-    </servlet-mapping>
+	<servlet>
+		<servlet-name>SvgConverter</servlet-name>
+		<servlet-class>com.ai.techradar.servlet.SvgConvertServlet</servlet-class>
+	</servlet>
+	
+	<servlet>
+		<servlet-name>CsvExporter</servlet-name>
+		<servlet-class>com.ai.techradar.servlet.CSVExportServlet</servlet-class>
+	</servlet>
 
-    <servlet-mapping>
-        <servlet-name>RadarPreview</servlet-name>
-        <url-pattern>/preview/*</url-pattern>
-    </servlet-mapping>
+	<servlet>
+		<servlet-name>RadarPreview</servlet-name>
+		<servlet-class>com.ai.techradar.servlet.RadarPreviewServlet</servlet-class>
+	</servlet>
 
-    <servlet-mapping>
-        <servlet-name>RadarView</servlet-name>
-        <url-pattern>/view/*</url-pattern>
-    </servlet-mapping>
-    
-    <welcome-file-list>
-        <welcome-file>index.jsp</welcome-file>
-    </welcome-file-list>
+	<servlet>
+		<servlet-name>RadarView</servlet-name>
+		<servlet-class>com.ai.techradar.servlet.RadarViewServlet</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>Resteasy</servlet-name>
+		<servlet-class>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Resteasy</servlet-name>
+		<url-pattern>/rest/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>SvgConverter</servlet-name>
+		<url-pattern>/upload/*</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>CsvExporter</servlet-name>
+		<url-pattern>/export/csv</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>RadarPreview</servlet-name>
+		<url-pattern>/preview/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>RadarView</servlet-name>
+		<url-pattern>/view/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>DefaultJaxrsConfig</servlet-name>
+		<servlet-class>com.wordnik.swagger.jaxrs.config.DefaultJaxrsConfig</servlet-class>
+		<init-param>
+			<param-name>api.version</param-name>
+			<param-value>1.0.0</param-value>
+		</init-param>
+		<init-param>
+			<param-name>swagger.api.basepath</param-name>
+			<param-value>http://localhost:8080/radar/rest</param-value>
+		</init-param>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
 </web-app>

@@ -10,15 +10,15 @@ techRadarApp.config(['$routeProvider',function($routeProvider) {
         controller: 'RadarCtrl'
       })
       .when('/radar/new', {
-        templateUrl: 'partials/radar.jsp',
+        templateUrl: 'partials/createradar.jsp',
         controller: 'RadarCtrl'
       })
       .when('/radar/:radarid', {
-        templateUrl: 'partials/radar.jsp',
+        templateUrl: 'partials/viewradar.jsp',
         controller: 'RadarCtrl'
       })
       .when('/radar/:radarid/edit', {
-        templateUrl: 'partials/radar.jsp',
+        templateUrl: 'partials/editradar.jsp',
         controller: 'RadarCtrl'
       })
       .otherwise({

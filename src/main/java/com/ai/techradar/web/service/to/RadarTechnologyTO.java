@@ -2,7 +2,7 @@ package com.ai.techradar.web.service.to;
 
 import com.ai.techradar.database.entities.MovementEnum;
 
-public class ZTO {
+public class RadarTechnologyTO {
 
 	private Long id;
 	
@@ -10,13 +10,13 @@ public class ZTO {
 
 	private RadarTO radar;
 
-	private XTO x;
+	private RadarMaturityTO x;
 
-	private YTO y;
+	private RadarTechGroupingTO y;
 
 	private MovementEnum movement;
 
-	public ZTO() {
+	public RadarTechnologyTO() {
 		
 	}
 
@@ -44,19 +44,19 @@ public class ZTO {
 		this.radar = radar;
 	}
 
-	public XTO getX() {
+	public RadarMaturityTO getX() {
 		return x;
 	}
 
-	public void setX(final XTO x) {
+	public void setX(final RadarMaturityTO x) {
 		this.x = x;
 	}
 
-	public YTO getY() {
+	public RadarTechGroupingTO getY() {
 		return y;
 	}
 
-	public void setY(final YTO y) {
+	public void setY(final RadarTechGroupingTO y) {
 		this.y = y;
 	}
 
@@ -68,8 +68,8 @@ public class ZTO {
 		this.movement = movement;
 	}
 	
-	public ZTO clone(){
-		ZTO clone = new ZTO();
+	public RadarTechnologyTO clone(){
+		RadarTechnologyTO clone = new RadarTechnologyTO();
 		clone.setId(id);
 		clone.setMovement(movement);
 		clone.setTechnology(technology);
