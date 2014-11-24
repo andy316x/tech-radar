@@ -1,6 +1,5 @@
 package com.ai.techradar.web.service.to;
 
-import java.util.List;
 
 public class MaturityTO {
 
@@ -8,10 +7,8 @@ public class MaturityTO {
 
 	private String name;
 
-	private List<RadarMaturityTO> xs;
-
 	public MaturityTO() {
-		
+
 	}
 
 	public Long getId() {
@@ -30,11 +27,4 @@ public class MaturityTO {
 		this.name = name;
 	}
 
-	public List<RadarMaturityTO> getXs() {
-		return xs;
-	}
-
-	public void setXs(final List<RadarMaturityTO> xs) {
-		this.xs = xs;
-	}
 }

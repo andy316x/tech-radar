@@ -15,10 +15,10 @@ import javax.servlet.http.HttpServletResponse;
 import com.ai.techradar.service.RadarService;
 import com.ai.techradar.service.impl.RadarServiceImpl;
 import com.ai.techradar.servlet.RadarPreviewServlet.Quadrant;
+import com.ai.techradar.web.service.to.MaturityTO;
 import com.ai.techradar.web.service.to.RadarTO;
-import com.ai.techradar.web.service.to.TechnologyTO;
-import com.ai.techradar.web.service.to.RadarMaturityTO;
 import com.ai.techradar.web.service.to.RadarTechnologyTO;
+import com.ai.techradar.web.service.to.TechGroupingTO;
 import com.lowagie.text.Anchor;
 import com.lowagie.text.Chapter;
 import com.lowagie.text.Chunk;
@@ -63,7 +63,7 @@ public class PDFGeneratorSecond extends PdfPageEventHelper {
 	private static final String[] ARC_COLOURS = new String[] { "#BFC0BF", "#CBCCCB", "#D7D8D6",
 	"#E4E5E4" };
 
-	private final Map<String, List<TechnologyTO>> map = new LinkedHashMap<String, List<TechnologyTO>>();
+	private final Map<String, List<RadarTechnologyTO>> map = new LinkedHashMap<String, List<RadarTechnologyTO>>();
 
 	private final RadarTO r = service.getRadarById(new Long(1));
 
@@ -78,24 +78,20 @@ public class PDFGeneratorSecond extends PdfPageEventHelper {
 		"#E88744", "#8D2145" };
 	int colourCount = 0;
 
-	public void makeImageRadar(Document document) {
+	public void makeImageRadar(Document document, final Long id) {
 
 		try {
 
 			final float w = scaleFactor * optimumWidth;
 			final float h = height;
 
-			final RadarTO radar = service.getRadarById(new Long(1));
+			final RadarTO radar = service.getRadarById(id);
 
 			final Map<String, Arc> arcMap = new LinkedHashMap<String, Arc>();
-			for (final RadarTechnologyTO z : radar.getZs()) {
-				String arcName = z.getX().getArc().getName();
-				Arc arc = arcMap.get(arcName);
-				if (arc == null) {
-					arc = new Arc((int) ARC_WIDTHS[arcMap.size()], arcName,
+			for (final MaturityTO maturity : radar.getMaturities()) {
+				final Arc arc = new Arc((int) ARC_WIDTHS[arcMap.size()], maturity.getName(),
 							ARC_COLOURS[arcMap.size()]);
-					arcMap.put(arcName, arc);
-				}
+					arcMap.put(maturity.getName(), arc);
 			}
 
 			float totalArc = 0;
@@ -121,28 +117,24 @@ public class PDFGeneratorSecond extends PdfPageEventHelper {
 			}
 
 			final Map<String, Quadrant> quadrantMap = new HashMap<String, Quadrant>();
-			for (final RadarTechnologyTO z : radar.getZs()) {
-				String quadrantName = z.getY().getQuadrant().getName();
-				Quadrant techQuadrant = quadrantMap.get(quadrantName);
-				if (techQuadrant == null) {
-					techQuadrant = new Quadrant(quadrantName,
+			for (final TechGroupingTO techGrouping : radar.getTechGroupings()) {
+				Quadrant quadrant = new Quadrant(techGrouping.getName(),
 							QUADRANT_COLOURS[quadrantMap.size()]);
-					techQuadrant.setStartTheta(quadrantMap.size() * 90);
-					quadrantMap.put(quadrantName, techQuadrant);
-				}
-				techQuadrant.getItems().add(z.getTechnology());
+				quadrant.setStartTheta(quadrantMap.size() * 90);
+					quadrantMap.put(techGrouping.getName(), quadrant);
 			}
 
 			// add technologies to quad
 
-			for (final RadarTechnologyTO z : r.getZs()) {
-				String quadrantName = z.getY().getQuadrant().getName();
-				List<TechnologyTO> quad = map.get(quadrantName);
-				if (quad == null) {
-					quad = new ArrayList<TechnologyTO>();
-					map.put(quadrantName, quad);
+			for (final RadarTechnologyTO tech : r.getTechnologies()) {
+				String techGroupingName = tech.getTechGrouping();
+				List<RadarTechnologyTO> techGrouping = map.get(techGroupingName);
+				if (techGrouping == null) {
+					techGrouping = new ArrayList<RadarTechnologyTO>();
+					map.put(techGroupingName, techGrouping);
 				}
-				quad.add(z.getTechnology());
+				techGrouping.add(tech);
+				quadrantMap.get(tech.getTechGrouping()).getItems().add(tech);
 			}
 
 			int chapNumber = 1;
@@ -199,52 +191,52 @@ public class PDFGeneratorSecond extends PdfPageEventHelper {
 
 				g2d.setColor(Color.decode(quadrant.getColour()));
 
-				final Stack<Stack<Stack<TechnologyTO>>> arcRails = new Stack<Stack<Stack<TechnologyTO>>>();
+				final Stack<Stack<Stack<RadarTechnologyTO>>> arcRails = new Stack<Stack<Stack<RadarTechnologyTO>>>();
 				for (final Arc arc : arcMap.values()) {
-					final Stack<Stack<TechnologyTO>> rails = new Stack<Stack<TechnologyTO>>();
+					final Stack<Stack<RadarTechnologyTO>> rails = new Stack<Stack<RadarTechnologyTO>>();
 					for (int k = 0; k < arc.getRails(); k++) {
-						rails.push(new Stack<TechnologyTO>());
+						rails.push(new Stack<RadarTechnologyTO>());
 					}
 					arcRails.push(rails);
 				}
 
 				count = 0;
-				for (final TechnologyTO technology : quadrant.getItems()) {
-					final Arc arc = arcMap.get(technology.getZs().get(0).getX().getArc().getName());
+				for (final RadarTechnologyTO technology : quadrant.getItems()) {
+					final Arc arc = arcMap.get(technology.getMaturity());
 					arcRails.get(arc.getIndex()).get((int) Math.floor(count % arc.getRails()))
 					.push(technology);
 					count++;
 				}
 
 				// separate into sub headings
-				List<TechnologyTO> techList = quadrant.getItems();
+				List<RadarTechnologyTO> techList = quadrant.getItems();
 
 				HashMap<String, Paragraph> mapArcNameToPDFParagraph = new HashMap<String, Paragraph>();
 				ArrayList<String> arcNames = new ArrayList<String>();
 
 				techIndexRadar = techIndex + 1;
-				for (TechnologyTO tech : techList) {
-					String arcName = tech.getZs().get(0).getX().getArc().getName();
+				for (RadarTechnologyTO tech : techList) {
+					String arcName = tech.getMaturity();
 					if (mapArcNameToPDFParagraph.containsKey(arcName)) {
 						Paragraph currentParagraph = mapArcNameToPDFParagraph.get(arcName);
 						currentParagraph.setFont(textFont);
-						currentParagraph.add(++techIndex + ". " + tech.getName() + "\n");
+						currentParagraph.add(++techIndex + ". " + tech.getTechnology() + "\n");
 					} else {
 						Paragraph techParagraph = new Paragraph();
 						techParagraph.setFont(textFont);
 						mapArcNameToPDFParagraph.put(arcName, techParagraph);
-						techParagraph.add(++techIndex + ". " + tech.getName() + "\n");
+						techParagraph.add(++techIndex + ". " + tech.getTechnology() + "\n");
 						arcNames.add(arcName);
 					}
 				}
 
 				count = 0;
 				for (int j = 0; j < arcRails.size(); j++) {
-					final Stack<Stack<TechnologyTO>> rails = arcRails.get(j);
+					final Stack<Stack<RadarTechnologyTO>> rails = arcRails.get(j);
 					for (int k = 0; k < rails.size(); k++) {
-						final Stack<TechnologyTO> techs = rails.get(k);
+						final Stack<RadarTechnologyTO> techs = rails.get(k);
 						for (int l = 0; l < techs.size(); l++) {
-							final TechnologyTO item = techs.get(l);
+							final RadarTechnologyTO item = techs.get(l);
 
 							// what does this do?
 
@@ -260,7 +252,7 @@ public class PDFGeneratorSecond extends PdfPageEventHelper {
 							// techQuadrant);
 							// }
 
-							final Arc arc = arcMap.get(item.getZs().get(0).getX().getArc().getName());
+							final Arc arc = arcMap.get(item.getMaturity());
 							final float r = (((arc.getOuterRadius() - arc.getInnerRadius()) / ((rails
 									.size()) + 1)) * (k + 1)) + arc.getInnerRadius();
 
@@ -283,7 +275,7 @@ public class PDFGeneratorSecond extends PdfPageEventHelper {
 							int lowNumberPositionCorrection = (int) scaleFactor * 2;
 							int highNumberPositionCorrection = (int) scaleFactor * 1;
 
-				
+
 
 							g2d.setColor(Color.WHITE);
 							g2d.fillArc((int) x - ((blipSize + whiteOutline) / 2) , (int) y - 2,
@@ -386,18 +378,18 @@ public class PDFGeneratorSecond extends PdfPageEventHelper {
 		}
 	}
 
-	public void MakePDF(HttpServletResponse response) {
+	public void MakePDF(HttpServletResponse response, final Long id) {
 		try {
 
 			// arcs
 
 			final Map<String, Arc> arcMap = new LinkedHashMap<String, Arc>();
-			for (final RadarMaturityTO x : r.getXs()) {
-				Arc arc = arcMap.get(x.getArc().getName());
+			for (final MaturityTO maturity : r.getMaturities()) {
+				Arc arc = arcMap.get(maturity.getName());
 				if (arc == null) {
-					arc = new Arc((int) ARC_WIDTHS[arcMap.size()], x.getArc().getName(),
+					arc = new Arc((int) ARC_WIDTHS[arcMap.size()], maturity.getName(),
 							ARC_COLOURS[arcMap.size()]);
-					arcMap.put(x.getArc().getName(), arc);
+					arcMap.put(maturity.getName(), arc);
 				}
 
 			}
@@ -412,7 +404,7 @@ public class PDFGeneratorSecond extends PdfPageEventHelper {
 
 			document.open();
 
-			makeImageRadar(document);
+			makeImageRadar(document, id);
 			makeContentsPage(document);
 
 			// Close and flush

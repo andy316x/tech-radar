@@ -18,7 +18,7 @@ public class Maturity {
 
 	private String name;
 
-	private List<RadarMaturity> xs;
+	private List<RadarMaturity> radarMaturities;
 
 	public Maturity() {
 		// this form used by Hibernate
@@ -27,7 +27,7 @@ public class Maturity {
 	@Id
 	@GeneratedValue(generator="increment")
 	@GenericGenerator(name="increment", strategy = "increment")
-	@Column(name="ARC_ID")
+	@Column(name="MATURITY_ID")
 	public Long getId() {
 		return id;
 	}
@@ -44,12 +44,12 @@ public class Maturity {
 		this.name = name;
 	}
 
-	@OneToMany(mappedBy="arc", cascade=CascadeType.ALL)
-	public List<RadarMaturity> getXs() {
-		return xs;
+	@OneToMany(mappedBy="maturity", cascade=CascadeType.ALL)
+	public List<RadarMaturity> getRadarMaturities() {
+		return radarMaturities;
 	}
 
-	public void setXs(final List<RadarMaturity> xs) {
-		this.xs = xs;
+	public void setRadarMaturities(final List<RadarMaturity> radarMaturities) {
+		this.radarMaturities = radarMaturities;
 	}
 }

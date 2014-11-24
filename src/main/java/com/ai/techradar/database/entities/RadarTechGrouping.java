@@ -7,10 +7,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
-
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -18,12 +17,12 @@ import org.hibernate.annotations.GenericGenerator;
 public class RadarTechGrouping {
 
 	private Long id;
-	
-	private TechGrouping quadrant;
+
+	private TechGrouping techGrouping;
 
 	private Radar radar;
 
-	private List<RadarTechnology> zs;
+	private List<RadarTechnology> radarTechnologies;
 
 	public RadarTechGrouping() {
 		// this form used by Hibernate
@@ -32,7 +31,7 @@ public class RadarTechGrouping {
 	@Id
 	@GeneratedValue(generator="increment")
 	@GenericGenerator(name="increment", strategy = "increment")
-	@Column(name="Y_ID")
+	@Column(name="RADAR_TECH_GROUPING_ID")
 	public Long getId() {
 		return id;
 	}
@@ -42,13 +41,13 @@ public class RadarTechGrouping {
 	}
 
 	@ManyToOne
-	@JoinColumn(name="QUADRANT_ID")
-	public TechGrouping getQuadrant() {
-		return quadrant;
+	@JoinColumn(name="TECH_GROUPING_ID")
+	public TechGrouping getTechGrouping() {
+		return techGrouping;
 	}
 
-	public void setQuadrant(final TechGrouping quadrant) {
-		this.quadrant = quadrant;
+	public void setTechGrouping(final TechGrouping techGrouping) {
+		this.techGrouping = techGrouping;
 	}
 
 	@ManyToOne
@@ -61,12 +60,12 @@ public class RadarTechGrouping {
 		this.radar = radar;
 	}
 
-	@OneToMany(mappedBy="y", cascade=CascadeType.ALL)
-	public List<RadarTechnology> getZs() {
-		return zs;
+	@OneToMany(mappedBy="radarTechGrouping", cascade=CascadeType.ALL)
+	public List<RadarTechnology> getRadarTechnologies() {
+		return radarTechnologies;
 	}
 
-	public void setZs(final List<RadarTechnology> zs) {
-		this.zs = zs;
+	public void setRadarTechnologies(final List<RadarTechnology> radarTechnologies) {
+		this.radarTechnologies = radarTechnologies;
 	}
 }

@@ -7,28 +7,26 @@ import java.util.List;
 public class RadarTO {
 
 	private Long id;
-	
+
 	private String name;
 
-	private String filename;
+	private Date dateCreated;
 
-	private Date dateUploaded;
+	private List<RadarTechnologyTO> technologies;
 
-	private List<RadarTechnologyTO> zs;
+	private List<MaturityTO> maturities;
 
-	private List<RadarMaturityTO> xs;
-
-	private List<RadarTechGroupingTO> ys;
+	private List<TechGroupingTO> techGroupings;
 
 	public RadarTO() {
-		
+
 	}
 
 	public Long getId() {
 		return id;
 	}
 
-	public void setId(final Long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -36,47 +34,40 @@ public class RadarTO {
 		return name;
 	}
 
-	public void setName(final String name) {
+	public void setName(String name) {
 		this.name = name;
 	}
 
-	public String getFilename() {
-		return filename;
+	public Date getDateCreated() {
+		return dateCreated;
 	}
 
-	public void setFilename(String filename) {
-		this.filename = filename;
+	public void setDateCreated(Date dateCreated) {
+		this.dateCreated = dateCreated;
 	}
 
-	public Date getDateUploaded() {
-		return dateUploaded;
+	public List<RadarTechnologyTO> getTechnologies() {
+		return technologies;
 	}
 
-	public void setDateUploaded(final Date dateUploaded) {
-		this.dateUploaded = dateUploaded;
+	public void setTechnologies(List<RadarTechnologyTO> technologies) {
+		this.technologies = technologies;
 	}
 
-	public List<RadarTechnologyTO> getZs() {
-		return zs;
+	public List<MaturityTO> getMaturities() {
+		return maturities;
 	}
 
-	public void setZs(final List<RadarTechnologyTO> zs) {
-		this.zs = zs;
+	public void setMaturities(List<MaturityTO> maturities) {
+		this.maturities = maturities;
 	}
 
-	public List<RadarMaturityTO> getXs() {
-		return xs;
+	public List<TechGroupingTO> getTechGroupings() {
+		return techGroupings;
 	}
 
-	public void setXs(final List<RadarMaturityTO> xs) {
-		this.xs = xs;
+	public void setTechGroupings(List<TechGroupingTO> techGroupings) {
+		this.techGroupings = techGroupings;
 	}
 
-	public List<RadarTechGroupingTO> getYs() {
-		return ys;
-	}
-
-	public void setYs(final List<RadarTechGroupingTO> ys) {
-		this.ys = ys;
-	}
 }

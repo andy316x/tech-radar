@@ -23,11 +23,11 @@ public class Radar {
 
 	private Date dateUploaded;
 
-	private List<RadarTechnology> zs;
+	private List<RadarTechnology> radarTechnologies;
 
-	private List<RadarMaturity> xs;
+	private List<RadarMaturity> radarMaturities;
 
-	private List<RadarTechGrouping> ys;
+	private List<RadarTechGrouping> radarTechGroupings;
 
 	public Radar() {
 		// this form used by Hibernate
@@ -70,29 +70,29 @@ public class Radar {
 	}
 
 	@OneToMany(mappedBy="radar", cascade=CascadeType.ALL)
-	public List<RadarTechnology> getZs() {
-		return zs;
+	public List<RadarTechnology> getRadarTechnologies() {
+		return radarTechnologies;
 	}
 
-	public void setZs(final List<RadarTechnology> zs) {
-		this.zs = zs;
-	}
-
-	@OneToMany(mappedBy="radar", cascade=CascadeType.ALL)
-	public List<RadarMaturity> getXs() {
-		return xs;
-	}
-
-	public void setXs(final List<RadarMaturity> xs) {
-		this.xs = xs;
+	public void setRadarTechnologies(final List<RadarTechnology> radarTechnologies) {
+		this.radarTechnologies = radarTechnologies;
 	}
 
 	@OneToMany(mappedBy="radar", cascade=CascadeType.ALL)
-	public List<RadarTechGrouping> getYs() {
-		return ys;
+	public List<RadarMaturity> getRadarMaturities() {
+		return radarMaturities;
 	}
 
-	public void setYs(final List<RadarTechGrouping> ys) {
-		this.ys = ys;
+	public void setRadarMaturities(final List<RadarMaturity> radarMaturities) {
+		this.radarMaturities = radarMaturities;
+	}
+
+	@OneToMany(mappedBy="radar", cascade=CascadeType.ALL)
+	public List<RadarTechGrouping> getRadarTechGroupings() {
+		return radarTechGroupings;
+	}
+
+	public void setRadarTechGroupings(final List<RadarTechGrouping> radarTechGroupings) {
+		this.radarTechGroupings = radarTechGroupings;
 	}
 }

@@ -41,6 +41,7 @@ var Radar = {
 		var arcs = [];
 		var rails = [2, 2, 1, 1];
 		for(var i = 0; i < radar.arcs.length; i++) {
+			
 			var r = (radar.arcs[i].r / totalArc)*(w/2);
 			
 			this._drawArc(svg, cumulativeArc, cumulativeArc + r, w/2, h/2, radar.arcs[i].color);

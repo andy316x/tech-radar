@@ -130,22 +130,22 @@ techRadarControllers.directive('ngNewRadar', function ($http) {
 			$scope.save = function() {
 				var radar = {
 					    name: $scope.name,
-					    ys: [
-					         {quadrant: {name: $scope.techGrouping1}},
-					         {quadrant: {name: $scope.techGrouping2}},
-					         {quadrant: {name: $scope.techGrouping3}},
-					         {quadrant: {name: $scope.techGrouping4}}
+					    techGroupings: [
+					         {name: $scope.techGrouping1},
+					         {name: $scope.techGrouping2},
+					         {name: $scope.techGrouping3},
+					         {name: $scope.techGrouping4}
 					    ],
-					    xs: [
-					         {arc: {name: 'Assess'}},
-					         {arc: {name: 'Adopt'}},
-					         {arc: {name: 'Trial'}},
-					         {arc: {name: 'Phase Out'}}
+					    maturities: [
+					         {name: 'Assess'},
+					         {name: 'Adopt'},
+					         {name: 'Trial'},
+					         {name: 'Phase Out'}
 					    ]
 					};
 				$http.post('/radar/rest/radar', radar).
 				success(function(data, status, headers, config) {
-					$scope.radarCreated(data);
+					$scope.radarCreated({radar: data});
 				}).
 				error(function(data, status, headers, config) {
 					$scope.errors = data;
@@ -156,33 +156,29 @@ techRadarControllers.directive('ngNewRadar', function ($http) {
 	};
 });
 
-techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location, $log) {
+techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location, $routeParams, $log) {
 	
 	$scope.newRadarVisible = false;
 	
-	$scope.onRadarCreated = function() {
+	$scope.onRadarCreated = function(radar) {
 		$scope.newRadarVisible = false;
-		$scope.go('/radar/1');
+		$scope.go('/radar/' + radar.id);
 	};
 	
 	$scope.go = function ( path ) {
 		$location.path( path );
 	};
 	
-	$scope.doExport = function ( radarId ) {
-		$http({method: 'GET', url: '/radar/upload?id=' + radarId + '&nocache=' + (new Date()).getTime()}).
-		success(function(data, status, headers, config) {
-			$scope.radars = data;
-			if($scope.selectedId == null) {
-				if(data.length > 0) {
-					$scope.selectedId = data[0].id;
-					loadRadar();
-				}
-			}
-		}).
-		error(function(data, status, headers, config) {
-			$log.log('error');
-		});
+	$scope.exportSvg = function(id) {
+		var form = document.getElementById('theForm');
+		form['id'].value = id;
+		form.submit();
+	};
+	
+	$scope.exportCsv = function(id) {
+		var form = document.getElementById('csvExportForm');
+		form['id'].value = id;
+		form.submit();
 	};
 	
 	$scope.doCsvExport = function ( radarId ) {
@@ -229,7 +225,7 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 	});
 	
 	var loadRadar = function() {
-		$http({method: 'GET', url: '/radar/rest/radar/' + $scope.selectedId + '?nocache=' + (new Date()).getTime()}).
+		$http({method: 'GET', url: '/radar/rest/radar/' + $routeParams.radarid + '?nocache=' + (new Date()).getTime()}).
 		success(function(data, status, headers, config) {
 			var theRadar = data;
 			theRadar.arcMap = {};
@@ -239,58 +235,54 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 					quadrants: []
 			};
 			
-			for(var i = 0; i < theRadar.xs.length; i++) {
+			for(var i = 0; i < theRadar.maturities.length; i++) {
 				(function(row){
-					var arc = theRadar.arcMap[row.name];
-					if(arc == null || typeof arc == 'undefined') {
-						arc = {
-								id: row.name,
-								name: row.name,
-								r: arcWidths[theRadar.radar.arcs.length],
-								color: arcColours[theRadar.radar.arcs.length]
-						};
-						theRadar.arcMap[row.name] = arc;
-						theRadar.radar.arcs.push(arc);
-					}
-				})(theRadar.xs[i].arc);
+					var arc = {
+							id: row.name,
+							name: row.name,
+							r: arcWidths[theRadar.radar.arcs.length],
+							color: arcColours[theRadar.radar.arcs.length]
+					};
+					theRadar.arcMap[row.name] = arc;
+					theRadar.radar.arcs.push(arc);
+				})(theRadar.maturities[i]);
 			}
 			
-			for(var i = 0; i < theRadar.ys.length; i++) {
+			for(var i = 0; i < theRadar.techGroupings.length; i++) {
 				(function(row){
-					var quadrant = theRadar.quadrantMap[row.name];
-					if(quadrant == null || typeof quadrant == 'undefined') {
-						quadrant = {
-								id: row.name,
-								name: row.name,
-								color: quadrantColours[theRadar.radar.quadrants.length],
-								items: []
-						};
-						theRadar.quadrantMap[row.name] = quadrant;
-						theRadar.radar.quadrants.push(quadrant);
-					}
-				})(theRadar.ys[i].quadrant);
+					quadrant = {
+							id: row.name,
+							name: row.name,
+							color: quadrantColours[theRadar.radar.quadrants.length],
+							items: []
+					};
+					theRadar.quadrantMap[row.name] = quadrant;
+					theRadar.radar.quadrants.push(quadrant);
+				})(theRadar.techGroupings[i]);
 			}
 
-			for(var i = 0; i < theRadar.zs.length; i++) {
-				(function(row){
-					var customerStrategic = row.technology.customerStrategic;
-					var newItem = {
-							id: i+1,
-							name: row.technology.name,
-							show: false,
-							arc: row.x.arc.name,
-							pc: {
-								r: row.radius,
-								t: Math.floor((Math.random() * 90) + 1)
-							},
-							movement: row.movement,
-							description: row.technology.description,
-							detailUrl: row.technology.detailUrl,
-							customerStrategic: customerStrategic,
-							url: row.technology.url
-					};
-					theRadar.quadrantMap[row.y.quadrant.name].items.push(newItem);
-				})(theRadar.zs[i]);
+			if(theRadar.technologies!=null && typeof theRadar.technologies!='undefined') {
+				for(var i = 0; i < theRadar.technologies.length; i++) {
+					(function(row){
+						var customerStrategic = row.customerStrategic;
+						var newItem = {
+								id: i+1,
+								name: row.technology,
+								show: false,
+								arc: row.maturity,
+								pc: {
+									r: row.radius,
+									t: Math.floor((Math.random() * 90) + 1)
+								},
+								movement: row.movement,
+								description: row.description,
+								detailUrl: row.detailUrl,
+								customerStrategic: customerStrategic,
+								url: row.url
+						};
+						theRadar.quadrantMap[row.techGrouping].items.push(newItem);
+					})(theRadar.technologies[i]);
+				}
 			}
 			$scope.selectedRadar = theRadar;
 		}).
@@ -299,7 +291,7 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 		});
 	};
 
-	if($scope.selectedId != null) {
+	if($scope.radarid != null) {
 		loadRadar();
 	}
 

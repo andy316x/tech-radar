@@ -9,10 +9,6 @@ techRadarApp.config(['$routeProvider',function($routeProvider) {
         templateUrl: 'partials/radar.jsp',
         controller: 'RadarCtrl'
       })
-      .when('/radar/new', {
-        templateUrl: 'partials/createradar.jsp',
-        controller: 'RadarCtrl'
-      })
       .when('/radar/:radarid', {
         templateUrl: 'partials/viewradar.jsp',
         controller: 'RadarCtrl'

@@ -15,6 +15,8 @@ public class RadarApplication extends Application {
 		singletons.add(new MaturityRestService());
 		singletons.add(new TechGroupingRestService());
 		singletons.add(new SwaggerDocsRestService());
+		
+		singletons.add(new DataUploadRestService());
 	}
 
 	// Register provider here like exceptionhandler in resteasy

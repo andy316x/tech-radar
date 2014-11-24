@@ -22,12 +22,9 @@ import com.ai.techradar.database.hibernate.HibernateUtil;
 import com.ai.techradar.service.RadarService;
 import com.ai.techradar.service.ValidationException;
 import com.ai.techradar.web.service.to.MaturityTO;
-import com.ai.techradar.web.service.to.RadarMaturityTO;
 import com.ai.techradar.web.service.to.RadarTO;
-import com.ai.techradar.web.service.to.RadarTechGroupingTO;
 import com.ai.techradar.web.service.to.RadarTechnologyTO;
 import com.ai.techradar.web.service.to.TechGroupingTO;
-import com.ai.techradar.web.service.to.TechnologyTO;
 
 @SuppressWarnings("unchecked")
 public class RadarServiceImpl implements RadarService {
@@ -49,7 +46,7 @@ public class RadarServiceImpl implements RadarService {
 			final RadarTO r = new RadarTO();
 			r.setId((Long)row[0]);
 			r.setName((String)row[1]);
-			r.setDateUploaded((Date)row[2]);
+			r.setDateCreated((Date)row[2]);
 
 			rs.add(r);
 		}
@@ -61,19 +58,6 @@ public class RadarServiceImpl implements RadarService {
 	}
 
 
-	/**
-	 *   Currently returns the following uni-directional data model:
-	 *   
-	 *     ------------------------------------------> X ---> Arc
-	 *     |         |                           |
-	 *   Radar ----> Z---------> Technology ---> Z
-	 *     |         |                           |
-	 *     ------------------------------------------> Y ---> Quadrant
-	 *     
-	 *     Both Zs point to the same X&Y Objects.
-	 *     Both Zs are equivalent except the second contains a null radar.
-	 *   
-	 */
 	public RadarTO getRadarById(final Long id) {
 		final Session session = HibernateUtil.getSessionFactory().openSession();
 		session.beginTransaction();
@@ -86,74 +70,41 @@ public class RadarServiceImpl implements RadarService {
 		final RadarTO r = new RadarTO();
 		r.setId(radar.getId());
 		r.setName(radar.getName());
-		r.setDateUploaded(radar.getDateUploaded());
+		r.setDateCreated(radar.getDateUploaded());
 
-		//final List<TechnologyTO> ts = new ArrayList<TechnologyTO>();
-		final List<RadarMaturityTO> xs = new ArrayList<RadarMaturityTO>();
-		final List<RadarTechGroupingTO> ys = new ArrayList<RadarTechGroupingTO>();
-		final List<RadarTechnologyTO> zs = new ArrayList<RadarTechnologyTO>();
-		//final List<ArcTO> arcs = new ArrayList<ArcTO>();
-		//final List<QuadrantTO> quadrants = new ArrayList<QuadrantTO>();
-
-		for(final RadarTechnology z_ : radar.getZs()) {
-			Maturity arc_ = z_.getX().getArc();
-			TechGrouping quadrant_ = z_.getY().getQuadrant();
-
-			RadarMaturityTO x = null;
-			for(RadarMaturityTO tempX: xs){
-				if(tempX.getArc().getName().equals(arc_.getName())){ // NPE here
-					x = tempX;
-				}
-			}
-			if(x == null){
-				MaturityTO arc = new MaturityTO();
-				arc.setName(arc_.getName());
-				arc.setId(arc_.getId());
-				x = new RadarMaturityTO();
-				x.setArc(arc);
-				x.setId(z_.getX().getId());
-				xs.add(x);
-			}
-
-			RadarTechGroupingTO y = null;
-			for(RadarTechGroupingTO tempY: ys){
-				if(tempY.getQuadrant().getName().equals(quadrant_.getName())){
-					y = tempY;
-				}
-			}
-			if(y == null){
-				TechGroupingTO quadrant = new TechGroupingTO();
-				quadrant.setName(quadrant_.getName());
-				quadrant.setId(quadrant_.getId());
-				y = new RadarTechGroupingTO();
-				y.setQuadrant(quadrant);
-				y.setId(z_.getY().getId());
-				ys.add(y);
-			}
-			final RadarTechnologyTO zto = new RadarTechnologyTO();
-			zto.setMovement(z_.getMovement());
-			zto.setX(x);
-			zto.setY(y);
-			zs.add(zto);
-
-			final TechnologyTO t = new TechnologyTO();
-			final Technology technology = z_.getTechnology();
-			t.setId(technology.getId());
-			t.setName(technology.getName());
-			t.setBlipSize(technology.getUsageCount());
-			t.setUrl(technology.getUrl());
-			t.setDescription(technology.getDescription());
-			t.setDetailUrl(technology.getDetailUrl());
-			t.setCustomerStrategic(technology.isCustomerStrategic());
-
-			List<RadarTechnologyTO> temp_Zs = new ArrayList<RadarTechnologyTO>();
-			temp_Zs.add(zto.clone());
-			t.setZs(temp_Zs);
-			zto.setTechnology(t);
+		final List<MaturityTO> maturities = new ArrayList<MaturityTO>();
+		for(final RadarMaturity radarMaturity : radar.getRadarMaturities()) {
+			final MaturityTO maturityTO = new MaturityTO();
+			maturityTO.setName(radarMaturity.getMaturity().getName());
+			maturities.add(maturityTO);
 		}
-		r.setXs(xs);
-		r.setYs(ys);
-		r.setZs(zs);
+
+		final List<TechGroupingTO> techGroupings = new ArrayList<TechGroupingTO>();
+		for(final RadarTechGrouping radarTechGrouping : radar.getRadarTechGroupings()) {
+			final TechGroupingTO techGroupingTO = new TechGroupingTO();
+			techGroupingTO.setName(radarTechGrouping.getTechGrouping().getName());
+			techGroupings.add(techGroupingTO);
+		}
+
+		final List<RadarTechnologyTO> technologies = new ArrayList<RadarTechnologyTO>();
+
+		for(final RadarTechnology z_ : radar.getRadarTechnologies()) {
+			final RadarTechnologyTO tech = new RadarTechnologyTO();
+			tech.setMovement(z_.getMovement());
+			tech.setTechGrouping(z_.getRadarTechGrouping().getTechGrouping().getName());
+			tech.setMaturity(z_.getRadarMaturity().getMaturity().getName());
+			final Technology technology = z_.getTechnology();
+			tech.setTechnology(technology.getName());
+			tech.setBlipSize(technology.getUsageCount());
+			tech.setUrl(technology.getUrl());
+			tech.setDescription(technology.getDescription());
+			tech.setDetailUrl(technology.getDetailUrl());
+			tech.setCustomerStrategic(technology.isCustomerStrategic());
+			technologies.add(tech);
+		}
+		r.setMaturities(maturities);
+		r.setTechGroupings(techGroupings);
+		r.setTechnologies(technologies);
 
 		session.getTransaction().commit();
 		session.close();
@@ -181,18 +132,18 @@ public class RadarServiceImpl implements RadarService {
 			final Long id = (Long)session.save(radar);
 			radarTO.setId(id);
 
-			final List<RadarMaturityTO> radarMaturityTOs = radarTO.getXs();
+			final List<MaturityTO> radarMaturityTOs = radarTO.getMaturities();
 			if(radarMaturityTOs!=null && !radarMaturityTOs.isEmpty()) {
 				if(radarMaturityTOs.size() > 3) {
-					for(final RadarMaturityTO radarMaturityTO : radarMaturityTOs) {
-						final Maturity maturity = readMaturity(radarMaturityTO.getArc().getName(), session);
+					for(final MaturityTO radarMaturityTO : radarMaturityTOs) {
+						final Maturity maturity = readMaturity(radarMaturityTO.getName(), session);
 						if(maturity!=null) {
 							final RadarMaturity radarMaturity = new RadarMaturity();
 							radarMaturity.setRadar(radar);
-							radarMaturity.setArc(maturity);
+							radarMaturity.setMaturity(maturity);
 							session.persist(radarMaturity);
 						} else {
-							validations.add("Maturity " + radarMaturityTO.getArc().getName() + " does not exist");
+							validations.add("Maturity " + radarMaturityTO.getName() + " does not exist");
 						}
 					}
 				} else {
@@ -202,18 +153,18 @@ public class RadarServiceImpl implements RadarService {
 				validations.add("No maturities");
 			}
 
-			final List<RadarTechGroupingTO> radarTechGroupingTOs = radarTO.getYs();
+			final List<TechGroupingTO> radarTechGroupingTOs = radarTO.getTechGroupings();
 			if(radarTechGroupingTOs!=null && !radarTechGroupingTOs.isEmpty()) {
 				if(radarTechGroupingTOs.size() == 4) {
-					for(final RadarTechGroupingTO radarTechGroupingTO : radarTechGroupingTOs) {
-						final TechGrouping techGrouping = readTechGrouping(radarTechGroupingTO.getQuadrant().getName(), session);
+					for(final TechGroupingTO radarTechGroupingTO : radarTechGroupingTOs) {
+						final TechGrouping techGrouping = readTechGrouping(radarTechGroupingTO.getName(), session);
 						if(techGrouping!=null) {
 							final RadarTechGrouping radarTechGrouping = new RadarTechGrouping();
 							radarTechGrouping.setRadar(radar);
-							radarTechGrouping.setQuadrant(techGrouping);
+							radarTechGrouping.setTechGrouping(techGrouping);
 							session.persist(radarTechGrouping);
 						} else {
-							validations.add("Tech grouping " + radarTechGroupingTO.getQuadrant().getName() + " does not exist");
+							validations.add("Tech grouping " + radarTechGroupingTO.getName() + " does not exist");
 						}
 					}
 				} else {
@@ -239,54 +190,54 @@ public class RadarServiceImpl implements RadarService {
 
 		return radarTO;
 	}
-	
+
 	public RadarTO addTechnologiesToRadar(final Long radarId, final List<RadarTechnologyTO> radarTechnologyTOs) throws ValidationException {
 		final List<String> validations = new ArrayList<String>();
 
 		final Session session = HibernateUtil.getSessionFactory().openSession();
 		session.beginTransaction();
-		
+
 		try {
 
 			final Radar radar = readRadar(radarId, session);
-			
+
 			if(radar==null) {
 				validations.add("Unable to find radar with ID " + radarId);
 				throw new ValidationException(validations);
 			}
-			
+
 			if(radarTechnologyTOs!=null && !radarTechnologyTOs.isEmpty()) {
-				
+
 				for(final RadarTechnologyTO radarTechnologyTO : radarTechnologyTOs) {
-					
-					final String technologyName = radarTechnologyTO.getTechnology().getName();
+
+					final String technologyName = radarTechnologyTO.getTechnology();
 					final Technology technology = readTechnology(technologyName, session);
 					if(technology==null) {
 						validations.add("Unable to find technology '" + technologyName);
 					}
-					
-					final String maturityName = radarTechnologyTO.getX().getArc().getName();
+
+					final String maturityName = radarTechnologyTO.getMaturity();
 					final RadarMaturity radarMaturity = readRadarMaturity(radarId, maturityName, session);
 					if(radarMaturity==null) {
 						validations.add("Unable to find maturity '" + maturityName + "' in radar with ID " + radarId);
 					}
-					
-					final String techGroupingName = radarTechnologyTO.getY().getQuadrant().getName();
+
+					final String techGroupingName = radarTechnologyTO.getTechGrouping();
 					final RadarTechGrouping radarTechGrouping = readRadarTechGrouping(radarId, techGroupingName, session);
 					if(radarTechGrouping==null) {
 						validations.add("Unable to find tech grouping '" + techGroupingName + "' in radar with ID " + radarId);
 					}
-					
+
 					final RadarTechnology radarTechnology = new RadarTechnology();
 					radarTechnology.setTechnology(technology);
 					radarTechnology.setRadar(radar);
-					radarTechnology.setX(radarMaturity);
-					radarTechnology.setY(radarTechGrouping);
+					radarTechnology.setRadarMaturity(radarMaturity);
+					radarTechnology.setRadarTechGrouping(radarTechGrouping);
 					radarTechnology.setMovement(MovementEnum.t);
 					session.persist(radarTechnology);
-					
+
 				}
-				
+
 			} else {
 				validations.add("No technologies supplied");
 			}
@@ -307,28 +258,28 @@ public class RadarServiceImpl implements RadarService {
 
 		return null;
 	}
-	
+
 	private RadarMaturity readRadarMaturity(final Long id, final String maturity, final Session session) {
 		final Criteria query = session.createCriteria(RadarMaturity.class);
-		
+
 		query.createAlias("radar", "radar");
-		query.createAlias("arc", "maturity");
-		
+		query.createAlias("maturity", "maturity");
+
 		query.add(Restrictions.eq("radar.id", id));
 		query.add(Restrictions.eq("maturity.name", maturity));
-		
+
 		return (RadarMaturity)query.uniqueResult();
 	}
-	
+
 	private RadarTechGrouping readRadarTechGrouping(final Long id, final String techGrouping, final Session session) {
 		final Criteria query = session.createCriteria(RadarTechGrouping.class);
-		
+
 		query.createAlias("radar", "radar");
-		query.createAlias("quadrant", "tg");
-		
+		query.createAlias("techGrouping", "tg");
+
 		query.add(Restrictions.eq("radar.id", id));
 		query.add(Restrictions.eq("tg.name", techGrouping));
-		
+
 		return (RadarTechGrouping)query.uniqueResult();
 	}
 
@@ -337,7 +288,7 @@ public class RadarServiceImpl implements RadarService {
 		query.add(Restrictions.eq("id", id));
 		return (Radar)query.uniqueResult();
 	}
-	
+
 	private Technology readTechnology(final String name, final Session session) {
 		final Criteria query = session.createCriteria(Technology.class);
 		query.add(Restrictions.eq("name", name));

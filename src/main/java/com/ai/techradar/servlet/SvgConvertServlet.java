@@ -32,9 +32,11 @@ public class SvgConvertServlet extends HttpServlet {
 		try {
 			response.setContentType("application/pdf");
 			response.addHeader("Content-Disposition", "attachment;filename=\"export.pdf\"");
+			
+			final Long id = Long.parseLong(request.getParameter("id"));
 
 			PDFGeneratorSecond test = new PDFGeneratorSecond();
-			test.MakePDF(response);
+			test.MakePDF(response, id);
 
 			response.flushBuffer();
 		} catch (Exception e) {
@@ -43,29 +45,5 @@ public class SvgConvertServlet extends HttpServlet {
 		}
 
 	}
-	
-	@Override
-	public void doGet(final HttpServletRequest request, final HttpServletResponse response)
-			throws ServletException, IOException {
-		try {
-			response.setContentType("application/pdf");
-			response.addHeader("Content-Disposition", "attachment;filename=\"export.pdf\"");
-
-			PDFGeneratorSecond test = new PDFGeneratorSecond();
-			test.MakePDF(response);
-
-			response.flushBuffer();
-		} catch (Exception e) {
-			// TODO log properly
-			e.printStackTrace();
-		}
-
-	}
-
-	/*private static void addEmptyLine(Section section, int number) {
-		for (int i = 0; i < number; i++) {
-			section.add(new Paragraph(" "));
-		}
-	}*/
 
 }

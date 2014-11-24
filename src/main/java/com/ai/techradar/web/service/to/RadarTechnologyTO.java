@@ -5,78 +5,117 @@ import com.ai.techradar.database.entities.MovementEnum;
 public class RadarTechnologyTO {
 
 	private Long id;
-	
-	private TechnologyTO technology;
 
-	private RadarTO radar;
+	private String technology;
 
-	private RadarMaturityTO x;
+	private String maturity;
 
-	private RadarTechGroupingTO y;
+	private String techGrouping;
 
 	private MovementEnum movement;
 
+	private int blipSize;
+
+	private String url;
+
+	private String description;
+
+	private String detailUrl;
+
+	private boolean customerStrategic;
+
 	public RadarTechnologyTO() {
-		
+
 	}
 
 	public Long getId() {
 		return id;
 	}
 
-	public void setId(final Long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public TechnologyTO getTechnology() {
+	public String getTechnology() {
 		return technology;
 	}
 
-	public void setTechnology(final TechnologyTO technology) {
+	public void setTechnology(String technology) {
 		this.technology = technology;
 	}
 
-	public RadarTO getRadar() {
-		return radar;
+	public String getMaturity() {
+		return maturity;
 	}
 
-	public void setRadar(final RadarTO radar) {
-		this.radar = radar;
+	public void setMaturity(String maturity) {
+		this.maturity = maturity;
 	}
 
-	public RadarMaturityTO getX() {
-		return x;
+	public String getTechGrouping() {
+		return techGrouping;
 	}
 
-	public void setX(final RadarMaturityTO x) {
-		this.x = x;
-	}
-
-	public RadarTechGroupingTO getY() {
-		return y;
-	}
-
-	public void setY(final RadarTechGroupingTO y) {
-		this.y = y;
+	public void setTechGrouping(String techGrouping) {
+		this.techGrouping = techGrouping;
 	}
 
 	public MovementEnum getMovement() {
 		return movement;
 	}
 
-	public void setMovement(final MovementEnum movement) {
+	public void setMovement(MovementEnum movement) {
 		this.movement = movement;
 	}
-	
+
+	public int getBlipSize() {
+		return blipSize;
+	}
+
+	public void setBlipSize(int blipSize) {
+		this.blipSize = blipSize;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getDetailUrl() {
+		return detailUrl;
+	}
+
+	public void setDetailUrl(String detailUrl) {
+		this.detailUrl = detailUrl;
+	}
+
+	public boolean isCustomerStrategic() {
+		return customerStrategic;
+	}
+
+	public void setCustomerStrategic(boolean customerStrategic) {
+		this.customerStrategic = customerStrategic;
+	}
+
 	public RadarTechnologyTO clone(){
 		RadarTechnologyTO clone = new RadarTechnologyTO();
 		clone.setId(id);
 		clone.setMovement(movement);
 		clone.setTechnology(technology);
-		clone.setRadar(radar);
-		clone.setX(x);
-		clone.setY(y);
-		
+		clone.setMaturity(maturity);
+		clone.setTechGrouping(techGrouping);
+
 		return clone;
 	}
 }

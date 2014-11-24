@@ -2,12 +2,12 @@ package com.ai.techradar.database.entities;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.CascadeType;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -18,7 +18,7 @@ public class TechGrouping {
 
 	private String name;
 
-	private List<RadarTechGrouping> ys;
+	private List<RadarTechGrouping> radarTechGroupings;
 
 	public TechGrouping() {
 		// this form used by Hibernate
@@ -27,7 +27,7 @@ public class TechGrouping {
 	@Id
 	@GeneratedValue(generator="increment")
 	@GenericGenerator(name="increment", strategy = "increment")
-	@Column(name="Quadrant_ID")
+	@Column(name="TECH_GROUPING_ID")
 	public Long getId() {
 		return id;
 	}
@@ -44,12 +44,13 @@ public class TechGrouping {
 		this.name = name;
 	}
 
-	@OneToMany(mappedBy="quadrant", cascade=CascadeType.ALL)
-	public List<RadarTechGrouping> getYs() {
-		return ys;
+	@OneToMany(mappedBy="techGrouping", cascade=CascadeType.ALL)
+	public List<RadarTechGrouping> getRadarTechGroupings() {
+		return radarTechGroupings;
 	}
 
-	public void setYs(final List<RadarTechGrouping> ys) {
-		this.ys = ys;
+	public void setRadarTechGroupings(final List<RadarTechGrouping> radarTechGroupings) {
+		this.radarTechGroupings = radarTechGroupings;
 	}
+
 }

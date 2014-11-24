@@ -1,6 +1,5 @@
 package com.ai.techradar.web.service.to;
 
-import java.util.List;
 
 
 public class TechnologyTO {
@@ -19,10 +18,8 @@ public class TechnologyTO {
 
 	private boolean customerStrategic;
 
-	private List<RadarTechnologyTO> zs;
-
 	public TechnologyTO() {
-		
+
 	}
 
 	public Long getId() {
@@ -79,14 +76,6 @@ public class TechnologyTO {
 
 	public void setCustomerStrategic(final boolean customerStrategic) {
 		this.customerStrategic = customerStrategic;
-	}
-
-	public List<RadarTechnologyTO> getZs() {
-		return zs;
-	}
-
-	public void setZs(final List<RadarTechnologyTO> zs) {
-		this.zs = zs;
 	}
 
 }

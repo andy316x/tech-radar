@@ -23,7 +23,7 @@
 			</div>
 		</div>
 		
-		<div ng-new-radar="" visible="newRadarVisible" radar-created="onRadarCreated()"></div>
+		<div ng-new-radar="" visible="newRadarVisible" radar-created="onRadarCreated(radar)"></div>
 		
 		<div class="col-md-12" style="background-color:#EFEFEF;padding:25px 20px;">
 	
@@ -44,7 +44,7 @@
 					<div style="padding-left:60px;">
 						<div><strong>Ricky Winterbourne</strong></div>
 						<div><small>(UK Services)</small></div>
-						<div><small>Published <strong>{{radar.dateUploaded | date:'dd MMM yy'}}</strong></small></div>
+						<div><small>Published <strong>{{radar.dateCreated | date:'dd MMM yy'}}</strong></small></div>
 					</div>
 				</div>
 				<div>

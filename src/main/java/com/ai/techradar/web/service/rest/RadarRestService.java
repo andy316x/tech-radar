@@ -97,7 +97,7 @@ public class RadarRestService {
 		}
 
 	}
-	
+
 	@POST
 	@Path("/addtech/{radarId}")
 	@ApiOperation(value="Add technologies to radar",response=Response.class)
@@ -114,7 +114,7 @@ public class RadarRestService {
 		}
 
 	}
-	
+
 	@POST
 	@Path("/upload")
 	@Consumes("multipart/form-data")
@@ -152,13 +152,13 @@ public class RadarRestService {
 					r.setDateUploaded(new Date());
 					r.setFilename(fileName);
 
-					final List<RadarMaturity> xs = new ArrayList<RadarMaturity>();
-					final List<RadarTechGrouping> ys = new ArrayList<RadarTechGrouping>();
-					final List<RadarTechnology> zs = new ArrayList<RadarTechnology>();
+					final List<RadarMaturity> radarMaturities = new ArrayList<RadarMaturity>();
+					final List<RadarTechGrouping> radarTechGroupings = new ArrayList<RadarTechGrouping>();
+					final List<RadarTechnology> radarTechnologies = new ArrayList<RadarTechnology>();
 
-					r.setXs(xs);
-					r.setYs(ys);
-					r.setZs(zs);
+					r.setRadarMaturities(radarMaturities);
+					r.setRadarTechGroupings(radarTechGroupings);
+					r.setRadarTechnologies(radarTechnologies);
 
 					final BufferedReader in = new BufferedReader(new InputStreamReader(istream));
 
@@ -178,8 +178,8 @@ public class RadarRestService {
 						final String detailUrl = readString(record.get("AI URL"));
 						final boolean customerStrategic = readBoolean(record.get("Customer strategic"));
 
-						RadarMaturity x = getX(arcName,arcs,r,xs,session);
-						RadarTechGrouping y = getY(quadrantName,quadrants,r,ys,session);
+						RadarMaturity radarMaturity = getRadarMaturity(arcName,arcs,r,radarMaturities,session);
+						RadarTechGrouping radarTechGrouping = getY(quadrantName,quadrants,r,radarTechGroupings,session);
 
 						Technology newTechnology = null;
 						for(Technology technology: technologies){
@@ -198,25 +198,25 @@ public class RadarRestService {
 							newTechnology.setDescription(description);
 							newTechnology.setDetailUrl(detailUrl);
 							newTechnology.setCustomerStrategic(customerStrategic);
-							newTechnology.setZs(new ArrayList<RadarTechnology>());
+							newTechnology.setRadarTechnologies(new ArrayList<RadarTechnology>());
 							technologies.add(newTechnology);
 						}
 
-						RadarTechnology z = new RadarTechnology();
-						z.setTechnology(newTechnology); // z -> technology
-						newTechnology.getZs().add(z); // technology -> z
-						z.setRadar(r); // z -> r
-						r.getZs().add(z); // r -> z
-						z.setMovement(movement);
-						z.setX(x); // z -> x
-						x.getZs().add(z); // x -> z
-						z.setY(y); // z -> y
-						y.getZs().add(z); // y -> z
+						RadarTechnology radarTechnology = new RadarTechnology();
+						radarTechnology.setTechnology(newTechnology);
+						newTechnology.getRadarTechnologies().add(radarTechnology);
+						radarTechnology.setRadar(r);
+						r.getRadarTechnologies().add(radarTechnology);
+						radarTechnology.setMovement(movement);
+						radarTechnology.setRadarMaturity(radarMaturity);
+						radarMaturity.getRadarTechnologies().add(radarTechnology);
+						radarTechnology.setRadarTechGrouping(radarTechGrouping);
+						radarTechGrouping.getRadarTechnologies().add(radarTechnology);
 
 						session.persist(newTechnology);
-						session.persist(x);
-						session.persist(y);
-						session.persist(z);
+						session.persist(radarMaturity);
+						session.persist(radarTechGrouping);
+						session.persist(radarTechnology);
 					}
 
 					id = session.save(r);
@@ -308,89 +308,89 @@ public class RadarRestService {
 		return "randomName";
 	}
 
-	private RadarMaturity getX(String arcName, List<Maturity> arcs, Radar r, List<RadarMaturity> xs, Session session){
-		Maturity newArc = null;
-		RadarMaturity newX = null;
+	private RadarMaturity getRadarMaturity(String arcName, List<Maturity> arcs, Radar r, List<RadarMaturity> xs, Session session){
+		Maturity newMaturity = null;
+		RadarMaturity newRadarMaturity = null;
 		for(Maturity arc: arcs){
 			if(arc.getName().equals(arcName)){
-				newArc = arc;
+				newMaturity = arc;
 			}
 		}
 
-		if(newArc == null){
-			newArc = new Maturity();
-			newArc.setName(arcName);
-			arcs.add(newArc);
-			newX = new RadarMaturity();
-			newX.setArc(newArc); // x -> arc
-			List<RadarMaturity> newArcXs = new ArrayList<RadarMaturity>();
-			newArcXs.add(newX);
-			newArc.setXs(newArcXs);  // arc -> x
-			newX.setRadar(r); // x -> r
-			r.getXs().add(newX); // r -> x
-			newX.setZs(new ArrayList<RadarTechnology>());
-		}else{ // Arc exists but may not be added to this radar
+		if(newMaturity == null){
+			newMaturity = new Maturity();
+			newMaturity.setName(arcName);
+			arcs.add(newMaturity);
+			newRadarMaturity = new RadarMaturity();
+			newRadarMaturity.setMaturity(newMaturity); 
+			List<RadarMaturity> newRadarMaturities = new ArrayList<RadarMaturity>();
+			newRadarMaturities.add(newRadarMaturity);
+			newMaturity.setRadarMaturities(newRadarMaturities);
+			newRadarMaturity.setRadar(r);
+			r.getRadarMaturities().add(newRadarMaturity);
+			newRadarMaturity.setRadarTechnologies(new ArrayList<RadarTechnology>());
+		}else{ // Maturity exists but may not be added to this radar
 			for(RadarMaturity x : xs){
-				if(x.getArc().equals(newArc)){
-					newX = x;
+				if(x.getMaturity().equals(newMaturity)){
+					newRadarMaturity = x;
 				}
 			}	
 
-			if(newX == null){
-				newX = new RadarMaturity();
-				newX.setArc(newArc); // x -> arc
-				List<RadarMaturity> newArcXs = new ArrayList<RadarMaturity>();
-				newArcXs.add(newX);
-				newArc.setXs(newArcXs);  // arc -> x
-				newX.setRadar(r); // x -> r
-				r.getXs().add(newX); // r -> x
-				newX.setZs(new ArrayList<RadarTechnology>());
+			if(newRadarMaturity == null){
+				newRadarMaturity = new RadarMaturity();
+				newRadarMaturity.setMaturity(newMaturity);
+				List<RadarMaturity> newRadarMaturities = new ArrayList<RadarMaturity>();
+				newRadarMaturities.add(newRadarMaturity);
+				newMaturity.setRadarMaturities(newRadarMaturities);
+				newRadarMaturity.setRadar(r);
+				r.getRadarMaturities().add(newRadarMaturity);
+				newRadarMaturity.setRadarTechnologies(new ArrayList<RadarTechnology>());
 			}
 		}
-		session.persist(newArc);
-		return newX;
+		session.persist(newMaturity);
+		return newRadarMaturity;
 	}
 
 	private RadarTechGrouping getY(String quadrantName, List<TechGrouping> quadrants, Radar r, List<RadarTechGrouping> ys, Session session){
-		TechGrouping newQuadrant = null;
-		RadarTechGrouping newY = null;
+		TechGrouping newTechGrouping = null;
+		RadarTechGrouping newRadarTechGrouping = null;
 		for(TechGrouping quadrant: quadrants){
 			if(quadrant.getName().equals(quadrantName)){
-				newQuadrant = quadrant;
+				newTechGrouping = quadrant;
 			}
 		}
 
-		if(newQuadrant == null){
-			newQuadrant = new TechGrouping();
-			newQuadrant.setName(quadrantName);
-			quadrants.add(newQuadrant);
-			newY = new RadarTechGrouping();
-			newY.setQuadrant(newQuadrant); // y -> quadrant
-			List<RadarTechGrouping> newQuadrantYs = new ArrayList<RadarTechGrouping>();
-			newQuadrantYs.add(newY);
-			newQuadrant.setYs(newQuadrantYs);  // quadrant -> y
-			newY.setRadar(r); // y -> r
-			r.getYs().add(newY); // r -> y
-			newY.setZs(new ArrayList<RadarTechnology>());
-		}else{ // Quadrant exists but may not be added to this radar
+		if(newTechGrouping == null){
+			newTechGrouping = new TechGrouping();
+			newTechGrouping.setName(quadrantName);
+			quadrants.add(newTechGrouping);
+			newRadarTechGrouping = new RadarTechGrouping();
+			newRadarTechGrouping.setTechGrouping(newTechGrouping);
+			List<RadarTechGrouping> newRadarTechGroupings = new ArrayList<RadarTechGrouping>();
+			newRadarTechGroupings.add(newRadarTechGrouping);
+			newTechGrouping.setRadarTechGroupings(newRadarTechGroupings);
+			newRadarTechGrouping.setRadar(r);
+			r.getRadarTechGroupings().add(newRadarTechGrouping);
+			newRadarTechGrouping.setRadarTechnologies(new ArrayList<RadarTechnology>());
+		}else{ // Tech grouping exists but may not be added to this radar
 			for(RadarTechGrouping y : ys){
-				if(y.getQuadrant().equals(newQuadrant)){
-					newY = y;
+				if(y.getTechGrouping().equals(newTechGrouping)){
+					newRadarTechGrouping = y;
 				}
 			}
 
-			if(newY == null){
-				newY = new RadarTechGrouping();
-				newY.setQuadrant(newQuadrant); // y -> quadrant
-				List<RadarTechGrouping> newQuadrantYs = new ArrayList<RadarTechGrouping>();
-				newQuadrantYs.add(newY);
-				newQuadrant.setYs(newQuadrantYs);  // quadrant -> y
-				newY.setRadar(r); // y -> r
-				r.getYs().add(newY); // r -> y
-				newY.setZs(new ArrayList<RadarTechnology>());
+			if(newRadarTechGrouping == null){
+				newRadarTechGrouping = new RadarTechGrouping();
+				newRadarTechGrouping.setTechGrouping(newTechGrouping);
+				List<RadarTechGrouping> newRadarTechGroupings = new ArrayList<RadarTechGrouping>();
+				newRadarTechGroupings.add(newRadarTechGrouping);
+				newTechGrouping.setRadarTechGroupings(newRadarTechGroupings);
+				newRadarTechGrouping.setRadar(r); 
+				r.getRadarTechGroupings().add(newRadarTechGrouping);
+				newRadarTechGrouping.setRadarTechnologies(new ArrayList<RadarTechnology>());
 			}
 		}
-		session.persist(newQuadrant);
-		return newY;
+		session.persist(newTechGrouping);
+		return newRadarTechGrouping;
 	}	
 }

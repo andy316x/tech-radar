@@ -2,12 +2,12 @@ package com.ai.techradar.database.entities;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.CascadeType;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -28,7 +28,7 @@ public class Technology {
 
 	private boolean customerStrategic;
 
-	private List<RadarTechnology> zs;
+	private List<RadarTechnology> radarTechnologies;
 
 	public Technology() {
 		// this form used by Hibernate
@@ -96,12 +96,12 @@ public class Technology {
 	}
 
 	@OneToMany(mappedBy="technology", cascade=CascadeType.ALL)
-	public List<RadarTechnology> getZs() {
-		return zs;
+	public List<RadarTechnology> getRadarTechnologies() {
+		return radarTechnologies;
 	}
 
-	public void setZs(final List<RadarTechnology> zs) {
-		this.zs = zs;
+	public void setRadarTechnologies(final List<RadarTechnology> radarTechnologies) {
+		this.radarTechnologies = radarTechnologies;
 	}
 
 }

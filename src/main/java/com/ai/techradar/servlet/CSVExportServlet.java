@@ -29,7 +29,9 @@ public class CSVExportServlet extends HttpServlet {
 			response.setContentType("text/csv");
 			response.addHeader("Content-Disposition", "attachment;filename=\"export.csv\"");
 
-			final RadarTO radar = service.getRadarById(new Long(1));
+			final Long id = Long.parseLong(request.getParameter("id"));
+
+			final RadarTO radar = service.getRadarById(id);
 
 			final StringBuilder strBuilder = new StringBuilder();
 
@@ -37,17 +39,18 @@ public class CSVExportServlet extends HttpServlet {
 			final CSVPrinter printer = new CSVPrinter(strBuilder, CSVFormat.RFC4180.withHeader());
 			printer.printRecord("Technology","Quadrant","Maturity","moved / no change","project Count","Product URL","Description","AI URL","Customer strategic");
 
-			for(final RadarTechnologyTO tech : radar.getZs()) {
+			for(final RadarTechnologyTO tech : radar.getTechnologies()) {
 				final List<String> empData = new ArrayList<String>();
-				empData.add(tech.getTechnology().getName());
-				empData.add(tech.getY().getQuadrant().getName());
-				empData.add(tech.getX().getArc().getName());
-				empData.add("" + true);
-				empData.add("" + tech.getTechnology().getBlipSize());
-				empData.add(tech.getTechnology().getUrl());
-				empData.add(tech.getTechnology().getDescription());
-				empData.add(tech.getTechnology().getDetailUrl());
-				empData.add("" + tech.getTechnology().isCustomerStrategic());
+				empData.add(tech.getTechnology());
+				empData.add(tech.getTechGrouping());
+				empData.add(tech.getMaturity());
+				// TODO
+				//				empData.add("" + true);
+				//				empData.add("" + tech.getTechnology().getBlipSize());
+				//				empData.add(tech.getTechnology().getUrl());
+				//				empData.add(tech.getTechnology().getDescription());
+				//				empData.add(tech.getTechnology().getDetailUrl());
+				//				empData.add("" + tech.getTechnology().isCustomerStrategic());
 				printer.printRecord(empData);
 			}
 

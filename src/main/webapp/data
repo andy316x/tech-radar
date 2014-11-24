@@ -1,40 +1,50 @@
 {
+"techGroupings": [
+{
   "name": "Languages & Frameworks"
-}
+},
 {
   "name": "Tools"
-}
+},
 {
   "name": "Platforms"
-}
+},
 {
   "name": "Solutions"
 }
+],
 
+
+"maturities":[
 {
   "name": "Assess"
-}
+},
 {
   "name": "Adopt"
-}
+},
 {
   "name": "Trial"
-}
+},
 {
   "name": "Phase Out"
 }
+],
+
+"technologies":[
 
 {
   "name": "D3"
-}
+},
 {
   "name": "AngularJS"
-}
+},
 {
   "name": "JBoss"
-}
+},
 {
   "name": "JSF"
+}
+]
 }
 
 

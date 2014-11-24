@@ -19,11 +19,11 @@ public class RadarMaturity {
 
 	private Long id;
 	
-	private Maturity arc;
+	private Maturity maturity;
 
 	private Radar radar;
 
-	private List<RadarTechnology> zs;
+	private List<RadarTechnology> radarTechnologies;
 
 	public RadarMaturity() {
 		// this form used by Hibernate
@@ -32,7 +32,7 @@ public class RadarMaturity {
 	@Id
 	@GeneratedValue(generator="increment")
 	@GenericGenerator(name="increment", strategy = "increment")
-	@Column(name="X_ID")
+	@Column(name="RADAR_MATURITY_ID")
 	public Long getId() {
 		return id;
 	}
@@ -42,13 +42,13 @@ public class RadarMaturity {
 	}
 
 	@ManyToOne
-	@JoinColumn(name="ARC_ID")
-	public Maturity getArc() {
-		return arc;
+	@JoinColumn(name="MATURITY_ID")
+	public Maturity getMaturity() {
+		return maturity;
 	}
 
-	public void setArc(final Maturity arc) {
-		this.arc = arc;
+	public void setMaturity(final Maturity maturity) {
+		this.maturity = maturity;
 	}
 
 	@ManyToOne
@@ -61,12 +61,12 @@ public class RadarMaturity {
 		this.radar = radar;
 	}
 
-	@OneToMany(mappedBy="x", cascade=CascadeType.ALL)
-	public List<RadarTechnology> getZs() {
-		return zs;
+	@OneToMany(mappedBy="radarMaturity", cascade=CascadeType.ALL)
+	public List<RadarTechnology> getRadarTechnologies() {
+		return radarTechnologies;
 	}
 
-	public void setZs(final List<RadarTechnology> zs) {
-		this.zs = zs;
+	public void setRadarTechnologies(final List<RadarTechnology> radarTechnologies) {
+		this.radarTechnologies = radarTechnologies;
 	}
 }
