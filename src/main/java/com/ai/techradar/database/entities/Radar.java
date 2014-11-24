@@ -95,4 +95,5 @@ public class Radar {
 	public void setRadarTechGroupings(final List<RadarTechGrouping> radarTechGroupings) {
 		this.radarTechGroupings = radarTechGroupings;
 	}
+	
 }

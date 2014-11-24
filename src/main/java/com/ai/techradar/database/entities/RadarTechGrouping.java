@@ -7,7 +7,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -41,7 +40,6 @@ public class RadarTechGrouping {
 	}
 
 	@ManyToOne
-	@JoinColumn(name="TECH_GROUPING_ID")
 	public TechGrouping getTechGrouping() {
 		return techGrouping;
 	}
@@ -51,7 +49,6 @@ public class RadarTechGrouping {
 	}
 
 	@ManyToOne
-	@JoinColumn(name="RADAR_ID")
 	public Radar getRadar() {
 		return radar;
 	}
@@ -68,4 +65,5 @@ public class RadarTechGrouping {
 	public void setRadarTechnologies(final List<RadarTechnology> radarTechnologies) {
 		this.radarTechnologies = radarTechnologies;
 	}
+	
 }

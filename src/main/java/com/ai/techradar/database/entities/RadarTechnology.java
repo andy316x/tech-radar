@@ -4,7 +4,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -41,7 +40,6 @@ public class RadarTechnology {
 	}
 
 	@ManyToOne
-	@JoinColumn(name="TECHNOLOGY_ID")
 	public Technology getTechnology() {
 		return technology;
 	}
@@ -51,7 +49,6 @@ public class RadarTechnology {
 	}
 
 	@ManyToOne
-	@JoinColumn(name="RADAR_ID")
 	public Radar getRadar() {
 		return radar;
 	}
@@ -61,7 +58,6 @@ public class RadarTechnology {
 	}
 
 	@ManyToOne
-	@JoinColumn(name="RADAR_MATURITY_ID")
 	public RadarMaturity getRadarMaturity() {
 		return radarMaturity;
 	}
@@ -71,7 +67,6 @@ public class RadarTechnology {
 	}
 
 	@ManyToOne
-	@JoinColumn(name="RADAR_TECH_GROUPING_ID")
 	public RadarTechGrouping getRadarTechGrouping() {
 		return radarTechGrouping;
 	}

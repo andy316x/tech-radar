@@ -52,4 +52,5 @@ public class Maturity {
 	public void setRadarMaturities(final List<RadarMaturity> radarMaturities) {
 		this.radarMaturities = radarMaturities;
 	}
+	
 }

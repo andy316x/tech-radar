@@ -50,23 +50,23 @@
 
 [
 {
-  "technology":{"name":"D3"},
-  "x":{"arc":{"name":"Assess"}},
-  "y":{"quadrant":{"name":"Languages & Frameworks"}}
+  "technology":"D3",
+  "maturity":"Assess",
+  "techGrouping":"Languages & Frameworks"
 },
 {
-  "technology":{"name":"AngularJS"},
-  "x":{"arc":{"name":"Adopt"}},
-  "y":{"quadrant":{"name":"Tools"}}
+  "technology":"AngularJS",
+  "maturity":"Adopt",
+  "techGrouping":"Tools"
 },
 {
-  "technology":{"name":"JBoss"},
-  "x":{"arc":{"name":"Trial"}},
-  "y":{"quadrant":{"name":"Platforms"}}
+  "technology":"JBoss",
+  "maturity":"Trial",
+  "techGrouping":"Platforms"
 },
 {
-  "technology":{"name":"JSF"},
-  "x":{"arc":{"name":"Phase Out"}},
-  "y":{"quadrant":{"name":"Solutions"}}
+  "technology":"JSF",
+  "maturity":"Phase Out",
+  "techGrouping":"Solutions"
 }
 ]
