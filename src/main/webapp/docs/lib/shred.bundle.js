@@ -899,7 +899,9 @@ Object.defineProperties(Request.prototype, {
         switch(this.scheme) {
           case "https": return this._port = 443;
           case "http":
-          default: return this._port = 80;
+          default: return undefined;
+          // APW bug fix
+          //default: return this._port = 80;
         }
       }
       return this._port;

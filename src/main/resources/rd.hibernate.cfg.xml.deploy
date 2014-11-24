@@ -39,6 +39,11 @@
         <mapping package="com.ai.techradar.database.entities"/>
         <mapping class="com.ai.techradar.database.entities.Radar"/>
         <mapping class="com.ai.techradar.database.entities.Technology"/>
+        <mapping class="com.ai.techradar.database.entities.Maturity"/>
+        <mapping class="com.ai.techradar.database.entities.TechGrouping"/>
+        <mapping class="com.ai.techradar.database.entities.RadarTechnology"/>
+        <mapping class="com.ai.techradar.database.entities.RadarTechGrouping"/>
+        <mapping class="com.ai.techradar.database.entities.RadarMaturity"/>
         
  	</session-factory>
 
