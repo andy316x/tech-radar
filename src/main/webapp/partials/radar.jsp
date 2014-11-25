@@ -37,7 +37,7 @@
 					</div>
 				</div>
 				<div style="text-align:center;">
-					<img ng-src="/radar/preview/{{radar.id}}?w=175"></img>
+					<img src="/radar/img/radar_175.svg"></img>
 				</div>
 				<div>
 					<img class="img img-rounded" src="/radar/img/128.jpg">
