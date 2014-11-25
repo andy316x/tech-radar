@@ -45,6 +45,11 @@
 		<servlet-name>CsvExporter</servlet-name>
 		<servlet-class>com.ai.techradar.servlet.CSVExportServlet</servlet-class>
 	</servlet>
+	
+	<servlet>
+		<servlet-name>CsvUploader</servlet-name>
+		<servlet-class>com.ai.techradar.servlet.CSVUploadServlet</servlet-class>
+	</servlet>
 
 	<servlet>
 		<servlet-name>RadarPreview</servlet-name>
@@ -74,6 +79,11 @@
 	<servlet-mapping>
 		<servlet-name>CsvExporter</servlet-name>
 		<url-pattern>/export/csv</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>CsvUploader</servlet-name>
+		<url-pattern>/uploadcsv</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

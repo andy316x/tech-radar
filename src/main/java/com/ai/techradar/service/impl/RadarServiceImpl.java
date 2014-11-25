@@ -191,6 +191,35 @@ public class RadarServiceImpl implements RadarService {
 		return radarTO;
 	}
 
+	public boolean deleteRadarById(final Long id) {
+		final Session session = HibernateUtil.getSessionFactory().openSession();
+		session.beginTransaction();
+
+		final Criteria query = session.createCriteria(Radar.class);
+		query.add(Restrictions.eq("id", id));
+
+		final Radar radar = (Radar)query.uniqueResult();
+
+		for(final RadarTechnology radarTechnology : radar.getRadarTechnologies()) {
+			session.delete(radarTechnology);
+		}
+
+		for(final RadarTechGrouping radarTechGrouping : radar.getRadarTechGroupings()) {
+			session.delete(radarTechGrouping);
+		}
+
+		for(final RadarMaturity radarMaturity : radar.getRadarMaturities()) {
+			session.delete(radarMaturity);
+		}
+
+		session.delete(radar);
+
+		session.getTransaction().commit();
+		session.close();
+
+		return true;
+	}
+
 	public RadarTO addTechnologiesToRadar(final Long radarId, final List<RadarTechnologyTO> radarTechnologyTOs) throws ValidationException {
 		final List<String> validations = new ArrayList<String>();
 
@@ -204,6 +233,13 @@ public class RadarServiceImpl implements RadarService {
 			if(radar==null) {
 				validations.add("Unable to find radar with ID " + radarId);
 				throw new ValidationException(validations);
+			}
+			
+			// Remove all the existing technologies
+			// TODO at the moment an upload removes all previous 
+			// technologies - what should the behaviour be?
+			for(final RadarTechnology radarTechnology : radar.getRadarTechnologies()) {
+				session.delete(radarTechnology);
 			}
 
 			if(radarTechnologyTOs!=null && !radarTechnologyTOs.isEmpty()) {

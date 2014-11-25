@@ -101,10 +101,10 @@ techRadarControllers.directive('ngNewRadar', function ($http) {
 		link: function ($scope, element, attrs) {
 			
 			$scope.techGroupingOptions = [];
-			$scope.techGrouping1 = 'Languages & Frameworks';
-			$scope.techGrouping2 = 'Tools';
-			$scope.techGrouping3 = 'Solutions';
-			$scope.techGrouping4 = 'Platforms';
+			$scope.techGrouping1 = 'Dev Tool';
+			$scope.techGrouping2 = 'Dev Language';
+			$scope.techGrouping3 = 'Platform';
+			$scope.techGrouping4 = 'Solution Technology';
 			$http.get('/radar/rest/techgrouping').
 			success(function(data, status, headers, config) {
 				for(var i = 0; i < data.length; i++) {
@@ -116,10 +116,12 @@ techRadarControllers.directive('ngNewRadar', function ($http) {
 			});
 			
 			$scope.$watch('visible', function (newVal, oldVal, scope) {
-				if(newVal == true) {
-					element.children(":first").modal('show');
-				} else {
-					element.children(":first").modal('hide');
+				if(newVal != oldVal) {
+					if(newVal == true) {
+						element.children(":first").modal('show');
+					} else {
+						element.children(":first").modal('hide');
+					}
 				}
 			}, false);
 			
@@ -137,10 +139,10 @@ techRadarControllers.directive('ngNewRadar', function ($http) {
 					         {name: $scope.techGrouping4}
 					    ],
 					    maturities: [
-					         {name: 'Assess'},
-					         {name: 'Adopt'},
-					         {name: 'Trial'},
-					         {name: 'Phase Out'}
+					         {name: 'watch'},
+					         {name: 'maintain'},
+					         {name: 'invest'},
+					         {name: 'phase out'}
 					    ]
 					};
 				$http.post('/radar/rest/radar', radar).
@@ -157,6 +159,29 @@ techRadarControllers.directive('ngNewRadar', function ($http) {
 });
 
 techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location, $routeParams, $log) {
+	
+	$('#fileinput').on('change', function(ev){
+		var form = document.getElementById('uploadform');
+		form['id'].value = $scope.selectedRadar.id;
+		form.submit();
+		
+		var checkFrame = function() {
+			var frameWindow = document.getElementById('theframe').contentWindow;
+			console.log(frameWindow);
+			if(typeof frameWindow.techRadarData != 'undefined') {
+				console.log(frameWindow.techRadarData);
+				$scope.$apply(function(){
+					mapRadar(frameWindow.techRadarData);
+				});
+				console.log('done');
+			} else {
+				console.log('No data, try again in a bit');
+				window.setTimeout(checkFrame, 500);
+			}
+		};
+		
+		window.setTimeout(checkFrame, 500);
+	});
 	
 	$scope.newRadarVisible = false;
 	
@@ -188,6 +213,28 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 		}).
 		error(function(data, status, headers, config) {
 			$log.log('error');
+		});
+	};
+	
+	$scope.doSave = function () {
+		$http.post('/radar/rest/radar/addtech/' + $scope.selectedRadar.id, $scope.selectedRadar.technologies).
+		success(function(data, status, headers, config) {
+			$scope.go('/radar/' + $scope.selectedRadar.id);
+		}).
+		error(function(data, status, headers, config) {
+			$log.error('Failed to add technologies to radar');
+			$log.error(data);
+		});
+	};
+	
+	$scope.doDelete = function ( radarId ) {
+		$http({method:'DELETE', url:'/radar/rest/radar/' + radarId}).
+		success(function(data, status, headers, config) {
+			$scope.go('/radar');
+		}).
+		error(function(data, status, headers, config) {
+			$log.error('Failed to delete radar');
+			$log.error(data);
 		});
 	};
 
@@ -224,67 +271,71 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 		$log.log('error');
 	});
 	
+	var mapRadar = function(data) {
+		var theRadar = data;
+		theRadar.arcMap = {};
+		theRadar.quadrantMap = {};
+		theRadar.radar = {
+				arcs: [],
+				quadrants: []
+		};
+		
+		for(var i = 0; i < theRadar.maturities.length; i++) {
+			(function(row){
+				var arc = {
+						id: row.name,
+						name: row.name,
+						r: arcWidths[theRadar.radar.arcs.length],
+						color: arcColours[theRadar.radar.arcs.length]
+				};
+				theRadar.arcMap[row.name] = arc;
+				theRadar.radar.arcs.push(arc);
+			})(theRadar.maturities[i]);
+		}
+		
+		for(var i = 0; i < theRadar.techGroupings.length; i++) {
+			(function(row){
+				quadrant = {
+						id: row.name,
+						name: row.name,
+						color: quadrantColours[theRadar.radar.quadrants.length],
+						items: []
+				};
+				theRadar.quadrantMap[row.name] = quadrant;
+				theRadar.radar.quadrants.push(quadrant);
+			})(theRadar.techGroupings[i]);
+		}
+
+		if(theRadar.technologies!=null && typeof theRadar.technologies!='undefined') {
+			for(var i = 0; i < theRadar.technologies.length; i++) {
+				(function(row){
+					var customerStrategic = row.customerStrategic;
+					var newItem = {
+							id: i+1,
+							name: row.technology,
+							show: false,
+							arc: row.maturity,
+							pc: {
+								r: row.radius,
+								t: Math.floor((Math.random() * 90) + 1)
+							},
+							movement: row.movement,
+							description: row.description,
+							detailUrl: row.detailUrl,
+							customerStrategic: customerStrategic,
+							url: row.url
+					};
+					theRadar.quadrantMap[row.techGrouping].items.push(newItem);
+				})(theRadar.technologies[i]);
+			}
+		}
+		$scope.selectedRadar = theRadar;
+	};
+	
 	var loadRadar = function() {
 		$http({method: 'GET', url: '/radar/rest/radar/' + $routeParams.radarid + '?nocache=' + (new Date()).getTime()}).
 		success(function(data, status, headers, config) {
-			var theRadar = data;
-			theRadar.arcMap = {};
-			theRadar.quadrantMap = {};
-			theRadar.radar = {
-					arcs: [],
-					quadrants: []
-			};
-			
-			for(var i = 0; i < theRadar.maturities.length; i++) {
-				(function(row){
-					var arc = {
-							id: row.name,
-							name: row.name,
-							r: arcWidths[theRadar.radar.arcs.length],
-							color: arcColours[theRadar.radar.arcs.length]
-					};
-					theRadar.arcMap[row.name] = arc;
-					theRadar.radar.arcs.push(arc);
-				})(theRadar.maturities[i]);
-			}
-			
-			for(var i = 0; i < theRadar.techGroupings.length; i++) {
-				(function(row){
-					quadrant = {
-							id: row.name,
-							name: row.name,
-							color: quadrantColours[theRadar.radar.quadrants.length],
-							items: []
-					};
-					theRadar.quadrantMap[row.name] = quadrant;
-					theRadar.radar.quadrants.push(quadrant);
-				})(theRadar.techGroupings[i]);
-			}
-
-			if(theRadar.technologies!=null && typeof theRadar.technologies!='undefined') {
-				for(var i = 0; i < theRadar.technologies.length; i++) {
-					(function(row){
-						var customerStrategic = row.customerStrategic;
-						var newItem = {
-								id: i+1,
-								name: row.technology,
-								show: false,
-								arc: row.maturity,
-								pc: {
-									r: row.radius,
-									t: Math.floor((Math.random() * 90) + 1)
-								},
-								movement: row.movement,
-								description: row.description,
-								detailUrl: row.detailUrl,
-								customerStrategic: customerStrategic,
-								url: row.url
-						};
-						theRadar.quadrantMap[row.techGrouping].items.push(newItem);
-					})(theRadar.technologies[i]);
-				}
-			}
-			$scope.selectedRadar = theRadar;
+			mapRadar(data);
 		}).
 		error(function(data, status, headers, config) {
 			$log.log('error');

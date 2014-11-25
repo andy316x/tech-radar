@@ -15,6 +15,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -96,6 +97,19 @@ public class RadarRestService {
 			return Response.status(Status.BAD_REQUEST).entity(ex.getValidations()).build();
 		}
 
+	}
+
+	@DELETE
+	@Path("/{radarId}")
+	@ApiOperation(value="Delete radar by ID",response=Response.class)
+	@Produces("application/json")
+	public Response deleteRadarById(@PathParam("radarId") final String radarIdStr) {
+
+		final Long id = Long.parseLong(radarIdStr);
+
+		service.deleteRadarById(id);
+
+		return Response.ok().build();
 	}
 
 	@POST

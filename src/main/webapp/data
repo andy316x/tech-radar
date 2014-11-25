@@ -1,72 +1,197 @@
 {
 "techGroupings": [
 {
-  "name": "Languages & Frameworks"
+  "name": "Dev Tool"
 },
 {
-  "name": "Tools"
+  "name": "Dev Language"
 },
 {
-  "name": "Platforms"
+  "name": "Platform"
 },
 {
-  "name": "Solutions"
+  "name": "Solution Technology"
 }
 ],
 
 
 "maturities":[
 {
-  "name": "Assess"
+  "name": "watch"
 },
 {
-  "name": "Adopt"
+  "name": "maintain"
 },
 {
-  "name": "Trial"
+  "name": "invest"
 },
 {
-  "name": "Phase Out"
+  "name": "phase out"
 }
 ],
 
 "technologies":[
-
-{
-  "name": "D3"
-},
-{
-  "name": "AngularJS"
-},
-{
-  "name": "JBoss"
-},
-{
-  "name": "JSF"
-}
+   {"name": "Bamboo"},
+   {"name": "C++"},
+   {"name": ".Net"},
+   {"name": "C#"},
+   {"name": "Java EE"},
+   {"name": "Java SE"},
+   {"name": "Python"},
+   {"name": "Shell Script"},
+   {"name": "SQL"},
+   {"name": "XPath"},
+   {"name": "XSD"},
+   {"name": "XSLT"},
+   {"name": "COM/ActiveX"},
+   {"name": "EMITE"},
+   {"name": "Hessian"},
+   {"name": "Owl"},
+   {"name": "PL/SQL"},
+   {"name": "Ruby"},
+   {"name": "Stored Procedures"},
+   {"name": "VB"},
+   {"name": "VB.NET"},
+   {"name": "VBA"},
+   {"name": "Jira"},
+   {"name": "Maven"},
+   {"name": "Puppet"},
+   {"name": "Sonotype Nexus"},
+   {"name": "Swagger"},
+   {"name": "Enterprise Architect"},
+   {"name": "Git"},
+   {"name": "Jenkins"},
+   {"name": "MSBuild"},
+   {"name": "Eclipse"},
+   {"name": "Visual Studio"},
+   {"name": "MooD"},
+   {"name": "XML Spy"},
+   {"name": "TortoiseSVN"},
+   {"name": "IBM RTC"},
+   {"name": "Team Foundation Server"},
+   {"name": "Trac"},
+   {"name": "Hudson"},
+   {"name": "Team Foundation Server_b"},
+   {"name": "NetBeans"},
+   {"name": "Perforce"},
+   {"name": "Team Foundation Server_c"},
+   {"name": "Chef"},
+   {"name": "npm"},
+   {"name": "Lumension"},
+   {"name": "Drupal"},
+   {"name": "Sharepoint"},
+   {"name": "Apache"},
+   {"name": "Jboss"},
+   {"name": "Microsoft IIS"},
+   {"name": "Oracle Weblogic"},
+   {"name": "Tomcat"},
+   {"name": "Citrix"},
+   {"name": "VirtualBox"},
+   {"name": "VMWare"},
+   {"name": "Alfresco"},
+   {"name": "ESRI ArcGIS Server"},
+   {"name": "Linux"},
+   {"name": "Windows Server"},
+   {"name": "Oracle Application Server"},
+   {"name": "Palantir"},
+   {"name": "SAS"},
+   {"name": "SAS Dataflux"},
+   {"name": "SAS Enterprise Guide"},
+   {"name": "Splunk"},
+   {"name": "Wildfly"},
+   {"name": "Amazon AWS"},
+   {"name": "Infosphere MDM"},
+   {"name": "MapReduce"},
+   {"name": "QlikView"},
+   {"name": "Oracle BPEL"},
+   {"name": "Oracle BPMN"},
+   {"name": "Allegro Graph"},
+   {"name": "Elastic Search"},
+   {"name": "Hadoop"},
+   {"name": "SQL Server"},
+   {"name": "Talend"},
+   {"name": "ActiveMQ"},
+   {"name": "Camel"},
+   {"name": "Jersey"},
+   {"name": "Logstash"},
+   {"name": "REST"},
+   {"name": "WebAPI"},
+   {"name": "AngularJS"},
+   {"name": "CSS"},
+   {"name": "D3"},
+   {"name": "HTML5"},
+   {"name": "Javascript"},
+   {"name": "Experian QuickAddress"},
+   {"name": "InfoSphere Streams"},
+   {"name": "Active Directory"},
+   {"name": "MySQL"},
+   {"name": "Oracle "},
+   {"name": "IBM MQ"},
+   {"name": "Rabbit MQ"},
+   {"name": "XMPP"},
+   {"name": "AutoMapper"},
+   {"name": "EJB3"},
+   {"name": "EntityFramework"},
+   {"name": "Exchange"},
+   {"name": "log4j"},
+   {"name": "log4net"},
+   {"name": "OpenFire"},
+   {"name": "Quartz"},
+   {"name": "Spring"},
+   {"name": "Tika"},
+   {"name": "Windows Communication Foundation (WCF)"},
+   {"name": "ESRI ArcGIS Client API"},
+   {"name": "HTML"},
+   {"name": "jQuery"},
+   {"name": "Kibana"},
+   {"name": "Oracle APEX"},
+   {"name": "Windows Presentation Foundation (WPF)"},
+   {"name": "i2 Analysts Notebook"},
+   {"name": "Mapfish Print"},
+   {"name": "Rocket AeroText"},
+   {"name": "Oracle Internet Directory"},
+   {"name": "OWSM"},
+   {"name": "Autonomy"},
+   {"name": "Cassandra"},
+   {"name": "Lucene"},
+   {"name": "Oracle Text"},
+   {"name": "SAS Data Integration Studio"},
+   {"name": "ASN.1"},
+   {"name": "Microsoft (MSMQ)"},
+   {"name": "Software AG"},
+   {"name": "Apache Axis2"},
+   {"name": "Hibernate"},
+   {"name": "JSP"},
+   {"name": "Newtonsoft JSON.NET"},
+   {"name": "NLog"},
+   {"name": "Apache MyFaces"},
+   {"name": "Apache Tomahawk"},
+   {"name": "Apache Trinidad"},
+   {"name": "ASP.Net"},
+   {"name": "DevExpress"},
+   {"name": "Eclipse RCP"},
+   {"name": "GWT"},
+   {"name": "Java SWT"},
+   {"name": "JavaFX"},
+   {"name": "JFace"},
+   {"name": "JSF"},
+   {"name": "Prime Faces"},
+   {"name": "Swing"},
+   {"name": "Vaadin"},
+   {"name": "VB.NET Winforms"},
+   {"name": "yFiles"},
+   {"name": "OpenNLP"},
+   {"name": "Tableau"},
+   {"name": "YarcData"},
+   {"name": "Apache Accumulo"},
+   {"name": "h2"},
+   {"name": "MongoDB"},
+   {"name": "Neo4j"},
+   {"name": "PostGIS"},
+   {"name": "Denodo"},
+   {"name": "Kapow"},
+   {"name": "NodeJS"},
+   {"name": "Bootstrap"},
+   {"name": "Foundation"}
 ]
 }
-
-
-[
-{
-  "technology":"D3",
-  "maturity":"Assess",
-  "techGrouping":"Languages & Frameworks"
-},
-{
-  "technology":"AngularJS",
-  "maturity":"Adopt",
-  "techGrouping":"Tools"
-},
-{
-  "technology":"JBoss",
-  "maturity":"Trial",
-  "techGrouping":"Platforms"
-},
-{
-  "technology":"JSF",
-  "maturity":"Phase Out",
-  "techGrouping":"Solutions"
-}
-]

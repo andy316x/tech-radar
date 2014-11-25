@@ -15,13 +15,21 @@
 			<h1><i class="glyphicon glyphicon-ok" style="color:green;"></i> <strong>Editing</strong> <span class="muted" style="margin-left:20px;">{{selectedRadar.name}}</span></h1>
 		</div>
 		<div class="col-md-6 text-right">
-			<button class="btn btn-default" ng-click="exportCsv(selectedRadar.id)">Download Data</button>
-			<button class="btn btn-success">Upload Data</button>
-			<button class="btn btn-default">Delete</button>
-			<button class="btn btn-primary" ng-click="go('/radar/'+selectedRadar.id)">Save</button>
-			<button class="btn btn-default">Publish</button>
+			<form id="uploadform" action="/radar/uploadcsv" method="post" target="theframe" enctype="multipart/form-data">
+				<button class="btn btn-default" ng-click="exportCsv(selectedRadar.id)">Download Data</button>
+				<input id="id" name="id" type="hidden"></input>
+				<div id='file_browse_wrapper'>
+					Upload Data
+					<input type='file' id='fileinput' name="fileinput"></input>
+				</div>
+				<button class="btn btn-default" ng-click="doDelete(selectedRadar.id)">Delete</button>
+				<button class="btn btn-primary" ng-click="doSave()">Save</button>
+				<button class="btn btn-success">Publish</button>
+			</form>
 		</div>
 	</div>
+	
+	<iframe id="theframe" name="theframe" style="display:none;"></iframe>
 
 	<div class="col-md-12" style="background-color:#EFEFEF;padding:25px 20px;">
 	
