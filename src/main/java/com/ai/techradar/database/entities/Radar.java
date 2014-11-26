@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Index;
 
 @Entity
 public class Radar {
@@ -45,6 +46,7 @@ public class Radar {
 		this.id = id;
 	}
 
+	@Index(name="radarNameIndex")
 	public String getName() {
 		return name;
 	}
@@ -61,6 +63,7 @@ public class Radar {
 		this.filename = filename;
 	}
 
+	@Index(name="radarDateUploadedIndex")
 	public Date getDateUploaded() {
 		return dateUploaded;
 	}

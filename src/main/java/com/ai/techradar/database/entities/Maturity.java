@@ -2,14 +2,15 @@ package com.ai.techradar.database.entities;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.CascadeType;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Index;
 
 @Entity
 public class Maturity {
@@ -36,6 +37,7 @@ public class Maturity {
 		this.id = id;
 	}
 
+	@Index(name="maturityNameIndex")
 	public String getName() {
 		return name;
 	}
@@ -52,5 +54,5 @@ public class Maturity {
 	public void setRadarMaturities(final List<RadarMaturity> radarMaturities) {
 		this.radarMaturities = radarMaturities;
 	}
-	
+
 }

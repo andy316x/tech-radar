@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Index;
 
 @Entity
 public class TechGrouping {
@@ -36,6 +37,7 @@ public class TechGrouping {
 		this.id = id;
 	}
 
+	@Index(name="techGroupingNameIndex")
 	public String getName() {
 		return name;
 	}

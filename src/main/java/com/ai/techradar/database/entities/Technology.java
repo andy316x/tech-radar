@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Index;
 
 @Entity
 public class Technology {
@@ -46,6 +47,7 @@ public class Technology {
 		this.id = id;
 	}
 
+	@Index(name="technologyNameIndex")
 	public String getName() {
 		return name;
 	}
