@@ -16,12 +16,52 @@ var Radar = {
 		var h = w;
 		
 		global_radar = radar;
-		
+
 		var scaleFactor = w/1000;
+		var allRails = [];
+		var maxBlips = new Array(radar.arcs.length);
+		for(var i = 0; i < radar.quadrants.length; i++) {
+			var quadrant = radar.quadrants[i];
+			allRails.push([]);
+			for(var j = 0; j < radar.arcs.length; j++) {
+				allRails[i].push([]);
+			}
+		
+			for(var j = 0; j < quadrant.items.length; j++) {
+				var arcIndex = function(arcName){
+					for(var k = 0; k < radar.arcs.length; k++){
+						if(radar.arcs[k].name == arcName){
+							return k;
+						}
+					}
+					return 0;
+				}(quadrant.items[j].arc);
+				allRails[i][arcIndex].push(quadrant.items[j]);
+			}
+			
+			for(var j = 0; j < radar.arcs.length;j++){
+				if(typeof maxBlips[j] === "undefined" || maxBlips[j] < allRails[i][j].length){
+					maxBlips[j] = allRails[i][j].length;
+				}
+			}
+		}
+		
+		var totalMaxBlips = 0;
+		for(var i = 0; i < radar.arcs.length; i++){
+			totalMaxBlips += maxBlips[i];
+		}
+		
+		for(var i = 0; i < radar.arcs.length; i++){
+			
+			maxBlips[i] = Math.sqrt((maxBlips[i]/totalMaxBlips)/(1/(radar.arcs.length - i)));
+			if(totalMaxBlips === 0){
+				maxBlips[i] = 1;
+			}
+		}
 		
 		var totalArc = 0;
 		for(var i = 0; i < radar.arcs.length; i++) {
-			totalArc = totalArc + radar.arcs[i].r;
+			totalArc = totalArc + radar.arcs[i].r*maxBlips[i];
 		}
 		global_totalArc = totalArc;
 		
@@ -39,10 +79,9 @@ var Radar = {
 		var cumulativeArc = 0;
 		var arcMap = {};
 		var arcs = [];
-		var rails = [2, 2, 1, 1];
 		for(var i = 0; i < radar.arcs.length; i++) {
 			
-			var r = (radar.arcs[i].r / totalArc)*(w/2);
+			var r = (radar.arcs[i].r*maxBlips[i] / totalArc)*(w/2);
 			
 			this._drawArc(svg, cumulativeArc, cumulativeArc + r, w/2, h/2, radar.arcs[i].color);
 			this._drawArcAxisText(svg, cumulativeArc, cumulativeArc + r, w, h, radar.arcs[i].name, scaleFactor);
@@ -50,7 +89,6 @@ var Radar = {
 			var arc = {
 				innerRadius: cumulativeArc,
 				outerRadius: cumulativeArc + r,
-				rails: rails[i],
 				index: i
 			};
 			arcMap[radar.arcs[i].id] = arc;
@@ -95,16 +133,8 @@ var Radar = {
 				.style({'text-anchor':'middle'})
 				.text(quadrant.name);
 			
-			var arcRails = [];
-			for(var j = 0; j < arcs.length; j++) {
-				var arc = arcs[j];
-				arcRails.push([]);
-			}
+			var arcRails = allRails[i];
 			
-			for(var j = 0; j < quadrant.items.length; j++) {
-				var arc = arcMap[quadrant.items[j].arc];
-				arcRails[arc.index].push(quadrant.items[j]);
-			}
 			for(var j = 0; j < arcRails.length; j++) {
 				var rails = arcRails[j];
 				blips.push([]);
@@ -231,8 +261,6 @@ var Radar = {
 				}
 				
 				for(var k = 0; k < rails.length; k++) {
-					var item = rails[k];
-					var arc = arcMap[item.arc];
 					var x = poisson_dist[k][0];
 					var y = poisson_dist[k][1];
 					

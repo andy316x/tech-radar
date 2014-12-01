@@ -242,7 +242,7 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 
 	var quadrantColours = ['#3DB5BE', '#83AD78', '#E88744', '#8D2145'];
 	var arcColours = ['#BFC0BF', '#CBCCCB', '#D7D8D6', '#E4E5E4'];
-	var arcWidths = [150, 125, 75, 50];
+	var arcWidths = [125, 110, 90, 75];
 
 	$scope.selectedRadar = {
 			arcs:[],
@@ -263,7 +263,7 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 		if($scope.selectedId == null) {
 			if(data.length > 0) {
 				$scope.selectedId = data[0].id;
-				loadRadar();
+				loadRadar($scope.selectedId);
 			}
 		}
 	}).
@@ -332,8 +332,8 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 		$scope.selectedRadar = theRadar;
 	};
 	
-	var loadRadar = function() {
-		$http({method: 'GET', url: '/radar/rest/radar/' + $routeParams.radarid + '?nocache=' + (new Date()).getTime()}).
+	var loadRadar = function(id) {
+		$http({method: 'GET', url: '/radar/rest/radar/' + id + '?nocache=' + (new Date()).getTime()}).
 		success(function(data, status, headers, config) {
 			mapRadar(data);
 		}).
@@ -342,8 +342,8 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 		});
 	};
 
-	if($scope.radarid != null) {
-		loadRadar();
+	if(!($routeParams.radarid == null || typeof $routeParams.radarid === "undefined")) {
+		loadRadar($routeParams.radarid);
 	}
 
 });
