@@ -386,12 +386,6 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 	$http({method: 'GET', url: '/radar/rest/radar?nocache=' + (new Date()).getTime()}).
 	success(function(data, status, headers, config) {
 		$scope.radars = data;
-		if($scope.selectedId == null) {
-			if(data.length > 0) {
-				$scope.selectedId = data[0].id;
-				loadRadar();
-			}
-		}
 	}).
 	error(function(data, status, headers, config) {
 		$log.log('error');
@@ -457,9 +451,9 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 		}
 		$scope.selectedRadar = theRadar;
 	};
-
-	var loadRadar = function() {
-		$http({method: 'GET', url: '/radar/rest/radar/' + $routeParams.radarid + '?nocache=' + (new Date()).getTime()}).
+	
+	var loadRadar = function(id) {
+		$http({method: 'GET', url: '/radar/rest/radar/' + id + '?nocache=' + (new Date()).getTime()}).
 		success(function(data, status, headers, config) {
 			mapRadar(data);
 		}).
@@ -468,8 +462,8 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 		});
 	};
 
-	if($scope.radarid != null) {
-		loadRadar();
+	if(!($routeParams.radarid == null || typeof $routeParams.radarid === "undefined")) {
+		loadRadar($routeParams.radarid);
 	}
 
 });
