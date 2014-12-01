@@ -1,4 +1,26 @@
-<div class="container-fluid main-content" ng-controller="RadarCtrl">
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed"
+				data-toggle="collapse" data-target=".navbar-collapse">
+				<span class="sr-only">Toggle navigation</span> <span
+					class="icon-bar"></span> <span class="icon-bar"></span> <span
+					class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="#">The Radar</a>
+		</div>
+		<div class="navbar-collapse collapse">
+			<ul class="nav navbar-nav navbar-right">
+				<li class="active"><a href="#/radar">Radars</a></li>
+				<li><a href="#/technology">Technologies</a></li>
+				<li><a href="#">Skills Profile</a></li>
+				<li><a href="#">Ricky Winterbourne  <img class="img img-rounded" src="/radar/img/128.jpg"></a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="container-fluid main-content">
 	
 	<div class="row">
 	
@@ -22,7 +44,7 @@
 		</div>
 	</div>
 
-	<div class="col-md-12" style="background-color:#EFEFEF;padding:25px 20px;">
+	<div class="col-md-12" style="background-color:rgb(236,236,236);padding:25px 20px;">
 	
 		<div class="col-md-12">
 			<div class="col-md-6">
@@ -43,7 +65,7 @@
 			</div>
 		</div>
 		
-		<div class="col-md-12" style="padding:50px 100px;">
+		<div class="col-md-12" style="padding:50px 10%;">
 			<div id="radar" ng-radar="" radar="selectedRadar.radar" selected-blip="selectedItem"></div>
 		</div>
 		

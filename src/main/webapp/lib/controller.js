@@ -59,47 +59,47 @@ techRadarControllers.directive('ngNewRadar', function ($http) {
 			radarCreated: '&'
 		},
 		template: '<div class="modal fade">' +
-			      '  <div class="modal-dialog">' +
-	              '    <div class="modal-content">' +
-	              '      <div class="modal-header">' +
-	              '        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>' +
-	              '        <h4 class="modal-title">New Radar</h4>' +
-	              '      </div>' +
-	              '      <div class="modal-body">' +
-	              '        <div class="form-group">' +
-	              '          <label>Name</label>' +
-	              '          <input type="text" class="form-control" ng-model="name" placeholder="Enter name"></input>' +
-	              '        </div>' +
-	              '        <div class="form-group">' +
-	              '          <label>Tech Grouping 1</label>' +
-	              '          <select class="form-control" ng-model="techGrouping1" ng-options="techGroupingOption.value as techGroupingOption.label for techGroupingOption in techGroupingOptions"></select>' +
-	              '          </select>' +
-	              '        </div>' +
-	              '        <div class="form-group">' +
-	              '          <label>Tech Grouping 2</label>' +
-	              '          <select class="form-control" ng-model="techGrouping2" ng-options="techGroupingOption.value as techGroupingOption.label for techGroupingOption in techGroupingOptions"></select>' +
-	              '          </select>' +
-	              '        </div>' +
-	              '        <div class="form-group">' +
-	              '          <label>Tech Grouping 3</label>' +
-	              '          <select class="form-control" ng-model="techGrouping3" ng-options="techGroupingOption.value as techGroupingOption.label for techGroupingOption in techGroupingOptions"></select>' +
-	              '          </select>' +
-	              '        </div>' +
-	              '        <div class="form-group">' +
-	              '          <label>Tech Grouping 4</label>' +
-	              '          <select class="form-control" ng-model="techGrouping4" ng-options="techGroupingOption.value as techGroupingOption.label for techGroupingOption in techGroupingOptions"></select>' +
-	              '          </select>' +
-	              '        </div>' +
-	              '        <div ng-repeat="error in errors"><span class="text-danger">{{error}}</span></div>' +
-	              '      </div>' +
-	              '      <div class="modal-footer">' +
-	              '        <button type="button" ng-click="save()" class="btn btn-success">Create</button>' +
-	              '      </div>' +
-	              '    </div>' +
-	              '  </div>' +
-	              '</div>',
+		'  <div class="modal-dialog">' +
+		'    <div class="modal-content">' +
+		'      <div class="modal-header">' +
+		'        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>' +
+		'        <h4 class="modal-title">New Radar</h4>' +
+		'      </div>' +
+		'      <div class="modal-body">' +
+		'        <div class="form-group">' +
+		'          <label>Name</label>' +
+		'          <input type="text" class="form-control" ng-model="name" placeholder="Enter name"></input>' +
+		'        </div>' +
+		'        <div class="form-group">' +
+		'          <label>Tech Grouping 1</label>' +
+		'          <select class="form-control" ng-model="techGrouping1" ng-options="techGroupingOption.value as techGroupingOption.label for techGroupingOption in techGroupingOptions"></select>' +
+		'          </select>' +
+		'        </div>' +
+		'        <div class="form-group">' +
+		'          <label>Tech Grouping 2</label>' +
+		'          <select class="form-control" ng-model="techGrouping2" ng-options="techGroupingOption.value as techGroupingOption.label for techGroupingOption in techGroupingOptions"></select>' +
+		'          </select>' +
+		'        </div>' +
+		'        <div class="form-group">' +
+		'          <label>Tech Grouping 3</label>' +
+		'          <select class="form-control" ng-model="techGrouping3" ng-options="techGroupingOption.value as techGroupingOption.label for techGroupingOption in techGroupingOptions"></select>' +
+		'          </select>' +
+		'        </div>' +
+		'        <div class="form-group">' +
+		'          <label>Tech Grouping 4</label>' +
+		'          <select class="form-control" ng-model="techGrouping4" ng-options="techGroupingOption.value as techGroupingOption.label for techGroupingOption in techGroupingOptions"></select>' +
+		'          </select>' +
+		'        </div>' +
+		'        <div ng-repeat="error in errors"><span class="text-danger">{{error}}</span></div>' +
+		'      </div>' +
+		'      <div class="modal-footer">' +
+		'        <button type="button" ng-click="save()" class="btn btn-success">Create</button>' +
+		'      </div>' +
+		'    </div>' +
+		'  </div>' +
+		'</div>',
 		link: function ($scope, element, attrs) {
-			
+
 			$scope.techGroupingOptions = [];
 			$scope.techGrouping1 = 'Dev Tool';
 			$scope.techGrouping2 = 'Dev Language';
@@ -114,7 +114,7 @@ techRadarControllers.directive('ngNewRadar', function ($http) {
 			error(function(data, status, headers, config) {
 				$log.log('failed to load tech groupings');
 			});
-			
+
 			$scope.$watch('visible', function (newVal, oldVal, scope) {
 				if(newVal != oldVal) {
 					if(newVal == true) {
@@ -124,27 +124,28 @@ techRadarControllers.directive('ngNewRadar', function ($http) {
 					}
 				}
 			}, false);
-			
+
 			element.children(":first").on('hide.bs.modal', function(e) {
 				$scope.visible = false;
 			});
-			
+
 			$scope.save = function() {
 				var radar = {
-					    name: $scope.name,
-					    techGroupings: [
-					         {name: $scope.techGrouping1},
-					         {name: $scope.techGrouping2},
-					         {name: $scope.techGrouping3},
-					         {name: $scope.techGrouping4}
-					    ],
-					    maturities: [
-					         {name: 'watch'},
-					         {name: 'maintain'},
-					         {name: 'invest'},
-					         {name: 'phase out'}
-					    ]
-					};
+						name: $scope.name,
+						techGroupings: [
+						                {name: $scope.techGrouping1},
+						                {name: $scope.techGrouping2},
+						                {name: $scope.techGrouping3},
+						                {name: $scope.techGrouping4}
+						                ],
+						                maturities: [
+						                             {name: 'phase out'},
+						                             {name: 'maintain'},
+						                             {name: 'invest'},
+						                             {name: 'assess'},
+						                             {name: 'watch'}
+						                             ]
+				};
 				$http.post('/radar/rest/radar', radar).
 				success(function(data, status, headers, config) {
 					$scope.radarCreated({radar: data});
@@ -153,18 +154,143 @@ techRadarControllers.directive('ngNewRadar', function ($http) {
 					$scope.errors = data;
 				});
 			};
-			
+
 		}
 	};
 });
 
-techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location, $routeParams, $log) {
+techRadarControllers.controller('TechnologyCtrl', function ($scope, $http, $location, $routeParams, $log) {
+
+	// TODO I am being lazy, we need this in a directive
+	var technologySuggestions = new Bloodhound({
+		datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+		queryTokenizer: Bloodhound.tokenizers.whitespace,
+		prefetch: '/radar/rest/technology'
+	});
+	technologySuggestions.clearPrefetchCache();
+	technologySuggestions.initialize();
 	
+	var radarSuggestions = new Bloodhound({
+		datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+		queryTokenizer: Bloodhound.tokenizers.whitespace,
+		prefetch: '/radar/rest/radar'
+	});
+	radarSuggestions.clearPrefetchCache();
+	radarSuggestions.initialize();
+
+	$('.typeahead').typeahead({
+		hint: true,
+		highlight: true,
+		minLength: 1
+	},
+	{
+		name: 'technologies',
+		displayKey: 'name',
+		source: technologySuggestions.ttAdapter(),
+		templates: {
+			header: '<h3 class="search-title">Technologies</h3>'
+		}
+	},
+	{
+		name: 'radars',
+		displayKey: 'name',
+		source: radarSuggestions.ttAdapter(),
+		templates: {
+			header: '<h3 class="search-title">Radars</h3>'
+		}
+	})
+	.bind('typeahead:selected', function (obj, datum) {
+		$scope.$apply(function(){
+			if(typeof datum.maturities != 'undefined') {
+				$location.path('/radar/' + datum.id);
+			} else {
+				$location.path('/technology/' + datum.id);
+			}
+		});
+    });
+	
+	$scope.technologies = [];
+	$scope.technology = null;
+
+	$http({method: 'GET', url: '/radar/rest/technology?nocache=' + (new Date()).getTime()}).
+	success(function(data, status, headers, config) {
+		for(var i = 0; i < data.length; i++) {
+			$scope.technologies.push(data[i]);
+		}
+	}).
+	error(function(data, status, headers, config) {
+		$log.log('error getting technology list');
+	});
+
+	if(typeof $routeParams.technologyid != 'undefined') {
+		$http({method: 'GET', url: '/radar/rest/technology/' + $routeParams.technologyid + '?nocache=' + (new Date()).getTime()}).
+		success(function(data, status, headers, config) {
+			$scope.technology = data;
+		}).
+		error(function(data, status, headers, config) {
+			$log.log('error getting technology with ID ' + $routeParams.technologyid);
+		});
+	}
+
+});
+
+techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location, $routeParams, $log) {
+
+	// TODO I am being lazy, we need this in a directive
+	var technologySuggestions = new Bloodhound({
+		datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+		queryTokenizer: Bloodhound.tokenizers.whitespace,
+		prefetch: '/radar/rest/technology'
+	});
+	technologySuggestions.clearPrefetchCache();
+	technologySuggestions.initialize();
+	
+	var radarSuggestions = new Bloodhound({
+		datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+		queryTokenizer: Bloodhound.tokenizers.whitespace,
+		prefetch: '/radar/rest/radar'
+	});
+	radarSuggestions.clearPrefetchCache();
+	radarSuggestions.initialize();
+
+	$('.typeahead').typeahead({
+		hint: true,
+		highlight: true,
+		minLength: 1
+	},
+	{
+		name: 'technologies',
+		displayKey: 'name',
+		source: technologySuggestions.ttAdapter(),
+		templates: {
+			header: '<h3 class="search-title">Technologies</h3>'
+		}
+	},
+	{
+		name: 'radars',
+		displayKey: 'name',
+		source: radarSuggestions.ttAdapter(),
+		templates: {
+			header: '<h3 class="search-title">Radars</h3>'
+		}
+	})
+	.bind('typeahead:selected', function (obj, datum) {
+		$scope.$apply(function(){
+			if(typeof datum.maturities != 'undefined') {
+				$scope.go('/radar/' + datum.id);
+			} else {
+				$scope.go('/technology/' + datum.id);
+			}
+		});
+    });
+
+
+
 	$('#fileinput').on('change', function(ev){
 		var form = document.getElementById('uploadform');
 		form['id'].value = $scope.selectedRadar.id;
 		form.submit();
-		
+
 		var checkFrame = function() {
 			var frameWindow = document.getElementById('theframe').contentWindow;
 			console.log(frameWindow);
@@ -179,33 +305,33 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 				window.setTimeout(checkFrame, 500);
 			}
 		};
-		
+
 		window.setTimeout(checkFrame, 500);
 	});
-	
+
 	$scope.newRadarVisible = false;
-	
+
 	$scope.onRadarCreated = function(radar) {
 		$scope.newRadarVisible = false;
 		$scope.go('/radar/' + radar.id);
 	};
-	
+
 	$scope.go = function ( path ) {
 		$location.path( path );
 	};
-	
+
 	$scope.exportSvg = function(id) {
 		var form = document.getElementById('theForm');
 		form['id'].value = id;
 		form.submit();
 	};
-	
+
 	$scope.exportCsv = function(id) {
 		var form = document.getElementById('csvExportForm');
 		form['id'].value = id;
 		form.submit();
 	};
-	
+
 	$scope.doCsvExport = function ( radarId ) {
 		$http({method: 'GET', url: '/radar/export/csv?id=' + radarId + '&nocache=' + (new Date()).getTime()}).
 		success(function(data, status, headers, config) {
@@ -215,7 +341,7 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 			$log.log('error');
 		});
 	};
-	
+
 	$scope.doSave = function () {
 		$http.post('/radar/rest/radar/addtech/' + $scope.selectedRadar.id, $scope.selectedRadar.technologies).
 		success(function(data, status, headers, config) {
@@ -226,7 +352,7 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 			$log.error(data);
 		});
 	};
-	
+
 	$scope.doDelete = function ( radarId ) {
 		$http({method:'DELETE', url:'/radar/rest/radar/' + radarId}).
 		success(function(data, status, headers, config) {
@@ -241,8 +367,8 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 	$scope.selectedId = document.radar.radarId;
 
 	var quadrantColours = ['#3DB5BE', '#83AD78', '#E88744', '#8D2145'];
-	var arcColours = ['#BFC0BF', '#CBCCCB', '#D7D8D6', '#E4E5E4'];
-	var arcWidths = [150, 125, 75, 50];
+	var arcColours = ['rgb(223,223,223)', 'rgb(166,167,169)', 'rgb(190,191,193)', 'rgb(209,209,209)', 'rgb(223,223,223)'];
+	var arcWidths = [150, 125, 75, 50, 50];
 
 	$scope.selectedRadar = {
 			arcs:[],
@@ -270,7 +396,7 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 	error(function(data, status, headers, config) {
 		$log.log('error');
 	});
-	
+
 	var mapRadar = function(data) {
 		var theRadar = data;
 		theRadar.arcMap = {};
@@ -279,7 +405,7 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 				arcs: [],
 				quadrants: []
 		};
-		
+
 		for(var i = 0; i < theRadar.maturities.length; i++) {
 			(function(row){
 				var arc = {
@@ -292,7 +418,7 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 				theRadar.radar.arcs.push(arc);
 			})(theRadar.maturities[i]);
 		}
-		
+
 		for(var i = 0; i < theRadar.techGroupings.length; i++) {
 			(function(row){
 				quadrant = {
@@ -331,7 +457,7 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 		}
 		$scope.selectedRadar = theRadar;
 	};
-	
+
 	var loadRadar = function() {
 		$http({method: 'GET', url: '/radar/rest/radar/' + $routeParams.radarid + '?nocache=' + (new Date()).getTime()}).
 		success(function(data, status, headers, config) {

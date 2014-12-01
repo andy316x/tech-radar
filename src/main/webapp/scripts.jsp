@@ -17,3 +17,4 @@
 <script src="/radar/lib/controller.js"></script>
 <script src="/radar/lib/app.js"></script>
 <script src="/radar/lib/angular-route.min.js"></script>
+<script src="/radar/lib/typeahead.js"></script>

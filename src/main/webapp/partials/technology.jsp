@@ -11,8 +11,8 @@
 		</div>
 		<div class="navbar-collapse collapse">
 			<ul class="nav navbar-nav navbar-right">
-				<li class="active"><a href="#/radar">Radars</a></li>
-				<li><a href="#/technology">Technologies</a></li>
+				<li><a href="#/radar">Radars</a></li>
+				<li class="active"><a href="#/technology">Technologies</a></li>
 				<li><a href="#">Skills Profile</a></li>
 				<li><a href="#">Ricky Winterbourne  <img class="img img-rounded" src="/radar/img/128.jpg"></a></li>
 			</ul>
@@ -21,6 +21,8 @@
 </div>
 
 <div class="container-fluid main-content">
+
+
 	
 	<div class="row">
 	
@@ -41,37 +43,14 @@
 				</div>
 			</div>
 			<div class="col-md-3 text-right">
-				<button class="btn btn-success" ng-click="newRadarVisible=true">New Radar</button>
+				<button class="btn btn-success" ng-click="newRadarVisible=true">New Technology</button>
 			</div>
 		</div>
 		
-		<div ng-new-radar="" visible="newRadarVisible" radar-created="onRadarCreated(radar)"></div>
-		
 		<div class="col-md-12" style="background-color:#EFEFEF;padding:25px 20px;">
 	
-			<div ng-repeat="radar in radars" class="radar-card">
-				<div style="margin-bottom: 20px;">
-					<div class="col-xs-6">
-						{{radar.name}}
-					</div>
-					<div class="col-xs-6 text-right">
-						<i class="glyphicon glyphicon-ok" style="color:green;"></i>
-					</div>
-				</div>
-				<div style="text-align:center;">
-					<img src="/radar/img/radar_175.svg"></img>
-				</div>
-				<div>
-					<img class="img img-rounded" src="/radar/img/128.jpg">
-					<div style="padding-left:60px;">
-						<div><strong>Ricky Winterbourne</strong></div>
-						<div><small>(UK Services)</small></div>
-						<div><small>Published <strong>{{radar.dateCreated | date:'dd MMM yy'}}</strong></small></div>
-					</div>
-				</div>
-				<div>
-					<button class="btn btn-primary btn-block" ng-click="go('/radar/' + radar.id)">View</button>
-				</div>
+			<div ng-repeat="technology in technologies" class="radar-card" style="cursor: pointer;">
+				<a href="#/technology/{{technology.id}}">{{technology.name}}</a>
 			</div>
 			
 		</div>

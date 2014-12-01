@@ -20,6 +20,8 @@ public class RadarMaturity {
 	private Maturity maturity;
 
 	private Radar radar;
+	
+	private int theOrder;
 
 	private List<RadarTechnology> radarTechnologies;
 
@@ -64,6 +66,14 @@ public class RadarMaturity {
 
 	public void setRadarTechnologies(final List<RadarTechnology> radarTechnologies) {
 		this.radarTechnologies = radarTechnologies;
+	}
+
+	public int getTheOrder() {
+		return theOrder;
+	}
+
+	public void setTheOrder(int theOrder) {
+		this.theOrder = theOrder;
 	}
 	
 }
