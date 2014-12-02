@@ -27,8 +27,10 @@
 		<div class="col-md-12">
 			<div class="col-md-6">
 				<ul class="nav nav-pills">
-					<li class="active"><a href="#">All</a></li>
-					<li ng-repeat="quadrant in selectedRadar.radar.quadrants"><a href="#">{{quadrant.name}}</a></li>
+					<li ng-class="selectedQuad == '' ? 'active' : ''"><a href ng-click="go('/radar/'+selectedRadar.id)">All</a></li>
+					<li ng-repeat="quadrant in selectedRadar.radar.quadrants" ng-class="selectedQuad == quadrant.name ? 'active' : ''">
+						<a href ng-click="go('/radar/'+selectedRadar.id+'/'+quadrant.name)">{{quadrant.name}}</a>
+					</li>
 				</ul>
 			</div>
 			<div class="col-md-6 text-right" style="padding:10px;">

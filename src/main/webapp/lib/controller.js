@@ -1,6 +1,6 @@
 var techRadarControllers = angular.module('techRadarControllers', []);
 
-techRadarControllers.directive('ngRadar', function () {
+techRadarControllers.directive('ngRadar', function ($routeParams) {
 	return {
 		restrict: 'A',
 		scope: {
@@ -9,20 +9,41 @@ techRadarControllers.directive('ngRadar', function () {
 		},
 		link: function ($scope, element, attrs) {
 			var el = element[0];
-			var doDraw = function(r) {
-				$scope.theRadar = Radar.draw(el, r, {
-					onbliphover: function(blip) {
-						$scope.$apply(function(){
-							$scope.selectedBlip = blip;
-						});
-					},
-					onblipleave: function(blip) {
-						$scope.$apply(function(){
-							$scope.selectedBlip = null;
-						});
-					}
-				});
-			};
+			
+			var quadrantName = $routeParams.quadrant;
+		
+			var doDraw;
+			if(quadrantName != null && typeof quadrantName !== "undefined"){
+				doDraw = function(r) {
+					$scope.theRadar = Radar.draw_Quadrant(el, r, quadrantName, {
+						onbliphover: function(blip) {
+							$scope.$apply(function(){
+								$scope.selectedBlip = blip;
+							});
+						},
+						onblipleave: function(blip) {
+							$scope.$apply(function(){
+								$scope.selectedBlip = null;
+							});
+						}
+					});
+				};
+			}else{
+				doDraw = function(r) {
+					$scope.theRadar = Radar.draw(el, r, {
+						onbliphover: function(blip) {
+							$scope.$apply(function(){
+								$scope.selectedBlip = blip;
+							});
+						},
+						onblipleave: function(blip) {
+							$scope.$apply(function(){
+								$scope.selectedBlip = null;
+							});
+						}
+					});
+				};
+			}
 
 			if($scope.radar != null && typeof $scope.radar != 'undefined') {
 				doDraw($scope.radar);
@@ -159,6 +180,12 @@ techRadarControllers.directive('ngNewRadar', function ($http) {
 });
 
 techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location, $routeParams, $log) {
+	
+	$scope.selectedQuad = $routeParams.quadrant;
+	
+	if($scope.selectedQuad == null || typeof $scope.selectedQuad === "undefined"){
+		$scope.selectedQuad = "";
+	}
 	
 	$('#fileinput').on('change', function(ev){
 		var form = document.getElementById('uploadform');

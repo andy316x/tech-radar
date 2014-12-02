@@ -13,6 +13,10 @@ techRadarApp.config(['$routeProvider',function($routeProvider) {
         templateUrl: 'partials/viewradar.jsp',
         controller: 'RadarCtrl'
       })
+      .when('/radar/:radarid/:quadrant', {
+        templateUrl: 'partials/viewradar.jsp',
+        controller: 'RadarCtrl'
+      })
       .when('/radar/:radarid/edit', {
         templateUrl: 'partials/editradar.jsp',
         controller: 'RadarCtrl'
