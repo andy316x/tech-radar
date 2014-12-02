@@ -22,6 +22,8 @@ public class RadarTechGrouping {
 	private Radar radar;
 
 	private List<RadarTechnology> radarTechnologies;
+	
+	private int theOrder;
 
 	public RadarTechGrouping() {
 		// this form used by Hibernate
@@ -64,6 +66,14 @@ public class RadarTechGrouping {
 
 	public void setRadarTechnologies(final List<RadarTechnology> radarTechnologies) {
 		this.radarTechnologies = radarTechnologies;
+	}
+
+	public int getTheOrder() {
+		return theOrder;
+	}
+
+	public void setTheOrder(int theOrder) {
+		this.theOrder = theOrder;
 	}
 	
 }

@@ -1,6 +1,8 @@
 package com.ai.techradar.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -73,14 +75,18 @@ public class RadarServiceImpl implements RadarService {
 		r.setDateCreated(radar.getDateUploaded());
 
 		final List<MaturityTO> maturities = new ArrayList<MaturityTO>();
-		for(final RadarMaturity radarMaturity : radar.getRadarMaturities()) {
+		final List<RadarMaturity> maturityEntities = radar.getRadarMaturities();
+		Collections.sort(maturityEntities, MATURITY_COMPARATOR);
+		for(final RadarMaturity radarMaturity : maturityEntities) {
 			final MaturityTO maturityTO = new MaturityTO();
 			maturityTO.setName(radarMaturity.getMaturity().getName());
 			maturities.add(maturityTO);
 		}
 
 		final List<TechGroupingTO> techGroupings = new ArrayList<TechGroupingTO>();
-		for(final RadarTechGrouping radarTechGrouping : radar.getRadarTechGroupings()) {
+		final List<RadarTechGrouping> techGroupingEntities = radar.getRadarTechGroupings();
+		Collections.sort(techGroupingEntities, TECH_GROUPING_COMPARATOR);
+		for(final RadarTechGrouping radarTechGrouping : techGroupingEntities) {
 			final TechGroupingTO techGroupingTO = new TechGroupingTO();
 			techGroupingTO.setName(radarTechGrouping.getTechGrouping().getName());
 			techGroupings.add(techGroupingTO);
@@ -111,6 +117,34 @@ public class RadarServiceImpl implements RadarService {
 
 		return r;
 	}
+	
+	private static final Comparator<RadarMaturity> MATURITY_COMPARATOR = new Comparator<RadarMaturity>() {
+		public int compare(final RadarMaturity maturity1, final RadarMaturity maturity2) {
+			if(maturity1.getTheOrder() == maturity2.getTheOrder()) {
+				return 0;
+			}
+			
+			if(maturity1.getTheOrder() < maturity2.getTheOrder()) {
+				return -1;
+			} else {
+				return 1;
+			}
+		}
+	};
+	
+	private static final Comparator<RadarTechGrouping> TECH_GROUPING_COMPARATOR = new Comparator<RadarTechGrouping>() {
+		public int compare(final RadarTechGrouping maturity1, final RadarTechGrouping maturity2) {
+			if(maturity1.getTheOrder() == maturity2.getTheOrder()) {
+				return 0;
+			}
+			
+			if(maturity1.getTheOrder() < maturity2.getTheOrder()) {
+				return -1;
+			} else {
+				return 1;
+			}
+		}
+	};
 
 	public RadarTO createRadar(final RadarTO radarTO) throws ValidationException {
 		final List<String> validations = new ArrayList<String>();
@@ -135,12 +169,14 @@ public class RadarServiceImpl implements RadarService {
 			final List<MaturityTO> radarMaturityTOs = radarTO.getMaturities();
 			if(radarMaturityTOs!=null && !radarMaturityTOs.isEmpty()) {
 				if(radarMaturityTOs.size() > 3) {
+					int i = 0;
 					for(final MaturityTO radarMaturityTO : radarMaturityTOs) {
 						final Maturity maturity = readMaturity(radarMaturityTO.getName(), session);
 						if(maturity!=null) {
 							final RadarMaturity radarMaturity = new RadarMaturity();
 							radarMaturity.setRadar(radar);
 							radarMaturity.setMaturity(maturity);
+							radarMaturity.setTheOrder(i++);
 							session.persist(radarMaturity);
 						} else {
 							validations.add("Maturity " + radarMaturityTO.getName() + " does not exist");
@@ -156,12 +192,14 @@ public class RadarServiceImpl implements RadarService {
 			final List<TechGroupingTO> radarTechGroupingTOs = radarTO.getTechGroupings();
 			if(radarTechGroupingTOs!=null && !radarTechGroupingTOs.isEmpty()) {
 				if(radarTechGroupingTOs.size() == 4) {
+					int i = 0;
 					for(final TechGroupingTO radarTechGroupingTO : radarTechGroupingTOs) {
 						final TechGrouping techGrouping = readTechGrouping(radarTechGroupingTO.getName(), session);
 						if(techGrouping!=null) {
 							final RadarTechGrouping radarTechGrouping = new RadarTechGrouping();
 							radarTechGrouping.setRadar(radar);
 							radarTechGrouping.setTechGrouping(techGrouping);
+							radarTechGrouping.setTheOrder(i++);
 							session.persist(radarTechGrouping);
 						} else {
 							validations.add("Tech grouping " + radarTechGroupingTO.getName() + " does not exist");
@@ -234,7 +272,7 @@ public class RadarServiceImpl implements RadarService {
 				validations.add("Unable to find radar with ID " + radarId);
 				throw new ValidationException(validations);
 			}
-			
+
 			// Remove all the existing technologies
 			// TODO at the moment an upload removes all previous 
 			// technologies - what should the behaviour be?
@@ -244,6 +282,7 @@ public class RadarServiceImpl implements RadarService {
 
 			if(radarTechnologyTOs!=null && !radarTechnologyTOs.isEmpty()) {
 
+				int i = 0;
 				for(final RadarTechnologyTO radarTechnologyTO : radarTechnologyTOs) {
 
 					final String technologyName = radarTechnologyTO.getTechnology();
@@ -270,6 +309,7 @@ public class RadarServiceImpl implements RadarService {
 					radarTechnology.setRadarMaturity(radarMaturity);
 					radarTechnology.setRadarTechGrouping(radarTechGrouping);
 					radarTechnology.setMovement(MovementEnum.t);
+					radarTechnology.setTheOrder(i++);
 					session.persist(radarTechnology);
 
 				}

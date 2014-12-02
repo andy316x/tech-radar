@@ -5,6 +5,7 @@ import java.util.List;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
@@ -15,7 +16,6 @@ import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 
-@SuppressWarnings("unchecked")
 @Path("technology")
 @Api(value="/technology",description="Radar service")
 public class TechnologyRestService {
@@ -31,6 +31,19 @@ public class TechnologyRestService {
 		final List<TechnologyTO> rs = service.getTechnologies();
 
 		return Response.ok(rs).build();
+	}
+
+	@GET
+	@Path("/{technologyId}")
+	@ApiOperation(value="Get technology by ID",response=Response.class)
+	@Produces("application/json")
+	public Response getRadarById(@PathParam("technologyId") final String technologyIdStr) {
+
+		final Long id = Long.parseLong(technologyIdStr);
+
+		final TechnologyTO technology = service.getTechnologyById(id);
+
+		return Response.ok(technology).build();
 	}
 
 	@POST

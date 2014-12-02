@@ -5,8 +5,6 @@
 <jsp:include page="head.jsp"/>
 <body>
 
-	<jsp:include page="nav.jsp"/>
-
 	<div ng-view>
 	</div>
 	

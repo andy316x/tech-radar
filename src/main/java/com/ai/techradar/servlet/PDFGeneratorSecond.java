@@ -56,12 +56,12 @@ public class PDFGeneratorSecond extends PdfPageEventHelper {
 	private static float a2 = scaleFactor * 210;// 240;
 	private static float a3 = scaleFactor * 115;// 135; 115
 	private static float a4 = scaleFactor * 115;// 135;
+	private static float a5 = scaleFactor * 115;// 135;
 
-	private static final float[] ARC_WIDTHS = new float[] { a1, a2, a3, a4 };
+	private static final float[] ARC_WIDTHS = new float[] { a1, a2, a3, a4, a5 };
 	// must add up to int width
 
-	private static final String[] ARC_COLOURS = new String[] { "#BFC0BF", "#CBCCCB", "#D7D8D6",
-	"#E4E5E4" };
+	private static final String[] ARC_COLOURS = new String[] { "rgb(223,223,223)", "rgb(166,167,169)", "rgb(190,191,193)", "rgb(209,209,209)", "rgb(223,223,223)" };
 
 	private final Map<String, List<RadarTechnologyTO>> map = new LinkedHashMap<String, List<RadarTechnologyTO>>();
 
@@ -162,18 +162,24 @@ public class PDFGeneratorSecond extends PdfPageEventHelper {
 				final int r2 = (int) r1 + (int) a2; // cumulative of arc widths
 				final int r3 = (int) r2 + (int) a3;
 				final int r4 = (int) r3 + (int) a4;
+				final int r5 = (int) r4 + (int) a5;
+				
+				g2d.setColor(new Color(223, 223, 223));
+				g2d.fillArc(r5 / 2 - r1 / 2, r5 / 2 - r1 / 2, r5, r5, 90, 90);
 
-				g2d.setColor(Color.decode("#E4E5E4"));
-				g2d.fillArc(r4 / 2 - r4 / 2, r4 / 2 - r4 / 2, r4, r4, 90, 90);
+				g2d.setColor(new Color(209, 209, 209));
+				g2d.fillArc(r5 / 2 - r4 / 2, r5 / 2 - r4 / 2, r4, r4, 90, 90);
 
-				g2d.setColor(Color.decode("#D7D8D6"));
-				g2d.fillArc(r4 / 2 - r3 / 2, r4 / 2 - r3 / 2, r3, r3, 90, 90);
+				g2d.setColor(new Color(190, 191, 193));
+				g2d.fillArc(r5 / 2 - r3 / 2, r5 / 2 - r3 / 2, r3, r3, 90, 90);
 
-				g2d.setColor(Color.decode("#CBCCCB"));
-				g2d.fillArc(r4 / 2 - r2 / 2, r4 / 2 - r2 / 2, r2, r2, 90, 90);
+				g2d.setColor(new Color(166, 167, 169));
+				g2d.fillArc(r5 / 2 - r2 / 2, r5 / 2 - r2 / 2, r2, r2, 90, 90);
 
-				g2d.setColor(Color.decode("#BFC0BF"));
-				g2d.fillArc(r4 / 2 - r1 / 2, r4 / 2 - r1 / 2, r1, r1, 90, 90);
+				g2d.setColor(new Color(223, 223, 223));
+				g2d.fillArc(r5 / 2 - r1 / 2, r5 / 2 - r1 / 2, r1, r1, 90, 90);
+				
+				
 				g2d.setFont(new java.awt.Font("Verdana", Font.NORMAL, 8));
 				g2d.setColor(Color.decode(quadrant.getColour()));
 
@@ -182,6 +188,7 @@ public class PDFGeneratorSecond extends PdfPageEventHelper {
 				g2d.drawString("PHASE OUT", scaleFactor * 330, offset);
 				g2d.drawString("MAINTAIN", scaleFactor * 330, offset + (scaleFactor * 60));
 				g2d.drawString("INVEST", scaleFactor * 330, offset + (scaleFactor * 125));
+				g2d.drawString("ASSESS", scaleFactor * 330, offset + (scaleFactor * 240));
 				g2d.drawString("WATCH", scaleFactor * 330, offset + (scaleFactor * 240));
 
 				final int axisWidth = 8;

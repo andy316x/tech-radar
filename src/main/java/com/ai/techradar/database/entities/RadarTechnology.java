@@ -22,6 +22,8 @@ public class RadarTechnology {
 	private RadarTechGrouping radarTechGrouping;
 
 	private MovementEnum movement;
+	
+	private int theOrder;
 
 	public RadarTechnology() {
 		// this form used by Hibernate
@@ -81,6 +83,14 @@ public class RadarTechnology {
 
 	public void setMovement(final MovementEnum movement) {
 		this.movement = movement;
+	}
+
+	public int getTheOrder() {
+		return theOrder;
+	}
+
+	public void setTheOrder(int theOrder) {
+		this.theOrder = theOrder;
 	}
 
 }

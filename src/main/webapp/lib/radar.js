@@ -383,7 +383,6 @@ var Radar = {
 			var r = (radar.arcs[i].r*maxBlips[i] / totalArc)*(w/2);
 			
 			this._drawArc(svg, cumulativeArc, cumulativeArc + r, w/2, h/2, radar.arcs[i].color);
-			this._drawArcAxisText(svg, cumulativeArc, cumulativeArc + r, w, h, radar.arcs[i].name, scaleFactor);
 			
 			var arc = {
 				innerRadius: cumulativeArc,
@@ -396,22 +395,27 @@ var Radar = {
 			cumulativeArc = cumulativeArc + r;
 		}
 		
-		var axisWidth = scaleFactor*15;
+		var axisWidth = scaleFactor*25;
 		svg.append('rect')
 			.attr('x',0)
 			.attr('y',(h/2)-(axisWidth/2))
 			.attr('width',w)
 			.attr('height',scaleFactor*axisWidth)
-			.attr('fill','white')
-			.attr('opacity',0.5);
+			.attr('fill','rgb(236,236,236)');
 		
 		svg.append('rect')
 			.attr('x',(w/2)-(axisWidth/2))
 			.attr('y',0)
 			.attr('width',scaleFactor*axisWidth)
 			.attr('height',h)
-			.attr('fill','white')
-			.attr('opacity',0.5);
+			.attr('fill','rgb(236,236,236)');
+		
+		for(var i = 0; i < radar.arcs.length; i++) {
+			
+			var arc = arcMap[radar.arcs[i].id];
+			
+			this._drawArcAxisText(svg, arc.innerRadius, arc.outerRadius, w, h, radar.arcs[i].name, scaleFactor);
+		}
 		
 		this._drawKey(svg,w,h,scaleFactor);
 		
@@ -669,9 +673,15 @@ var Radar = {
 	}
 		
 		svg.append('text')
-			.attr({'x':x,'y':y+sf*1,'text-anchor':'middle','fill':'#000'})
-			.style({'font-size':(sf*10) + 'px','font-weight':900})
-			.text(text.toUpperCase());
+			.attr({'x':x,'y':y+sf*3,'text-anchor':'middle','fill':'#000'})
+			.style({'font-size':(sf*12) + 'px','font-weight':900})
+			.text(text);
+		
+		var x2 = (totalWidth/2)-(innerRadius+((outerRadius-innerRadius)/2));
+		svg.append('text')
+		.attr({'x':x,'y':y+sf*3,'text-anchor':'middle','fill':'#000'})
+		.style({'font-size':(sf*12) + 'px','font-weight':900})
+		.text(text);
 	},
 	
 	_drawBlips: function(svg,blips,callback) {

@@ -17,7 +17,7 @@
 
 "maturities":[
 {
-  "name": "watch"
+  "name": "phase out"
 },
 {
   "name": "maintain"
@@ -26,7 +26,10 @@
   "name": "invest"
 },
 {
-  "name": "phase out"
+  "name": "assess"
+},
+{
+  "name": "watch"
 }
 ],
 
