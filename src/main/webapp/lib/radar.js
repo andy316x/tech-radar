@@ -96,7 +96,7 @@ var Radar = {
 			cumulativeArc = cumulativeArc + r;
 		}
 		
-		var axisWidth = scaleFactor*15;
+		var axisWidth = scaleFactor*25;
 		svg.append('rect')
 			.attr('x',0)
 			.attr('y',(h/2)-(axisWidth/2))
@@ -302,12 +302,18 @@ var Radar = {
 	},
 	
 	_drawArcAxisText: function(svg, innerRadius, outerRadius, totalWidth, totalHeight, text, sf) {
-		var x = (totalWidth/2)+innerRadius+((outerRadius-innerRadius)/2);
+		var x1 = (totalWidth/2)+innerRadius+((outerRadius-innerRadius)/2);
 		var y = totalHeight/2;
 		svg.append('text')
-			.attr({'x':x,'y':y+sf*1,'text-anchor':'middle','fill':'#000'})
-			.style({'font-size':(sf*10) + 'px','font-weight':900})
+			.attr({'x':x1,'y':y+sf*3,'text-anchor':'middle','fill':'#000'})
+			.style({'font-size':(sf*12) + 'px','font-weight':900})
 			.text(text);
+		
+		var x2 = (totalWidth/2)-(innerRadius+((outerRadius-innerRadius)/2));
+		svg.append('text')
+		.attr({'x':x2,'y':y+sf*3,'text-anchor':'middle','fill':'#000'})
+		.style({'font-size':(sf*12) + 'px','font-weight':900})
+		.text(text);
 	},
 	
 	_drawBlips: function(svg,blips,callback) {
