@@ -32,7 +32,7 @@
 		<input hidden="true" id="id" name="id" value=""></input>
 	</form>	
 	
-	<div class="col-md-12 clearfix" style="margin-bottom: 0;border-bottom: 1px solid #CCC;padding-bottom: 20px;">
+	<div class="col-md-12 clearfix" style="margin-bottom: 0;border-bottom: 1px solid #CCC;padding-bottom: 20px;overflow:visible;">
 		<div class="col-md-6">
 			<h1><i class="glyphicon glyphicon-ok" style="color:green;"></i> <strong>Editing</strong> <span class="muted" style="margin-left:20px;">{{selectedRadar.name}}</span></h1>
 		</div>
@@ -43,6 +43,17 @@
 				<div id='file_browse_wrapper'>
 					Upload Data
 					<input type='file' id='fileinput' name="fileinput"></input>
+					<div ng-show="uploadingTechnologies==true" class="popover fade bottom in" style="position: absolute;z-index: 100;top: 38px;left: -68px;display: block;width: 235px;padding: 16px 0px 0px 0px;">
+      					<div class="arrow"></div>
+      					<h3 class="popover-title" style="background-color: #FFF;color: #333;padding-top: 0;">Building radar</h3>
+      					<div class="popover-content">
+      						<div class="progress" style="margin: 0px 0px 5px 0px;">
+								<div class="progress-bar progress-bar-striped progress-bar-success active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
+									<span class="sr-only">100% Complete</span>
+								</div>
+							</div>
+      					</div>
+    				</div>
 				</div>
 				<button class="btn btn-default" ng-click="doDelete(selectedRadar.id)">Delete</button>
 				<button class="btn btn-primary" ng-click="doSave()">Save</button>

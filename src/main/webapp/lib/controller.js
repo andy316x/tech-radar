@@ -257,6 +257,7 @@ techRadarControllers.controller('TechnologyCtrl', function ($scope, $http, $loca
 
 techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location, $routeParams, $log) {
 	
+	$scope.uploadingTechnologies = false;
 	$scope.errors = [];
 	$scope.msgs = [];
 
@@ -317,8 +318,11 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 
 
 	$('#fileinput').on('change', function(ev){
-		$scope.errors = [];
-		$scope.msgs = [];
+		$scope.$apply(function(){
+			$scope.uploadingTechnologies = true;
+			$scope.errors = [];
+			$scope.msgs = [];
+		});
 		
 		var form = document.getElementById('uploadform');
 		form['id'].value = $scope.selectedRadar.id;
@@ -328,6 +332,7 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 			var frameWindow = document.getElementById('theframe').contentWindow;
 			if(typeof frameWindow.techRadarData != 'undefined') {
 				$scope.$apply(function(){
+					$scope.uploadingTechnologies = false;
 					if(frameWindow.techRadarData.success===true) {
 						mapRadar(frameWindow.techRadarData.radar);
 						$scope.msgs.push('Successfully uploaded technologies to the radar, click \'save\' if you are happy');
@@ -338,11 +343,11 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 					}
 				});
 			} else {
-				window.setTimeout(checkFrame, 500);
+				window.setTimeout(checkFrame, 2000);
 			}
 		};
 
-		window.setTimeout(checkFrame, 500);
+		window.setTimeout(checkFrame, 2000);
 	});
 
 	$scope.newRadarVisible = false;
