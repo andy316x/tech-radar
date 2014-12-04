@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -276,8 +277,11 @@ public class RadarServiceImpl implements RadarService {
 			// Remove all the existing technologies
 			// TODO at the moment an upload removes all previous 
 			// technologies - what should the behaviour be?
-			for(final RadarTechnology radarTechnology : radar.getRadarTechnologies()) {
-				session.delete(radarTechnology);
+			final Iterator<RadarTechnology> deletedTechnologyIter = radar.getRadarTechnologies().iterator();
+			while(deletedTechnologyIter.hasNext()) {
+				final RadarTechnology deletedTechnology = deletedTechnologyIter.next();
+				session.delete(deletedTechnology);
+				deletedTechnologyIter.remove();
 			}
 
 			if(radarTechnologyTOs!=null && !radarTechnologyTOs.isEmpty()) {

@@ -44,13 +44,17 @@ public class CSVExportServlet extends HttpServlet {
 				empData.add(tech.getTechnology());
 				empData.add(tech.getTechGrouping());
 				empData.add(tech.getMaturity());
-				// TODO
-				//				empData.add("" + true);
-				//				empData.add("" + tech.getTechnology().getBlipSize());
-				//				empData.add(tech.getTechnology().getUrl());
-				//				empData.add(tech.getTechnology().getDescription());
-				//				empData.add(tech.getTechnology().getDetailUrl());
-				//				empData.add("" + tech.getTechnology().isCustomerStrategic());
+				empData.add("" + true);
+				empData.add("" + tech.getBlipSize());
+				empData.add(tech.getUrl());
+				empData.add(tech.getDescription());
+				empData.add(tech.getDetailUrl());
+				if(tech.isCustomerStrategic()) {
+					empData.add("Y");
+				} else {
+					empData.add("N");
+				}
+
 				printer.printRecord(empData);
 			}
 

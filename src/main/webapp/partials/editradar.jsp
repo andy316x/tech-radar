@@ -56,6 +56,18 @@
 	<div class="col-md-12" style="background-color:#EFEFEF;padding:25px 20px;">
 	
 		<div class="col-md-12">
+			<div class="alert alert-danger" role="alert" ng-repeat="error in errors">
+				{{error}}
+			</div>
+		</div>
+		
+		<div class="col-md-12">
+			<div class="alert alert-success" role="alert" ng-repeat="msg in msgs">
+				{{msg}}
+			</div>
+		</div>
+	
+		<div class="col-md-12">
 			<div class="col-md-6">
 				<ul class="nav nav-pills">
 					<li class="active"><a href="#">All</a></li>

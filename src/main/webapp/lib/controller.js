@@ -256,6 +256,9 @@ techRadarControllers.controller('TechnologyCtrl', function ($scope, $http, $loca
 });
 
 techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location, $routeParams, $log) {
+	
+	$scope.errors = [];
+	$scope.msgs = [];
 
 	// TODO I am being lazy, we need this in a directive
 	var technologySuggestions = new Bloodhound({
@@ -314,21 +317,27 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 
 
 	$('#fileinput').on('change', function(ev){
+		$scope.errors = [];
+		$scope.msgs = [];
+		
 		var form = document.getElementById('uploadform');
 		form['id'].value = $scope.selectedRadar.id;
 		form.submit();
 
 		var checkFrame = function() {
 			var frameWindow = document.getElementById('theframe').contentWindow;
-			console.log(frameWindow);
 			if(typeof frameWindow.techRadarData != 'undefined') {
-				console.log(frameWindow.techRadarData);
 				$scope.$apply(function(){
-					mapRadar(frameWindow.techRadarData);
+					if(frameWindow.techRadarData.success===true) {
+						mapRadar(frameWindow.techRadarData.radar);
+						$scope.msgs.push('Successfully uploaded technologies to the radar, click \'save\' if you are happy');
+					} else {
+						for(var i = 0; i < frameWindow.techRadarData.errors.length; i++) {
+							$scope.errors.push(frameWindow.techRadarData.errors[i]);
+						}
+					}
 				});
-				console.log('done');
 			} else {
-				console.log('No data, try again in a bit');
 				window.setTimeout(checkFrame, 500);
 			}
 		};

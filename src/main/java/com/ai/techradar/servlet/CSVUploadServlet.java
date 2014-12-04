@@ -5,8 +5,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -21,9 +26,19 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 
+import com.ai.techradar.database.entities.Maturity;
 import com.ai.techradar.database.entities.MovementEnum;
+import com.ai.techradar.database.entities.Radar;
+import com.ai.techradar.database.entities.TechGrouping;
+import com.ai.techradar.database.entities.Technology;
+import com.ai.techradar.database.hibernate.HibernateUtil;
 import com.ai.techradar.service.RadarService;
 import com.ai.techradar.service.impl.RadarServiceImpl;
 import com.ai.techradar.web.service.to.RadarTO;
@@ -43,8 +58,18 @@ public class CSVUploadServlet extends HttpServlet {
 			final PrintWriter writer = response.getWriter();
 
 			final ObjectMapper objmapper = new ObjectMapper();
+			
+			final Set<String> technologiesFound = new HashSet<String>();
+			final Set<String> techGroupingsFound = new HashSet<String>();
+			final Set<String> maturitiesFound = new HashSet<String>();
 
 			try {
+				final Session session = HibernateUtil.getSessionFactory().openSession();
+				
+				final UploadResponse uploadResponse = new UploadResponse();
+				uploadResponse.setSuccess(true);
+				uploadResponse.setErrors(new ArrayList<String>());
+				
 				final List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
 
 				final Long id = getId(items);
@@ -55,48 +80,63 @@ public class CSVUploadServlet extends HttpServlet {
 				for (final FileItem item : items) {
 					if (!item.isFormField()) {
 						// Process form file field (input type="file").
-						final String fieldname = item.getFieldName();
-						final String filename = FilenameUtils.getName(item.getName());
 						final InputStream istream = item.getInputStream();
 						final BufferedReader in = new BufferedReader(new InputStreamReader(istream));
 
 						final CSVParser parser = new CSVParser(in, CSVFormat.RFC4180.withHeader());
 						final List<CSVRecord> list = parser.getRecords();
+						
+						try {
+							
+							Long i = new Long(1);
+							for(final CSVRecord record : list) {
+								final String name = readString(record.get("Technology"));
+								final String quadrantName = readString(record.get("Quadrant"));
+								final String arcName = readString(record.get("Maturity"));
+								final MovementEnum movement = readMovement(record.get("moved / no change"));
+								
+								if(!StringUtils.isBlank(name)) {
+									technologiesFound.add(name);
+								} else {
+									uploadResponse.getErrors().add("Mandatory field 'Technology' is blank");
+								}
+								
+								if(!StringUtils.isBlank(quadrantName)) {
+									techGroupingsFound.add(quadrantName);
+								} else {
+									uploadResponse.getErrors().add("Mandatory field 'Quadrant' is blank");
+								}
+								
+								if(!StringUtils.isBlank(arcName)) {
+									maturitiesFound.add(arcName);
+								} else {
+									uploadResponse.getErrors().add("Mandatory field 'Maturity' is blank");
+								}
 
-						// TODO validate columns
-
-						Long i = new Long(1);
-						final StringBuilder strBuilder = new StringBuilder();
-						strBuilder.append("\"technologies:\"[\n");
-						for(final CSVRecord record : list) {
-							final String name = readString(record.get("Technology"));
-							strBuilder.append("   {\"name\": \"" + name + "\"}");
-							if(i<list.size()) {
-								strBuilder.append(",");
+								final RadarTechnologyTO radarTechnology = new RadarTechnologyTO();
+								radarTechnology.setId(i++);
+								radarTechnology.setTechnology(name);
+								radarTechnology.setTechGrouping(quadrantName);
+								radarTechnology.setMaturity(arcName);
+								radarTechnology.setMovement(movement);
+								radar.getTechnologies().add(radarTechnology);
 							}
-							strBuilder.append("\n");
-							final String quadrantName = readString(record.get("Quadrant"));
-							final String arcName = readString(record.get("Maturity"));
-							final MovementEnum movement = readMovement(record.get("moved / no change"));
-							final int usageCount = readInt(record.get("project Count"));
-							final String url = readString(record.get("Product URL"));
-							final String description = readString(record.get("Description"));
-							final String detailUrl = readString(record.get("AI URL"));
-							final boolean customerStrategic = readBoolean(record.get("Customer strategic"));
-
-							final RadarTechnologyTO radarTechnology = new RadarTechnologyTO();
-							radarTechnology.setId(i++);
-							radarTechnology.setTechnology(name);
-							radarTechnology.setTechGrouping(quadrantName);
-							radarTechnology.setMaturity(arcName);
-							radarTechnology.setMovement(movement);
-							radar.getTechnologies().add(radarTechnology);
+							
+						} catch(final IllegalArgumentException ex) {
+							uploadResponse.getErrors().add("Mandatory column heading not found, expected \"Technology\", \"Quadrant\", \"Maturity\", \"moved / no change\"");
 						}
-						strBuilder.append("]\n");
-						System.out.println(strBuilder.toString());
 
 						parser.close();
 					}
+				}
+				
+				checkTechnologiesExist(technologiesFound, uploadResponse.getErrors(), session);
+				checkMaturitiesExist(maturitiesFound, uploadResponse.getErrors(), session);
+				checkTechGroupingsExist(techGroupingsFound, uploadResponse.getErrors(), session);
+				
+				uploadResponse.setRadar(radar);
+				if(!uploadResponse.getErrors().isEmpty()) {
+					uploadResponse.setSuccess(false);
 				}
 
 				writer.append("<html>");
@@ -104,23 +144,110 @@ public class CSVUploadServlet extends HttpServlet {
 
 				writer.append("  <script>");
 				writer.append("    window.techRadarData = ");
-				writer.append(objmapper.writeValueAsString(radar));
+				writer.append(objmapper.writeValueAsString(uploadResponse));
 				writer.append(";");
 				writer.append("  </script>");
 
 				writer.append("</body>");
 				writer.append("</html>");
+				
+				session.close();
 
 			} catch (final FileUploadException e) {
 				throw new ServletException("Cannot parse multipart request.", e);
 			}
 
 			response.flushBuffer();
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			// TODO log properly
 			e.printStackTrace();
 		}
 
+	}
+	
+	private void checkTechnologiesExist(final Collection<String> technologies, final List<String> messages, final Session session) {
+		final Criteria query = session.createCriteria(Technology.class);
+
+		query.add(Restrictions.in("name", technologies));
+		
+		query.setProjection(Projections.property("name"));
+		
+		final Set<String> technologiesInDb = new HashSet<String>();
+		for(final String techName : (List<String>)query.list()) {
+			technologiesInDb.add(techName);
+		}
+		
+		for(final String techName : technologies) {
+			if(!technologiesInDb.contains(techName)) {
+				messages.add("Technology with name '" + techName + "' could not be found");
+			}
+		}
+	}
+	
+	private void checkMaturitiesExist(final Collection<String> maturities, final List<String> messages, final Session session) {
+		final Criteria query = session.createCriteria(Maturity.class);
+
+		query.add(Restrictions.in("name", maturities));
+		
+		query.setProjection(Projections.property("name"));
+		
+		final Set<String> maturitiesInDb = new HashSet<String>();
+		for(final String maturityName : (List<String>)query.list()) {
+			maturitiesInDb.add(maturityName);
+		}
+		
+		for(final String maturityName : maturities) {
+			if(!maturitiesInDb.contains(maturityName)) {
+				messages.add("Maturity with name '" + maturityName + "' could not be found");
+			}
+		}
+	}
+	
+	private void checkTechGroupingsExist(final Collection<String> techGroupings, final List<String> messages, final Session session) {
+		final Criteria query = session.createCriteria(TechGrouping.class);
+
+		query.add(Restrictions.in("name", techGroupings));
+		
+		query.setProjection(Projections.property("name"));
+		
+		final Set<String> techGroupingsInDb = new HashSet<String>();
+		for(final String techGroupingName : (List<String>)query.list()) {
+			techGroupingsInDb.add(techGroupingName);
+		}
+		
+		for(final String techGroupingName : techGroupings) {
+			if(!techGroupingsInDb.contains(techGroupingName)) {
+				messages.add("Tech grouping with name '" + techGroupingName + "' could not be found");
+			}
+		}
+	}
+	
+	public static class UploadResponse implements Serializable {
+		private static final long serialVersionUID = 2606667506899689378L;
+		private boolean success;
+		private RadarTO radar;
+		private List<String> errors;
+		public UploadResponse() {
+			
+		}
+		public boolean isSuccess() {
+			return success;
+		}
+		public void setSuccess(boolean success) {
+			this.success = success;
+		}
+		public RadarTO getRadar() {
+			return radar;
+		}
+		public void setRadar(RadarTO radar) {
+			this.radar = radar;
+		}
+		public List<String> getErrors() {
+			return errors;
+		}
+		public void setErrors(List<String> errors) {
+			this.errors = errors;
+		}
 	}
 
 	private static String readString(final String str) {
@@ -135,7 +262,21 @@ public class CSVUploadServlet extends HttpServlet {
 	}
 
 	private static int readInt(final String str) {
-		return Integer.parseInt(str);
+		if(str==null) {
+			return 0;
+		}
+		if(str.trim().length()==0) {
+			return 0;
+		}
+		
+		try {
+			return Integer.parseInt(str);
+		} catch(final NumberFormatException ex) {
+			// TODO we should real inform the user
+			System.out.println("'" + str + "' is not a valid int");
+		}
+		
+		return 0;
 	}
 
 	private static MovementEnum readMovement(final String str) {

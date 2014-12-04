@@ -22,7 +22,7 @@ public class RadarTechnology {
 	private RadarTechGrouping radarTechGrouping;
 
 	private MovementEnum movement;
-	
+
 	private int theOrder;
 
 	public RadarTechnology() {

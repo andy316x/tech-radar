@@ -16,11 +16,11 @@ import org.hibernate.annotations.GenericGenerator;
 public class RadarMaturity {
 
 	private Long id;
-	
+
 	private Maturity maturity;
 
 	private Radar radar;
-	
+
 	private int theOrder;
 
 	private List<RadarTechnology> radarTechnologies;
@@ -41,7 +41,7 @@ public class RadarMaturity {
 		this.id = id;
 	}
 
-	@ManyToOne()
+	@ManyToOne
 	public Maturity getMaturity() {
 		return maturity;
 	}
@@ -75,5 +75,5 @@ public class RadarMaturity {
 	public void setTheOrder(int theOrder) {
 		this.theOrder = theOrder;
 	}
-	
+
 }

@@ -22,7 +22,7 @@ public class RadarTechGrouping {
 	private Radar radar;
 
 	private List<RadarTechnology> radarTechnologies;
-	
+
 	private int theOrder;
 
 	public RadarTechGrouping() {
@@ -75,5 +75,5 @@ public class RadarTechGrouping {
 	public void setTheOrder(int theOrder) {
 		this.theOrder = theOrder;
 	}
-	
+
 }
