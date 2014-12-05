@@ -22,7 +22,7 @@ var Radar = {
 		var wMin = 0;
 		var hMin = scaleFactor*15;
 
-		var quadrantNo
+		var quadrantNo;
 		for(var i = 0; i < radar.quadrants.length; i++){
 			if(radar.quadrants[i].id == quadrantName){
 				quadrantNo = i;
@@ -79,6 +79,41 @@ var Radar = {
 			.attr('width',w)
 			.attr('height',h);
 		svg.selectAll('*').remove();
+		
+		// filters go in defs element
+		var defs = svg.append("defs");
+
+		// create filter with id #drop-shadow
+		// height=130% so that the shadow is not clipped
+		var filter = defs.append("filter")
+		    .attr("id", "drop-shadow")
+		    .attr("height", "150%");
+
+		// SourceAlpha refers to opacity of graphic that this filter will be applied to
+		// convolve that with a Gaussian with standard deviation 3 and store result
+		// in blur
+		filter.append("feGaussianBlur")
+		    .attr("in", "SourceAlpha")
+		    .attr("stdDeviation", 2)
+		    .attr("result", "blur");
+
+		// translate output of Gaussian blur to the right and downwards with 2px
+		// store result in offsetBlur
+		filter.append("feOffset")
+		    .attr("in", "blur")
+		    .attr("dx", 1)
+		    .attr("dy", 1)
+		    .attr("result", "offsetBlur");
+
+		// overlay original SourceGraphic over translated blurred opacity by using
+		// feMerge filter. Order of specifying inputs is important!
+		var feMerge = filter.append("feMerge");
+
+		feMerge.append("feMergeNode")
+		    .attr("in", "offsetBlur")
+		feMerge.append("feMergeNode")
+		    .attr("in", "SourceGraphic");
+		
 		
 		var cumulativeArc = 0;
 		var arcMap = {};
@@ -374,6 +409,40 @@ var Radar = {
 			.attr('width',w)
 			.attr('height',h);
 		svg.selectAll('*').remove();
+		
+		// filters go in defs element
+		var defs = svg.append("defs");
+
+		// create filter with id #drop-shadow
+		// height=130% so that the shadow is not clipped
+		var filter = defs.append("filter")
+		    .attr("id", "drop-shadow")
+		    .attr("height", "150%");
+
+		// SourceAlpha refers to opacity of graphic that this filter will be applied to
+		// convolve that with a Gaussian with standard deviation 3 and store result
+		// in blur
+		filter.append("feGaussianBlur")
+		    .attr("in", "SourceAlpha")
+		    .attr("stdDeviation", 2)
+		    .attr("result", "blur");
+
+		// translate output of Gaussian blur to the right and downwards with 2px
+		// store result in offsetBlur
+		filter.append("feOffset")
+		    .attr("in", "blur")
+		    .attr("dx", 1)
+		    .attr("dy", 1)
+		    .attr("result", "offsetBlur");
+
+		// overlay original SourceGraphic over translated blurred opacity by using
+		// feMerge filter. Order of specifying inputs is important!
+		var feMerge = filter.append("feMerge");
+
+		feMerge.append("feMergeNode")
+		    .attr("in", "offsetBlur")
+		feMerge.append("feMergeNode")
+		    .attr("in", "SourceGraphic");
 		
 		var cumulativeArc = 0;
 		var arcMap = {};
@@ -709,23 +778,22 @@ var Radar = {
 			
 				blip.attr('d', function(d){
 					if (d.item.movement == 'c'){
-						return 'M412.201,311.406c0.021,0,0.042,0,0.063,0c0.067,0,0.135,0,0.201,0c4.052,0,6.106-0.051,8.168-0.102c2.053-0.051,4.115-0.102,8.176-0.102h0.103c6.976-0.183,10.227-5.306,6.306-11.53c-3.988-6.121-4.97-5.407-8.598-11.224c-1.631-3.008-3.872-4.577-6.179-4.577c-2.276,0-4.613,1.528-6.48,4.699c-3.578,6.077-3.26,6.014-7.306,11.723C402.598,306.067,405.426,311.406,412.201,311.406';
+						return "M5,82.9422876 C32.8460969,99.0192375 67.1539031,99.0192375 95,82.9422876 C95.0000034,50.7883845 77.8460999,21.0769515 50,5 C22.1539001,21.0769515 4.99999658,50.7883845 5,82.9422876 L5,82.9422876 Z";
 					}else{
-						return "M420.084,282.092c-1.073,0-2.16,0.103-3.243,0.313c-6.912,1.345-13.188,8.587-11.423,16.874c1.732,8.141,8.632,13.711,17.806,13.711c0.025,0,0.052,0,0.074-0.003c0.551-0.025,1.395-0.011,2.225-0.109c4.404-0.534,8.148-2.218,10.069-6.487c1.747-3.886,2.114-7.993,0.913-12.118C434.379,286.944,427.494,282.092,420.084,282.092";
+						return 'M420.084,282.092c-1.073,0-2.16,0.103-3.243,0.313c-6.912,1.345-13.188,8.587-11.423,16.874c1.732,8.141,8.632,13.711,17.806,13.711c0.025,0,0.052,0,0.074-0.003c0.551-0.025,1.395-0.011,2.225-0.109c4.404-0.534,8.148-2.218,10.069-6.487c1.747-3.886,2.114-7.993,0.913-12.118C434.379,286.944,427.494,282.092,420.084,282.092';
 					}
 				});
 			
-				blip.attr('stroke', function(d){
-					if ((d.item.customerStrategic!=null && typeof d.item.customerStrategic!='undefined') ? d.item.customerStrategic : false){
-						return '#FFDF00';
-					}else{
-						return '#FFFFFF';
-					}
-				});
-			
-				blip.attr('stroke-width',2)
-					.attr('fill',function(d){ return d.color;})
-					.attr('transform',function(d){ return 'scale('+((d.scaleFactor*30)/34)+') translate('+(-404+d.x*(34/(d.scaleFactor*30))-17)+', '+(-282+d.y*(34/(d.scaleFactor*30))-17)+')';});
+				blip.attr('fill',function(d){ return d.color;})
+					.attr('transform',function(d){
+						if(d.item.movement == 'c') {
+							return 'scale('+d.scaleFactor*0.32+') translate(' + (d.x - 15)/(d.scaleFactor*0.32) + ', ' + (d.y - 17)/(d.scaleFactor*0.32) + ')';
+						} else {
+							return 'scale('+((d.scaleFactor*30)/34)+') translate('+(-404+d.x*(34/(d.scaleFactor*30))-17)+', '+(-282+d.y*(34/(d.scaleFactor*30))-17)+')';
+						}
+					});
+				
+				blip.style("filter", "url(#drop-shadow)");
 			
 				link.append('text')
 					.attr('x',function(d){ return d.x;})
@@ -748,21 +816,22 @@ var Radar = {
 		var triangleKey="New or moved";
 		var circleKey="No change";
 		
-		var scale=sf*10;
+		var scale=sf*5;
 		var colour = 'black';
 		svg.append('path')
-			.attr('d','M412.201,311.406c0.021,0,0.042,0,0.063,0c0.067,0,0.135,0,0.201,0c4.052,0,6.106-0.051,8.168-0.102c2.053-0.051,4.115-0.102,8.176-0.102h0.103c6.976-0.183,10.227-5.306,6.306-11.53c-3.988-6.121-4.97-5.407-8.598-11.224c-1.631-3.008-3.872-4.577-6.179-4.577c-2.276,0-4.613,1.528-6.48,4.699c-3.578,6.077-3.26,6.014-7.306,11.723C402.598,306.067,405.426,311.406,412.201,311.406')
+			.attr('d','M5,82.9422876 C32.8460969,99.0192375 67.1539031,99.0192375 95,82.9422876 C95.0000034,50.7883845 77.8460999,21.0769515 50,5 C22.1539001,21.0769515 4.99999658,50.7883845 5,82.9422876 L5,82.9422876 Z')
 			.attr('fill',colour)
-			.attr('transform','scale('+(scale/34)+') translate('+(-404+x*(34/scale)-17)+', '+(-282+(y-sf*10)*(34/scale)-17)+')');
+			.attr('transform','scale('+(scale/34)+') translate('+x*(34/scale)+', '+(y-sf*10)*(34/scale)+')');
 		svg.append('text')
-			.attr({'x':x+sf*10,'y':y-sf*5,'fill':colour,'font-size':(sf*0.8)+'em'})
+			.attr({'x':x+sf*20,'y':y+sf*1,'fill':colour,'font-size':(sf*0.8)+'em'})
 			.text(triangleKey);
-		svg.append('path')
-			.attr('d',"M420.084,282.092c-1.073,0-2.16,0.103-3.243,0.313c-6.912,1.345-13.188,8.587-11.423,16.874c1.732,8.141,8.632,13.711,17.806,13.711c0.025,0,0.052,0,0.074-0.003c0.551-0.025,1.395-0.011,2.225-0.109c4.404-0.534,8.148-2.218,10.069-6.487c1.747-3.886,2.114-7.993,0.913-12.118C434.379,286.944,427.494,282.092,420.084,282.092")
+		svg.append('circle')
+			.attr('r',sf*7)
 			.attr('fill',colour)
-			.attr('transform','scale('+(scale/34)+') translate('+(-404+x*(34/scale)-17)+', '+(-282+(y+sf*10)*(34/scale)-17)+')');
+			.attr('cx',x+sf*7)
+			.attr('cy',y+sf*17);
 		svg.append('text')
-			.attr({'x':x+sf*10,'y':y+sf*15,'fill':colour,'font-size':(sf*0.8)+'em'})
+			.attr({'x':x+sf*20,'y':y+sf*21,'fill':colour,'font-size':(sf*0.8)+'em'})
 			.text(circleKey);
 	},
 	
