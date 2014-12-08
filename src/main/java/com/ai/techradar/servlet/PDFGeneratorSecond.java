@@ -45,7 +45,7 @@ public class PDFGeneratorSecond extends PdfPageEventHelper {
 	private final Font headerFont = new Font(Font.HELVETICA, 14, Font.BOLD);
 	private final Font subheaderFont = new Font(Font.HELVETICA, 11, Font.BOLD);
 	private final Font textFont = new Font(Font.HELVETICA, 8, Font.NORMAL);
-	private RadarService service = new RadarServiceImpl();
+	private RadarService service = new RadarServiceImpl("");
 
 	private final static float optimumWidth = 650; // 750;
 	private final static float width = 650;

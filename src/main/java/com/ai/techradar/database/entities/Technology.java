@@ -31,6 +31,8 @@ public class Technology {
 
 	private List<RadarTechnology> radarTechnologies;
 
+	private List<UserTechnology> users;
+
 	public Technology() {
 		// this form used by Hibernate
 	}
@@ -104,6 +106,15 @@ public class Technology {
 
 	public void setRadarTechnologies(final List<RadarTechnology> radarTechnologies) {
 		this.radarTechnologies = radarTechnologies;
+	}
+
+	@OneToMany(mappedBy="technology", cascade=CascadeType.ALL)
+	public List<UserTechnology> getUsers() {
+		return users;
+	}
+
+	public void setUsers(final List<UserTechnology> users) {
+		this.users = users;
 	}
 
 }

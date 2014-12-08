@@ -48,7 +48,7 @@ public class CSVUploadServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1199770769064383844L;
 
-	private RadarService service = new RadarServiceImpl();
+	private RadarService service = new RadarServiceImpl("");
 
 	@Override
 	public void doPost(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {

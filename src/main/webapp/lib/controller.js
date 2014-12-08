@@ -1,237 +1,78 @@
 var techRadarControllers = angular.module('techRadarControllers', []);
 
-techRadarControllers.directive('ngRadar', function ($routeParams) {
-	return {
-		restrict: 'A',
-		scope: {
-			radar: '=',
-			selectedBlip: '='
-		},
-		link: function ($scope, element, attrs) {
-			var el = element[0];
-			
-			var quadrantName = $routeParams.quadrant;
-		
-			var doDraw;
-			if(quadrantName != null && typeof quadrantName !== "undefined"){
-				doDraw = function(r) {
-					$scope.theRadar = Radar.draw_Quadrant(el, r, quadrantName, {
-						onbliphover: function(blip) {
-							$scope.$apply(function(){
-								$scope.selectedBlip = blip;
-							});
-						},
-						onblipleave: function(blip) {
-							$scope.$apply(function(){
-								$scope.selectedBlip = null;
-							});
-						}
-					});
-				};
-			}else{
-				doDraw = function(r) {
-					$scope.theRadar = Radar.draw(el, r, {
-						onbliphover: function(blip) {
-							$scope.$apply(function(){
-								$scope.selectedBlip = blip;
-							});
-						},
-						onblipleave: function(blip) {
-							$scope.$apply(function(){
-								$scope.selectedBlip = null;
-							});
-						}
-					});
-				};
-			}
+techRadarControllers.controller('CommonViewCtrl', function ($scope, $http, $location, $routeParams, $log) {
 
-			if($scope.radar != null && typeof $scope.radar != 'undefined') {
-				doDraw($scope.radar);
-			}
-
-			$scope.$watch('radar', function (newVal, oldVal, scope) {
-				if(newVal != null && typeof newVal != 'undefined') {
-					doDraw(newVal);
-				}
-			}, true);
-
-			$scope.$watch('selectedBlip', function (newVal, oldVal, scope) {
-				if($scope.theRadar != null && typeof $scope.theRadar != 'undefined') {
-					if(newVal == null || typeof newVal == 'undefined') {
-						$scope.theRadar.unselectBlip(newVal);
-					} else {
-						$scope.theRadar.selectBlip(newVal);
-					}
-				}
-			}, true);
-
-			window.addEventListener('resize', function() {
-				doDraw($scope.radar);
-			}, true);
-		}
-	};
-});
-
-techRadarControllers.directive('ngNewRadar', function ($http) {
-	return {
-		restrict: 'A',
-		scope: {
-			visible: '=',
-			radarCreated: '&'
-		},
-		template: '<div class="modal fade">' +
-		'  <div class="modal-dialog">' +
-		'    <div class="modal-content">' +
-		'      <div class="modal-header">' +
-		'        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>' +
-		'        <h4 class="modal-title">New Radar</h4>' +
-		'      </div>' +
-		'      <div class="modal-body">' +
-		'        <div class="form-group">' +
-		'          <label>Name</label>' +
-		'          <input type="text" class="form-control" ng-model="name" placeholder="Enter name"></input>' +
-		'        </div>' +
-		'        <div class="form-group">' +
-		'          <label>Tech Grouping 1</label>' +
-		'          <select class="form-control" ng-model="techGrouping1" ng-options="techGroupingOption.value as techGroupingOption.label for techGroupingOption in techGroupingOptions"></select>' +
-		'          </select>' +
-		'        </div>' +
-		'        <div class="form-group">' +
-		'          <label>Tech Grouping 2</label>' +
-		'          <select class="form-control" ng-model="techGrouping2" ng-options="techGroupingOption.value as techGroupingOption.label for techGroupingOption in techGroupingOptions"></select>' +
-		'          </select>' +
-		'        </div>' +
-		'        <div class="form-group">' +
-		'          <label>Tech Grouping 3</label>' +
-		'          <select class="form-control" ng-model="techGrouping3" ng-options="techGroupingOption.value as techGroupingOption.label for techGroupingOption in techGroupingOptions"></select>' +
-		'          </select>' +
-		'        </div>' +
-		'        <div class="form-group">' +
-		'          <label>Tech Grouping 4</label>' +
-		'          <select class="form-control" ng-model="techGrouping4" ng-options="techGroupingOption.value as techGroupingOption.label for techGroupingOption in techGroupingOptions"></select>' +
-		'          </select>' +
-		'        </div>' +
-		'        <div ng-repeat="error in errors"><span class="text-danger">{{error}}</span></div>' +
-		'      </div>' +
-		'      <div class="modal-footer">' +
-		'        <button type="button" ng-click="save()" class="btn btn-success">Create</button>' +
-		'      </div>' +
-		'    </div>' +
-		'  </div>' +
-		'</div>',
-		link: function ($scope, element, attrs) {
-
-			$scope.techGroupingOptions = [];
-			$scope.techGrouping1 = 'Dev Tool';
-			$scope.techGrouping2 = 'Dev Language';
-			$scope.techGrouping3 = 'Platform';
-			$scope.techGrouping4 = 'Solution Technology';
-			$http.get('/radar/rest/techgrouping').
-			success(function(data, status, headers, config) {
-				for(var i = 0; i < data.length; i++) {
-					$scope.techGroupingOptions.push({label:data[i].name, value:data[i].name});
-				}
-			}).
-			error(function(data, status, headers, config) {
-				$log.log('failed to load tech groupings');
-			});
-
-			$scope.$watch('visible', function (newVal, oldVal, scope) {
-				if(newVal != oldVal) {
-					if(newVal == true) {
-						element.children(":first").modal('show');
-					} else {
-						element.children(":first").modal('hide');
-					}
-				}
-			}, false);
-
-			element.children(":first").on('hide.bs.modal', function(e) {
-				$scope.visible = false;
-			});
-
-			$scope.save = function() {
-				var radar = {
-						name: $scope.name,
-						techGroupings: [
-						                {name: $scope.techGrouping1},
-						                {name: $scope.techGrouping2},
-						                {name: $scope.techGrouping3},
-						                {name: $scope.techGrouping4}
-						                ],
-						                maturities: [
-						                             {name: 'phase out'},
-						                             {name: 'maintain'},
-						                             {name: 'invest'},
-						                             {name: 'assess'},
-						                             {name: 'watch'}
-						                             ]
-				};
-				$http.post('/radar/rest/radar', radar).
-				success(function(data, status, headers, config) {
-					$scope.radarCreated({radar: data});
-				}).
-				error(function(data, status, headers, config) {
-					$scope.errors = data;
-				});
-			};
-
-		}
-	};
-});
-
-techRadarControllers.controller('TechnologyCtrl', function ($scope, $http, $location, $routeParams, $log) {
-
-	// TODO I am being lazy, we need this in a directive
-	var technologySuggestions = new Bloodhound({
-		datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-		queryTokenizer: Bloodhound.tokenizers.whitespace,
-		prefetch: '/radar/rest/technology'
-	});
-	technologySuggestions.clearPrefetchCache();
-	technologySuggestions.initialize();
+	// Stuff that all views will need
 	
-	var radarSuggestions = new Bloodhound({
-		datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-		queryTokenizer: Bloodhound.tokenizers.whitespace,
-		prefetch: '/radar/rest/radar'
-	});
-	radarSuggestions.clearPrefetchCache();
-	radarSuggestions.initialize();
-
-	$('.typeahead').typeahead({
-		hint: true,
-		highlight: true,
-		minLength: 1
-	},
-	{
-		name: 'technologies',
-		displayKey: 'name',
-		source: technologySuggestions.ttAdapter(),
-		templates: {
-			header: '<h3 class="search-title">Technologies</h3>'
-		}
-	},
-	{
-		name: 'radars',
-		displayKey: 'name',
-		source: radarSuggestions.ttAdapter(),
-		templates: {
-			header: '<h3 class="search-title">Radars</h3>'
-		}
-	})
-	.bind('typeahead:selected', function (obj, datum) {
-		$scope.$apply(function(){
-			if(typeof datum.maturities != 'undefined') {
-				$location.path('/radar/' + datum.id);
+	
+	
+	// Login
+	$scope.loggedin = false;
+	$scope.loginclick = false;
+	$scope.wrongpassword = false;
+	
+	$scope.login = function(u, p) {
+		$scope.wrongpassword = false;
+		$http.post('/radar/j_security_check?j_username=' + u + "&j_password=" + p + "&bust=" + new Date().getTime(), {j_username:u,j_password:p}).
+		success(function(data, status, headers, config) {
+			if(typeof data.name != 'undefined') {
+				$scope.name = data.name;
+				$scope.loggedin = true;
+				$scope.loginclick = false;
 			} else {
-				$location.path('/technology/' + datum.id);
+				$scope.wrongpassword = true;
 			}
+		  }).
+		  error(function(data, status, headers, config) {
+			  $log.log(data);
+		  });
+	};
+
+	$http.get('/radar/login').
+	success(function(data, status, headers, config) {
+		// We are already logged in
+	}).
+	error(function(data, status, headers, config) {
+		// We need to log in
+	});
+	
+	
+	
+	
+	// User info
+	$http({method: 'GET', url: '/radar/rest/me?nocache=' + (new Date()).getTime()}).
+	success(function(data, status, headers, config) {
+		$scope.loggedin = true;
+		$scope.name = data.name;
+	}).
+	error(function(data, status, headers, config) {
+		if(status==403) {
+			// The user is not authorised
+			$scope.loggedin = false;
+			$log.log('User is not logged in');
+		} else {
+			// TODO error, we have an unexpected error case
+			$log.error('Unexpected error occurred while verifying user identity');
+		}
+	});
+	
+	
+	
+	// Navigation
+	$scope.go = function ( path ) {
+		$location.path( path );
+	};
+	$scope.goApply = function ( path ) {
+		$scope.$apply(function() {
+			$location.path( path );
 		});
-    });
+	};
+
+});
+
+techRadarControllers.controller('TechnologiesCtrl', function ($scope, $http, $location, $routeParams, $log) {
 	
 	$scope.technologies = [];
-	$scope.technology = null;
 
 	$http({method: 'GET', url: '/radar/rest/technology?nocache=' + (new Date()).getTime()}).
 	success(function(data, status, headers, config) {
@@ -242,6 +83,12 @@ techRadarControllers.controller('TechnologyCtrl', function ($scope, $http, $loca
 	error(function(data, status, headers, config) {
 		$log.log('error getting technology list');
 	});
+
+});
+
+techRadarControllers.controller('TechnologyCtrl', function ($scope, $http, $location, $routeParams, $log) {
+	
+	$scope.technology = null;
 
 	if(typeof $routeParams.technologyid != 'undefined') {
 		$http({method: 'GET', url: '/radar/rest/technology/' + $routeParams.technologyid + '?nocache=' + (new Date()).getTime()}).
@@ -255,20 +102,32 @@ techRadarControllers.controller('TechnologyCtrl', function ($scope, $http, $loca
 
 });
 
+techRadarControllers.controller('RadarsCtrl', function ($scope, $http, $location, $routeParams, $log) {
+
+	$scope.radars = [];
+	
+	$scope.newRadarVisible = false;
+
+	$scope.onRadarCreated = function(radar) {
+		$scope.newRadarVisible = false;
+		$scope.radars.push(radar);
+	};
+
+	$http({method: 'GET', url: '/radar/rest/radar?nocache=' + (new Date()).getTime()}).
+	success(function(data, status, headers, config) {
+		$scope.radars = data;
+	}).
+	error(function(data, status, headers, config) {
+		$log.log('error');
+	});
+
+});
+
 techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location, $routeParams, $log) {
 	
 	$scope.uploadingTechnologies = false;
 	$scope.errors = [];
 	$scope.msgs = [];
-
-	// TODO I am being lazy, we need this in a directive
-	var technologySuggestions = new Bloodhound({
-		datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-		queryTokenizer: Bloodhound.tokenizers.whitespace,
-		prefetch: '/radar/rest/technology'
-	});
-	technologySuggestions.clearPrefetchCache();
-	technologySuggestions.initialize();
 	
 	$scope.selectedQuad = $routeParams.quadrant;
 	
@@ -276,47 +135,6 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 		$scope.selectedQuad = "";
 	}
 	
-	var radarSuggestions = new Bloodhound({
-		datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-		queryTokenizer: Bloodhound.tokenizers.whitespace,
-		prefetch: '/radar/rest/radar'
-	});
-	radarSuggestions.clearPrefetchCache();
-	radarSuggestions.initialize();
-
-	$('.typeahead').typeahead({
-		hint: true,
-		highlight: true,
-		minLength: 1
-	},
-	{
-		name: 'technologies',
-		displayKey: 'name',
-		source: technologySuggestions.ttAdapter(),
-		templates: {
-			header: '<h3 class="search-title">Technologies</h3>'
-		}
-	},
-	{
-		name: 'radars',
-		displayKey: 'name',
-		source: radarSuggestions.ttAdapter(),
-		templates: {
-			header: '<h3 class="search-title">Radars</h3>'
-		}
-	})
-	.bind('typeahead:selected', function (obj, datum) {
-		$scope.$apply(function(){
-			if(typeof datum.maturities != 'undefined') {
-				$scope.go('/radar/' + datum.id);
-			} else {
-				$scope.go('/technology/' + datum.id);
-			}
-		});
-    });
-
-
-
 	$('#fileinput').on('change', function(ev){
 		$scope.$apply(function(){
 			$scope.uploadingTechnologies = true;
@@ -349,18 +167,7 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 
 		window.setTimeout(checkFrame, 2000);
 	});
-
-	$scope.newRadarVisible = false;
-
-	$scope.onRadarCreated = function(radar) {
-		$scope.newRadarVisible = false;
-		$scope.go('/radar/' + radar.id);
-	};
-
-	$scope.go = function ( path ) {
-		$location.path( path );
-	};
-
+	
 	$scope.exportSvg = function(id) {
 		var form = document.getElementById('theForm');
 		form['id'].value = id;
@@ -386,7 +193,7 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 	$scope.doSave = function () {
 		$http.post('/radar/rest/radar/addtech/' + $scope.selectedRadar.id, $scope.selectedRadar.technologies).
 		success(function(data, status, headers, config) {
-			$scope.go('/radar/' + $scope.selectedRadar.id);
+			$location.path('/radar/' + $scope.selectedRadar.id);
 		}).
 		error(function(data, status, headers, config) {
 			$log.error('Failed to add technologies to radar');
@@ -397,7 +204,7 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 	$scope.doDelete = function ( radarId ) {
 		$http({method:'DELETE', url:'/radar/rest/radar/' + radarId}).
 		success(function(data, status, headers, config) {
-			$scope.go('/radar');
+			$location.path('/radar');
 		}).
 		error(function(data, status, headers, config) {
 			$log.error('Failed to delete radar');
@@ -423,14 +230,6 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 	$scope.mouseOut = function(item) {
 		$scope.selectedItem = null;
 	};
-
-	$http({method: 'GET', url: '/radar/rest/radar?nocache=' + (new Date()).getTime()}).
-	success(function(data, status, headers, config) {
-		$scope.radars = data;
-	}).
-	error(function(data, status, headers, config) {
-		$log.log('error');
-	});
 
 	var mapRadar = function(data) {
 		var theRadar = data;

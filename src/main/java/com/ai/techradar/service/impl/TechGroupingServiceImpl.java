@@ -8,13 +8,16 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Projections;
 
 import com.ai.techradar.database.entities.TechGrouping;
-import com.ai.techradar.database.entities.Technology;
 import com.ai.techradar.database.hibernate.HibernateUtil;
 import com.ai.techradar.service.TechGroupingService;
 import com.ai.techradar.web.service.to.TechGroupingTO;
 
 @SuppressWarnings("unchecked")
-public class TechGroupingServiceImpl implements TechGroupingService {
+public class TechGroupingServiceImpl extends AbstractTechRadarService implements TechGroupingService {
+
+	public TechGroupingServiceImpl(final String user) {
+		super(user);
+	}
 
 	public List<TechGroupingTO> getTechGroupings() {
 		final Session session = HibernateUtil.getSessionFactory().openSession();

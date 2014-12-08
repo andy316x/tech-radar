@@ -11,6 +11,8 @@ public class RadarTO {
 	private String name;
 
 	private Date dateCreated;
+	
+	private String createdBy;
 
 	private List<RadarTechnologyTO> technologies;
 
@@ -44,6 +46,14 @@ public class RadarTO {
 
 	public void setDateCreated(Date dateCreated) {
 		this.dateCreated = dateCreated;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
 	}
 
 	public List<RadarTechnologyTO> getTechnologies() {

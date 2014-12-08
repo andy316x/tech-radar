@@ -10,9 +10,8 @@
         <!-- Settings for a local HSQL (testing) database. -->
         <property name="dialect">org.hibernate.dialect.H2Dialect</property>
         <property name="connection.driver_class">org.h2.Driver</property>
-        <property name="connection.url">jdbc:h2:~/techradar</property>
-        <property name="connection.username">sa</property>
-        <property name="connection.password"></property>
+        <property name="hibernate.connection.datasource">java:comp/env/jdbc/RadarDB</property>
+        <property name="hibernate.current_session_context_class">thread</property>
 
         <!-- Use the C3P0 connection pool. -->
         <property name="c3p0.min_size">3</property>
@@ -30,7 +29,7 @@
         <property name="format_sql">true</property>
     
         <!-- Drop and then re-create schema on SessionFactory build, for testing. -->
-        <property name="hbm2ddl.auto">none</property>
+        <property name="hbm2ddl.auto">create</property>
     
         <!-- Bind the getCurrentSession() method to the thread. -->
         <property name="current_session_context_class">thread</property>
@@ -44,6 +43,8 @@
         <mapping class="com.ai.techradar.database.entities.RadarTechnology"/>
         <mapping class="com.ai.techradar.database.entities.RadarTechGrouping"/>
         <mapping class="com.ai.techradar.database.entities.RadarMaturity"/>
+        <mapping class="com.ai.techradar.database.entities.User"/>
+        <mapping class="com.ai.techradar.database.entities.UserTechnology"/>
         
  	</session-factory>
 

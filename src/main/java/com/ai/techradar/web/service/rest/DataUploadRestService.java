@@ -1,22 +1,18 @@
 package com.ai.techradar.web.service.rest;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
-import com.ai.techradar.service.MaturityService;
-import com.ai.techradar.service.RadarService;
-import com.ai.techradar.service.TechGroupingService;
-import com.ai.techradar.service.TechnologyService;
 import com.ai.techradar.service.ValidationException;
-import com.ai.techradar.service.impl.MaturityServiceImpl;
-import com.ai.techradar.service.impl.RadarServiceImpl;
-import com.ai.techradar.service.impl.TechGroupingServiceImpl;
-import com.ai.techradar.service.impl.TechnologyServiceImpl;
 import com.ai.techradar.web.service.to.MaturityTO;
 import com.ai.techradar.web.service.to.RadarTO;
 import com.ai.techradar.web.service.to.TechGroupingTO;
@@ -27,46 +23,62 @@ import com.wordnik.swagger.annotations.ApiParam;
 
 @Path("dataupload")
 @Api(value="/dataupload",description="Bulk load data service")
-public class DataUploadRestService {
-
-	private RadarService radarService = new RadarServiceImpl();
-	private TechnologyService technologyService = new TechnologyServiceImpl();
-	private MaturityService maturityService = new MaturityServiceImpl();
-	private TechGroupingService techGroupingService = new TechGroupingServiceImpl();
+public class DataUploadRestService extends AbstractTechRadarRestService {
 
 	@POST
 	@Path("/startapp")
 	@ApiOperation(value="Bulk import data",response=Response.class)
 	@Produces("application/json")
-	public Response startApp(@ApiParam("the radar") final Data data) {
+	public Response startApp(
+			@Context SecurityContext securityContext,
+			@ApiParam("the radar") final Data data) {
 
-		if(data.getTechnologies()!=null) {
-			for(final TechnologyTO technology : data.getTechnologies()) {
-				technologyService.createTechnology(technology);
+		try {
+
+			if(data.getTechnologies()!=null) {
+				for(final TechnologyTO technology : data.getTechnologies()) {
+					getTechnologyService(getUser(securityContext)).createTechnology(technology);
+				}
 			}
+
+			if(data.getMaturities()!=null) {
+				for(final MaturityTO maturity : data.getMaturities()) {
+					getMaturityService(getUser(securityContext)).createMaturity(maturity);
+				}
+			}
+
+			if(data.getTechnologies()!=null) {
+				for(final TechGroupingTO techGrouping : data.getTechGroupings()) {
+					getTechGroupingService(getUser(securityContext)).createTechGrouping(techGrouping);
+				}
+			}
+
+			if(data.getRadar()!=null) {
+				try {
+					getRadarService(getUser(securityContext)).createRadar(data.getRadar());
+				} catch (final ValidationException ex) {
+					ex.printStackTrace();
+				}
+			}
+
+			return Response.ok(data).build();
+
+		} catch (SecurityException e) {
+			throw new WebApplicationException(e);
+		} catch (IllegalArgumentException e) {
+			throw new WebApplicationException(e);
+		} catch (ClassNotFoundException e) {
+			throw new WebApplicationException(e);
+		} catch (NoSuchMethodException e) {
+			throw new WebApplicationException(e);
+		} catch (InstantiationException e) {
+			throw new WebApplicationException(e);
+		} catch (IllegalAccessException e) {
+			throw new WebApplicationException(e);
+		} catch (InvocationTargetException e) {
+			throw new WebApplicationException(e);
 		}
 
-		if(data.getMaturities()!=null) {
-			for(final MaturityTO maturity : data.getMaturities()) {
-				maturityService.createMaturity(maturity);
-			}
-		}
-
-		if(data.getTechnologies()!=null) {
-			for(final TechGroupingTO techGrouping : data.getTechGroupings()) {
-				techGroupingService.createTechGrouping(techGrouping);
-			}
-		}
-
-		if(data.getRadar()!=null) {
-			try {
-				radarService.createRadar(data.getRadar());
-			} catch (final ValidationException ex) {
-				ex.printStackTrace();
-			}
-		}
-
-		return Response.ok(data).build();
 	}
 
 	public static class Data implements Serializable {
@@ -85,7 +97,7 @@ public class DataUploadRestService {
 			return technologies;
 		}
 
-		public void setTechnologies(List<TechnologyTO> technologies) {
+		public void setTechnologies(final List<TechnologyTO> technologies) {
 			this.technologies = technologies;
 		}
 
@@ -93,7 +105,7 @@ public class DataUploadRestService {
 			return maturities;
 		}
 
-		public void setMaturities(List<MaturityTO> maturities) {
+		public void setMaturities(final List<MaturityTO> maturities) {
 			this.maturities = maturities;
 		}
 
@@ -101,7 +113,7 @@ public class DataUploadRestService {
 			return techGroupings;
 		}
 
-		public void setTechGroupings(List<TechGroupingTO> techGroupings) {
+		public void setTechGroupings(final List<TechGroupingTO> techGroupings) {
 			this.techGroupings = techGroupings;
 		}
 
@@ -109,7 +121,7 @@ public class DataUploadRestService {
 			return radar;
 		}
 
-		public void setRadar(RadarTO radar) {
+		public void setRadar(final RadarTO radar) {
 			this.radar = radar;
 		}
 

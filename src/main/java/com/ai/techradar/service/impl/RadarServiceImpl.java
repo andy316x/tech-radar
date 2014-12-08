@@ -21,6 +21,7 @@ import com.ai.techradar.database.entities.RadarTechGrouping;
 import com.ai.techradar.database.entities.RadarTechnology;
 import com.ai.techradar.database.entities.TechGrouping;
 import com.ai.techradar.database.entities.Technology;
+import com.ai.techradar.database.entities.User;
 import com.ai.techradar.database.hibernate.HibernateUtil;
 import com.ai.techradar.service.RadarService;
 import com.ai.techradar.service.ValidationException;
@@ -30,7 +31,11 @@ import com.ai.techradar.web.service.to.RadarTechnologyTO;
 import com.ai.techradar.web.service.to.TechGroupingTO;
 
 @SuppressWarnings("unchecked")
-public class RadarServiceImpl implements RadarService {
+public class RadarServiceImpl extends AbstractTechRadarService implements RadarService {
+
+	public RadarServiceImpl(final String user) {
+		super(user);
+	}
 
 	public List<RadarTO> getRadars() {
 		final Session session = HibernateUtil.getSessionFactory().openSession();
@@ -38,10 +43,13 @@ public class RadarServiceImpl implements RadarService {
 
 		final Criteria query = session.createCriteria(Radar.class);
 
+		query.createAlias("createdBy", "createdBy");
+
 		query.setProjection(Projections.projectionList()
 				.add(Projections.property("id"))
 				.add(Projections.property("name"))
-				.add(Projections.property("dateUploaded"))
+				.add(Projections.property("createdDate"))
+				.add(Projections.property("createdBy.username"))
 				);
 
 		final List<RadarTO> rs = new ArrayList<RadarTO>();
@@ -50,6 +58,7 @@ public class RadarServiceImpl implements RadarService {
 			r.setId((Long)row[0]);
 			r.setName((String)row[1]);
 			r.setDateCreated((Date)row[2]);
+			r.setCreatedBy((String)row[3]);
 
 			rs.add(r);
 		}
@@ -73,7 +82,7 @@ public class RadarServiceImpl implements RadarService {
 		final RadarTO r = new RadarTO();
 		r.setId(radar.getId());
 		r.setName(radar.getName());
-		r.setDateCreated(radar.getDateUploaded());
+		r.setDateCreated(radar.getCreatedDate());
 
 		final List<MaturityTO> maturities = new ArrayList<MaturityTO>();
 		final List<RadarMaturity> maturityEntities = radar.getRadarMaturities();
@@ -118,13 +127,13 @@ public class RadarServiceImpl implements RadarService {
 
 		return r;
 	}
-	
+
 	private static final Comparator<RadarMaturity> MATURITY_COMPARATOR = new Comparator<RadarMaturity>() {
 		public int compare(final RadarMaturity maturity1, final RadarMaturity maturity2) {
 			if(maturity1.getTheOrder() == maturity2.getTheOrder()) {
 				return 0;
 			}
-			
+
 			if(maturity1.getTheOrder() < maturity2.getTheOrder()) {
 				return -1;
 			} else {
@@ -132,13 +141,13 @@ public class RadarServiceImpl implements RadarService {
 			}
 		}
 	};
-	
+
 	private static final Comparator<RadarTechGrouping> TECH_GROUPING_COMPARATOR = new Comparator<RadarTechGrouping>() {
 		public int compare(final RadarTechGrouping maturity1, final RadarTechGrouping maturity2) {
 			if(maturity1.getTheOrder() == maturity2.getTheOrder()) {
 				return 0;
 			}
-			
+
 			if(maturity1.getTheOrder() < maturity2.getTheOrder()) {
 				return -1;
 			} else {
@@ -156,7 +165,16 @@ public class RadarServiceImpl implements RadarService {
 		try {
 
 			final Radar radar = new Radar();
-			radar.setDateUploaded(new Date());
+			radar.setCreatedDate(new Date());
+
+
+			// Created by
+			final User createdBy = readUser(getUser(), session);
+			if(createdBy!=null) {
+				radar.setCreatedBy(createdBy);
+				createdBy.getRadars().add(radar);
+			}
+
 
 			if(!StringUtils.isBlank(radarTO.getName())) {
 				radar.setName(radarTO.getName());
@@ -166,6 +184,7 @@ public class RadarServiceImpl implements RadarService {
 
 			final Long id = (Long)session.save(radar);
 			radarTO.setId(id);
+			radarTO.setCreatedBy(createdBy.getUsername());
 
 			final List<MaturityTO> radarMaturityTOs = radarTO.getMaturities();
 			if(radarMaturityTOs!=null && !radarMaturityTOs.isEmpty()) {
@@ -385,6 +404,12 @@ public class RadarServiceImpl implements RadarService {
 		final Criteria query = session.createCriteria(TechGrouping.class);
 		query.add(Restrictions.eq("name", name));
 		return (TechGrouping)query.uniqueResult();
+	}
+
+	private User readUser(final String username, final Session session) {
+		final Criteria query = session.createCriteria(User.class);
+		query.add(Restrictions.eq("username", username));
+		return (User)query.uniqueResult();
 	}
 
 }

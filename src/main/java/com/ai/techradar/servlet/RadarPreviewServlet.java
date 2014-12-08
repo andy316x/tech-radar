@@ -38,7 +38,7 @@ public class RadarPreviewServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 5976711967719593613L;
 
-	private RadarService service = new RadarServiceImpl();
+	private RadarService service = new RadarServiceImpl("");
 
 	private static final int[] ARC_WIDTHS = new int[]{150, 125, 75, 50};
 

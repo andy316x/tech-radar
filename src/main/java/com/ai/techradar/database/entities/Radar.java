@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -20,9 +21,9 @@ public class Radar {
 	
 	private String name;
 
-	private String filename;
+	private Date createdDate;
 
-	private Date dateUploaded;
+	private User createdBy;
 
 	private List<RadarTechnology> radarTechnologies;
 
@@ -55,21 +56,21 @@ public class Radar {
 		this.name = name;
 	}
 
-	public String getFilename() {
-		return filename;
+	public Date getCreatedDate() {
+		return createdDate;
 	}
 
-	public void setFilename(String filename) {
-		this.filename = filename;
+	public void setCreatedDate(final Date createdDate) {
+		this.createdDate = createdDate;
 	}
 
-	@Index(name="radarDateUploadedIndex")
-	public Date getDateUploaded() {
-		return dateUploaded;
+	@ManyToOne
+	public User getCreatedBy() {
+		return createdBy;
 	}
 
-	public void setDateUploaded(final Date dateUploaded) {
-		this.dateUploaded = dateUploaded;
+	public void setCreatedBy(final User createdBy) {
+		this.createdBy = createdBy;
 	}
 
 	@OneToMany(mappedBy="radar", cascade=CascadeType.ALL)

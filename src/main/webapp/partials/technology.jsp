@@ -14,7 +14,23 @@
 				<li><a href="#/radar">Radars</a></li>
 				<li class="active"><a href="#/technology">Technologies</a></li>
 				<li><a href="#">Skills Profile</a></li>
-				<li><a href="#">Ricky Winterbourne  <img class="img img-rounded" src="/radar/img/128.jpg"></a></li>
+				<li ng-show="loggedin==true"><a>{{name}}  <img ng-click="loginclick=!loginclick" class="img img-rounded" src="/radar/img/128.jpg"></a></li>
+				<li ng-show="loggedin==false">
+					<a ng-click="loginclick=!loginclick">Sign in  <img class="img img-rounded" src="/radar/img/icon_8204.png"></a>
+					<div ng-show="loginclick==true" class="popover fade bottom in" style="position: absolute;z-index: 100;top: 38px;left: -185px;display: block;width: 300px;padding: 16px 0px 0px 0px;">
+      					<div class="arrow" style="margin-left:87px"></div>
+      					<h3 class="popover-title" style="background-color: #FFF;color: #333;padding-top: 0;">Sign in</h3>
+      					<div class="popover-content form-group">
+      						<p>Sign in to Tech Radar using your Black network username and password</p>
+      						<p><strong>Username</strong></p>
+    						<p><input class="form-control" type="text" name="j_username" size="25" ng-model="username"></p>
+    						<p><strong>Password</strong></p>
+    						<p><input class="form-control" type="password" size="15" name="j_password" ng-model="password"></p>
+    						<p class="text-danger" ng-show="wrongpassword==true">* Incorrect username/password</p>
+    						<p class="text-right"><button class="btn btn-success" ng-click="login(username, password)">Sign in</button></p>
+      					</div>
+    				</div>
+				</li>
 			</ul>
 		</div>
 	</div>
@@ -38,12 +54,12 @@
 			</div>
 			<div class="col-md-3">
 				<div class="search-wrapper">
-					<input type="text" class="form-control typeahead" placeholder="Search"></input>
+					<input ng-search="" on-radar-selected="goApply('/radar/' + id)" on-technology-selected="goApply('/technology/' + id)" type="text" class="form-control typeahead" placeholder="Search"></input>
 					<i class="glyphicon glyphicon-search"></i>
 				</div>
 			</div>
 			<div class="col-md-3 text-right">
-				<button class="btn btn-success" ng-click="newRadarVisible=true">New Technology</button>
+				<button class="btn btn-success" ng-click="newRadarVisible=true" ng-show="loggedin==true">New Technology</button>
 			</div>
 		</div>
 		

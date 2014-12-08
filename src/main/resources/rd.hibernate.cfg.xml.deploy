@@ -30,7 +30,7 @@
         <property name="format_sql">true</property>
     
         <!-- Drop and then re-create schema on SessionFactory build, for testing. -->
-        <property name="hbm2ddl.auto">create</property>
+        <property name="hbm2ddl.auto">none</property>
     
         <!-- Bind the getCurrentSession() method to the thread. -->
         <property name="current_session_context_class">thread</property>
@@ -44,6 +44,8 @@
         <mapping class="com.ai.techradar.database.entities.RadarTechnology"/>
         <mapping class="com.ai.techradar.database.entities.RadarTechGrouping"/>
         <mapping class="com.ai.techradar.database.entities.RadarMaturity"/>
+        <mapping class="com.ai.techradar.database.entities.User"/>
+        <mapping class="com.ai.techradar.database.entities.UserTechnology"/>
         
  	</session-factory>
 

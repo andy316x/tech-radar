@@ -21,7 +21,7 @@ public class CSVExportServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 7125431699341927732L;
 
-	private RadarService service = new RadarServiceImpl();
+	private RadarService service = new RadarServiceImpl("");
 
 	@Override
 	public void doPost(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {

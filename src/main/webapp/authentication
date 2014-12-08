@@ -1,0 +1,41 @@
+Create the following in the authentication DB
+
+create table user (username varchar(255) primary key, userpass varchar(255));
+create table userrole (id int primary key, username varchar(255), role varchar(255));
+
+insert into user (username, userpass) values ('Andy Wilson', 'da41bceff97b1cf96078ffb249b3d66e');
+
+insert into userrole (id, username, role) values (1, 'Andy Wilson', 'admin');
+insert into userrole (id, username, role) values (2, 'Andy Wilson', 'all');
+
+
+context.xml
+    <ResourceLink name="jdbc/AuthenticationDB"
+              global="jdbc/AuthenticationDB"
+              auth="Container"
+              type="javax.sql.DataSource" />
+              
+server.xml              
+    <Resource name="jdbc/AuthenticationDB"
+          global="jdbc/AuthenticationDB"
+          auth="Container"
+          type="javax.sql.DataSource"
+          driverClassName="org.h2.Driver"
+          url="jdbc:h2:tcp://localhost/~/authentication"
+          username="sa"
+          password=""
+       
+          maxActive="100"
+          maxIdle="20"
+          minIdle="5"
+          maxWait="10000"/>
+          
+    <Realm 
+      	className="org.apache.catalina.realm.DataSourceRealm"
+      	dataSourceName="jdbc/AuthenticationDB"
+      	digest="MD5"
+      	userTable="user"
+      	userNameCol="username"
+      	userCredCol="userpass"
+      	userRoleTable="userrole"
+      	roleNameCol="role"/>

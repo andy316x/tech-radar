@@ -1,6 +1,7 @@
 var techRadarApp = angular.module('techRadar', [
 'ngRoute',
-'techRadarControllers'
+'techRadarControllers',
+'techRadarDirectives'
 ]);
 
 techRadarApp.config(['$routeProvider',function($routeProvider) {
@@ -9,7 +10,7 @@ techRadarApp.config(['$routeProvider',function($routeProvider) {
 	// Radar
       .when('/radar', {
         templateUrl: 'partials/radar.jsp',
-        controller: 'RadarCtrl'
+        controller: 'RadarsCtrl'
       })
       .when('/radar/:radarid', {
         templateUrl: 'partials/viewradar.jsp',
@@ -27,7 +28,7 @@ techRadarApp.config(['$routeProvider',function($routeProvider) {
     // Technology
       .when('/technology', {
         templateUrl: 'partials/technology.jsp',
-        controller: 'TechnologyCtrl'
+        controller: 'TechnologiesCtrl'
       })
       .when('/technology/:technologyid', {
         templateUrl: 'partials/viewtechnology.jsp',
@@ -37,6 +38,6 @@ techRadarApp.config(['$routeProvider',function($routeProvider) {
       // Default
       .otherwise({
 		templateUrl: 'partials/radar.jsp',
-		controller: 'RadarCtrl'
+		controller: 'RadarsCtrl'
 	});
 }]);

@@ -7,14 +7,24 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.sql.JoinType;
 
+import com.ai.techradar.database.entities.SkillLevelEnum;
 import com.ai.techradar.database.entities.Technology;
+import com.ai.techradar.database.entities.User;
+import com.ai.techradar.database.entities.UserTechnology;
 import com.ai.techradar.database.hibernate.HibernateUtil;
 import com.ai.techradar.service.TechnologyService;
+import com.ai.techradar.service.ValidationException;
 import com.ai.techradar.web.service.to.TechnologyTO;
+import com.ai.techradar.web.service.to.UserTechnologyTO;
 
 @SuppressWarnings("unchecked")
-public class TechnologyServiceImpl implements TechnologyService {
+public class TechnologyServiceImpl extends AbstractTechRadarService implements TechnologyService {
+
+	public TechnologyServiceImpl(final String user) {
+		super(user);
+	}
 
 	public List<TechnologyTO> getTechnologies() {
 		final Session session = HibernateUtil.getSessionFactory().openSession();
@@ -84,6 +94,115 @@ public class TechnologyServiceImpl implements TechnologyService {
 		technology.setId(id);
 
 		return technology;
+	}
+
+	public UserTechnologyTO setUserTechnology(final Long technologyId, final UserTechnologyTO userTechnology) throws ValidationException {
+		final List<String> validations = new ArrayList<String>();
+
+		final Session session = HibernateUtil.getSessionFactory().openSession();
+		session.beginTransaction();
+
+		try {
+
+			final UserTechnology userTechnologyEntity = new UserTechnology();
+
+			// Find and set technology
+			final Technology technology = readTechnology(technologyId, session);
+			if(technology!=null) {
+				userTechnologyEntity.setTechnology(technology);
+				technology.getUsers().add(userTechnologyEntity);
+				userTechnology.setTechnology(technology.getName());
+			} else {
+				validations.add("Could not find technology with ID " + technologyId);
+			}
+
+			// Find and set user
+			final User user = readUser(getUser(), session);
+			if(user != null) {
+				userTechnologyEntity.setUser(user);
+				user.getTechnologies().add(userTechnologyEntity);
+				userTechnology.setUser(user.getUsername());
+			} else {
+				validations.add("Could not find user with username " + getUser());
+			}
+
+
+			// TODO Check this link doesn't already exist!
+
+			// Validate and set skill level
+			if(userTechnology.getSkillLevel() != null) {
+				userTechnologyEntity.setSkillLevel(userTechnology.getSkillLevel());
+			} else {
+				validations.add("Skill level must be set");
+			}
+
+			session.persist(userTechnologyEntity);
+
+
+			if(validations.isEmpty()) {
+				session.getTransaction().commit();
+			} else {
+				session.getTransaction().rollback();
+				throw new ValidationException(validations);
+			}
+
+		} catch(final ValidationException ex) {
+			throw new ValidationException(ex.getValidations());
+		} finally {
+			session.close();
+		}
+
+		return userTechnology;
+	}
+
+	public List<UserTechnologyTO> getTechnologyUsers(final Long technologyId) throws ValidationException {
+		final List<UserTechnologyTO> results = new ArrayList<UserTechnologyTO>();
+
+		final Session session = HibernateUtil.getSessionFactory().openSession();
+
+		try {
+
+			final Criteria query = session.createCriteria(Technology.class);
+			query.add(Restrictions.eq("id", technologyId));
+
+			// Join out to user technology
+			final Criteria joinToUserTechnology = query.createCriteria("users", "technologyUser", JoinType.INNER_JOIN);
+
+			// Join out to user
+			joinToUserTechnology.createAlias("user", "user", JoinType.INNER_JOIN);
+
+			query.setProjection(Projections.projectionList()
+					.add(Projections.property("user.username"))
+					.add(Projections.property("name"))
+					.add(Projections.property("technologyUser.skillLevel"))
+					);
+
+			for(final Object[] row : (List<Object[]>)query.list()) {
+				final UserTechnologyTO userTechnologyTO = new UserTechnologyTO();
+				userTechnologyTO.setUser((String)row[0]);
+				userTechnologyTO.setTechnology((String)row[1]);
+				userTechnologyTO.setSkillLevel((SkillLevelEnum)row[2]);
+
+				results.add(userTechnologyTO);
+			}
+
+		} finally {
+			session.close();
+		}
+
+		return results;
+	}
+
+	private Technology readTechnology(final Long id, final Session session) {
+		final Criteria query = session.createCriteria(Technology.class);
+		query.add(Restrictions.eq("id", id));
+		return (Technology)query.uniqueResult();
+	}
+
+	private User readUser(final String username, final Session session) {
+		final Criteria query = session.createCriteria(User.class);
+		query.add(Restrictions.eq("username", username));
+		return (User)query.uniqueResult();
 	}
 
 }

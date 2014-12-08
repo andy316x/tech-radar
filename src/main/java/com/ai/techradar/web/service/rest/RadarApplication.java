@@ -1,5 +1,8 @@
 package com.ai.techradar.web.service.rest;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,6 +17,7 @@ public class RadarApplication extends Application {
 		singletons.add(new TechnologyRestService());
 		singletons.add(new MaturityRestService());
 		singletons.add(new TechGroupingRestService());
+		singletons.add(new MeRestService());
 		singletons.add(new SwaggerDocsRestService());
 		
 		singletons.add(new DataUploadRestService());
