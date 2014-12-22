@@ -9,6 +9,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
 
+import com.ai.techradar.database.entities.Radar;
 import com.ai.techradar.database.entities.SkillLevelEnum;
 import com.ai.techradar.database.entities.Technology;
 import com.ai.techradar.database.entities.User;
@@ -16,15 +17,12 @@ import com.ai.techradar.database.entities.UserTechnology;
 import com.ai.techradar.database.hibernate.HibernateUtil;
 import com.ai.techradar.service.TechnologyService;
 import com.ai.techradar.service.ValidationException;
+import com.ai.techradar.util.AdminHandlerHelper;
 import com.ai.techradar.web.service.to.TechnologyTO;
 import com.ai.techradar.web.service.to.UserTechnologyTO;
 
 @SuppressWarnings("unchecked")
-public class TechnologyServiceImpl extends AbstractTechRadarService implements TechnologyService {
-
-	public TechnologyServiceImpl(final String user) {
-		super(user);
-	}
+public class TechnologyServiceImpl implements TechnologyService {
 
 	public List<TechnologyTO> getTechnologies() {
 		final Session session = HibernateUtil.getSessionFactory().openSession();
@@ -117,13 +115,13 @@ public class TechnologyServiceImpl extends AbstractTechRadarService implements T
 			}
 
 			// Find and set user
-			final User user = readUser(getUser(), session);
+			final User user = readUser(AdminHandlerHelper.getCurrentUser(), session);
 			if(user != null) {
 				userTechnologyEntity.setUser(user);
 				user.getTechnologies().add(userTechnologyEntity);
 				userTechnology.setUser(user.getUsername());
 			} else {
-				validations.add("Could not find user with username " + getUser());
+				validations.add("Could not find user with username " + AdminHandlerHelper.getCurrentUser());
 			}
 
 
@@ -202,7 +200,19 @@ public class TechnologyServiceImpl extends AbstractTechRadarService implements T
 	private User readUser(final String username, final Session session) {
 		final Criteria query = session.createCriteria(User.class);
 		query.add(Restrictions.eq("username", username));
-		return (User)query.uniqueResult();
+		final User user = (User)query.uniqueResult();
+
+		if(user != null) {
+			return user;
+		}
+
+		final User newUser = new User();
+		newUser.setUsername(username);
+		newUser.setRadars(new ArrayList<Radar>());
+		newUser.setTechnologies(new ArrayList<UserTechnology>());
+		session.persist(newUser);
+
+		return newUser;
 	}
 
 }

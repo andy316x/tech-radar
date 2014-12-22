@@ -21,13 +21,7 @@
       					<div class="arrow" style="margin-left:87px"></div>
       					<h3 class="popover-title" style="background-color: #FFF;color: #333;padding-top: 0;">Sign in</h3>
       					<div class="popover-content form-group">
-      						<p>Sign in to Tech Radar using your Black network username and password</p>
-      						<p><strong>Username</strong></p>
-    						<p><input class="form-control" type="text" name="j_username" size="25" ng-model="username"></p>
-    						<p><strong>Password</strong></p>
-    						<p><input class="form-control" type="password" size="15" name="j_password" ng-model="password"></p>
-    						<p class="text-danger" ng-show="wrongpassword==true">* Incorrect username/password</p>
-    						<p class="text-right"><button class="btn btn-success" ng-click="login(username, password)">Sign in</button></p>
+      						<iframe id="loginframe" src="loginsuccess.html" style="width: 100%;height: 265px;border: none;overflow: hidden;"></iframe>
       					</div>
     				</div>
 				</li>

@@ -13,7 +13,7 @@ import java.util.Stack;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ai.techradar.service.RadarService;
-import com.ai.techradar.service.impl.RadarServiceImpl;
+import com.ai.techradar.service.SpringStarter;
 import com.ai.techradar.servlet.RadarPreviewServlet.Quadrant;
 import com.ai.techradar.web.service.to.MaturityTO;
 import com.ai.techradar.web.service.to.RadarTO;
@@ -45,7 +45,7 @@ public class PDFGeneratorSecond extends PdfPageEventHelper {
 	private final Font headerFont = new Font(Font.HELVETICA, 14, Font.BOLD);
 	private final Font subheaderFont = new Font(Font.HELVETICA, 11, Font.BOLD);
 	private final Font textFont = new Font(Font.HELVETICA, 8, Font.NORMAL);
-	private RadarService service = new RadarServiceImpl("");
+	private RadarService service = (RadarService)SpringStarter.getContext().getBean("RadarService");
 
 	private final static float optimumWidth = 650; // 750;
 	private final static float width = 650;

@@ -1,7 +1,6 @@
 package com.ai.techradar.web.service.rest;
 
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import javax.ws.rs.POST;
@@ -12,7 +11,13 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import com.ai.techradar.service.MaturityService;
+import com.ai.techradar.service.RadarService;
+import com.ai.techradar.service.SpringStarter;
+import com.ai.techradar.service.TechGroupingService;
+import com.ai.techradar.service.TechnologyService;
 import com.ai.techradar.service.ValidationException;
+import com.ai.techradar.util.AdminHandlerHelper;
 import com.ai.techradar.web.service.to.MaturityTO;
 import com.ai.techradar.web.service.to.RadarTO;
 import com.ai.techradar.web.service.to.TechGroupingTO;
@@ -24,6 +29,14 @@ import com.wordnik.swagger.annotations.ApiParam;
 @Path("dataupload")
 @Api(value="/dataupload",description="Bulk load data service")
 public class DataUploadRestService extends AbstractTechRadarRestService {
+	
+	private TechnologyService technologyService = (TechnologyService)SpringStarter.getContext().getBean("TechnologyService");
+	
+	private MaturityService maturityService = (MaturityService)SpringStarter.getContext().getBean("MaturityService");
+	
+	private TechGroupingService techGroupingService = (TechGroupingService)SpringStarter.getContext().getBean("TechGroupingService");
+	
+	private RadarService radarService = (RadarService)SpringStarter.getContext().getBean("RadarService");
 
 	@POST
 	@Path("/startapp")
@@ -32,30 +45,34 @@ public class DataUploadRestService extends AbstractTechRadarRestService {
 	public Response startApp(
 			@Context SecurityContext securityContext,
 			@ApiParam("the radar") final Data data) {
+		
+		if(securityContext.getUserPrincipal()!=null) {
+			AdminHandlerHelper.login(securityContext.getUserPrincipal().getName());
+		}
 
 		try {
 
 			if(data.getTechnologies()!=null) {
 				for(final TechnologyTO technology : data.getTechnologies()) {
-					getTechnologyService(getUser(securityContext)).createTechnology(technology);
+					technologyService.createTechnology(technology);
 				}
 			}
 
 			if(data.getMaturities()!=null) {
 				for(final MaturityTO maturity : data.getMaturities()) {
-					getMaturityService(getUser(securityContext)).createMaturity(maturity);
+					maturityService.createMaturity(maturity);
 				}
 			}
 
 			if(data.getTechnologies()!=null) {
 				for(final TechGroupingTO techGrouping : data.getTechGroupings()) {
-					getTechGroupingService(getUser(securityContext)).createTechGrouping(techGrouping);
+					techGroupingService.createTechGrouping(techGrouping);
 				}
 			}
 
 			if(data.getRadar()!=null) {
 				try {
-					getRadarService(getUser(securityContext)).createRadar(data.getRadar());
+					radarService.createRadar(data.getRadar());
 				} catch (final ValidationException ex) {
 					ex.printStackTrace();
 				}
@@ -67,16 +84,8 @@ public class DataUploadRestService extends AbstractTechRadarRestService {
 			throw new WebApplicationException(e);
 		} catch (IllegalArgumentException e) {
 			throw new WebApplicationException(e);
-		} catch (ClassNotFoundException e) {
-			throw new WebApplicationException(e);
-		} catch (NoSuchMethodException e) {
-			throw new WebApplicationException(e);
-		} catch (InstantiationException e) {
-			throw new WebApplicationException(e);
-		} catch (IllegalAccessException e) {
-			throw new WebApplicationException(e);
-		} catch (InvocationTargetException e) {
-			throw new WebApplicationException(e);
+		} finally {
+			AdminHandlerHelper.logout();
 		}
 
 	}

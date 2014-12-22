@@ -12,6 +12,8 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.ai.techradar.database.entities.Maturity;
 import com.ai.techradar.database.entities.MovementEnum;
@@ -22,20 +24,24 @@ import com.ai.techradar.database.entities.RadarTechnology;
 import com.ai.techradar.database.entities.TechGrouping;
 import com.ai.techradar.database.entities.Technology;
 import com.ai.techradar.database.entities.User;
+import com.ai.techradar.database.entities.UserTechnology;
 import com.ai.techradar.database.hibernate.HibernateUtil;
 import com.ai.techradar.service.RadarService;
+import com.ai.techradar.service.UserService;
+import com.ai.techradar.service.UserService.UserInfo;
 import com.ai.techradar.service.ValidationException;
+import com.ai.techradar.util.AdminHandlerHelper;
 import com.ai.techradar.web.service.to.MaturityTO;
 import com.ai.techradar.web.service.to.RadarTO;
 import com.ai.techradar.web.service.to.RadarTechnologyTO;
 import com.ai.techradar.web.service.to.TechGroupingTO;
 
 @SuppressWarnings("unchecked")
-public class RadarServiceImpl extends AbstractTechRadarService implements RadarService {
-
-	public RadarServiceImpl(final String user) {
-		super(user);
-	}
+public class RadarServiceImpl implements RadarService {
+	
+	@Autowired
+	@Qualifier("UserService")
+	private UserService userService;
 
 	public List<RadarTO> getRadars() {
 		final Session session = HibernateUtil.getSessionFactory().openSession();
@@ -58,7 +64,13 @@ public class RadarServiceImpl extends AbstractTechRadarService implements RadarS
 			r.setId((Long)row[0]);
 			r.setName((String)row[1]);
 			r.setDateCreated((Date)row[2]);
-			r.setCreatedBy((String)row[3]);
+			
+			final UserInfo userInfo = userService.getUserInfo((String)row[3]);
+			if(userInfo.getSurname() != null) {
+				r.setCreatedBy(userInfo.getGivenName() + " " + userInfo.getSurname());	
+			} else {
+				r.setCreatedBy(userInfo.getGivenName());
+			}
 
 			rs.add(r);
 		}
@@ -169,7 +181,7 @@ public class RadarServiceImpl extends AbstractTechRadarService implements RadarS
 
 
 			// Created by
-			final User createdBy = readUser(getUser(), session);
+			final User createdBy = readUser(AdminHandlerHelper.getCurrentUser(), session);
 			if(createdBy!=null) {
 				radar.setCreatedBy(createdBy);
 				createdBy.getRadars().add(radar);
@@ -409,7 +421,19 @@ public class RadarServiceImpl extends AbstractTechRadarService implements RadarS
 	private User readUser(final String username, final Session session) {
 		final Criteria query = session.createCriteria(User.class);
 		query.add(Restrictions.eq("username", username));
-		return (User)query.uniqueResult();
+		final User user = (User)query.uniqueResult();
+
+		if(user != null) {
+			return user;
+		}
+
+		final User newUser = new User();
+		newUser.setUsername(username);
+		newUser.setRadars(new ArrayList<Radar>());
+		newUser.setTechnologies(new ArrayList<UserTechnology>());
+		session.persist(newUser);
+
+		return newUser;
 	}
 
 }

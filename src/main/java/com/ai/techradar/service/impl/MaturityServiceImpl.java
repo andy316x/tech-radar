@@ -13,11 +13,7 @@ import com.ai.techradar.service.MaturityService;
 import com.ai.techradar.web.service.to.MaturityTO;
 
 @SuppressWarnings("unchecked")
-public class MaturityServiceImpl extends AbstractTechRadarService implements MaturityService {
-
-	public MaturityServiceImpl(final String user) {
-		super(user);
-	}
+public class MaturityServiceImpl implements MaturityService {
 
 	public List<MaturityTO> getMaturities() {
 		final Session session = HibernateUtil.getSessionFactory().openSession();

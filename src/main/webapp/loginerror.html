@@ -1,5 +1,35 @@
 <html>
+
+<head>
+
+<link href="/radar/css/bootstrap.min.css" rel="stylesheet"></link>
+
+</head>
+
 <body>
-Login error
+
+<form method="POST" action="/radar/j_security_check">
+	<p>
+		Sign in to Tech Radar using your <strong>Black</strong> network username and password
+	</p>
+	<p>
+		<strong>Username</strong>
+	</p>
+	<p>
+		<input class="form-control" type="text" name="j_username" size="25" style="width:100%"></input>
+	</p>
+	<p>
+		<strong>Password</strong>
+	</p>
+	<p>
+		<input class="form-control" type="password" size="15" name="j_password" ng-model="password" style="width:100%;"></input>
+	</p>
+	<p class="text-danger">* Incorrect username/password</p>
+	<p class="text-right">
+		<button class="btn btn-success">Sign in</button>
+	</p>
+</form>
+
 </body>
+
 </html>

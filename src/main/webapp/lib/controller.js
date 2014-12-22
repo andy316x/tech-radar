@@ -8,53 +8,44 @@ techRadarControllers.controller('CommonViewCtrl', function ($scope, $http, $loca
 	
 	// Login
 	$scope.loggedin = false;
-	$scope.loginclick = false;
-	$scope.wrongpassword = false;
 	
-	$scope.login = function(u, p) {
-		$scope.wrongpassword = false;
-		$http.post('/radar/j_security_check?j_username=' + u + "&j_password=" + p + "&bust=" + new Date().getTime(), {j_username:u,j_password:p}).
+	
+	var getUserInfo = function() {
+		// User info
+		$http({method: 'GET', url: '/radar/rest/me?nocache=' + (new Date()).getTime()}).
 		success(function(data, status, headers, config) {
-			if(typeof data.name != 'undefined') {
-				$scope.name = data.name;
-				$scope.loggedin = true;
-				$scope.loginclick = false;
+			$scope.loggedin = true;
+			$scope.name = data.name;
+		}).
+		error(function(data, status, headers, config) {
+			if(status==403) {
+				// The user is not authorised
+				$scope.loggedin = false;
+				$log.log('User is not logged in');
+				var checkLogin = function() {
+					var loginFrame = document.getElementById('loginframe');
+					if(loginFrame != null) {
+						var loginWindow = loginFrame.contentWindow;
+						if(typeof loginWindow.techRadarData !== 'undefined') {
+							// User has now logged in so get their details
+							getUserInfo();
+						} else {
+							// User is still not logged in, try again in a bit
+							window.setTimeout(checkLogin, 1000);
+						}
+					} else {
+						// The login frame is not on the page, try again in a bit
+						window.setTimeout(checkLogin, 1000);
+					}
+				};
+				checkLogin();
 			} else {
-				$scope.wrongpassword = true;
+				// TODO error, we have an unexpected error case
+				$log.error('Unexpected error occurred while verifying user identity');
 			}
-		  }).
-		  error(function(data, status, headers, config) {
-			  $log.log(data);
-		  });
+		});
 	};
-
-	$http.get('/radar/login').
-	success(function(data, status, headers, config) {
-		// We are already logged in
-	}).
-	error(function(data, status, headers, config) {
-		// We need to log in
-	});
-	
-	
-	
-	
-	// User info
-	$http({method: 'GET', url: '/radar/rest/me?nocache=' + (new Date()).getTime()}).
-	success(function(data, status, headers, config) {
-		$scope.loggedin = true;
-		$scope.name = data.name;
-	}).
-	error(function(data, status, headers, config) {
-		if(status==403) {
-			// The user is not authorised
-			$scope.loggedin = false;
-			$log.log('User is not logged in');
-		} else {
-			// TODO error, we have an unexpected error case
-			$log.error('Unexpected error occurred while verifying user identity');
-		}
-	});
+	getUserInfo();
 	
 	
 	
@@ -302,7 +293,7 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 		});
 	};
 
-	if(!($routeParams.radarid == null || typeof $routeParams.radarid === "undefined")) {
+	if(!($routeParams.radarid == null || typeof $routeParams.radarid === 'undefined')) {
 		loadRadar($routeParams.radarid);
 	}
 

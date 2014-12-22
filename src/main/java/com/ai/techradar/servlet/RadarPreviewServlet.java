@@ -25,11 +25,9 @@ import org.apache.fop.svg.PDFTranscoder;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Text;
 
-import com.ai.techradar.database.entities.MovementEnum;
 import com.ai.techradar.service.RadarService;
-import com.ai.techradar.service.impl.RadarServiceImpl;
+import com.ai.techradar.service.SpringStarter;
 import com.ai.techradar.web.service.to.MaturityTO;
 import com.ai.techradar.web.service.to.RadarTO;
 import com.ai.techradar.web.service.to.RadarTechnologyTO;
@@ -38,7 +36,7 @@ public class RadarPreviewServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 5976711967719593613L;
 
-	private RadarService service = new RadarServiceImpl("");
+	private RadarService service = (RadarService)SpringStarter.getContext().getBean("RadarService");
 
 	private static final int[] ARC_WIDTHS = new int[]{150, 125, 75, 50};
 

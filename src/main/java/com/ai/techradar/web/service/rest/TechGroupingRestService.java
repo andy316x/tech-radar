@@ -1,6 +1,5 @@
 package com.ai.techradar.web.service.rest;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -12,6 +11,9 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import com.ai.techradar.service.SpringStarter;
+import com.ai.techradar.service.TechGroupingService;
+import com.ai.techradar.util.AdminHandlerHelper;
 import com.ai.techradar.web.service.to.TechGroupingTO;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -20,16 +22,22 @@ import com.wordnik.swagger.annotations.ApiParam;
 @Path("techgrouping")
 @Api(value="/techgrouping",description="Radar service")
 public class TechGroupingRestService extends AbstractTechRadarRestService {
+	
+	private TechGroupingService techGroupingService = (TechGroupingService)SpringStarter.getContext().getBean("TechGroupingService");
 
 	@GET
 	@Path("/")
 	@ApiOperation(value="Get tech groupings",response=Response.class)
 	@Produces("application/json")
 	public Response getTechGroupings(@Context SecurityContext securityContext) {
+		
+		if(securityContext.getUserPrincipal()!=null) {
+			AdminHandlerHelper.login(securityContext.getUserPrincipal().getName());
+		}
 
 		try {
 
-			final List<TechGroupingTO> rs = getTechGroupingService(getUser(securityContext)).getTechGroupings();
+			final List<TechGroupingTO> rs = techGroupingService.getTechGroupings();
 
 			return Response.ok(rs).build();
 
@@ -37,16 +45,8 @@ public class TechGroupingRestService extends AbstractTechRadarRestService {
 			throw new WebApplicationException(e);
 		} catch (IllegalArgumentException e) {
 			throw new WebApplicationException(e);
-		} catch (ClassNotFoundException e) {
-			throw new WebApplicationException(e);
-		} catch (NoSuchMethodException e) {
-			throw new WebApplicationException(e);
-		} catch (InstantiationException e) {
-			throw new WebApplicationException(e);
-		} catch (IllegalAccessException e) {
-			throw new WebApplicationException(e);
-		} catch (InvocationTargetException e) {
-			throw new WebApplicationException(e);
+		} finally {
+			AdminHandlerHelper.logout();
 		}
 
 	}
@@ -58,10 +58,14 @@ public class TechGroupingRestService extends AbstractTechRadarRestService {
 	public Response createTechGrouping(
 			@Context SecurityContext securityContext,
 			@ApiParam("the tech grouping") final TechGroupingTO techGrouping) {
+		
+		if(securityContext.getUserPrincipal()!=null) {
+			AdminHandlerHelper.login(securityContext.getUserPrincipal().getName());
+		}
 
 		try {
 
-			final TechGroupingTO newTechGrouping = getTechGroupingService(getUser(securityContext)).createTechGrouping(techGrouping);
+			final TechGroupingTO newTechGrouping = techGroupingService.createTechGrouping(techGrouping);
 
 			return Response.ok(newTechGrouping).build();
 
@@ -69,16 +73,8 @@ public class TechGroupingRestService extends AbstractTechRadarRestService {
 			throw new WebApplicationException(e);
 		} catch (IllegalArgumentException e) {
 			throw new WebApplicationException(e);
-		} catch (ClassNotFoundException e) {
-			throw new WebApplicationException(e);
-		} catch (NoSuchMethodException e) {
-			throw new WebApplicationException(e);
-		} catch (InstantiationException e) {
-			throw new WebApplicationException(e);
-		} catch (IllegalAccessException e) {
-			throw new WebApplicationException(e);
-		} catch (InvocationTargetException e) {
-			throw new WebApplicationException(e);
+		} finally {
+			AdminHandlerHelper.logout();
 		}
 
 	}

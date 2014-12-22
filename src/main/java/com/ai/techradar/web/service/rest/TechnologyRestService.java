@@ -1,6 +1,5 @@
 package com.ai.techradar.web.service.rest;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -14,7 +13,10 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
 
+import com.ai.techradar.service.SpringStarter;
+import com.ai.techradar.service.TechnologyService;
 import com.ai.techradar.service.ValidationException;
+import com.ai.techradar.util.AdminHandlerHelper;
 import com.ai.techradar.web.service.to.TechnologyTO;
 import com.ai.techradar.web.service.to.UserTechnologyTO;
 import com.wordnik.swagger.annotations.Api;
@@ -24,6 +26,8 @@ import com.wordnik.swagger.annotations.ApiParam;
 @Path("technology")
 @Api(value="/technology",description="Radar service")
 public class TechnologyRestService extends AbstractTechRadarRestService {
+	
+	private TechnologyService technologyService = (TechnologyService)SpringStarter.getContext().getBean("TechnologyService");
 
 	@GET
 	@Path("/")
@@ -31,9 +35,13 @@ public class TechnologyRestService extends AbstractTechRadarRestService {
 	@Produces("application/json")
 	public Response getTechnologies(@Context SecurityContext securityContext) {
 
+		if(securityContext.getUserPrincipal()!=null) {
+			AdminHandlerHelper.login(securityContext.getUserPrincipal().getName());
+		}
+
 		try {
 
-			final List<TechnologyTO> rs = getTechnologyService(getUser(securityContext)).getTechnologies();
+			final List<TechnologyTO> rs = technologyService.getTechnologies();
 
 			return Response.ok(rs).build();
 
@@ -41,16 +49,8 @@ public class TechnologyRestService extends AbstractTechRadarRestService {
 			throw new WebApplicationException(e);
 		} catch (IllegalArgumentException e) {
 			throw new WebApplicationException(e);
-		} catch (ClassNotFoundException e) {
-			throw new WebApplicationException(e);
-		} catch (NoSuchMethodException e) {
-			throw new WebApplicationException(e);
-		} catch (InstantiationException e) {
-			throw new WebApplicationException(e);
-		} catch (IllegalAccessException e) {
-			throw new WebApplicationException(e);
-		} catch (InvocationTargetException e) {
-			throw new WebApplicationException(e);
+		} finally {
+			AdminHandlerHelper.logout();
 		}
 
 	}
@@ -63,11 +63,15 @@ public class TechnologyRestService extends AbstractTechRadarRestService {
 			@Context SecurityContext securityContext,
 			@PathParam("technologyId") final String technologyIdStr) {
 
+		if(securityContext.getUserPrincipal()!=null) {
+			AdminHandlerHelper.login(securityContext.getUserPrincipal().getName());
+		}
+
 		try {
 
 			final Long id = Long.parseLong(technologyIdStr);
 
-			final TechnologyTO technology = getTechnologyService(getUser(securityContext)).getTechnologyById(id);
+			final TechnologyTO technology = technologyService.getTechnologyById(id);
 
 			return Response.ok(technology).build();
 
@@ -75,16 +79,8 @@ public class TechnologyRestService extends AbstractTechRadarRestService {
 			throw new WebApplicationException(e);
 		} catch (IllegalArgumentException e) {
 			throw new WebApplicationException(e);
-		} catch (ClassNotFoundException e) {
-			throw new WebApplicationException(e);
-		} catch (NoSuchMethodException e) {
-			throw new WebApplicationException(e);
-		} catch (InstantiationException e) {
-			throw new WebApplicationException(e);
-		} catch (IllegalAccessException e) {
-			throw new WebApplicationException(e);
-		} catch (InvocationTargetException e) {
-			throw new WebApplicationException(e);
+		} finally {
+			AdminHandlerHelper.logout();
 		}
 
 	}
@@ -97,9 +93,13 @@ public class TechnologyRestService extends AbstractTechRadarRestService {
 			@Context SecurityContext securityContext,
 			@ApiParam("the radar") final TechnologyTO technology) {
 
+		if(securityContext.getUserPrincipal()!=null) {
+			AdminHandlerHelper.login(securityContext.getUserPrincipal().getName());
+		}
+
 		try {
 
-			final TechnologyTO newTechnology = getTechnologyService(getUser(securityContext)).createTechnology(technology);
+			final TechnologyTO newTechnology = technologyService.createTechnology(technology);
 
 			return Response.ok(newTechnology).build();
 
@@ -107,16 +107,8 @@ public class TechnologyRestService extends AbstractTechRadarRestService {
 			throw new WebApplicationException(e);
 		} catch (IllegalArgumentException e) {
 			throw new WebApplicationException(e);
-		} catch (ClassNotFoundException e) {
-			throw new WebApplicationException(e);
-		} catch (NoSuchMethodException e) {
-			throw new WebApplicationException(e);
-		} catch (InstantiationException e) {
-			throw new WebApplicationException(e);
-		} catch (IllegalAccessException e) {
-			throw new WebApplicationException(e);
-		} catch (InvocationTargetException e) {
-			throw new WebApplicationException(e);
+		} finally {
+			AdminHandlerHelper.logout();
 		}
 
 	}
@@ -130,11 +122,15 @@ public class TechnologyRestService extends AbstractTechRadarRestService {
 			@PathParam("technologyId") final String technologyIdStr,
 			@ApiParam("the radar") final UserTechnologyTO userTechnology) {
 
+		if(securityContext.getUserPrincipal()!=null) {
+			AdminHandlerHelper.login(securityContext.getUserPrincipal().getName());
+		}
+
 		try {
 
 			final Long id = Long.parseLong(technologyIdStr);
 
-			final UserTechnologyTO newUserTechnology = getTechnologyService(getUser(securityContext)).setUserTechnology(id, userTechnology);
+			final UserTechnologyTO newUserTechnology = technologyService.setUserTechnology(id, userTechnology);
 
 			return Response.ok(newUserTechnology).build();
 
@@ -144,20 +140,12 @@ public class TechnologyRestService extends AbstractTechRadarRestService {
 			throw new WebApplicationException(e);
 		} catch (IllegalArgumentException e) {
 			throw new WebApplicationException(e);
-		} catch (ClassNotFoundException e) {
-			throw new WebApplicationException(e);
-		} catch (NoSuchMethodException e) {
-			throw new WebApplicationException(e);
-		} catch (InstantiationException e) {
-			throw new WebApplicationException(e);
-		} catch (IllegalAccessException e) {
-			throw new WebApplicationException(e);
-		} catch (InvocationTargetException e) {
-			throw new WebApplicationException(e);
+		} finally {
+			AdminHandlerHelper.logout();
 		}
 
 	}
-	
+
 	@GET
 	@Path("/{technologyId}/user")
 	@ApiOperation(value="Get users who use the technology",response=Response.class)
@@ -166,11 +154,15 @@ public class TechnologyRestService extends AbstractTechRadarRestService {
 			@Context SecurityContext securityContext,
 			@PathParam("technologyId") final String technologyIdStr) {
 
+		if(securityContext.getUserPrincipal()!=null) {
+			AdminHandlerHelper.login(securityContext.getUserPrincipal().getName());
+		}
+
 		try {
 
 			final Long technologyId = Long.parseLong(technologyIdStr);
 
-			final List<UserTechnologyTO> userTechnologies = getTechnologyService(getUser(securityContext)).getTechnologyUsers(technologyId);
+			final List<UserTechnologyTO> userTechnologies = technologyService.getTechnologyUsers(technologyId);
 
 			return Response.ok(userTechnologies).build();
 
@@ -180,16 +172,8 @@ public class TechnologyRestService extends AbstractTechRadarRestService {
 			throw new WebApplicationException(e);
 		} catch (IllegalArgumentException e) {
 			throw new WebApplicationException(e);
-		} catch (ClassNotFoundException e) {
-			throw new WebApplicationException(e);
-		} catch (NoSuchMethodException e) {
-			throw new WebApplicationException(e);
-		} catch (InstantiationException e) {
-			throw new WebApplicationException(e);
-		} catch (IllegalAccessException e) {
-			throw new WebApplicationException(e);
-		} catch (InvocationTargetException e) {
-			throw new WebApplicationException(e);
+		} finally {
+			AdminHandlerHelper.logout();
 		}
 
 	}

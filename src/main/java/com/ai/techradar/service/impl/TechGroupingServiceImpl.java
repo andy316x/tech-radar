@@ -13,11 +13,7 @@ import com.ai.techradar.service.TechGroupingService;
 import com.ai.techradar.web.service.to.TechGroupingTO;
 
 @SuppressWarnings("unchecked")
-public class TechGroupingServiceImpl extends AbstractTechRadarService implements TechGroupingService {
-
-	public TechGroupingServiceImpl(final String user) {
-		super(user);
-	}
+public class TechGroupingServiceImpl implements TechGroupingService {
 
 	public List<TechGroupingTO> getTechGroupings() {
 		final Session session = HibernateUtil.getSessionFactory().openSession();

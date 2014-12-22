@@ -8,7 +8,6 @@ import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -25,7 +24,6 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.hibernate.Criteria;
@@ -35,12 +33,11 @@ import org.hibernate.criterion.Restrictions;
 
 import com.ai.techradar.database.entities.Maturity;
 import com.ai.techradar.database.entities.MovementEnum;
-import com.ai.techradar.database.entities.Radar;
 import com.ai.techradar.database.entities.TechGrouping;
 import com.ai.techradar.database.entities.Technology;
 import com.ai.techradar.database.hibernate.HibernateUtil;
 import com.ai.techradar.service.RadarService;
-import com.ai.techradar.service.impl.RadarServiceImpl;
+import com.ai.techradar.service.SpringStarter;
 import com.ai.techradar.web.service.to.RadarTO;
 import com.ai.techradar.web.service.to.RadarTechnologyTO;
 
@@ -48,7 +45,7 @@ public class CSVUploadServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1199770769064383844L;
 
-	private RadarService service = new RadarServiceImpl("");
+	private RadarService service = (RadarService)SpringStarter.getContext().getBean("RadarService");
 
 	@Override
 	public void doPost(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {

@@ -1,6 +1,5 @@
 package com.ai.techradar.web.service.rest;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -12,6 +11,9 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import com.ai.techradar.service.MaturityService;
+import com.ai.techradar.service.SpringStarter;
+import com.ai.techradar.util.AdminHandlerHelper;
 import com.ai.techradar.web.service.to.MaturityTO;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -20,6 +22,8 @@ import com.wordnik.swagger.annotations.ApiParam;
 @Path("maturity")
 @Api(value="/maturity",description="Radar service")
 public class MaturityRestService extends AbstractTechRadarRestService {
+	
+	private MaturityService maturityService = (MaturityService)SpringStarter.getContext().getBean("MaturityService");
 
 	@GET
 	@Path("/")
@@ -27,9 +31,13 @@ public class MaturityRestService extends AbstractTechRadarRestService {
 	@Produces("application/json")
 	public Response getMaturities(@Context SecurityContext securityContext) {
 
+		if(securityContext.getUserPrincipal()!=null) {
+			AdminHandlerHelper.login(securityContext.getUserPrincipal().getName());
+		}
+
 		try {
 
-			final List<MaturityTO> rs = getMaturityService(getUser(securityContext)).getMaturities();
+			final List<MaturityTO> rs = maturityService.getMaturities();
 
 			return Response.ok(rs).build();
 
@@ -37,16 +45,8 @@ public class MaturityRestService extends AbstractTechRadarRestService {
 			throw new WebApplicationException(e);
 		} catch (IllegalArgumentException e) {
 			throw new WebApplicationException(e);
-		} catch (ClassNotFoundException e) {
-			throw new WebApplicationException(e);
-		} catch (NoSuchMethodException e) {
-			throw new WebApplicationException(e);
-		} catch (InstantiationException e) {
-			throw new WebApplicationException(e);
-		} catch (IllegalAccessException e) {
-			throw new WebApplicationException(e);
-		} catch (InvocationTargetException e) {
-			throw new WebApplicationException(e);
+		} finally {
+			AdminHandlerHelper.logout();
 		}
 
 	}
@@ -59,9 +59,13 @@ public class MaturityRestService extends AbstractTechRadarRestService {
 			@Context SecurityContext securityContext,
 			@ApiParam("the radar") final MaturityTO maturity) {
 
+		if(securityContext.getUserPrincipal()!=null) {
+			AdminHandlerHelper.login(securityContext.getUserPrincipal().getName());
+		}
+
 		try {
 
-			final MaturityTO newMaturity = getMaturityService(getUser(securityContext)).createMaturity(maturity);
+			final MaturityTO newMaturity = maturityService.createMaturity(maturity);
 
 			return Response.ok(newMaturity).build();
 
@@ -69,16 +73,8 @@ public class MaturityRestService extends AbstractTechRadarRestService {
 			throw new WebApplicationException(e);
 		} catch (IllegalArgumentException e) {
 			throw new WebApplicationException(e);
-		} catch (ClassNotFoundException e) {
-			throw new WebApplicationException(e);
-		} catch (NoSuchMethodException e) {
-			throw new WebApplicationException(e);
-		} catch (InstantiationException e) {
-			throw new WebApplicationException(e);
-		} catch (IllegalAccessException e) {
-			throw new WebApplicationException(e);
-		} catch (InvocationTargetException e) {
-			throw new WebApplicationException(e);
+		} finally {
+			AdminHandlerHelper.logout();
 		}
 
 	}

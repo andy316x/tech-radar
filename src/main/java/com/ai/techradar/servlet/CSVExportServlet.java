@@ -13,7 +13,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 
 import com.ai.techradar.service.RadarService;
-import com.ai.techradar.service.impl.RadarServiceImpl;
+import com.ai.techradar.service.SpringStarter;
 import com.ai.techradar.web.service.to.RadarTO;
 import com.ai.techradar.web.service.to.RadarTechnologyTO;
 
@@ -21,7 +21,7 @@ public class CSVExportServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 7125431699341927732L;
 
-	private RadarService service = new RadarServiceImpl("");
+	private RadarService service = (RadarService)SpringStarter.getContext().getBean("RadarService");
 
 	@Override
 	public void doPost(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
