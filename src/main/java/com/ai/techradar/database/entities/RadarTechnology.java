@@ -1,5 +1,7 @@
 package com.ai.techradar.database.entities;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,6 +18,10 @@ public class RadarTechnology {
 	private Technology technology;
 
 	private Radar radar;
+	
+	private Date addedDate;
+	
+	private User addedBy;
 
 	private RadarMaturity radarMaturity;
 
@@ -57,6 +63,23 @@ public class RadarTechnology {
 
 	public void setRadar(final Radar radar) {
 		this.radar = radar;
+	}
+	
+	public Date getAddedDate() {
+		return addedDate;
+	}
+
+	public void setAddedDate(final Date addedDate) {
+		this.addedDate = addedDate;
+	}
+	
+	@ManyToOne
+	public User getAddedBy() {
+		return addedBy;
+	}
+
+	public void setAddedBy(final User addedBy) {
+		this.addedBy = addedBy;
 	}
 
 	@ManyToOne

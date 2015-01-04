@@ -17,6 +17,7 @@ import com.ai.techradar.service.SpringStarter;
 import com.ai.techradar.service.TechnologyService;
 import com.ai.techradar.service.ValidationException;
 import com.ai.techradar.util.AdminHandlerHelper;
+import com.ai.techradar.web.service.to.RadarTechnologyTO;
 import com.ai.techradar.web.service.to.TechnologyTO;
 import com.ai.techradar.web.service.to.UserTechnologyTO;
 import com.wordnik.swagger.annotations.Api;
@@ -26,7 +27,7 @@ import com.wordnik.swagger.annotations.ApiParam;
 @Path("technology")
 @Api(value="/technology",description="Radar service")
 public class TechnologyRestService extends AbstractTechRadarRestService {
-	
+
 	private TechnologyService technologyService = (TechnologyService)SpringStarter.getContext().getBean("TechnologyService");
 
 	@GET
@@ -165,6 +166,38 @@ public class TechnologyRestService extends AbstractTechRadarRestService {
 			final List<UserTechnologyTO> userTechnologies = technologyService.getTechnologyUsers(technologyId);
 
 			return Response.ok(userTechnologies).build();
+
+		} catch(final ValidationException ex) {
+			return Response.status(Status.BAD_REQUEST).entity(ex.getValidations()).build();
+		} catch (SecurityException e) {
+			throw new WebApplicationException(e);
+		} catch (IllegalArgumentException e) {
+			throw new WebApplicationException(e);
+		} finally {
+			AdminHandlerHelper.logout();
+		}
+
+	}
+
+	@GET
+	@Path("/{technologyId}/radar")
+	@ApiOperation(value="Get radars that the technology exists in",response=Response.class)
+	@Produces("application/json")
+	public Response getTechnologyRadars(
+			@Context SecurityContext securityContext,
+			@PathParam("technologyId") final String technologyIdStr) {
+
+		if(securityContext.getUserPrincipal()!=null) {
+			AdminHandlerHelper.login(securityContext.getUserPrincipal().getName());
+		}
+
+		try {
+
+			final Long technologyId = Long.parseLong(technologyIdStr);
+
+			final List<RadarTechnologyTO> technologyRadars = technologyService.getTechnologyRadars(technologyId);
+
+			return Response.ok(technologyRadars).build();
 
 		} catch(final ValidationException ex) {
 			return Response.status(Status.BAD_REQUEST).entity(ex.getValidations()).build();

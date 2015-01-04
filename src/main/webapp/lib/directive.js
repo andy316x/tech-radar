@@ -239,6 +239,9 @@ techRadarDirectives.directive('ngTechnologyModal', function ($http) {
 		'          <div ng-repeat="rating in ratings">' + 
 		'            <span>{{rating.user}} - {{rating.skillLevel}}</span>' + 
 		'          </div>' + 
+		'          <div ng-repeat="otherRadar in otherRadars">' + 
+		'            <strong>{{otherRadar.addedByUid}}</strong> added <a href="/radar/#/technology/{{technology.id}}">{{technology.name}}</a> to <a href="/radar/#/radar/{{otherRadar.radarId}}">{{otherRadar.radarName}}</a> {{otherRadar.addedDate | prettydate}}' + 
+		'          </div>' + 
 		'        </div>' + 
 		'      </div>' +
 		'    </div>' +
@@ -266,7 +269,20 @@ techRadarDirectives.directive('ngTechnologyModal', function ($http) {
 					}
 				}).
 				error(function(data, status, headers, config) {
-					$log.log('failed to load user rating for technology ' + newval.name);
+					$log.log('failed to load user ratings for technology with ID ' + techId);
+				});
+				
+				// Load technology radars
+				// TODO omit current radar
+				$scope.otherRadars = [];
+				$http({method: 'GET', url: '/radar/rest/technology/' + techId + '/radar?nocache=' + (new Date()).getTime()}).
+				success(function(data, status, headers, config) {
+					for(var i = 0; i < data.length; i++) {
+						$scope.otherRadars.push(data[i]);
+					}
+				}).
+				error(function(data, status, headers, config) {
+					$log.log('failed to load user radars for technology with ID ' + techId);
 				});
 			};
 
@@ -349,5 +365,57 @@ techRadarDirectives.directive('ngSearch', function () {
 			});
 
 		}
+	};
+});
+
+techRadarDirectives.filter('prettydate', function() {
+	return function(input) {
+		if(input == null || typeof input == 'undefined') {
+			return '';
+		}
+		
+		var aSecond = 1000;
+		var aMinute = 60*aSecond;
+		var anHour = 60*aMinute;
+		var anDay = 24*anHour;
+		
+		var nowMillis = (new Date()).getTime();
+		var difference = nowMillis - input;
+		
+		if(difference < 20*aSecond) {
+			return 'just now';
+		}
+		
+		if(difference < aMinute) {
+			var seconds = Math.floor(difference/aSecond);
+			if(seconds==1) {
+				return 'a second ago';
+			} else {
+				return seconds + ' seconds ago';
+			}
+		}
+		
+		if(difference < anHour) {
+			var minutes = Math.floor(difference/aMinute);
+			if(minutes==1) {
+				return 'a minute ago';
+			} else {
+				return minutes + ' minutes ago';
+			}
+		}
+		
+		if(difference < anDay) {
+			var hours = Math.floor(difference/anHour);
+			if(hours==1) {
+				return 'an hour ago';
+			} else {
+				return hours + ' hours ago';
+			}
+		}
+		
+		var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+		var then = new Date(input);
+		
+		return 'on ' + then.getDate() + ' ' + months[then.getMonth()] + ' \'' + ('' + then.getFullYear()).substring(2, 4);
 	};
 });

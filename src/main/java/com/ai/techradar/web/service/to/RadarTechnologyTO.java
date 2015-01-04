@@ -1,5 +1,7 @@
 package com.ai.techradar.web.service.to;
 
+import java.util.Date;
+
 import com.ai.techradar.database.entities.MovementEnum;
 
 public class RadarTechnologyTO {
@@ -12,6 +14,12 @@ public class RadarTechnologyTO {
 
 	private String techGrouping;
 
+	private Date addedDate;
+
+	private String addedByUid;
+
+	private String addedByFriendlyName;
+
 	private MovementEnum movement;
 
 	private int blipSize;
@@ -23,6 +31,10 @@ public class RadarTechnologyTO {
 	private String detailUrl;
 
 	private boolean customerStrategic;
+	
+	private Long radarId;
+	
+	private String radarName;
 
 	public RadarTechnologyTO() {
 
@@ -58,6 +70,30 @@ public class RadarTechnologyTO {
 
 	public void setTechGrouping(String techGrouping) {
 		this.techGrouping = techGrouping;
+	}
+
+	public Date getAddedDate() {
+		return addedDate;
+	}
+
+	public void setAddedDate(Date addedDate) {
+		this.addedDate = addedDate;
+	}
+
+	public String getAddedByUid() {
+		return addedByUid;
+	}
+
+	public void setAddedByUid(String addedByUid) {
+		this.addedByUid = addedByUid;
+	}
+
+	public String getAddedByFriendlyName() {
+		return addedByFriendlyName;
+	}
+
+	public void setAddedByFriendlyName(String addedByFriendlyName) {
+		this.addedByFriendlyName = addedByFriendlyName;
 	}
 
 	public MovementEnum getMovement() {
@@ -106,6 +142,22 @@ public class RadarTechnologyTO {
 
 	public void setCustomerStrategic(boolean customerStrategic) {
 		this.customerStrategic = customerStrategic;
+	}
+
+	public Long getRadarId() {
+		return radarId;
+	}
+
+	public void setRadarId(Long radarId) {
+		this.radarId = radarId;
+	}
+
+	public String getRadarName() {
+		return radarName;
+	}
+
+	public void setRadarName(String radarName) {
+		this.radarName = radarName;
 	}
 
 	public RadarTechnologyTO clone(){

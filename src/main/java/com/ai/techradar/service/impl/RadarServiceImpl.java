@@ -292,72 +292,93 @@ public class RadarServiceImpl implements RadarService {
 
 	public RadarTO addTechnologiesToRadar(final Long radarId, final List<RadarTechnologyTO> radarTechnologyTOs) throws ValidationException {
 		final List<String> validations = new ArrayList<String>();
+		
+		final String uid = AdminHandlerHelper.getCurrentUser();
 
 		final Session session = HibernateUtil.getSessionFactory().openSession();
 		session.beginTransaction();
 
 		try {
-
-			final Radar radar = readRadar(radarId, session);
-
-			if(radar==null) {
-				validations.add("Unable to find radar with ID " + radarId);
-				throw new ValidationException(validations);
-			}
-
-			// Remove all the existing technologies
-			// TODO at the moment an upload removes all previous 
-			// technologies - what should the behaviour be?
-			final Iterator<RadarTechnology> deletedTechnologyIter = radar.getRadarTechnologies().iterator();
-			while(deletedTechnologyIter.hasNext()) {
-				final RadarTechnology deletedTechnology = deletedTechnologyIter.next();
-				session.delete(deletedTechnology);
-				deletedTechnologyIter.remove();
-			}
-
-			if(radarTechnologyTOs!=null && !radarTechnologyTOs.isEmpty()) {
-
-				int i = 0;
-				for(final RadarTechnologyTO radarTechnologyTO : radarTechnologyTOs) {
-
-					final String technologyName = radarTechnologyTO.getTechnology();
-					final Technology technology = readTechnology(technologyName, session);
-					if(technology==null) {
-						validations.add("Unable to find technology '" + technologyName);
-					}
-
-					final String maturityName = radarTechnologyTO.getMaturity();
-					final RadarMaturity radarMaturity = readRadarMaturity(radarId, maturityName, session);
-					if(radarMaturity==null) {
-						validations.add("Unable to find maturity '" + maturityName + "' in radar with ID " + radarId);
-					}
-
-					final String techGroupingName = radarTechnologyTO.getTechGrouping();
-					final RadarTechGrouping radarTechGrouping = readRadarTechGrouping(radarId, techGroupingName, session);
-					if(radarTechGrouping==null) {
-						validations.add("Unable to find tech grouping '" + techGroupingName + "' in radar with ID " + radarId);
-					}
-
-					final RadarTechnology radarTechnology = new RadarTechnology();
-					radarTechnology.setTechnology(technology);
-					radarTechnology.setRadar(radar);
-					radarTechnology.setRadarMaturity(radarMaturity);
-					radarTechnology.setRadarTechGrouping(radarTechGrouping);
-					radarTechnology.setMovement(MovementEnum.t);
-					radarTechnology.setTheOrder(i++);
-					session.persist(radarTechnology);
-
+			
+			if(!StringUtils.isBlank(uid)) {
+				
+				final User user = readUser(uid, session);
+				if(user==null) {
+					validations.add("Unable to find user with ID " + radarId);
+				}
+				
+				final Radar radar = readRadar(radarId, session);
+				if(radar==null) {
+					validations.add("Unable to find radar with ID " + radarId);
+				}
+				
+				if(!validations.isEmpty()) {
+					throw new ValidationException(validations);
 				}
 
-			} else {
-				validations.add("No technologies supplied");
-			}
+				// Remove all the existing technologies
+				// TODO at the moment an upload removes all previous 
+				// technologies - what should the behaviour be?
+				final Iterator<RadarTechnology> deletedTechnologyIter = radar.getRadarTechnologies().iterator();
+				while(deletedTechnologyIter.hasNext()) {
+					final RadarTechnology deletedTechnology = deletedTechnologyIter.next();
+					session.delete(deletedTechnology);
+					deletedTechnologyIter.remove();
+				}
+
+				if(radarTechnologyTOs!=null && !radarTechnologyTOs.isEmpty()) {
+
+					int i = 0;
+					for(final RadarTechnologyTO radarTechnologyTO : radarTechnologyTOs) {
+
+						final String technologyName = radarTechnologyTO.getTechnology();
+						final Technology technology = readTechnology(technologyName, session);
+						if(technology==null) {
+							validations.add("Unable to find technology '" + technologyName);
+						}
+
+						final String maturityName = radarTechnologyTO.getMaturity();
+						final RadarMaturity radarMaturity = readRadarMaturity(radarId, maturityName, session);
+						if(radarMaturity==null) {
+							validations.add("Unable to find maturity '" + maturityName + "' in radar with ID " + radarId);
+						}
+
+						final String techGroupingName = radarTechnologyTO.getTechGrouping();
+						final RadarTechGrouping radarTechGrouping = readRadarTechGrouping(radarId, techGroupingName, session);
+						if(radarTechGrouping==null) {
+							validations.add("Unable to find tech grouping '" + techGroupingName + "' in radar with ID " + radarId);
+						}
+
+						final RadarTechnology radarTechnology = new RadarTechnology();
+						radarTechnology.setTechnology(technology);
+						radarTechnology.setRadar(radar);
+						radarTechnology.setRadarMaturity(radarMaturity);
+						radarTechnology.setRadarTechGrouping(radarTechGrouping);
+						radarTechnology.setMovement(MovementEnum.t);
+						radarTechnology.setTheOrder(i++);
+						
+						radarTechnology.setAddedDate(new Date());
+						radarTechnology.setAddedBy(user);
+						user.getRadarTechnologies().add(radarTechnology);
+						
+						session.persist(radarTechnology);
+
+					}
+
+				} else {
+					validations.add("No technologies supplied");
+				}
 
 
-			if(validations.isEmpty()) {
-				session.getTransaction().commit();
+				if(validations.isEmpty()) {
+					session.getTransaction().commit();
+				} else {
+					session.getTransaction().rollback();
+					throw new ValidationException(validations);
+				}	
+				
 			} else {
-				session.getTransaction().rollback();
+				validations.add("User is not logged in");
 				throw new ValidationException(validations);
 			}
 
@@ -431,6 +452,7 @@ public class RadarServiceImpl implements RadarService {
 		newUser.setUsername(username);
 		newUser.setRadars(new ArrayList<Radar>());
 		newUser.setTechnologies(new ArrayList<UserTechnology>());
+		newUser.setRadarTechnologies(new ArrayList<RadarTechnology>());
 		session.persist(newUser);
 
 		return newUser;

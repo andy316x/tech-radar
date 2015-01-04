@@ -82,6 +82,7 @@ techRadarControllers.controller('TechnologyCtrl', function ($scope, $http, $loca
 	
 	$scope.technology = null;
 	$scope.ratings = [];
+	$scope.otherRadars = [];
 
 	if(typeof $routeParams.technologyid != 'undefined') {
 		$http({method: 'GET', url: '/radar/rest/technology/' + $routeParams.technologyid + '?nocache=' + (new Date()).getTime()}).
@@ -103,6 +104,17 @@ techRadarControllers.controller('TechnologyCtrl', function ($scope, $http, $loca
 		}).
 		error(function(data, status, headers, config) {
 			$log.log('failed to load user rating for technology ' + newval.name);
+		});
+		
+		// Load technology radars
+		$http({method: 'GET', url: '/radar/rest/technology/' + $routeParams.technologyid + '/radar?nocache=' + (new Date()).getTime()}).
+		success(function(data, status, headers, config) {
+			for(var i = 0; i < data.length; i++) {
+				$scope.otherRadars.push(data[i]);
+			}
+		}).
+		error(function(data, status, headers, config) {
+			$log.log('failed to load radars for technology with ID ' + techId);
 		});
 	}
 
