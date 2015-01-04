@@ -403,12 +403,40 @@ var Radar = {
 			element.removeChild(element.firstChild);
 		}
 		
+		var p0 = [250, 200, 60], p1 = [560, 300, 120];
+		
 		var svg=d3.select(element)
 			.insert('svg',':first-child')
 			.attr('xmlns:xmlns:xlink','http://www.w3.org/1999/xlink')
 			.attr('width',w)
-			.attr('height',h);
+			.attr('height',h)
 		svg.selectAll('*').remove();
+		
+		
+		
+		
+		
+		
+		
+		function transition(svg, start, end) {
+			var center = [w / 2, h / 2],
+			i = d3.interpolateZoom(start, end);
+			
+			console.log(d3.interpolateZoom);
+
+			svg
+			.attr("transform", transform(start))
+			.transition()
+			.delay(250)
+			.duration(i.duration * 2)
+			.attrTween("transform", function() { return function(t) { return transform(i(t)); }; })
+			.each("end", function() { d3.select(this).call(transition, end, start); });
+
+			function transform(p) {
+				var k = h / p[2];
+				return "translate(" + (center[0] - p[0] * k) + "," + (center[1] - p[1] * k) + ")scale(" + k + ")";
+			}
+		}
 		
 		// filters go in defs element
 		var defs = svg.append("defs");
@@ -762,8 +790,11 @@ var Radar = {
 				
 				var link = svg.selectAll('g').data(blips).selectAll('a').data(function (d) {return d;}).enter().append("svg:a")
 				.attr('id', function(d){ return 'blip-'+d.item.id;})
-				.attr('xlink:href', function(d){return d.item.url;})
+				.attr('xlink:href', 'javascript:void(0)')
 				.style({'text-decoration':'none','cursor':'pointer'})
+				.on('click', function(d) {
+					callback.onblipclick(d.item);
+				})
 				.on('mouseover', function(d) {
 					d3.selectAll('a circle, a path').attr('opacity',0.3);
 					d3.select('#blip-'+d.item.id).selectAll('circle, path').attr('opacity',1.0);

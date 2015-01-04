@@ -41,17 +41,20 @@ public class MeRestService extends AbstractTechRadarRestService {
 			@Context ServletConfig config, 
 			@Context ServletContext context, 
 			@Context SecurityContext securityContext) {
+		
+		final String username = securityContext.getUserPrincipal().getName();
 
 		if(securityContext.getUserPrincipal()!=null) {
-			AdminHandlerHelper.login(securityContext.getUserPrincipal().getName());
+			AdminHandlerHelper.login(username);
 		}
 
 		try {
 
 			final UserTO user = new UserTO();
 
-			final UserInfo userInfo = userService.getUserInfo(securityContext.getUserPrincipal().getName());
+			final UserInfo userInfo = userService.getUserInfo(username);
 
+			user.setUid(username);
 			user.setName(userInfo.getSurname() + ", " + userInfo.getGivenName());
 
 			return Response.ok(user).build();
@@ -68,12 +71,17 @@ public class MeRestService extends AbstractTechRadarRestService {
 
 	public static class UserTO implements Serializable {
 		private static final long serialVersionUID = 216554152025525794L;
+		private String uid;
 		private String name;
-
+		public String getUid() {
+			return uid;
+		}
+		public void setUid(final String uid) {
+			this.uid = uid;
+		}
 		public String getName() {
 			return name;
 		}
-
 		public void setName(final String name) {
 			this.name = name;
 		}

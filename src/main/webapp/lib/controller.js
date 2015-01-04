@@ -15,6 +15,7 @@ techRadarControllers.controller('CommonViewCtrl', function ($scope, $http, $loca
 		$http({method: 'GET', url: '/radar/rest/me?nocache=' + (new Date()).getTime()}).
 		success(function(data, status, headers, config) {
 			$scope.loggedin = true;
+			$scope.uid = data.uid;
 			$scope.name = data.name;
 		}).
 		error(function(data, status, headers, config) {
@@ -80,6 +81,7 @@ techRadarControllers.controller('TechnologiesCtrl', function ($scope, $http, $lo
 techRadarControllers.controller('TechnologyCtrl', function ($scope, $http, $location, $routeParams, $log) {
 	
 	$scope.technology = null;
+	$scope.ratings = [];
 
 	if(typeof $routeParams.technologyid != 'undefined') {
 		$http({method: 'GET', url: '/radar/rest/technology/' + $routeParams.technologyid + '?nocache=' + (new Date()).getTime()}).
@@ -89,7 +91,33 @@ techRadarControllers.controller('TechnologyCtrl', function ($scope, $http, $loca
 		error(function(data, status, headers, config) {
 			$log.log('error getting technology with ID ' + $routeParams.technologyid);
 		});
+		
+		$http({method: 'GET', url: '/radar/rest/technology/' + $routeParams.technologyid + '/user?nocache=' + (new Date()).getTime()}).
+		success(function(data, status, headers, config) {
+			for(var i = 0; i < data.length; i++) {
+				$scope.ratings.push(data[i]);
+				if(data[i].user === $scope.uid) {
+					$scope.currentSkillLevel = data[i].skillLevel;
+				}
+			}
+		}).
+		error(function(data, status, headers, config) {
+			$log.log('failed to load user rating for technology ' + newval.name);
+		});
 	}
+
+	$scope.selectSkillLevel = function(skillLevel) {
+		$scope.currentSkillLevel = skillLevel;
+		
+		$http.post('/radar/rest/technology/' + $scope.technology.id + '/user', {skillLevel:skillLevel}).
+		success(function(data, status, headers, config) {
+			$log.log('Successfully set technology \'' + $scope.technology.name + '\' (ID: ' + $scope.technology.id + ') to skill level \'' + skillLevel + '\'');
+		}).
+		error(function(data, status, headers, config) {
+			$log.error('Failed to add technologies to radar');
+			$log.error(data);
+		});
+	};
 
 });
 
@@ -220,6 +248,22 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 
 	$scope.mouseOut = function(item) {
 		$scope.selectedItem = null;
+	};
+	
+	$scope.blipClicked = function(blip) {
+		$scope.clickedTechnology = blip;
+		$scope.technologyModalVisible = true;
+	};
+	
+	$scope.skillLevelSelected = function(technology, skillLevel) {
+		$http.post('/radar/rest/technology/' + technology.id + '/user', {skillLevel:skillLevel}).
+		success(function(data, status, headers, config) {
+			$log.log('Successfully set technology \'' + technology.name + '\' (ID: ' + technology.id + ') to skill level \'' + skillLevel + '\'');
+		}).
+		error(function(data, status, headers, config) {
+			$log.error('Failed to add technologies to radar');
+			$log.error(data);
+		});
 	};
 
 	var mapRadar = function(data) {

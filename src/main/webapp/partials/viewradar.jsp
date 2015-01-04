@@ -30,6 +30,8 @@
 	</div>
 </div>
 
+<div ng-technology-modal="" visible="technologyModalVisible" technology="clickedTechnology" logged-in-user="uid" on-skill-level-selected="skillLevelSelected(clickedTechnology, skillLevel)"></div>
+
 <div class="container-fluid main-content">
 	
 	<div class="row">
@@ -78,7 +80,7 @@
 		</div>
 		
 		<div class="col-md-12" style="padding:50px 10%;">
-			<div id="radar" ng-radar="" radar="selectedRadar.radar" selected-blip="selectedItem"></div>
+			<div id="radar" ng-radar="" radar="selectedRadar.radar" selected-blip="selectedItem" on-blip-clicked="blipClicked(blip)"></div>
 		</div>
 		
 	</div>

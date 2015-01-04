@@ -5,7 +5,8 @@ techRadarDirectives.directive('ngRadar', function ($routeParams) {
 		restrict: 'A',
 		scope: {
 			radar: '=',
-			selectedBlip: '='
+			selectedBlip: '=',
+			onBlipClicked: '&'
 		},
 		link: function ($scope, element, attrs) {
 			var el = element[0];
@@ -16,6 +17,11 @@ techRadarDirectives.directive('ngRadar', function ($routeParams) {
 			if(quadrantName != null && typeof quadrantName !== "undefined"){
 				doDraw = function(r) {
 					$scope.theRadar = Radar.draw_Quadrant(el, r, quadrantName, {
+						onblipclick: function(blip) {
+							$scope.$apply(function(){
+								$scope.onBlipClicked({blip:blip});
+							});
+						},
 						onbliphover: function(blip) {
 							$scope.$apply(function(){
 								$scope.selectedBlip = blip;
@@ -31,6 +37,11 @@ techRadarDirectives.directive('ngRadar', function ($routeParams) {
 			}else{
 				doDraw = function(r) {
 					$scope.theRadar = Radar.draw(el, r, {
+						onblipclick: function(blip) {
+							$scope.$apply(function(){
+								$scope.onBlipClicked({blip:blip});
+							});
+						},
 						onbliphover: function(blip) {
 							$scope.$apply(function(){
 								$scope.selectedBlip = blip;
@@ -174,6 +185,108 @@ techRadarDirectives.directive('ngNewRadar', function ($http) {
 				error(function(data, status, headers, config) {
 					$scope.errors = data;
 				});
+			};
+
+		}
+	};
+});
+
+techRadarDirectives.directive('ngTechnologyModal', function ($http) {
+	return {
+		restrict: 'A',
+		scope: {
+			visible: '=',
+			technology: '=',
+			loggedInUser: '=',
+			onSkillLevelSelected: '&'
+		},
+		template: '<div class="modal fade">' +
+		'  <div class="modal-dialog">' +
+		'    <div class="modal-content">' +
+		'      <div class="modal-header">' +
+		'        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>' +
+		'        <h4 class="modal-title">{{technology.name}}</h4>' +
+		'      </div>' +
+		'      <div class="modal-body clearfix">' +
+		'        <div class="col-sm-6">' + 
+		'          <blockquote>' + 
+		'            <p ng-show="technology.description!=null">{{technology.description}}</p>' + 
+		'            <p ng-show="technology.description==null">No description</p>' + 
+		'            <footer><strong>{{technology.name}}</strong> is advocated by <cite title="Andy Wilson">Andy Wilson</cite></footer>' + 
+		'          </blockquote>' + 
+		'          <div class="btn-group btn-group-justified" role="group" aria-label="...">' +
+		'            <div class="btn-group" role="group">' +
+		'              <button type="button" class="btn btn-xs btn-danger {{currentSkillLevel==null?\'active\':\'\'}}" ng-click="selectSkillLevel(null)">None</button>' +
+		'            </div>' +
+		'            <div class="btn-group" role="group">' +
+		'              <button type="button" class="btn btn-xs btn-default {{currentSkillLevel==\'Watching\'?\'active\':\'\'}}" ng-click="selectSkillLevel(\'Watching\')">Watching</button>' +
+		'            </div>' +
+		'            <div class="btn-group" role="group">' +
+		'              <button type="button" class="btn btn-xs btn-primary {{currentSkillLevel==\'Learning\'?\'active\':\'\'}}" ng-click="selectSkillLevel(\'Learning\')">Learning</button>' +
+		'            </div>' +
+		'            <div class="btn-group" role="group">' +
+		'              <button type="button" class="btn btn-xs btn-info {{currentSkillLevel==\'Competent\'?\'active\':\'\'}}" ng-click="selectSkillLevel(\'Competent\')">Competent</button>' +
+		'            </div>' +
+		'            <div class="btn-group" role="group">' +
+		'              <button type="button" class="btn btn-xs btn-warning {{currentSkillLevel==\'Expert\'?\'active\':\'\'}}" ng-click="selectSkillLevel(\'Expert\')">Expert</button>' +
+		'            </div>' +
+		'            <div class="btn-group" role="group">' +
+		'              <button type="button" class="btn btn-xs btn-success {{currentSkillLevel==\'Leader\'?\'active\':\'\'}}" ng-click="selectSkillLevel(\'Leader\')">Leader</button>' +
+		'            </div>' +
+		'          </div>' +
+		'        </div>' +
+		'        <div class="col-sm-6">' + 
+		'          <div ng-repeat="rating in ratings">' + 
+		'            <span>{{rating.user}} - {{rating.skillLevel}}</span>' + 
+		'          </div>' + 
+		'        </div>' + 
+		'      </div>' +
+		'    </div>' +
+		'  </div>' +
+		'</div>',
+		link: function ($scope, element, attrs) {
+			
+			$scope.$watch('technology', function (newVal, oldVal, scope) {
+				if(newVal != oldVal) {
+					reloadTechnology(newVal.id);
+				}
+			}, false);
+			
+			var reloadTechnology = function(techId) {
+				// Load technology ratings
+				$scope.ratings = [];
+				$http({method: 'GET', url: '/radar/rest/technology/' + techId + '/user?nocache=' + (new Date()).getTime()}).
+				success(function(data, status, headers, config) {
+					$scope.currentSkillLevel = null;
+					for(var i = 0; i < data.length; i++) {
+						$scope.ratings.push(data[i]);
+						if(data[i].user === $scope.loggedInUser) {
+							$scope.currentSkillLevel =  data[i].skillLevel;
+						}
+					}
+				}).
+				error(function(data, status, headers, config) {
+					$log.log('failed to load user rating for technology ' + newval.name);
+				});
+			};
+
+			$scope.$watch('visible', function (newVal, oldVal, scope) {
+				if(newVal != oldVal) {
+					if(newVal == true) {
+						element.children(":first").modal('show');
+					} else {
+						element.children(":first").modal('hide');
+					}
+				}
+			}, false);
+
+			element.children(":first").on('hide.bs.modal', function(e) {
+				$scope.visible = false;
+			});
+			
+			$scope.selectSkillLevel = function(skillLevel) {
+				$scope.currentSkillLevel = skillLevel;
+				$scope.onSkillLevelSelected({skillLevel:skillLevel});
 			};
 
 		}

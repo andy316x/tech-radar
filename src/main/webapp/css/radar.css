@@ -239,13 +239,13 @@ body {
 	padding-bottom: 0;
 }
 
-footer {
+.baefooter {
 	background: #e4e4e4;
 	border-top: 1px solid #dadada;
 	padding: 30px 0 150px 0;
 }
 
-footer img {
+.baefooter img {
 	width: 135px;
 	-webkit-filter: grayscale(100%);
 	-moz-filter: grayscale(100%);
@@ -256,7 +256,7 @@ footer img {
 	filter: gray; /* IE 6-9 */
 }
 
-footer li a {
+.baefooter li a {
 	font-size: 10px;
 }
 
@@ -435,4 +435,12 @@ h1,.h1 {
   -webkit-background-size: 40px 40px;
   background-size: 40px 40px;
 }
+
+
+.modal-dialog {
+  width: 100%;
+  padding: 20px 20px 0 20px;
+  margin: 0;
+}
+
 

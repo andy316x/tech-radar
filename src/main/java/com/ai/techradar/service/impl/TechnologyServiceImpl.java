@@ -3,6 +3,7 @@ package com.ai.techradar.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Projections;
@@ -96,47 +97,63 @@ public class TechnologyServiceImpl implements TechnologyService {
 
 	public UserTechnologyTO setUserTechnology(final Long technologyId, final UserTechnologyTO userTechnology) throws ValidationException {
 		final List<String> validations = new ArrayList<String>();
+		
+		final String username = AdminHandlerHelper.getCurrentUser();
 
 		final Session session = HibernateUtil.getSessionFactory().openSession();
 		session.beginTransaction();
 
 		try {
 
-			final UserTechnology userTechnologyEntity = new UserTechnology();
+			final UserTechnology userTechnologyEntity = readTechnologyRating(technologyId, username, session);
+			
+			if(userTechnologyEntity == null) {
+				
+				if(userTechnology.getSkillLevel() != null) {
+					final UserTechnology newUserTechnology = new UserTechnology();
+					newUserTechnology.setSkillLevel(userTechnology.getSkillLevel());
+					
+					// Find and set technology
+					final Technology technology = readTechnology(technologyId, session);
+					if(technology!=null) {
+						newUserTechnology.setTechnology(technology);
+						technology.getUsers().add(newUserTechnology);
+						userTechnology.setTechnology(technology.getName());
+					} else {
+						validations.add("Could not find technology with ID " + technologyId);
+					}
 
-			// Find and set technology
-			final Technology technology = readTechnology(technologyId, session);
-			if(technology!=null) {
-				userTechnologyEntity.setTechnology(technology);
-				technology.getUsers().add(userTechnologyEntity);
-				userTechnology.setTechnology(technology.getName());
+					// Find and set user
+					if(!StringUtils.isBlank(username)) {
+						final User user = readUser(AdminHandlerHelper.getCurrentUser(), session);
+						if(user != null) {
+							newUserTechnology.setUser(user);
+							user.getTechnologies().add(newUserTechnology);
+							userTechnology.setUser(user.getUsername());
+						} else {
+							validations.add("Could not find user with username " + AdminHandlerHelper.getCurrentUser());
+						}
+					} else {
+						validations.add("User must be logged in to rate technology");
+					}
+					
+					session.persist(newUserTechnology);
+					
+				} else {
+					// Nothing to do?
+				}
+				
 			} else {
-				validations.add("Could not find technology with ID " + technologyId);
+				
+				if(userTechnology.getSkillLevel() != null) {
+					userTechnologyEntity.setSkillLevel(userTechnology.getSkillLevel());
+				} else {
+					session.delete(userTechnologyEntity);
+				}
+				
 			}
 
-			// Find and set user
-			final User user = readUser(AdminHandlerHelper.getCurrentUser(), session);
-			if(user != null) {
-				userTechnologyEntity.setUser(user);
-				user.getTechnologies().add(userTechnologyEntity);
-				userTechnology.setUser(user.getUsername());
-			} else {
-				validations.add("Could not find user with username " + AdminHandlerHelper.getCurrentUser());
-			}
-
-
-			// TODO Check this link doesn't already exist!
-
-			// Validate and set skill level
-			if(userTechnology.getSkillLevel() != null) {
-				userTechnologyEntity.setSkillLevel(userTechnology.getSkillLevel());
-			} else {
-				validations.add("Skill level must be set");
-			}
-
-			session.persist(userTechnologyEntity);
-
-
+			
 			if(validations.isEmpty()) {
 				session.getTransaction().commit();
 			} else {
@@ -189,6 +206,18 @@ public class TechnologyServiceImpl implements TechnologyService {
 		}
 
 		return results;
+	}
+	
+	private UserTechnology readTechnologyRating(final Long id, final String username, final Session session) {
+		final Criteria query = session.createCriteria(UserTechnology.class);
+		
+		query.createAlias("technology", "technology");
+		query.createAlias("user", "user");
+		
+		query.add(Restrictions.eq("technology.id", id));
+		query.add(Restrictions.eq("user.username", username));
+		
+		return (UserTechnology)query.uniqueResult();
 	}
 
 	private Technology readTechnology(final Long id, final Session session) {

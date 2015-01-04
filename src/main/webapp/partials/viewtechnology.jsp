@@ -47,10 +47,38 @@
 		</div>
 		
 		<div class="col-md-12" style="background-color:#EFEFEF;padding:25px 20px;">
-		
-			<blockquote>
-				<p>{{technology.description}}</p>
-			</blockquote>
+			<div class="col-sm-6">
+				<blockquote>
+					<p ng-show="technology.description!=null">{{technology.description}}</p>
+					<p ng-show="technology.description==null">No description</p> 
+					<footer><strong>{{technology.name}}</strong> is advocated by <cite title="Andy Wilson">Andy Wilson</cite></footer>
+				</blockquote>
+				<div class="btn-group btn-group-justified" role="group" aria-label="...">
+					<div class="btn-group" role="group">
+						<button type="button" class="btn btn-xs btn-danger {{currentSkillLevel==null?'active':''}}" ng-click="selectSkillLevel(null)">None</button>
+					</div>
+					<div class="btn-group" role="group">
+						<button type="button" class="btn btn-xs btn-default {{currentSkillLevel=='Watching'?'active':''}}" ng-click="selectSkillLevel('Watching')">Watching</button>
+					</div>
+					<div class="btn-group" role="group">
+						<button type="button" class="btn btn-xs btn-primary {{currentSkillLevel=='Learning'?'active':''}}" ng-click="selectSkillLevel('Learning')">Learning</button>
+					</div>
+					<div class="btn-group" role="group">
+						<button type="button" class="btn btn-xs btn-info {{currentSkillLevel=='Competent'?'active':''}}" ng-click="selectSkillLevel('Competent')">Competent</button>
+					</div>
+					<div class="btn-group" role="group">
+						<button type="button" class="btn btn-xs btn-warning {{currentSkillLevel=='Expert'?'active':''}}" ng-click="selectSkillLevel('Expert')">Expert</button>
+					</div>
+					<div class="btn-group" role="group">
+						<button type="button" class="btn btn-xs btn-success {{currentSkillLevel=='Leader'?'active':''}}" ng-click="selectSkillLevel('Leader')">Leader</button>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div ng-repeat="rating in ratings">
+					<span>{{rating.user}} - {{rating.skillLevel}}</span>
+				</div> 
+			</div>
 			
 		</div>
 		

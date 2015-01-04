@@ -40,6 +40,7 @@ import com.ai.techradar.service.RadarService;
 import com.ai.techradar.service.SpringStarter;
 import com.ai.techradar.web.service.to.RadarTO;
 import com.ai.techradar.web.service.to.RadarTechnologyTO;
+import com.ai.techradar.web.service.to.TechnologyTO;
 
 public class CSVUploadServlet extends HttpServlet {
 
@@ -85,12 +86,36 @@ public class CSVUploadServlet extends HttpServlet {
 						
 						try {
 							
+							final StringBuilder strBuilder = new StringBuilder();
+							strBuilder.append("\"technologies\":[\n");
+							
 							Long i = new Long(1);
+							final List<TechnologyTO> techs = new ArrayList<TechnologyTO>();
 							for(final CSVRecord record : list) {
 								final String name = readString(record.get("Technology"));
 								final String quadrantName = readString(record.get("Quadrant"));
 								final String arcName = readString(record.get("Maturity"));
 								final MovementEnum movement = readMovement(record.get("moved / no change"));
+								
+								final int projectCount = readInt(record.get("project Count"));
+								final String productUrl = readString(record.get("Product URL"));
+								final String description = readString(record.get("Description"));
+								final String aiUrl = readString(record.get("AI URL"));
+								final boolean customerStrategic = readBoolean(record.get("Customer strategic"));
+								
+								final TechnologyTO tech = new TechnologyTO();
+								tech.setName(name);
+								tech.setBlipSize(projectCount);
+								tech.setUrl(productUrl);
+								tech.setDescription(description);
+								tech.setDetailUrl(aiUrl);
+								tech.setCustomerStrategic(customerStrategic);
+								techs.add(tech);
+								
+								if(i < list.size()) {
+									strBuilder.append(",");
+								}
+								strBuilder.append("\n");
 								
 								if(!StringUtils.isBlank(name)) {
 									technologiesFound.add(name);
@@ -118,6 +143,9 @@ public class CSVUploadServlet extends HttpServlet {
 								radarTechnology.setMovement(movement);
 								radar.getTechnologies().add(radarTechnology);
 							}
+							
+							final ObjectMapper mapper = new ObjectMapper();
+							System.out.println(mapper.defaultPrettyPrintingWriter().writeValueAsString(techs));
 							
 						} catch(final IllegalArgumentException ex) {
 							uploadResponse.getErrors().add("Mandatory column heading not found, expected \"Technology\", \"Quadrant\", \"Maturity\", \"moved / no change\"");
