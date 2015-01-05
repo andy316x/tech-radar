@@ -238,6 +238,9 @@ techRadarDirectives.directive('ngTechnologyModal', function ($http) {
 		'        <div class="col-sm-6">' + 
 		'          <div ng-show="ratings.length > 0" ng-tech-ratings="" ratings="ratings"></div>' + 
 		'          <div ng-show="ratings.length == 0" style="margin-bottom:10px">Be the first to rate your skill level for this technology</div>' + 
+		'          <div style="margin-bottom:10px">' + 
+		'            <img ng-repeat="rating in ratings" src="/radar/img/icon_8204.png" title="{{rating.user + \' - \' + rating.skillLevel}}" style="width: 50px;border-radius: 25px;background-color: #DEDEDE;margin: 5px;padding: 1px;box-shadow: 1px 1px 1px #333;"></img>' + 
+		'          </div>' + 
 		'          <div ng-repeat="otherRadar in otherRadars">' + 
 		'            <strong>{{otherRadar.addedByUid}}</strong> added <a href="/radar/#/technology/{{technology.id}}">{{technology.name}}</a> to <a href="/radar/#/radar/{{otherRadar.radarId}}">{{otherRadar.radarName}}</a> {{otherRadar.addedDate | prettydate}}' + 
 		'          </div>' + 

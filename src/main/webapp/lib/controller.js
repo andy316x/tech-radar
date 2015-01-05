@@ -132,7 +132,6 @@ techRadarControllers.controller('TechnologyCtrl', function ($scope, $http, $loca
 		if(skillLevel != null) {
 			$scope.ratings.push({user:$scope.uid,skillLevel:skillLevel});
 		}
-		$scope.onSkillLevelSelected({skillLevel:skillLevel});
 		
 		$http.post('/radar/rest/technology/' + $scope.technology.id + '/user', {skillLevel:skillLevel}).
 		success(function(data, status, headers, config) {
