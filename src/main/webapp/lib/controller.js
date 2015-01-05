@@ -120,6 +120,19 @@ techRadarControllers.controller('TechnologyCtrl', function ($scope, $http, $loca
 
 	$scope.selectSkillLevel = function(skillLevel) {
 		$scope.currentSkillLevel = skillLevel;
+		var toBeRemoved = -1;
+		for(var i = 0; i < $scope.ratings.length; i++) {
+			if($scope.ratings[i].user === $scope.uid) {
+				toBeRemoved = i;
+			}
+		}
+		if(toBeRemoved != -1) {
+			$scope.ratings.splice(toBeRemoved, 1);
+		}
+		if(skillLevel != null) {
+			$scope.ratings.push({user:$scope.uid,skillLevel:skillLevel});
+		}
+		$scope.onSkillLevelSelected({skillLevel:skillLevel});
 		
 		$http.post('/radar/rest/technology/' + $scope.technology.id + '/user', {skillLevel:skillLevel}).
 		success(function(data, status, headers, config) {

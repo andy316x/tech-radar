@@ -75,9 +75,8 @@
 				</div>
 			</div>
 			<div class="col-sm-6">
-				<div ng-repeat="rating in ratings">
-					<span>{{rating.user}} - {{rating.skillLevel}}</span>
-				</div>
+				<div ng-show="ratings.length > 0" ng-tech-ratings="" ratings="ratings"></div>
+				<div ng-show="ratings.length == 0" style="margin-bottom:10px">Be the first to rate your skill level for this technology</div>
 				<div ng-repeat="otherRadar in otherRadars">
 					<strong>{{otherRadar.addedByUid}}</strong> added <strong>{{technology.name}}</strong> to <a href="/radar/#/radar/{{otherRadar.radarId}}">{{otherRadar.radarName}}</a> {{otherRadar.addedDate | prettydate}}
 				</div>

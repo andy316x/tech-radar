@@ -236,9 +236,8 @@ techRadarDirectives.directive('ngTechnologyModal', function ($http) {
 		'          </div>' +
 		'        </div>' +
 		'        <div class="col-sm-6">' + 
-		'          <div ng-repeat="rating in ratings">' + 
-		'            <span>{{rating.user}} - {{rating.skillLevel}}</span>' + 
-		'          </div>' + 
+		'          <div ng-show="ratings.length > 0" ng-tech-ratings="" ratings="ratings"></div>' + 
+		'          <div ng-show="ratings.length == 0" style="margin-bottom:10px">Be the first to rate your skill level for this technology</div>' + 
 		'          <div ng-repeat="otherRadar in otherRadars">' + 
 		'            <strong>{{otherRadar.addedByUid}}</strong> added <a href="/radar/#/technology/{{technology.id}}">{{technology.name}}</a> to <a href="/radar/#/radar/{{otherRadar.radarId}}">{{otherRadar.radarName}}</a> {{otherRadar.addedDate | prettydate}}' + 
 		'          </div>' + 
@@ -302,9 +301,85 @@ techRadarDirectives.directive('ngTechnologyModal', function ($http) {
 			
 			$scope.selectSkillLevel = function(skillLevel) {
 				$scope.currentSkillLevel = skillLevel;
+				var toBeRemoved = -1;
+				for(var i = 0; i < $scope.ratings.length; i++) {
+					if($scope.ratings[i].user === $scope.loggedInUser) {
+						toBeRemoved = i;
+					}
+				}
+				if(toBeRemoved != -1) {
+					$scope.ratings.splice(toBeRemoved, 1);
+				}
+				if(skillLevel != null) {
+					$scope.ratings.push({user:$scope.loggedInUser,skillLevel:skillLevel});
+				}
 				$scope.onSkillLevelSelected({skillLevel:skillLevel});
 			};
 
+		}
+	};
+});
+
+techRadarDirectives.directive('ngTechRatings', function ($http) {
+	return {
+		restrict: 'A',
+		scope: {
+			ratings: '='
+		},
+		template: '<svg viewBox="0 0 1000 400" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg">' +
+		'  <rect x="5"   y="{{10+(300-300*(watching.length/max))}}"  rx="20" ry="20" width="190" height="{{300*(watching.length/max)}}"  style="fill:#FFFFFF;stroke-width:1;stroke:#CCCCCC"></rect>' +
+		'  <rect x="205" y="{{10+(300-300*(learning.length/max))}}"  rx="20" ry="20" width="190" height="{{300*(learning.length/max)}}"  style="fill:#428BCA;stroke-width:1;stroke:#428BCA"></rect>' +
+		'  <rect x="405" y="{{10+(300-300*(competent.length/max))}}" rx="20" ry="20" width="190" height="{{300*(competent.length/max)}}" style="fill:#5BC0DE;stroke-width:1;stroke:#5BC0DE"></rect>' +
+		'  <rect x="605" y="{{10+(300-300*(expert.length/max))}}"    rx="20" ry="20" width="190" height="{{300*(expert.length/max)}}"    style="fill:#F0AD4E;stroke-width:1;stroke:#F0AD4E"></rect>' +
+		'  <rect x="805" y="{{10+(300-300*(leader.length/max))}}"    rx="20" ry="20" width="190" height="{{300*(leader.length/max)}}"    style="fill:#5CB85C;stroke-width:1;stroke:#5CB85C"></rect>' +
+		'  <text x="100" y="350" text-anchor="middle" fill="#333333" style="font-size: 20px; font-weight: 900;">Watching</text>' +
+		'  <text x="300" y="350" text-anchor="middle" fill="#333333" style="font-size: 20px; font-weight: 900;">Learning</text>' +
+		'  <text x="500" y="350" text-anchor="middle" fill="#333333" style="font-size: 20px; font-weight: 900;">Competent</text>' +
+		'  <text x="700" y="350" text-anchor="middle" fill="#333333" style="font-size: 20px; font-weight: 900;">Expert</text>' +
+		'  <text x="900" y="350" text-anchor="middle" fill="#333333" style="font-size: 20px; font-weight: 900;">Leader</text>' +
+		'</svg>',
+		link: function ($scope, element, attrs) {
+			
+			$scope.$watch('ratings', function (newVal, oldVal, scope) {
+				repopulateRatings(newVal);
+			}, true);
+			
+			var repopulateRatings = function(ratings) {
+				
+				$scope.watching = [];
+				$scope.learning = [];
+				$scope.competent= [];
+				$scope.expert = [];
+				$scope.leader = [];
+				
+				if(ratings != null && typeof ratings != 'undefined') {
+					for(var i = 0; i < ratings.length; i++) {
+						if(ratings[i].skillLevel === 'Watching') {
+							$scope.watching.push(ratings[i]);
+						} else if(ratings[i].skillLevel === 'Learning') {
+							$scope.learning.push(ratings[i]);
+						} else if(ratings[i].skillLevel === 'Competent') {
+							$scope.competent.push(ratings[i]);
+						} else if(ratings[i].skillLevel === 'Expert') {
+							$scope.expert.push(ratings[i]);
+						} else if(ratings[i].skillLevel === 'Leader') {
+							$scope.leader.push(ratings[i]);
+						}
+					}
+				}
+				
+				var max = Math.max(
+					$scope.watching.length,
+					$scope.learning.length,
+					$scope.competent.length,
+					$scope.expert.length,
+					$scope.leader.length
+				);
+				
+				$scope.max = max===0 ? 1 : max;
+			};
+			
+			repopulateRatings($scope.ratings);
 		}
 	};
 });
