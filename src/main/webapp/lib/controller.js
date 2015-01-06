@@ -255,8 +255,6 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 		});
 	};
 
-	$scope.selectedId = document.radar.radarId;
-
 	var quadrantColours = ['#3DB5BE', '#83AD78', '#E88744', '#8D2145'];
 	var arcColours = ['rgb(223,223,223)', 'rgb(166,167,169)', 'rgb(190,191,193)', 'rgb(209,209,209)', 'rgb(223,223,223)'];
 	var arcWidths = [150, 125, 75, 50, 50];
