@@ -250,13 +250,13 @@ techRadarDirectives.directive('ngTechnologyModal', function ($http) {
 		'  </div>' +
 		'</div>',
 		link: function ($scope, element, attrs) {
-			
+
 			$scope.$watch('technology', function (newVal, oldVal, scope) {
 				if(newVal != oldVal) {
 					reloadTechnology(newVal.id);
 				}
 			}, false);
-			
+
 			var reloadTechnology = function(techId) {
 				// Load technology ratings
 				$scope.ratings = [];
@@ -273,7 +273,7 @@ techRadarDirectives.directive('ngTechnologyModal', function ($http) {
 				error(function(data, status, headers, config) {
 					$log.log('failed to load user ratings for technology with ID ' + techId);
 				});
-				
+
 				// Load technology radars
 				// TODO omit current radar
 				$scope.otherRadars = [];
@@ -301,7 +301,7 @@ techRadarDirectives.directive('ngTechnologyModal', function ($http) {
 			element.children(":first").on('hide.bs.modal', function(e) {
 				$scope.visible = false;
 			});
-			
+
 			$scope.selectSkillLevel = function(skillLevel) {
 				$scope.currentSkillLevel = skillLevel;
 				var toBeRemoved = -1;
@@ -329,32 +329,44 @@ techRadarDirectives.directive('ngTechRatings', function ($http) {
 		scope: {
 			ratings: '='
 		},
-		template: '<svg viewBox="0 0 1000 400" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg">' +
-		'  <rect x="5"   y="{{10+(300-300*(watching.length/max))}}"  rx="20" ry="20" width="190" height="{{300*(watching.length/max)}}"  style="fill:#FFFFFF;stroke-width:1;stroke:#CCCCCC"></rect>' +
-		'  <rect x="205" y="{{10+(300-300*(learning.length/max))}}"  rx="20" ry="20" width="190" height="{{300*(learning.length/max)}}"  style="fill:#428BCA;stroke-width:1;stroke:#428BCA"></rect>' +
-		'  <rect x="405" y="{{10+(300-300*(competent.length/max))}}" rx="20" ry="20" width="190" height="{{300*(competent.length/max)}}" style="fill:#5BC0DE;stroke-width:1;stroke:#5BC0DE"></rect>' +
-		'  <rect x="605" y="{{10+(300-300*(expert.length/max))}}"    rx="20" ry="20" width="190" height="{{300*(expert.length/max)}}"    style="fill:#F0AD4E;stroke-width:1;stroke:#F0AD4E"></rect>' +
-		'  <rect x="805" y="{{10+(300-300*(leader.length/max))}}"    rx="20" ry="20" width="190" height="{{300*(leader.length/max)}}"    style="fill:#5CB85C;stroke-width:1;stroke:#5CB85C"></rect>' +
-		'  <text x="100" y="350" text-anchor="middle" fill="#333333" style="font-size: 20px; font-weight: 900;">Watching</text>' +
-		'  <text x="300" y="350" text-anchor="middle" fill="#333333" style="font-size: 20px; font-weight: 900;">Learning</text>' +
-		'  <text x="500" y="350" text-anchor="middle" fill="#333333" style="font-size: 20px; font-weight: 900;">Competent</text>' +
-		'  <text x="700" y="350" text-anchor="middle" fill="#333333" style="font-size: 20px; font-weight: 900;">Expert</text>' +
-		'  <text x="900" y="350" text-anchor="middle" fill="#333333" style="font-size: 20px; font-weight: 900;">Leader</text>' +
+		template: '<svg width="{{scaleFactor*1000}}" height="{{scaleFactor*400}}" version="1.1" xmlns="http://www.w3.org/2000/svg">' +
+		'  <rect x="{{scaleFactor*5}}"   y="{{scaleFactor*(10+(300-300*(watching.length/max)))}}"  rx="{{scaleFactor*20}}" ry="{{scaleFactor*20}}" width="{{scaleFactor*(190)}}" height="{{scaleFactor*(300*(watching.length/max))}}"  style="fill:#FFFFFF;stroke-width:1;stroke:#CCCCCC"></rect>' +
+		'  <rect x="{{scaleFactor*205}}" y="{{scaleFactor*(10+(300-300*(learning.length/max)))}}"  rx="{{scaleFactor*20}}" ry="{{scaleFactor*20}}" width="{{scaleFactor*190}}"   height="{{scaleFactor*(300*(learning.length/max))}}"  style="fill:#428BCA;stroke-width:1;stroke:#428BCA"></rect>' +
+		'  <rect x="{{scaleFactor*405}}" y="{{scaleFactor*(10+(300-300*(competent.length/max)))}}" rx="{{scaleFactor*20}}" ry="{{scaleFactor*20}}" width="{{scaleFactor*190}}"   height="{{scaleFactor*(300*(competent.length/max))}}" style="fill:#5BC0DE;stroke-width:1;stroke:#5BC0DE"></rect>' +
+		'  <rect x="{{scaleFactor*605}}" y="{{scaleFactor*(10+(300-300*(expert.length/max)))}}"    rx="{{scaleFactor*20}}" ry="{{scaleFactor*20}}" width="{{scaleFactor*190}}"   height="{{scaleFactor*(300*(expert.length/max))}}"    style="fill:#F0AD4E;stroke-width:1;stroke:#F0AD4E"></rect>' +
+		'  <rect x="{{scaleFactor*805}}" y="{{scaleFactor*(10+(300-300*(leader.length/max)))}}"    rx="{{scaleFactor*20}}" ry="{{scaleFactor*20}}" width="{{scaleFactor*190}}"   height="{{scaleFactor*(300*(leader.length/max))}}"    style="fill:#5CB85C;stroke-width:1;stroke:#5CB85C"></rect>' +
+		'  <text x="{{scaleFactor*100}}" y="{{scaleFactor*350}}" text-anchor="middle" fill="#333333" style="{{\'font-size: \' + scaleFactor*20 + \'px; font-weight: 900;\'">Watching</text>' +
+		'  <text x="{{scaleFactor*300}}" y="{{scaleFactor*350}}" text-anchor="middle" fill="#333333" style="{{\'font-size: \' + scaleFactor*20 + \'px; font-weight: 900;\'">Learning</text>' +
+		'  <text x="{{scaleFactor*500}}" y="{{scaleFactor*350}}" text-anchor="middle" fill="#333333" style="{{\'font-size: \' + scaleFactor*20 + \'px; font-weight: 900;\'">Competent</text>' +
+		'  <text x="{{scaleFactor*700}}" y="{{scaleFactor*350}}" text-anchor="middle" fill="#333333" style="{{\'font-size: \' + scaleFactor*20 + \'px; font-weight: 900;\'">Expert</text>' +
+		'  <text x="{{scaleFactor*900}}" y="{{scaleFactor*350}}" text-anchor="middle" fill="#333333" style="{{\'font-size: \' + scaleFactor*20 + \'px; font-weight: 900;\'">Leader</text>' +
 		'</svg>',
 		link: function ($scope, element, attrs) {
-			
+
+			$scope.scaleFactor = 1;
+
+			$scope.getWidth = function () {
+				return element[0].offsetWidth;
+			};
+
+			$scope.$watch($scope.getWidth, function (width) {
+				$scope.scaleFactor = width/1000;
+			});
+
+			console.log(element[0].offsetWidth);
+
 			$scope.$watch('ratings', function (newVal, oldVal, scope) {
 				repopulateRatings(newVal);
 			}, true);
-			
+
 			var repopulateRatings = function(ratings) {
-				
+
 				$scope.watching = [];
 				$scope.learning = [];
 				$scope.competent= [];
 				$scope.expert = [];
 				$scope.leader = [];
-				
+
 				if(ratings != null && typeof ratings != 'undefined') {
 					for(var i = 0; i < ratings.length; i++) {
 						if(ratings[i].skillLevel === 'Watching') {
@@ -370,18 +382,18 @@ techRadarDirectives.directive('ngTechRatings', function ($http) {
 						}
 					}
 				}
-				
+
 				var max = Math.max(
-					$scope.watching.length,
-					$scope.learning.length,
-					$scope.competent.length,
-					$scope.expert.length,
-					$scope.leader.length
+						$scope.watching.length,
+						$scope.learning.length,
+						$scope.competent.length,
+						$scope.expert.length,
+						$scope.leader.length
 				);
-				
+
 				$scope.max = max===0 ? 1 : max;
 			};
-			
+
 			repopulateRatings($scope.ratings);
 		}
 	};
@@ -447,18 +459,18 @@ techRadarDirectives.directive('ngSearch', function () {
 });
 
 techRadarDirectives.directive('tooltip', function(){
-    return {
-        restrict: 'A',
-        link: function(scope, element, attrs){
-            $(element).hover(function(){
-                // on mouseenter
-                $(element).tooltip('show');
-            }, function(){
-                // on mouseleave
-                $(element).tooltip('hide');
-            });
-        }
-    };
+	return {
+		restrict: 'A',
+		link: function(scope, element, attrs){
+			$(element).hover(function(){
+				// on mouseenter
+				$(element).tooltip('show');
+			}, function(){
+				// on mouseleave
+				$(element).tooltip('hide');
+			});
+		}
+	};
 });
 
 techRadarDirectives.filter('prettydate', function() {
@@ -466,19 +478,19 @@ techRadarDirectives.filter('prettydate', function() {
 		if(input == null || typeof input == 'undefined') {
 			return '';
 		}
-		
+
 		var aSecond = 1000;
 		var aMinute = 60*aSecond;
 		var anHour = 60*aMinute;
 		var anDay = 24*anHour;
-		
+
 		var nowMillis = (new Date()).getTime();
 		var difference = nowMillis - input;
-		
+
 		if(difference < 20*aSecond) {
 			return 'just now';
 		}
-		
+
 		if(difference < aMinute) {
 			var seconds = Math.floor(difference/aSecond);
 			if(seconds==1) {
@@ -487,7 +499,7 @@ techRadarDirectives.filter('prettydate', function() {
 				return seconds + ' seconds ago';
 			}
 		}
-		
+
 		if(difference < anHour) {
 			var minutes = Math.floor(difference/aMinute);
 			if(minutes==1) {
@@ -496,7 +508,7 @@ techRadarDirectives.filter('prettydate', function() {
 				return minutes + ' minutes ago';
 			}
 		}
-		
+
 		if(difference < anDay) {
 			var hours = Math.floor(difference/anHour);
 			if(hours==1) {
@@ -505,10 +517,10 @@ techRadarDirectives.filter('prettydate', function() {
 				return hours + ' hours ago';
 			}
 		}
-		
+
 		var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 		var then = new Date(input);
-		
+
 		return 'on ' + then.getDate() + ' ' + months[then.getMonth()] + ' \'' + ('' + then.getFullYear()).substring(2, 4);
 	};
 });
