@@ -102,25 +102,40 @@ techRadarDirectives.directive('ngNewRadar', function ($http) {
 		'          <label>Name</label>' +
 		'          <input type="text" class="form-control" ng-model="name" placeholder="Enter name"></input>' +
 		'        </div>' +
-		'        <div class="form-group">' +
-		'          <label>Tech Grouping 1</label>' +
-		'          <select class="form-control" ng-model="techGrouping1" ng-options="techGroupingOption.value as techGroupingOption.label for techGroupingOption in techGroupingOptions"></select>' +
-		'          </select>' +
-		'        </div>' +
-		'        <div class="form-group">' +
-		'          <label>Tech Grouping 2</label>' +
-		'          <select class="form-control" ng-model="techGrouping2" ng-options="techGroupingOption.value as techGroupingOption.label for techGroupingOption in techGroupingOptions"></select>' +
-		'          </select>' +
-		'        </div>' +
-		'        <div class="form-group">' +
-		'          <label>Tech Grouping 3</label>' +
-		'          <select class="form-control" ng-model="techGrouping3" ng-options="techGroupingOption.value as techGroupingOption.label for techGroupingOption in techGroupingOptions"></select>' +
-		'          </select>' +
-		'        </div>' +
-		'        <div class="form-group">' +
-		'          <label>Tech Grouping 4</label>' +
-		'          <select class="form-control" ng-model="techGrouping4" ng-options="techGroupingOption.value as techGroupingOption.label for techGroupingOption in techGroupingOptions"></select>' +
-		'          </select>' +
+		'        <div style="position:relative;">' +
+		'          <img src="/radar/img/radar_175.svg" style="width: 100%;">' +
+		'          <span style="position:absolute;right:110px;bottom:150px;">' + 
+		'            <div class="dropdown">' + 
+		'              <button class="btn btn-link" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">{{techGrouping1}} <span class="caret"></button></span>' +
+		'              <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">' +
+		'                <li ng-repeat="techGroupingOption in techGroupingOptions"role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" ng-click="selectGrouping(1, techGroupingOption.label)">{{techGroupingOption.label}}</a></li>' +
+	    '              </ul>' +
+	    '            </div>' +
+	    '          </span>' + 
+	    '          <span style="position:absolute;left:110px;bottom:150px;">' + 
+		'            <div class="dropdown">' + 
+		'              <button class="btn btn-link" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">{{techGrouping2}} <span class="caret"></button></span>' +
+		'              <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">' +
+		'                <li ng-repeat="techGroupingOption in techGroupingOptions"role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" ng-click="selectGrouping(2, techGroupingOption.label)">{{techGroupingOption.label}}</a></li>' +
+	    '              </ul>' +
+	    '            </div>' +
+	    '          </span>' + 
+	    '          <span style="position:absolute;left:110px;top:150px;">' + 
+		'            <div class="dropdown">' + 
+		'              <button class="btn btn-link" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">{{techGrouping3}} <span class="caret"></button></span>' +
+		'              <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">' +
+		'                <li ng-repeat="techGroupingOption in techGroupingOptions"role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" ng-click="selectGrouping(3, techGroupingOption.label)">{{techGroupingOption.label}}</a></li>' +
+	    '              </ul>' +
+	    '            </div>' +
+	    '          </span>' + 
+	    '          <span style="position:absolute;right:110px;top:150px;">' + 
+		'            <div class="dropdown">' + 
+		'              <button class="btn btn-link" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">{{techGrouping4}} <span class="caret"></button></span>' +
+		'              <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">' +
+	    '                <li ng-repeat="techGroupingOption in techGroupingOptions" role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" ng-click="selectGrouping(4, techGroupingOption.label)">{{techGroupingOption.label}}</a></li>' +
+	    '              </ul>' +
+	    '            </div>' +
+	    '          </span>' + 
 		'        </div>' +
 		'        <div ng-repeat="error in errors"><span class="text-danger">{{error}}</span></div>' +
 		'      </div>' +
@@ -131,6 +146,18 @@ techRadarDirectives.directive('ngNewRadar', function ($http) {
 		'  </div>' +
 		'</div>',
 		link: function ($scope, element, attrs) {
+			
+			$scope.selectGrouping = function(index, grouping) {
+				if(index===1) {
+					$scope.techGrouping1 = grouping;
+				} else if(index===2) {
+					$scope.techGrouping2 = grouping;
+				} else if(index===3) {
+					$scope.techGrouping3 = grouping;
+				} else if(index===4) {
+					$scope.techGrouping4 = grouping;
+				}
+			};
 
 			$scope.techGroupingOptions = [];
 			$scope.techGrouping1 = 'Dev Tool';
@@ -200,7 +227,7 @@ techRadarDirectives.directive('ngTechnologyModal', function ($http) {
 			loggedInUser: '=',
 			onSkillLevelSelected: '&'
 		},
-		template: '<div class="modal fade">' +
+		template: '<div class="modal modal-xl fade">' +
 		'  <div class="modal-dialog">' +
 		'    <div class="modal-content">' +
 		'      <div class="modal-header">' +

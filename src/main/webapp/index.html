@@ -21,6 +21,24 @@
 </head>
 <body ng-controller="CommonViewCtrl">
 
+ 	<script type="text/ng-template" id="myModalContent.html">
+        <div class="modal-header">
+            <h3 class="modal-title">I'm a modal!</h3>
+        </div>
+        <div class="modal-body">
+            <ul>
+                <li ng-repeat="item in items">
+                    <a ng-click="selected.item = item">{{ item }}</a>
+                </li>
+            </ul>
+            Selected: <b>{{ selected.item }}</b>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        </div>
+    </script>
+
 	<div ng-view></div>
 	
 	<footer class="baefooter">
@@ -49,6 +67,7 @@
 	<script src="/radar/lib/jquery-1.11.1.min.js"></script>
 	<script src="/radar/lib/angular.min.js"></script>
 	<script src="/radar/lib/bootstrap.min.js"></script>
+	<script src="/radar/lib/ui-bootstrap.min.js"></script>
 	<script src="/radar/lib/d3.min.js" charset="utf-8"></script>
 	<script src="/radar/lib/radar.js"></script>
 	<script src="/radar/lib/controller.js"></script>

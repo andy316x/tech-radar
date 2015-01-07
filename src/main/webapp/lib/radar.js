@@ -516,7 +516,7 @@ var Radar = {
 		
 		this._drawKey(svg,w,h,scaleFactor);
 		
-		var translation = [[1, 1], [-1, 1], [-1, -1], [1, -1]];
+		var translation = [[1, 1, 'end', 1, 0], [-1, 1, 'start', 0, 1], [-1, -1, 'start', 0, 1], [1, -1, 'end', 1, 0]];
 		
 		var blips = [];
 		var quadrantMap = {};
@@ -526,12 +526,18 @@ var Radar = {
 			quadrantMap[quadrant.id] = quadrant;
 			quadrant.startAngle = angle;
 			
-			var labelx = (w/2) + translation[i][0]*0.75*(w/2);
+			var labelx = (w/2) + translation[i][0]*(w/2);
 			var labely = (h/2) + translation[i][1]*0.95*(h/2);
-			svg.append('text')
-				.attr({'x':labelx,'y':labely,'font-size':scaleFactor*14,'font-weight':'bold'})
-				.style({'text-anchor':'middle'})
+			var textElement = svg.append('text')
+				.attr({'x':labelx+translation[i][4]*scaleFactor*20,'y':labely,'font-size':scaleFactor*14,'font-weight':'bold'})
+				.style({'text-anchor':translation[i][2]})
 				.text(quadrant.name);
+			
+			svg.append('circle')
+			.attr('r',scaleFactor*7)
+			.attr('fill',quadrant.color)
+			.attr('cx',labelx+scaleFactor*10-translation[i][3]*(scaleFactor*20+textElement.node().getComputedTextLength()))
+			.attr('cy',labely-scaleFactor*5);
 			
 			var arcRails = allRails[i];
 			
@@ -842,10 +848,10 @@ var Radar = {
 	},
 	
 	_drawKey: function(svg,w,h,sf){
-		var x=w-(sf*100);
-		var y=h-(sf*100);
+		var x=w-(sf*125);
+		var y=sf*60;
 		var triangleKey="New or moved";
-		var circleKey="No change";
+		var circleKey="Unchanged";
 		
 		var scale=sf*5;
 		var colour = 'black';
@@ -860,9 +866,9 @@ var Radar = {
 			.attr('r',sf*7)
 			.attr('fill',colour)
 			.attr('cx',x+sf*7)
-			.attr('cy',y+sf*17);
+			.attr('cy',y+sf*22);
 		svg.append('text')
-			.attr({'x':x+sf*20,'y':y+sf*21,'fill':colour,'font-size':(sf*0.8)+'em'})
+			.attr({'x':x+sf*20,'y':y+sf*26,'fill':colour,'font-size':(sf*0.8)+'em'})
 			.text(circleKey);
 	},
 	
@@ -890,7 +896,7 @@ var Radar = {
 		}
 		
 		var triangleKey="New or moved";
-		var circleKey="No change";
+		var circleKey="Unchanged";
 		
 		var scale=sf*10;
 		var colour = 'black';

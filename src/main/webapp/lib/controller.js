@@ -1,15 +1,39 @@
-var techRadarControllers = angular.module('techRadarControllers', []);
+var techRadarControllers = angular.module('techRadarControllers', ['ui.bootstrap']);
 
-techRadarControllers.controller('CommonViewCtrl', function ($scope, $http, $location, $routeParams, $log) {
+techRadarControllers.controller('CommonViewCtrl', function ($scope, $http, $location, $routeParams, $modal, $log) {
 
 	// Stuff that all views will need
-	
-	
-	
+
+
+	$scope.items = ['item1', 'item2', 'item3'];
+
+	$scope.open = function (size) {
+
+		var modalInstance = $modal.open({
+			templateUrl: 'myModalContent.html',
+			controller: 'ModalInstanceCtrl',
+			size: size,
+			resolve: {
+				items: function () {
+					return $scope.items;
+				}
+			}
+		});
+
+		modalInstance.result.then(function (selectedItem) {
+			$scope.selected = selectedItem;
+		}, function () {
+			$log.info('Modal dismissed at: ' + new Date());
+		});
+	};
+
+
+
+
 	// Login
 	$scope.loggedin = false;
-	
-	
+
+
 	var getUserInfo = function() {
 		// User info
 		$http({method: 'GET', url: '/radar/rest/me?nocache=' + (new Date()).getTime()}).
@@ -47,9 +71,9 @@ techRadarControllers.controller('CommonViewCtrl', function ($scope, $http, $loca
 		});
 	};
 	getUserInfo();
-	
-	
-	
+
+
+
 	// Navigation
 	$scope.go = function ( path ) {
 		$location.path( path );
@@ -63,7 +87,7 @@ techRadarControllers.controller('CommonViewCtrl', function ($scope, $http, $loca
 });
 
 techRadarControllers.controller('TechnologiesCtrl', function ($scope, $http, $location, $routeParams, $log) {
-	
+
 	$scope.technologies = [];
 
 	$http({method: 'GET', url: '/radar/rest/technology?nocache=' + (new Date()).getTime()}).
@@ -79,7 +103,7 @@ techRadarControllers.controller('TechnologiesCtrl', function ($scope, $http, $lo
 });
 
 techRadarControllers.controller('TechnologyCtrl', function ($scope, $http, $location, $routeParams, $log) {
-	
+
 	$scope.technology = null;
 	$scope.ratings = [];
 	$scope.otherRadars = [];
@@ -92,7 +116,7 @@ techRadarControllers.controller('TechnologyCtrl', function ($scope, $http, $loca
 		error(function(data, status, headers, config) {
 			$log.log('error getting technology with ID ' + $routeParams.technologyid);
 		});
-		
+
 		$http({method: 'GET', url: '/radar/rest/technology/' + $routeParams.technologyid + '/user?nocache=' + (new Date()).getTime()}).
 		success(function(data, status, headers, config) {
 			for(var i = 0; i < data.length; i++) {
@@ -105,7 +129,7 @@ techRadarControllers.controller('TechnologyCtrl', function ($scope, $http, $loca
 		error(function(data, status, headers, config) {
 			$log.log('failed to load user rating for technology ' + newval.name);
 		});
-		
+
 		// Load technology radars
 		$http({method: 'GET', url: '/radar/rest/technology/' + $routeParams.technologyid + '/radar?nocache=' + (new Date()).getTime()}).
 		success(function(data, status, headers, config) {
@@ -132,7 +156,7 @@ techRadarControllers.controller('TechnologyCtrl', function ($scope, $http, $loca
 		if(skillLevel != null) {
 			$scope.ratings.push({user:$scope.uid,skillLevel:skillLevel});
 		}
-		
+
 		$http.post('/radar/rest/technology/' + $scope.technology.id + '/user', {skillLevel:skillLevel}).
 		success(function(data, status, headers, config) {
 			$log.log('Successfully set technology \'' + $scope.technology.name + '\' (ID: ' + $scope.technology.id + ') to skill level \'' + skillLevel + '\'');
@@ -145,10 +169,10 @@ techRadarControllers.controller('TechnologyCtrl', function ($scope, $http, $loca
 
 });
 
-techRadarControllers.controller('RadarsCtrl', function ($scope, $http, $location, $routeParams, $log) {
+techRadarControllers.controller('RadarsCtrl', function ($scope, $http, $location, $routeParams, $modal, $log) {
 
 	$scope.radars = [];
-	
+
 	$scope.newRadarVisible = false;
 
 	$scope.onRadarCreated = function(radar) {
@@ -167,24 +191,24 @@ techRadarControllers.controller('RadarsCtrl', function ($scope, $http, $location
 });
 
 techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location, $routeParams, $log) {
-	
+
 	$scope.uploadingTechnologies = false;
 	$scope.errors = [];
 	$scope.msgs = [];
-	
+
 	$scope.selectedQuad = $routeParams.quadrant;
-	
+
 	if($scope.selectedQuad == null || typeof $scope.selectedQuad === "undefined"){
 		$scope.selectedQuad = "";
 	}
-	
+
 	$('#fileinput').on('change', function(ev){
 		$scope.$apply(function(){
 			$scope.uploadingTechnologies = true;
 			$scope.errors = [];
 			$scope.msgs = [];
 		});
-		
+
 		var form = document.getElementById('uploadform');
 		form['id'].value = $scope.selectedRadar.id;
 		form.submit();
@@ -210,7 +234,7 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 
 		window.setTimeout(checkFrame, 2000);
 	});
-	
+
 	$scope.exportSvg = function(id) {
 		var form = document.getElementById('theForm');
 		form['id'].value = id;
@@ -271,12 +295,12 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 	$scope.mouseOut = function(item) {
 		$scope.selectedItem = null;
 	};
-	
+
 	$scope.blipClicked = function(blip) {
 		$scope.clickedTechnology = blip;
 		$scope.technologyModalVisible = true;
 	};
-	
+
 	$scope.skillLevelSelected = function(technology, skillLevel) {
 		$http.post('/radar/rest/technology/' + technology.id + '/user', {skillLevel:skillLevel}).
 		success(function(data, status, headers, config) {
@@ -348,7 +372,7 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 		}
 		$scope.selectedRadar = theRadar;
 	};
-	
+
 	var loadRadar = function(id) {
 		$http({method: 'GET', url: '/radar/rest/radar/' + id + '?nocache=' + (new Date()).getTime()}).
 		success(function(data, status, headers, config) {
@@ -364,3 +388,22 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 	}
 
 });
+
+techRadarControllers.controller('ModalInstanceCtrl', function ($scope, $modalInstance, items) {
+
+	$scope.items = items;
+	
+	$scope.selected = {
+			item: $scope.items[0]
+	};
+
+	$scope.ok = function () {
+		$modalInstance.close($scope.selected.item);
+	};
+
+	$scope.cancel = function () {
+		$modalInstance.dismiss('cancel');
+	};
+	
+});
+

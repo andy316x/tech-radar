@@ -437,7 +437,7 @@ h1,.h1 {
 }
 
 
-.modal-dialog {
+.modal-xl .modal-dialog {
   width: 100%;
   padding: 20px 20px 0 20px;
   margin: 0;
