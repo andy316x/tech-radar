@@ -11,8 +11,8 @@
 		</div>
 		<div class="navbar-collapse collapse">
 			<ul class="nav navbar-nav navbar-right">
-				<li class="active"><a href="#/radar">Radars</a></li>
-				<li><a href="#/technology">Technologies</a></li>
+				<li><a href="#/radar">Radars</a></li>
+				<li class="active"><a href="#/technology">Technologies</a></li>
 				<li><a href="#">Skills Profile</a></li>
 				<li ng-show="loggedin==true"><a>{{name}}  <img ng-click="loginclick=!loginclick" class="img img-rounded" src="/radar/img/128.jpg"></a></li>
 				<li ng-show="loggedin==false">
@@ -39,11 +39,8 @@
 		<div class="col-md-12 clearfix" style="margin-bottom: 0;border-bottom: 1px solid #CCC;padding-bottom: 20px;">
 			<div class="col-md-6">
 				<ul class="nav nav-pills">
-					<li  class="active"><a href="#">All</a></li>
-					<li><a href="#">UK Services</a></li>
-					<li><a href="#">Cyber</a></li>
-					<li><a href="#">Communications</a></li>
-					<li><a href="#">My Radars</a></li>
+					<li  class="active"><a href="/radar/#/technology">Technologies</a></li>
+					<li><a href="/radar/#/technology">Nominations</a></li>
 				</ul>
 			</div>
 			<div class="col-md-3">
@@ -53,14 +50,79 @@
 				</div>
 			</div>
 			<div class="col-md-3 text-right">
-				<button class="btn btn-success" ng-click="newRadarVisible=true" ng-show="loggedin==true">New Technology</button>
+				<button class="btn btn-success" ng-click="newRadarVisible=true" ng-show="loggedin==true">Nominate Technology</button>
 			</div>
 		</div>
 		
 		<div class="col-md-12" style="background-color:#EFEFEF;padding:25px 20px;">
-	
-			<div ng-repeat="technology in technologies" class="radar-card" style="cursor: pointer;">
-				<a href="#/technology/{{technology.id}}">{{technology.name}}</a>
+		
+			<div class="col-md-4">
+			
+				<div class="search-wrapper">
+					<input ng-model="searchText" type="text" class="form-control typeahead" placeholder="Filter technologies..."></input>
+					<i class="glyphicon glyphicon-search"></i>
+				</div>
+				
+				<div class="technology-wrapper">
+				
+					<div ng-repeat="technology in technologies | filter:{name:searchText}" class="technology-card{{selectedTechnology.id==technology.id?' active':''}}" ng-click="technologySelected(technology)">
+						<span href="#/technology/{{technology.id}}">{{$index+1}}. {{technology.name}}<i class="glyphicon glyphicon-thumbs-up"></i></span>
+					</div>
+				
+				</div>
+			
+			</div>
+			
+			<div class="col-md-8">
+				<div class="technology-wrapper" style="margin:0">
+				
+					<div class="clearfix" style="padding: 20px 15px 20px 5px;border-bottom: 1px solid #CCCCCC;">
+						<div class="col-xs-6">
+							<h1>{{selectedTechnology.name}}</h1>
+						</div>
+						<div class="col-xs-6 text-right">
+							<button class="btn btn-default">Edit</button>
+							<button class="btn btn-default">Delete</button>
+						</div>
+					</div>
+					
+					<div style="padding: 10px; border-bottom: 1px solid #CCCCCC">
+						<h4>Description</h4>
+						<p>{{selectedTechnology.description}}</p>
+					</div>
+					
+					<div style="padding: 10px; border-bottom: 1px solid #CCCCCC; min-height:120px;">
+						<h4>Advocate</h4>
+						<img src="/radar/img/icon_8204.png" style="width: 50px;border-radius: 25px;margin: 5px;padding: 1px;position: absolute;border: 1px solid black;opacity: 0.2;"></img>
+						<p style="padding-left: 70px"><em>"{{selectedTechnology.description}}"</em></p>
+					</div>
+					
+					<div style="padding: 10px; border-bottom: 1px solid #CCCCCC">
+						<h4>Maturity</h4>
+						<div ng-tech-maturities=""></div>
+					</div>
+					
+					<div style="padding: 10px; border-bottom: 1px solid #CCCCCC">
+						<h4>Personnel Skills</h4>
+						<p ng-show="selectedTechnology.ratings.length == 0">No personnel use this technology.</p>
+						<div ng-show="selectedTechnology.ratings.length > 0" ng-tech-ratings="" ratings="selectedTechnology.ratings"></div>
+					</div>
+					
+					<div class="clearfix">
+						<div class="col-xs-6" style="border-right: 1px solid #CCCCCC;padding: 10px">
+							<h4>Skilled Personnel</h4>
+							<p ng-show="selectedTechnology.ratings.length == 0">No personnel use this technology.</p>
+							<div ng-show="selectedTechnology.ratings.length > 0" style="margin-bottom:10px">
+								<img ng-repeat="rating in selectedTechnology.ratings" src="/radar/img/icon_8204.png" title="{{rating.user + ' - ' + rating.skillLevel}}" data-toggle="tooltip" data-placement="bottom" tooltip="" style="width: 50px;border-radius: 25px;background-color: #DEDEDE;margin: 5px;padding: 1px;box-shadow: 1px 1px 1px #333;"></img>
+							</div>
+						</div>
+						<div class="col-xs-6" style="padding: 10px">
+							<h4>Projects using {{selectedTechnology.name}}</h4>
+							<p>No projects use this technology.</p>
+						</div>
+					</div>
+				
+				</div>
 			</div>
 			
 		</div>

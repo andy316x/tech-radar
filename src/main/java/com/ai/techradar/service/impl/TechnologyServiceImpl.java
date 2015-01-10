@@ -37,6 +37,7 @@ public class TechnologyServiceImpl implements TechnologyService {
 		query.setProjection(Projections.projectionList()
 				.add(Projections.property("id"))
 				.add(Projections.property("name"))
+				.add(Projections.property("description"))
 				);
 
 		final List<TechnologyTO> ts = new ArrayList<TechnologyTO>();
@@ -44,6 +45,7 @@ public class TechnologyServiceImpl implements TechnologyService {
 			final TechnologyTO t = new TechnologyTO();
 			t.setId((Long)row[0]);
 			t.setName((String)row[1]);
+			t.setDescription((String)row[2]);
 
 			ts.add(t);
 		}
