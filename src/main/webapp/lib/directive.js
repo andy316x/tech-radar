@@ -6,6 +6,7 @@ techRadarDirectives.directive('ngRadar', function ($routeParams) {
 		scope: {
 			radar: '=',
 			selectedBlip: '=',
+			centreIndex: '=',
 			onBlipClicked: '&'
 		},
 		link: function ($scope, element, attrs) {
@@ -75,6 +76,10 @@ techRadarDirectives.directive('ngRadar', function ($routeParams) {
 					}
 				}
 			}, true);
+			
+			$scope.$watch('centreIndex', function (newVal, oldVal, scope) {
+				$scope.theRadar.zoom(newVal);
+			}, false);
 
 			window.addEventListener('resize', function() {
 				doDraw($scope.radar);
@@ -379,8 +384,6 @@ techRadarDirectives.directive('ngTechRatings', function ($http) {
 			$scope.$watch($scope.getWidth, function (width) {
 				$scope.scaleFactor = width/1000;
 			});
-
-			console.log(element[0].offsetWidth);
 
 			$scope.$watch('ratings', function (newVal, oldVal, scope) {
 				repopulateRatings(newVal);

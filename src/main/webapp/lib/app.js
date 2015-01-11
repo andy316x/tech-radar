@@ -20,10 +20,6 @@ techRadarApp.config(['$routeProvider',function($routeProvider) {
 		templateUrl: 'partials/editradar.html',
 		controller: 'RadarCtrl'
 	})
-	.when('/radar/:radarid/:quadrant', {
-		templateUrl: 'partials/viewradar.html',
-		controller: 'RadarCtrl'
-	})
 
 	// Technology
 	.when('/technology', {

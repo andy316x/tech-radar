@@ -10,338 +10,6 @@ var maxRadius = 100;
 
 var Radar = {
 		
-	draw_Quadrant : function(element, radar, quadrantName, callback){
-		var w = element.offsetWidth;
-		var h = w/2;
-		
-		global_radar = radar;
-
-		var scaleFactor = w/1000;
-		var allRails = [];
-		
-		var wMin = 0;
-		var hMin = scaleFactor*15;
-
-		var quadrantNo;
-		for(var i = 0; i < radar.quadrants.length; i++){
-			if(radar.quadrants[i].id == quadrantName){
-				quadrantNo = i;
-			}
-		}
-
-		var quadrant = radar.quadrants[quadrantNo];
-		
-		for(var j = 0; j < radar.arcs.length; j++) {
-			allRails.push([]);
-		}
-		
-		for(var j = 0; j < quadrant.items.length; j++) {
-			var arcIndex = function(arcName){
-				for(var k = 0; k < radar.arcs.length; k++){
-					if(radar.arcs[k].name == arcName){
-						return k;
-					}
-				}
-				return 0;
-			}(quadrant.items[j].arc);
-			allRails[arcIndex].push(quadrant.items[j]);
-		}
-		
-		var totalMaxBlips = 0;
-		var maxBlips = new Array(radar.arcs.length);
-		for(var i = 0; i < radar.arcs.length; i++){
-			maxBlips[i] = allRails[i].length;
-			if(maxBlips[i] == 0){
-				maxBlips[i] = 1;
-			}
-			totalMaxBlips += maxBlips[i];
-		}
-		
-		for(var i = 0; i < radar.arcs.length; i++){
-			allRails[i].length
-			maxBlips[i] = Math.sqrt((maxBlips[i]/totalMaxBlips)/(1/(radar.arcs.length - i)));
-		}
-		
-		var totalArc = 0;
-		for(var i = 0; i < radar.arcs.length; i++) {
-			totalArc = totalArc + radar.arcs[i].r*maxBlips[i];
-			//totalArc = totalArc + radar.arcs[i].r;
-		}
-		global_totalArc = totalArc;
-		
-		while (element.firstChild) {
-			element.removeChild(element.firstChild);
-		}
-		
-		var svg=d3.select(element)
-			.insert('svg',':first-child')
-			.attr('xmlns:xmlns:xlink','http://www.w3.org/1999/xlink')
-			.attr('width',w)
-			.attr('height',h);
-		svg.selectAll('*').remove();
-		
-		// filters go in defs element
-		var defs = svg.append("defs");
-
-		// create filter with id #drop-shadow
-		// height=130% so that the shadow is not clipped
-		var filter = defs.append("filter")
-		    .attr("id", "drop-shadow")
-		    .attr("height", "150%");
-
-		// SourceAlpha refers to opacity of graphic that this filter will be applied to
-		// convolve that with a Gaussian with standard deviation 3 and store result
-		// in blur
-		filter.append("feGaussianBlur")
-		    .attr("in", "SourceAlpha")
-		    .attr("stdDeviation", 2)
-		    .attr("result", "blur");
-
-		// translate output of Gaussian blur to the right and downwards with 2px
-		// store result in offsetBlur
-		filter.append("feOffset")
-		    .attr("in", "blur")
-		    .attr("dx", 1)
-		    .attr("dy", 1)
-		    .attr("result", "offsetBlur");
-
-		// overlay original SourceGraphic over translated blurred opacity by using
-		// feMerge filter. Order of specifying inputs is important!
-		var feMerge = filter.append("feMerge");
-
-		feMerge.append("feMergeNode")
-		    .attr("in", "offsetBlur")
-		feMerge.append("feMergeNode")
-		    .attr("in", "SourceGraphic");
-		
-		
-		var cumulativeArc = 0;
-		var arcMap = {};
-		var arcs = [];
-		for(var i = 0; i < radar.arcs.length; i++) {
-			
-			var r = (radar.arcs[i].r*maxBlips[i] / totalArc)*(w/2);
-			//var r = (radar.arcs[i].r / totalArc)*(w/2);
-			
-			this._drawArcQuad(svg, cumulativeArc, cumulativeArc + r, w, h, radar.arcs[i].color, quadrantNo);
-			this._drawArcAxisTextQuad(svg, cumulativeArc, cumulativeArc + r, w, h, radar.arcs[i].name, scaleFactor, quadrantNo, hMin);
-			
-			var arc = {
-				innerRadius: cumulativeArc,
-				outerRadius: cumulativeArc + r,
-				index: i
-			};
-			arcMap[radar.arcs[i].id] = arc;
-			arcs.push(arc);
-			
-			cumulativeArc = cumulativeArc + r;
-		}
-		
-		this._drawKeyQuad(svg,w,h,scaleFactor, quadrantNo);
-		
-		var translation = [[1, 1], [1.7, 1], [1.7, 0.0526], [1, 0.0526]];
-		
-		var blips = [];
-		var angle = 90*quadrantNo;
-		
-		var quadrant = radar.quadrants[quadrantNo];
-		quadrant.startAngle = 90*quadrantNo;
-			
-		var labelx = translation[quadrantNo][0]*0.75*(w/2);
-		var labely = translation[quadrantNo][1]*0.95*(h);
-		svg.append('text')
-			.attr({'x':labelx,'y':labely,'font-size':scaleFactor*14,'font-weight':'bold'})
-			.style({'text-anchor':'middle'})
-			.text(quadrant.name);
-			
-		for(var j = 0; j < allRails.length; j++) {
-			var rails = allRails[j];
-			blips.push([]);
-				
-			var poisson_dist = [];
-			var queue = [];
-			var queueSize = 0;
-			var radius = maxRadius;
-			var radius2 = radius*radius;
-			var R = 3*radius;
-			var quadNo = quadrantNo;
-			var arcNo = j;
-				
-			while(poisson_dist.length < rails.length){
-				if(poisson_dist.length > 0 && queueSize == 0){
-					poisson_dist = [];
-					queue = [];
-					queueSize = 0;
-					radius -= 2;
-					radius2 = radius*radius;
-					R = 3*radius;
-					//console.log("Restarting poisson disc sample with radius " + radius);
-				}
-				
-				var midx;
-				var midy;
-				
-				switch (quadrantNo){
-					case 0:
-						midx = 0;
-						midy = 0;
-						break;
-					case 1:
-						midx = w;
-						midy = 0;
-						break;
-					case 2:
-						midx = w;
-						midy = h;
-						break;
-					case 3:
-						midx = 0;
-						midy = h;
-						break;
-				}
-				
-				while(queueSize == 0){
-					var innerRadius = arcs[arcNo].innerRadius;
-					var outerRadius = arcs[arcNo].outerRadius;
-					
-					var r = ((outerRadius-innerRadius)/2)+innerRadius;
-					var x = midx + r*Math.cos(rad(90/2 + angle));
-					var y = midy + r*Math.sin(rad(90/2 + angle));
-					
-					if(!outside(x,y,quadNo,arcNo, 0)){
-						acceptCandidate(x,y);
-					}else{
-						return;
-					}
-				}
-				sample();
-				
-				function sample(){
-					var a = Math.random() * queueSize | 0;
-					var s = queue[a];
-					var b = 0;
-					genCandidate(s);
-					
-					function genCandidate(s){
-						if (++b > maxSample){
-							return rejectActive();
-						}
-						
-						var c = 2 * Math.PI * Math.random();
-						var r = Math.sqrt(Math.random() * R + radius2);
-						var x = s[0] + r * Math.cos(c);
-						var y = s[1] + r * Math.sin(c);
-						
-						if(outside(x,y,quadNo,arcNo, radius)) return genCandidate(s);
-						
-						if (far(x,y)){
-							return acceptCandidate(x,y);
-						}else{
-							return genCandidate(s);
-						}
-						
-						function rejectActive(){
-							queue[a] = queue[--queueSize];
-							queue.length = queueSize;
-						}
-					}
-				}
-				function far(x,y){
-					for(var i = 0; i < poisson_dist.length; i++){
-						var dx = poisson_dist[i][0] - x;
-						var dy = poisson_dist[i][1] - y;
-						if(dx*dx + dy*dy < radius2){
-							return false;
-						}
-					}
-					return true;
-				}
-
-				function acceptCandidate(x,y){
-					queue.push([x,y]);
-					++queueSize;
-					poisson_dist.push([x,y]);
-					return [x,y];
-				}
-					
-				function outside(x,y,quad,arc,radius){
-					var w = parseInt(svg.attr("width"));
-					var h = parseInt(svg.attr("height"));
-					
-					var innerRadius = arcs[arcNo].innerRadius + radius/2;
-					var outerRadius = arcs[arcNo].outerRadius - radius/2;
-					
-					switch (quad){
-						case 0:
-							if(x < radius/2 || y < radius/2) return true;
-							var innerx = x/Math.sqrt(Math.pow(x,2) + Math.pow(y,2))*innerRadius;
-							var outerx = x/Math.sqrt(Math.pow(x,2) + Math.pow(y,2))*outerRadius;
-							var innery = y/Math.sqrt(Math.pow(x,2) + Math.pow(y,2))*innerRadius;
-							var outery = y/Math.sqrt(Math.pow(x,2) + Math.pow(y,2))*outerRadius;
-							
-							if(x < innerx || x > outerx || y < innery || y > outery) return true;
-							return false;
-						case 1:
-							if(x > w - radius/2 || y < radius/2) return true;
-							var innerx = w + (x - w)/Math.sqrt(Math.pow((x - w),2) + Math.pow(y,2))*innerRadius;
-							var outerx = w + (x - w)/Math.sqrt(Math.pow((x - w),2) + Math.pow(y,2))*outerRadius;
-							var innery = y/Math.sqrt(Math.pow((x - w),2) + Math.pow(y,2))*innerRadius;
-							var outery = y/Math.sqrt(Math.pow((x - w),2) + Math.pow(y,2))*outerRadius;
-							
-							if(x > innerx || x < outerx || y < innery || y > outery) return true;
-							return false;
-						case 2:
-							if(x > w - radius/2 || y > h - radius/2) return true;
-							var innerx = w + (x - w)/Math.sqrt(Math.pow((x - w),2) + Math.pow((y - h),2))*innerRadius;
-							var outerx = w + (x - w)/Math.sqrt(Math.pow((x - w),2) + Math.pow((y - h),2))*outerRadius;
-							var innery = h + (y - h)/Math.sqrt(Math.pow((x - w),2) + Math.pow((y - h),2))*innerRadius;
-							var outery = h + (y - h)/Math.sqrt(Math.pow((x - w),2) + Math.pow((y - h),2))*outerRadius;
-							
-							/*console.log(x);
-							console.log(innerx);
-							console.log(outerx);
-							console.log(y);
-							console.log(innery);
-							console.log(outery);*/
-							
-							if(x > innerx || x < outerx || y > innery || y < outery) return true;
-							return false;
-						case 3:
-							if(x < radius/2 || y > h - radius/2) return true;
-							var innerx = x/Math.sqrt(Math.pow(x,2) + Math.pow((y - h),2))*innerRadius;
-							var outerx = x/Math.sqrt(Math.pow(x,2) + Math.pow((y - h),2))*outerRadius;
-							var innery = h + (y - h)/Math.sqrt(Math.pow(x,2) + Math.pow((y - h),2))*innerRadius;
-							var outery = h + (y - h)/Math.sqrt(Math.pow(x,2) + Math.pow((y - h),2))*outerRadius;
-							
-							if(x < innerx || x > outerx || y > innery || y < outery) return true;
-							return false;
-					}
-					return false;
-				}
-			}
-				
-			for(var k = 0; k < rails.length; k++) {
-				var x = poisson_dist[k][0];
-				var y = poisson_dist[k][1];
-				
-				blips[j].push({'item':allRails[j][k],'x':x,'y':y, 'color':quadrant.color, 'scaleFactor': scaleFactor, 'arc': j, 'quad' : quadrantNo});
-			}
-		}
-		
-		quadrant.endAngle = (quadrantNo+1)*90;
-		this._drawBlips(svg,blips,callback);
-		
-		return {
-			selectBlip: function(blip) {
-				d3.selectAll('a circle, a path').attr('opacity',0.3);
-				d3.select('#blip-'+blip.id).selectAll('circle, path').attr('opacity',1.0);
-			},
-			unselectBlip: function(blip) {
-				d3.selectAll('a circle, a path').attr('opacity',1.0);
-			}
-		};
-	},
-		
 	draw: function(element, radar, callback) {
 		
 		var w = element.offsetWidth;
@@ -403,34 +71,33 @@ var Radar = {
 			element.removeChild(element.firstChild);
 		}
 		
-		var p0 = [250, 200, 60], p1 = [560, 300, 120];
+		var centres = [
+		               [w/2, w/2, w],
+		               [w - scaleFactor*6, w - scaleFactor*6, w + scaleFactor*6],
+		               [scaleFactor*6, w - scaleFactor*6, w + scaleFactor*6],
+		               [scaleFactor*6, w/2 - scaleFactor*6, w + scaleFactor*6],
+		               [w - scaleFactor*6, w/2 - scaleFactor*6, w + scaleFactor*6],
+		               ];
 		
-		var svg=d3.select(element)
+		var canvas=d3.select(element)
 			.insert('svg',':first-child')
 			.attr('xmlns:xmlns:xlink','http://www.w3.org/1999/xlink')
 			.attr('width',w)
 			.attr('height',h)
-		svg.selectAll('*').remove();
+		canvas.selectAll('*').remove();
 		
-		
-		
-		
-		
-		
+		var svg = canvas.append('g');
 		
 		function transition(svg, start, end) {
 			var center = [w / 2, h / 2],
 			i = d3.interpolateZoom(start, end);
 			
-			console.log(d3.interpolateZoom);
-
 			svg
 			.attr("transform", transform(start))
 			.transition()
 			.delay(250)
 			.duration(i.duration * 2)
-			.attrTween("transform", function() { return function(t) { return transform(i(t)); }; })
-			.each("end", function() { d3.select(this).call(transition, end, start); });
+			.attrTween("transform", function() { return function(t) { return transform(i(t)); }; });
 
 			function transform(p) {
 				var k = h / p[2];
@@ -562,7 +229,6 @@ var Radar = {
 						radius -= 2;
 						radius2 = radius*radius;
 						R = 3*radius;
-						//console.log("Restarting poisson disc sample with radius " + radius);
 					}
 					
 					while(queueSize == 0){
@@ -631,8 +297,8 @@ var Radar = {
 					}
 					
 					function outside(x,y,quad,arc,radius){
-						var w = svg.attr("width")/2;
-						var h = svg.attr("height")/2;
+						var w = canvas.attr("width")/2;
+						var h = canvas.attr("height")/2;
 						
 						var innerRadius = arcs[arcNo].innerRadius + radius/2;
 						var outerRadius = arcs[arcNo].outerRadius - radius/2;
@@ -679,6 +345,10 @@ var Radar = {
 		}
 		this._drawBlips(svg,blips,callback);
 		
+		var context = {
+			oldZoom: 0	
+		};
+		
 		return {
 			selectBlip: function(blip) {
 				d3.selectAll('a circle, a path').attr('opacity',0.3);
@@ -686,6 +356,10 @@ var Radar = {
 			},
 			unselectBlip: function(blip) {
 				d3.selectAll('a circle, a path').attr('opacity',1.0);
+			},
+			zoom: function(index) {
+				svg.call(transition, centres[context.oldZoom], centres[index]);
+				context.oldZoom = index;
 			}
 		};
 	},

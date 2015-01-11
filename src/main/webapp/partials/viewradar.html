@@ -61,9 +61,9 @@
 		<div class="col-md-12">
 			<div class="col-md-6">
 				<ul class="nav nav-pills">
-					<li ng-class="selectedQuad == '' ? 'active' : ''"><a href ng-click="go('/radar/'+selectedRadar.id)">All</a></li>
-					<li ng-repeat="quadrant in selectedRadar.radar.quadrants" ng-class="selectedQuad == quadrant.name ? 'active' : ''">
-						<a href ng-click="go('/radar/'+selectedRadar.id+'/'+quadrant.name)">{{quadrant.name}}</a>
+					<li ng-class="ind == 0 ? 'active' : ''"><a href="javascript:void(0)" ng-click="selectIndex(0)">All</a></li>
+					<li ng-repeat="quadrant in selectedRadar.radar.quadrants" ng-class="ind == $index+1 ? 'active' : ''">
+						<a href="javascript:void(0)" ng-click="selectIndex($index+1)">{{quadrant.name}}</a>
 					</li>
 				</ul>
 			</div>
@@ -80,7 +80,7 @@
 		</div>
 		
 		<div class="col-md-12" style="padding:50px 10%;">
-			<div id="radar" ng-radar="" radar="selectedRadar.radar" selected-blip="selectedItem" on-blip-clicked="blipClicked(blip)"></div>
+			<div id="radar" ng-radar="" radar="selectedRadar.radar" selected-blip="selectedItem" centre-index="radarIndex" on-blip-clicked="blipClicked(blip)"></div>
 		</div>
 		
 	</div>

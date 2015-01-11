@@ -349,6 +349,13 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 			$log.error(data);
 		});
 	};
+	
+	$scope.ind = 0;
+	
+	$scope.selectIndex = function(ind) {
+		$scope.ind = ind;
+		$scope.radarIndex = ind;
+	};
 
 	var mapRadar = function(data) {
 		var theRadar = data;
