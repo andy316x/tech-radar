@@ -479,3 +479,46 @@ h1,.h1 {
   color: #FFFFFF;
 }
 
+
+
+
+
+
+.arc-overlay {
+	position: absolute;
+	width: 50%;
+	top: 0;
+}
+
+.arc-overlay > div {
+	margin: 30px;
+}
+
+.arc-overlay.arc-overlay-left {
+	left: 0
+}
+
+.arc-overlay.arc-overlay-right {
+	right: 0
+}
+
+.arc-overlay {
+  -webkit-transition:2.5s linear all;
+  -moz-transition:2.5s linear all;
+  -o-transition:2.5s linear all;
+  transition:2.5s linear all;
+}
+
+
+.arc-overlay.ng-show {
+  opacity:1;
+}
+
+.arc-overlay.ng-hide {
+  -webkit-transition:2.5s linear all;
+  -moz-transition:2.5s linear all;
+  -o-transition:2.5s linear all;
+  transition:2.5s linear all;
+  opacity:0;
+}
+

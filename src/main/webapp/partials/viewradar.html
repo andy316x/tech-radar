@@ -56,20 +56,20 @@
 		</div>
 	</div>
 
-	<div class="col-md-12" style="background-color:rgb(236,236,236);padding:25px 20px;">
+	<div class="col-md-12" style="background-color:rgb(236,236,236);padding:25px 20px;min-height:1500px;">
 	
 		<div class="col-md-12">
 			<div class="col-md-6">
 				<ul class="nav nav-pills">
-					<li ng-class="ind == 0 ? 'active' : ''"><a href="javascript:void(0)" ng-click="selectIndex(0)">All</a></li>
-					<li ng-repeat="quadrant in selectedRadar.radar.quadrants" ng-class="ind == $index+1 ? 'active' : ''">
+					<li ng-class="radarIndex == 0 ? 'active' : ''"><a href="javascript:void(0)" ng-click="selectIndex(0)">All</a></li>
+					<li ng-repeat="quadrant in selectedRadar.radar.quadrants" ng-class="radarIndex == $index+1 ? 'active' : ''">
 						<a href="javascript:void(0)" ng-click="selectIndex($index+1)">{{quadrant.name}}</a>
 					</li>
 				</ul>
 			</div>
 			<div class="col-md-6 text-right" style="padding:10px;">
 				<div class="col-xs-6" style="padding:8px 0;">
-					<span>Highest Skills</span>
+					<span>Highlight Skills</span>
 				</div>
 				<div class="col-xs-6">
 					<select class="form-control">
@@ -80,7 +80,53 @@
 		</div>
 		
 		<div class="col-md-12" style="padding:50px 10%;">
+		
 			<div id="radar" ng-radar="" radar="selectedRadar.radar" selected-blip="selectedItem" centre-index="radarIndex" on-blip-clicked="blipClicked(blip)"></div>
+			
+			<!-- Left technology overlay -->
+			<div ng-show="radarIndex==2" class="arc-overlay arc-overlay-left">
+				<div>
+					<div class="col-xs-6" ng-repeat="arc in quads[1].arcs">
+						<strong>{{arc.name | uppercase}}</strong>
+						<div ng-repeat="tech in arc.techs">
+							{{tech.id}}. {{tech.name}}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div ng-show="radarIndex==3" class="arc-overlay arc-overlay-left">
+				<div>
+					<div class="col-xs-6" ng-repeat="arc in quads[2].arcs">
+						<strong>{{arc.name | uppercase}}</strong>
+						<div ng-repeat="tech in arc.techs">
+							{{tech.id}}. {{tech.name}}
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<!-- Right technology overlay -->
+			<div ng-show="radarIndex==1" class="arc-overlay arc-overlay-right">
+				<div>
+					<div class="col-xs-6" ng-repeat="arc in quads[0].arcs">
+						<strong>{{arc.name | uppercase}}</strong>
+						<div ng-repeat="tech in arc.techs">
+							{{tech.id}}. {{tech.name}}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div ng-show="radarIndex==4" class="arc-overlay arc-overlay-right">
+				<div>
+					<div class="col-xs-6" ng-repeat="arc in quads[3].arcs">
+						<strong>{{arc.name | uppercase}}</strong>
+						<div ng-repeat="tech in arc.techs">
+							{{tech.id}}. {{tech.name}}
+						</div>
+					</div>
+				</div>
+			</div>
+			
 		</div>
 		
 	</div>

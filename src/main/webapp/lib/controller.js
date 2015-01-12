@@ -1,4 +1,4 @@
-var techRadarControllers = angular.module('techRadarControllers', ['ui.bootstrap']);
+var techRadarControllers = angular.module('techRadarControllers', ['ui.bootstrap', 'ngAnimate']);
 
 techRadarControllers.controller('CommonViewCtrl', function ($scope, $http, $location, $routeParams, $modal, $log) {
 
@@ -350,10 +350,15 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 		});
 	};
 	
-	$scope.ind = 0;
+	$scope.radarIndex = 0;
+	$scope.selectedQuadrant = null;
 	
 	$scope.selectIndex = function(ind) {
-		$scope.ind = ind;
+		if(ind>0) {
+			$scope.selectedQuadrant = $scope.quads[ind-1];
+		} else {
+			$scope.selectedQuadrant = null;
+		}
 		$scope.radarIndex = ind;
 	};
 
@@ -370,6 +375,7 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 			(function(row){
 				var arc = {
 						id: row.name,
+						ind: i,
 						name: row.name,
 						r: arcWidths[theRadar.radar.arcs.length],
 						color: arcColours[theRadar.radar.arcs.length]
@@ -378,15 +384,24 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 				theRadar.radar.arcs.push(arc);
 			})(theRadar.maturities[i]);
 		}
+		
+		$scope.quads = [];
 
 		for(var i = 0; i < theRadar.techGroupings.length; i++) {
 			(function(row){
 				quadrant = {
 						id: row.name,
+						ind: i,
 						name: row.name,
 						color: quadrantColours[theRadar.radar.quadrants.length],
 						items: []
 				};
+				var quad = {name:row.name, arcs:[]};
+				for(var j = 0; j < theRadar.maturities.length; j++) {
+					var arc = {name:theRadar.maturities[j].name, techs:[]};
+					quad.arcs.push(arc);
+				}
+				$scope.quads.push(quad);
 				theRadar.quadrantMap[row.name] = quadrant;
 				theRadar.radar.quadrants.push(quadrant);
 			})(theRadar.techGroupings[i]);
@@ -411,6 +426,7 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 							customerStrategic: customerStrategic,
 							url: row.url
 					};
+					$scope.quads[theRadar.quadrantMap[row.techGrouping].ind].arcs[theRadar.arcMap[row.maturity].ind].techs.push(newItem);
 					theRadar.quadrantMap[row.techGrouping].items.push(newItem);
 				})(theRadar.technologies[i]);
 			}
