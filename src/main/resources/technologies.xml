@@ -1,0 +1,10 @@
+<technologies>
+	<technology>
+		<id>1</id>
+		<name>D3</name>
+	</technology>
+	<technology>
+		<id>2</id>
+		<name>JSF</name>
+	</technology>
+</technologies>
