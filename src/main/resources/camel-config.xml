@@ -7,32 +7,34 @@
 
 	<!-- Here we define Camel, notice the namespace it uses -->
 	<camelContext xmlns="http://camel.apache.org/schema/spring">
+	
 		<!-- Camel route to feed the ActiveMQ inbox queue once per second -->
 		<route id="timerToInRoute">
-			<from uri="timer:foo?period=1s" />
-			<transform>
-				<simple>Message at ${date:now:yyyy-MM-dd HH:mm:ss}</simple>
-			</transform>
-			<to uri="activemq:queue:inbox" />
+			<from uri="timer:checkTechnologiesTimer?period=1s" />
+			<pollEnrich uri="file:/home/sandra/Programming/Eclipse/Workspaces/TechRadar/tech-radar/src/main/resources?noop=true&amp;fileName=technologies.xml" />
+			<split streaming="true">
+				<tokenize token="technology" xml="true" />
+				<to uri="activemq:queue:inbox" />
+			</split>
 		</route>
 
-		<!-- Camel route to move messages from the ActiveMQ inbox to its outbox 
-			queue -->
+		<!-- Camel route to move messages from the ActiveMQ inbox to the technology receiver bean -->
 		<route id="inToOutRoute">
 			<from uri="activemq:queue:inbox" />
-			<log message="Routing message from inbox to outbox queue with data ${body}" />
-			<to uri="activemq:queue:outbox" />
+			<log message="Routing message from inbox to bean with data ${body}" />
+			<to uri="bean:technologyReceiverBean"/>
 		</route>
 
 	</camelContext>
 
-	<!-- create a Camel ActiveMQ component to use, using the Spring bean style -->
-	<!-- we use the vm protocol to communicate intra-jvm which is much faster 
-		than tcp -->
+	<!-- Create a Camel ActiveMQ component to use, using the Spring bean style -->
+	<!-- we use the vm protocol to communicate intra-jvm which is much faster than tcp -->
 	<bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent">
 		<!-- vm://myBroker is the vm protocol, and myBroker is the broker name -->
-		<property name="brokerURL"
-			value="vm://myBroker?create=false&amp;waitForStart=5000" />
+		<property name="brokerURL" value="vm://myBroker?create=false&amp;waitForStart=5000" />
 	</bean>
+
+	<!-- Test bean for receiving technology data -->
+	<bean id="technologyReceiverBean" class="com.ai.techradar.camel.TechnologyReceiverBean" />
 
 </beans>
