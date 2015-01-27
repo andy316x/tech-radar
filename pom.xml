@@ -108,16 +108,10 @@
 
 
 		<!-- Spring 4 dependencies -->
-		<!-- <dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-core</artifactId>
-			<version>4.1.4.RELEASE</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-			<version>4.1.4.RELEASE</version>
-		</dependency> -->
+		<!-- <dependency> <groupId>org.springframework</groupId> <artifactId>spring-core</artifactId> 
+			<version>4.1.4.RELEASE</version> </dependency> <dependency> <groupId>org.springframework</groupId> 
+			<artifactId>spring-context</artifactId> <version>4.1.4.RELEASE</version> 
+			</dependency> -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
@@ -136,7 +130,7 @@
 			<artifactId>camel-spring</artifactId>
 			<version>2.14.1</version>
 		</dependency>
-		
+
 		<!-- camel jms and activemq -->
 		<dependency>
 			<groupId>org.apache.camel</groupId>
@@ -166,7 +160,7 @@
 			<version>5.10.0</version>
 		</dependency>
 
-        <!-- ActiveMQ client -->
+		<!-- ActiveMQ client -->
 		<dependency>
 			<groupId>org.apache.activemq</groupId>
 			<artifactId>activemq-client</artifactId>
@@ -184,7 +178,14 @@
 			<artifactId>xbean-spring</artifactId>
 			<version>3.18</version>
 		</dependency>
-		
+
+		<!-- XML parser (for reading test data from XML files) -->
+		<dependency>
+			<groupId>jdom</groupId>
+			<artifactId>jdom</artifactId>
+			<version>1.1</version>
+		</dependency>
+
 		<!-- Logging Dependencies -->
 		<dependency>
 			<groupId>commons-logging</groupId>
@@ -197,26 +198,26 @@
 			<artifactId>log4j</artifactId>
 			<version>1.2.17</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>1.7.10</version>
 		</dependency>
-		
+
 	</dependencies>
 	<build>
 		<finalName>radar</finalName>
 		<plugins>
-	        <plugin>
-	            <groupId>org.apache.maven.plugins</groupId>
-	            <artifactId>maven-compiler-plugin</artifactId>
-	            <version>2.3.2</version>
-	            <configuration>
-	                <source>1.6</source>
-	                <target>1.6</target>
-	            </configuration>
-	        </plugin>
-    	</plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+		</plugins>
 	</build>
 </project>

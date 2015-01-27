@@ -1,10 +1,11 @@
+<?xml version="1.0"?>
 <technologies>
 	<technology>
-		<id>1</id>
 		<name>D3</name>
+		<description></description>
 	</technology>
 	<technology>
-		<id>2</id>
 		<name>JSF</name>
+		<description>JavaServer Faces (JSF) is a Java specification for building component-based user interfaces for web applications. It was formalized as a standard through the Java Community Process and is part of the Java Platform, Enterprise Edition. (sourced Wikipedia)</description>
 	</technology>
 </technologies>
