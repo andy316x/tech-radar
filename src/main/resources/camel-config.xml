@@ -7,28 +7,29 @@
 
 	<!-- Here we define Camel, notice the namespace it uses -->
 	<camelContext xmlns="http://camel.apache.org/schema/spring">
-	
-		<!-- Camel route to feed the ActiveMQ inbox queue once per second -->
+
+		<!-- Camel route to feed the ActiveMQ inbox queue once per minute -->
 		<route id="timerToInRoute">
-			<from uri="timer:checkTechnologiesTimer?period=1s" />
-			<pollEnrich uri="file:/home/sandra/Programming/Eclipse/Workspaces/TechRadar/tech-radar/src/main/resources?noop=true&amp;fileName=technologies.xml" />
-			<split streaming="true">
-				<tokenize token="technology" xml="true" />
-				<to uri="activemq:queue:inbox" />
-			</split>
+			<from uri="timer:checkTechnologiesTimer?period=1m" />
+			<setHeader headerName="CamelHttpMethod">
+				<constant>GET</constant>
+			</setHeader>
+			<to uri="ahc:http://localhost:8080/radar/rest/drupal/technology" />
+			<to uri="activemq:queue:inbox" />
 		</route>
 
-		<!-- Camel route to move messages from the ActiveMQ inbox to the technology receiver bean -->
+		<!-- Camel route to move messages from the ActiveMQ inbox to the technology 
+			receiver bean -->
 		<route id="inToOutRoute">
 			<from uri="activemq:queue:inbox" />
-			<log message="Routing message from inbox to bean with data ${body}" />
-			<to uri="bean:technologyReceiverBean"/>
+			<to uri="bean:technologyReceiverBean" />
 		</route>
 
 	</camelContext>
 
 	<!-- Create a Camel ActiveMQ component to use, using the Spring bean style -->
-	<!-- we use the vm protocol to communicate intra-jvm which is much faster than tcp -->
+	<!-- we use the vm protocol to communicate intra-jvm which is much faster 
+		than tcp -->
 	<bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent">
 		<!-- vm://myBroker is the vm protocol, and myBroker is the broker name -->
 		<property name="brokerURL" value="vm://myBroker?create=false&amp;waitForStart=5000" />
