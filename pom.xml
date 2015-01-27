@@ -184,7 +184,8 @@
 			<artifactId>xbean-spring</artifactId>
 			<version>3.18</version>
 		</dependency>
-
+		
+		<!-- Logging Dependencies -->
 		<dependency>
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
@@ -196,7 +197,13 @@
 			<artifactId>log4j</artifactId>
 			<version>1.2.17</version>
 		</dependency>
-
+		
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.10</version>
+		</dependency>
+		
 	</dependencies>
 	<build>
 		<finalName>radar</finalName>

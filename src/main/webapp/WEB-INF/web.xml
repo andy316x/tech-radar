@@ -28,6 +28,15 @@
 		</param-value>
 	</context-param>
 	
+	<!-- Location of Spring XML files for Camel -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			classpath:broker.xml,
+			classpath:camel-config.xml
+		</param-value>
+	</context-param>
+	
 	<filter>
 		<filter-name>AdminSecurityFilter</filter-name>
 		<filter-class>com.ai.techradar.servlet.filter.SecurityFilter</filter-class>
@@ -57,6 +66,11 @@
 
 	<listener>
 		<listener-class>org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap</listener-class>
+	</listener>
+	
+	<!-- The listener that kick-starts Spring which loads the Camel XML files -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
 
 	<servlet>
