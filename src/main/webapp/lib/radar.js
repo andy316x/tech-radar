@@ -221,6 +221,90 @@ var Radar = {
 				var quadNo = i;
 				var arcNo = j;
 				
+				function sample(){
+					var a = Math.random() * queueSize | 0;
+					var s = queue[a];
+					var b = 0;
+					genCandidate(s);
+					
+					function genCandidate(s){
+						if (++b > maxSample){
+							return rejectActive();
+						}
+						
+						var c = 2 * Math.PI * Math.random();
+						var r = Math.sqrt(Math.random() * R + radius2);
+						var x = s[0] + r * Math.cos(c);
+						var y = s[1] + r * Math.sin(c);
+						
+						if(outside(x,y,quadNo,arcNo, radius)) return genCandidate(s);
+						
+						if (far(x,y)){
+							return acceptCandidate(x,y);
+						}else{
+							return genCandidate(s);
+						}
+						
+						function rejectActive(){
+							queue[a] = queue[--queueSize];
+							queue.length = queueSize;
+						}
+					}
+				}
+
+				function far(x,y){
+					for(var i = 0; i < poisson_dist.length; i++){
+						var dx = poisson_dist[i][0] - x;
+						var dy = poisson_dist[i][1] - y;
+						if(dx*dx + dy*dy < radius2){
+							return false;
+						}
+					}
+					return true;
+				}
+
+				function acceptCandidate(x,y){
+					queue.push([x,y]);
+					++queueSize;
+					poisson_dist.push([x,y]);
+					return [x,y];
+				}
+				
+				function outside(x,y,quad,arc,radius){
+					var w = canvas.attr("width")/2;
+					var h = canvas.attr("height")/2;
+					
+					var innerRadius = arcs[arcNo].innerRadius + radius/2;
+					var outerRadius = arcs[arcNo].outerRadius - radius/2;
+					
+					var innerx = w + (x - w)/Math.sqrt(Math.pow(x - w,2) + Math.pow(y - h,2))*innerRadius;
+					var outerx = w + (x - w)/Math.sqrt(Math.pow(x - w,2) + Math.pow(y - h,2))*outerRadius;
+					var innery = h + (y - h)/Math.sqrt(Math.pow(x - w,2) + Math.pow(y - h,2))*innerRadius;
+					var outery = h + (y - h)/Math.sqrt(Math.pow(x - w,2) + Math.pow(y - h,2))*outerRadius;
+					
+					if(Math.abs(x - w) < Math.abs(innerx - w) || Math.abs(x - w) > Math.abs(outerx - w)){
+						return true;
+					}
+					
+					if(Math.abs(y - h) < Math.abs(innery - h) || Math.abs(y - h) > Math.abs(outery - h)){
+						return true;
+					}
+					
+					if((quad == 0 || quad == 3) && x < w + radius/2 ){
+						return true;
+					}else if((quad == 1 || quad == 2) && x > w - radius/2){
+						return true;
+					}
+					
+					if((quad == 2 || quad == 3) && y > h - radius/2){
+						return true;
+					}else if((quad == 0 || quad == 1) && y < h + radius/2){
+						return true;
+					}
+					
+					return false;
+				}
+				
 				while(poisson_dist.length < rails.length){
 					if(poisson_dist.length > 0 && queueSize == 0){
 						poisson_dist = [];
@@ -246,90 +330,6 @@ var Radar = {
 						}
 					}
 					sample();
-					
-					function sample(){
-						var a = Math.random() * queueSize | 0;
-						var s = queue[a];
-						var b = 0;
-						genCandidate(s);
-						
-						function genCandidate(s){
-							if (++b > maxSample){
-								return rejectActive();
-							}
-							
-							var c = 2 * Math.PI * Math.random();
-							var r = Math.sqrt(Math.random() * R + radius2);
-							var x = s[0] + r * Math.cos(c);
-							var y = s[1] + r * Math.sin(c);
-							
-							if(outside(x,y,quadNo,arcNo, radius)) return genCandidate(s);
-							
-							if (far(x,y)){
-								return acceptCandidate(x,y);
-							}else{
-								return genCandidate(s);
-							}
-							
-							function rejectActive(){
-								queue[a] = queue[--queueSize];
-								queue.length = queueSize;
-							}
-						}
-					}
-
-					function far(x,y){
-						for(var i = 0; i < poisson_dist.length; i++){
-							var dx = poisson_dist[i][0] - x;
-							var dy = poisson_dist[i][1] - y;
-							if(dx*dx + dy*dy < radius2){
-								return false;
-							}
-						}
-						return true;
-					}
-
-					function acceptCandidate(x,y){
-						queue.push([x,y]);
-						++queueSize;
-						poisson_dist.push([x,y]);
-						return [x,y];
-					}
-					
-					function outside(x,y,quad,arc,radius){
-						var w = canvas.attr("width")/2;
-						var h = canvas.attr("height")/2;
-						
-						var innerRadius = arcs[arcNo].innerRadius + radius/2;
-						var outerRadius = arcs[arcNo].outerRadius - radius/2;
-						
-						var innerx = w + (x - w)/Math.sqrt(Math.pow(x - w,2) + Math.pow(y - h,2))*innerRadius;
-						var outerx = w + (x - w)/Math.sqrt(Math.pow(x - w,2) + Math.pow(y - h,2))*outerRadius;
-						var innery = h + (y - h)/Math.sqrt(Math.pow(x - w,2) + Math.pow(y - h,2))*innerRadius;
-						var outery = h + (y - h)/Math.sqrt(Math.pow(x - w,2) + Math.pow(y - h,2))*outerRadius;
-						
-						if(Math.abs(x - w) < Math.abs(innerx - w) || Math.abs(x - w) > Math.abs(outerx - w)){
-							return true;
-						}
-						
-						if(Math.abs(y - h) < Math.abs(innery - h) || Math.abs(y - h) > Math.abs(outery - h)){
-							return true;
-						}
-						
-						if((quad == 0 || quad == 3) && x < w + radius/2 ){
-							return true;
-						}else if((quad == 1 || quad == 2) && x > w - radius/2){
-							return true;
-						}
-						
-						if((quad == 2 || quad == 3) && y > h - radius/2){
-							return true;
-						}else if((quad == 0 || quad == 1) && y < h + radius/2){
-							return true;
-						}
-						
-						return false;
-					}
 				}
 				
 				for(var k = 0; k < rails.length; k++) {
