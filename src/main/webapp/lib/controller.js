@@ -285,16 +285,6 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 		form.submit();
 	};
 
-	$scope.doCsvExport = function ( radarId ) {
-		$http({method: 'GET', url: '/radar/export/csv?id=' + radarId + '&nocache=' + (new Date()).getTime()}).
-		success(function(data, status, headers, config) {
-			$log.log(done);
-		}).
-		error(function(data, status, headers, config) {
-			$log.log('error');
-		});
-	};
-
 	$scope.doSave = function () {
 		$http.post('/radar/rest/radar/addtech/' + $scope.selectedRadar.id, $scope.selectedRadar.technologies).
 		success(function(data, status, headers, config) {
