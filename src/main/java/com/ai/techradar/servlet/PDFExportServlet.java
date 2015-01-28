@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 //import com.lowagie.text.Paragraph;
 //import com.lowagie.text.Section;
 
-public class SvgConvertServlet extends HttpServlet {
+public class PDFExportServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -6114901392531397724L;
 

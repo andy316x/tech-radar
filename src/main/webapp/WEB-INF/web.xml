@@ -74,8 +74,8 @@
 	</listener>
 
 	<servlet>
-		<servlet-name>SvgConverter</servlet-name>
-		<servlet-class>com.ai.techradar.servlet.SvgConvertServlet</servlet-class>
+		<servlet-name>PdfExporter</servlet-name>
+		<servlet-class>com.ai.techradar.servlet.PDFExportServlet</servlet-class>
 	</servlet>
 
 	<servlet>
@@ -126,10 +126,10 @@
 		<servlet-name>Resteasy</servlet-name>
 		<url-pattern>/rest/*</url-pattern>
 	</servlet-mapping>
-
+	
 	<servlet-mapping>
-		<servlet-name>SvgConverter</servlet-name>
-		<url-pattern>/upload/*</url-pattern>
+		<servlet-name>PdfExporter</servlet-name>
+		<url-pattern>/export/pdf</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
