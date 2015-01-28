@@ -354,7 +354,7 @@ public class RadarServiceImpl implements RadarService {
 						radarTechnology.setRadar(radar);
 						radarTechnology.setRadarMaturity(radarMaturity);
 						radarTechnology.setRadarTechGrouping(radarTechGrouping);
-						radarTechnology.setMovement(MovementEnum.t);
+						radarTechnology.setMovement(radarTechnologyTO.getMovement());
 						radarTechnology.setTheOrder(i++);
 						
 						radarTechnology.setAddedDate(new Date());

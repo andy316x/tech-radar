@@ -196,6 +196,7 @@ techRadarDirectives.directive('ngNewRadar', function ($http) {
 			$scope.save = function() {
 				var radar = {
 						name: $scope.name,
+						dateCreated: new Date().getTime(),
 						techGroupings: [
 						                {name: $scope.techGrouping1},
 						                {name: $scope.techGrouping2},

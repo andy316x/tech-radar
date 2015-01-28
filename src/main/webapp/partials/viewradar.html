@@ -60,9 +60,9 @@
 	
 		<div class="col-md-12">
 			<div class="col-md-6">
-				<ul class="nav nav-pills">
+				<ul class="nav nav-pills nav-radar">
 					<li ng-class="radarIndex == 0 ? 'active' : ''"><a href="javascript:void(0)" ng-click="selectIndex(0)">All</a></li>
-					<li ng-repeat="quadrant in selectedRadar.radar.quadrants" ng-class="radarIndex == $index+1 ? 'active' : ''">
+					<li ng-repeat="quadrant in selectedRadar.radar.quadrants" ng-class="(radarIndex == $index+1 ? 'active' : '') + ' quad' + ($index+1)">
 						<a href="javascript:void(0)" ng-click="selectIndex($index+1)">{{quadrant.name}}</a>
 					</li>
 				</ul>

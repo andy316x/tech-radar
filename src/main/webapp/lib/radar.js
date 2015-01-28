@@ -63,7 +63,7 @@ var Radar = {
 		
 		var totalArc = 0;
 		for(var i = 0; i < radar.arcs.length; i++) {
-			totalArc = totalArc + radar.arcs[i].r*maxBlips[i];
+			totalArc = totalArc + radar.arcs[i].r;
 		}
 		global_totalArc = totalArc;
 		
@@ -144,7 +144,7 @@ var Radar = {
 		var arcs = [];
 		for(var i = 0; i < radar.arcs.length; i++) {
 			
-			var r = (radar.arcs[i].r*maxBlips[i] / totalArc)*(w/2);
+			var r = (radar.arcs[i].r / totalArc)*(w/2);
 			
 			this._drawArc(svg, cumulativeArc, cumulativeArc + r, w/2, h/2, radar.arcs[i].color);
 			
@@ -196,15 +196,15 @@ var Radar = {
 			var labelx = (w/2) + translation[i][0]*(w/2);
 			var labely = (h/2) + translation[i][1]*0.95*(h/2);
 			var textElement = svg.append('text')
-				.attr({'x':labelx+translation[i][4]*scaleFactor*20,'y':labely,'font-size':scaleFactor*14,'font-weight':'bold'})
+				.attr({'x':labelx+translation[i][4]*scaleFactor*20,'y':labely,'font-size':scaleFactor*18,'font-weight':'bold','fill':'#333'})
 				.style({'text-anchor':translation[i][2]})
 				.text(quadrant.name);
 			
 			svg.append('circle')
-			.attr('r',scaleFactor*7)
+			.attr('r',scaleFactor*6)
 			.attr('fill',quadrant.color)
 			.attr('cx',labelx+scaleFactor*10-translation[i][3]*(scaleFactor*20+textElement.node().getComputedTextLength()))
-			.attr('cy',labely-scaleFactor*5);
+			.attr('cy',labely-scaleFactor*6);
 			
 			var arcRails = allRails[i];
 			
@@ -421,9 +421,15 @@ var Radar = {
 		var x = (totalWidth/2)+innerRadius+((outerRadius-innerRadius)/2);
 		var y = totalHeight/2;
 		svg.append('text')
-			.attr({'x':x,'y':y+sf*1,'text-anchor':'middle','fill':'#000'})
-			.style({'font-size':(sf*10) + 'px','font-weight':900})
-			.text(text.toUpperCase());
+			.attr({'x':x,'y':y+sf*3,'text-anchor':'middle','fill':'#000'})
+			.style({'font-size':(sf*13) + 'px','font-weight':900})
+			.text(text.charAt(0).toUpperCase() + text.slice(1));
+		
+		var x2 = (totalWidth/2)-innerRadius-((outerRadius-innerRadius)/2);
+		svg.append('text')
+			.attr({'x':x2,'y':y+sf*3,'text-anchor':'middle','fill':'#000'})
+			.style({'font-size':(sf*13) + 'px','font-weight':900})
+			.text(text.charAt(0).toUpperCase() + text.slice(1));
 	},
 	
 	_drawArcAxisTextQuad: function(svg, innerRadius, outerRadius, totalWidth, totalHeight, text, sf, quadrantNo, hMin) {
@@ -498,7 +504,7 @@ var Radar = {
 				blip.attr('fill',function(d){ return d.color;})
 					.attr('transform',function(d){
 						if(d.item.movement == 'c') {
-							return 'scale('+d.scaleFactor*0.32+') translate(' + (d.x - 15)/(d.scaleFactor*0.32) + ', ' + (d.y - 17)/(d.scaleFactor*0.32) + ')';
+							return 'scale('+d.scaleFactor*0.32+') translate(' + (d.x - d.scaleFactor*15)/(d.scaleFactor*0.32) + ', ' + (d.y - d.scaleFactor*17)/(d.scaleFactor*0.32) + ')';
 						} else {
 							return 'scale('+((d.scaleFactor*30)/34)+') translate('+(-404+d.x*(34/(d.scaleFactor*30))-17)+', '+(-282+d.y*(34/(d.scaleFactor*30))-17)+')';
 						}
@@ -509,7 +515,7 @@ var Radar = {
 				link.append('text')
 					.attr('x',function(d){ return d.x;})
 					.attr('y',function(d){ return d.item.movement=='c'?d.y+(d.scaleFactor*6):d.y+(d.scaleFactor*4);})
-					.attr('font-size',function(d){ return d.scaleFactor*14;})
+					.attr('font-size',function(d){ return d.scaleFactor*12;})
 					.attr({'font-style':'italic','font-weight':'bold','fill':'white'})
 					.text(function(d){return d.item.id;})
 					.style({'text-anchor':'middle'})

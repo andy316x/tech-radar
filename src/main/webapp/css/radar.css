@@ -23,7 +23,7 @@ border: none;
 overflow: hidden;
 display: inline-block;
 margin: -2px 0px -13px 1px;
-border-radius: 4px;
+border-radius: 2px;
 color: #fff;
 padding: 7px 8px 0px 0px;
 cursor: pointer;
@@ -342,6 +342,10 @@ h1,.h1 {
 	padding-left: 30px;
 }
 
+.btn {
+border-radius: 2px;
+}
+
 
 
 
@@ -522,3 +526,84 @@ h1,.h1 {
   opacity:0;
 }
 
+
+
+.nav-pills>li>a {
+	color: #5a5a5a;
+}
+
+.nav-pills>li>a:hover, .nav-pills>li>a:focus {
+	background-color: transparent;
+	font-weight: bold;
+}
+
+.nav-pills li {
+	border-radius: 0;
+}
+
+.nav-pills>li>a {
+	border-radius: 2px;
+}
+
+.nav-pills>li.active>a, .nav-pills>li.active>a:hover, .nav-pills>li.active>a:focus {
+    color: #5a5a5a;
+    background-color: transparent;
+}
+
+.nav-pills>li.active>a, .nav-pills>li.active>a:hover {
+    font-weight: bold;
+}
+
+.nav-pills li.active, .nav-pills li:hover {
+    border-bottom: 2px solid #3276b1;
+    font-weight: bold;
+}
+
+.form-control {
+	border: 1px solid #ddd;
+	border-radius: 2px;
+}
+
+.glyphicon-search {
+	color: #ccc;
+}
+
+
+
+
+
+.nav-radar>li>a:hover, .nav-radar>li>a:focus {
+	color: white;
+	background-color: rgb(142,142,142);
+	font-weight: normal;
+}
+
+.nav-radar>li.active>a, .nav-radar>li.active>a:hover, .nav-radar>li.active>a:focus {
+    color: white;
+    background-color: rgb(142,142,142);
+}
+
+.nav-radar>li.active>a, .nav-radar>li.active>a:hover {
+    font-weight: normal;
+}
+
+.nav-radar li.active, .nav-radar li:hover {
+    border-bottom: 0;
+    font-weight: normal;
+}
+
+.nav-radar li.active.quad1 a, .nav-radar li:hover.quad1 a {
+    background-color: rgb(35,127,199);
+}
+
+.nav-radar li.active.quad2 a, .nav-radar li:hover.quad2 a {
+    background-color: rgb(213,44,35);
+}
+
+.nav-radar li.active.quad3 a, .nav-radar li:hover.quad3 a {
+    background-color: rgb(77,165,54);
+}
+
+.nav-radar li.active.quad4 a, .nav-radar li:hover.quad4 a {
+    background-color: rgb(226,174,26);
+}
