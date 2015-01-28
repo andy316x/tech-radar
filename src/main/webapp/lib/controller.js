@@ -273,8 +273,8 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 		window.setTimeout(checkFrame, 2000);
 	});
 
-	$scope.exportSvg = function(id) {
-		var form = document.getElementById('theForm');
+	$scope.exportPdf = function(id) {
+		var form = document.getElementById('pdfExportForm');
 		form['id'].value = id;
 		form.submit();
 	};
