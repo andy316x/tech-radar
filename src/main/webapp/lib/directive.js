@@ -78,7 +78,9 @@ techRadarDirectives.directive('ngRadar', function ($routeParams) {
 			}, true);
 			
 			$scope.$watch('centreIndex', function (newVal, oldVal, scope) {
-				$scope.theRadar.zoom(newVal);
+				if($scope.theRadar != null && typeof $scope.theRadar != 'undefined') {
+					$scope.theRadar.zoom(newVal);
+				}
 			}, false);
 
 			window.addEventListener('resize', function() {
