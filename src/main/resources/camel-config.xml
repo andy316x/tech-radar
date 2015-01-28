@@ -7,6 +7,10 @@
 
 	<!-- Here we define Camel, notice the namespace it uses -->
 	<camelContext xmlns="http://camel.apache.org/schema/spring">
+	
+		<dataFormats>
+			<xmljson id="xmljson" arrayName="technologies" elementName="technology"/>
+		</dataFormats>
 
 		<!-- Camel route to feed the ActiveMQ inbox queue once per hour -->
 		<route id="timerToInRoute">
@@ -18,10 +22,19 @@
 			<to uri="activemq:queue:inbox" />
 		</route>
 
-		<!-- Camel route to move messages from the ActiveMQ inbox to the technology 
-			receiver bean -->
-		<route id="inToOutRoute">
+		<!-- Camel route to split message into individual technologies -->
+		<route id="splitRoute">
 			<from uri="activemq:queue:inbox" />
+			<unmarshal ref="xmljson"/>
+			<split streaming="true">
+				<tokenize token="technology" xml="true"/>
+				<to uri="activemq:queue:outbox" />
+			</split>
+		</route>
+		
+		<!-- Camel route to pass each technology to receiver bean -->
+		<route id="inToOutRoute">
+			<from uri="activemq:queue:outbox" />
 			<to uri="bean:technologyReceiverBean" />
 		</route>
 
