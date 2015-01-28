@@ -8,9 +8,9 @@
 	<!-- Here we define Camel, notice the namespace it uses -->
 	<camelContext xmlns="http://camel.apache.org/schema/spring">
 
-		<!-- Camel route to feed the ActiveMQ inbox queue once per minute -->
+		<!-- Camel route to feed the ActiveMQ inbox queue once per hour -->
 		<route id="timerToInRoute">
-			<from uri="timer:checkTechnologiesTimer?period=1m" />
+			<from uri="timer:checkTechnologiesTimer?period=1h" />
 			<setHeader headerName="CamelHttpMethod">
 				<constant>GET</constant>
 			</setHeader>
