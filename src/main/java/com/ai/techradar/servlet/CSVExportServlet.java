@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.ai.techradar.service.RadarService;
 import com.ai.techradar.service.SpringStarter;
@@ -21,54 +23,64 @@ public class CSVExportServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 7125431699341927732L;
 
-	private RadarService service = (RadarService)SpringStarter.getContext().getBean("RadarService");
+	private final static Logger LOGGER = LoggerFactory.getLogger(CSVExportServlet.class);
+
+	private static final String EXPORTED_FILE_NAME = "export.csv";
+
+	private final RadarService radarService = (RadarService) SpringStarter.getContext().getBean("RadarService");
 
 	@Override
 	public void doPost(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
+
+		Long radarId = null;
+
 		try {
+			radarId = Long.parseLong(request.getParameter("id"));
+			LOGGER.debug("Request to export data for radar with ID {} to CSV", radarId);
+
 			response.setContentType("text/csv");
-			response.addHeader("Content-Disposition", "attachment;filename=\"export.csv\"");
+			response.addHeader("Content-Disposition", "attachment;filename=\"" + EXPORTED_FILE_NAME + "\"");
 
-			final Long id = Long.parseLong(request.getParameter("id"));
+			// Retrieve the radar
+			final RadarTO radar = radarService.getRadarById(radarId);
 
-			final RadarTO radar = service.getRadarById(id);
+			// Print radar CSV data to StringBuilder
+			final StringBuilder csvDataStrBuilder = new StringBuilder();
+			final CSVPrinter printer = new CSVPrinter(csvDataStrBuilder, CSVFormat.RFC4180.withHeader());
+			printer.printRecord("Technology", "Quadrant", "Maturity", "Moved / No Change", "Project Count", "Product URL", "Description",
+					"AI URL", "Customer Strategic");
 
-			final StringBuilder strBuilder = new StringBuilder();
-
-			// CSV Write Example using CSVPrinter
-			final CSVPrinter printer = new CSVPrinter(strBuilder, CSVFormat.RFC4180.withHeader());
-			printer.printRecord("Technology","Quadrant","Maturity","moved / no change","project Count","Product URL","Description","AI URL","Customer strategic");
-
-			for(final RadarTechnologyTO tech : radar.getTechnologies()) {
-				final List<String> empData = new ArrayList<String>();
-				empData.add(tech.getTechnology());
-				empData.add(tech.getTechGrouping());
-				empData.add(tech.getMaturity());
-				empData.add("" + true);
-				empData.add("" + tech.getBlipSize());
-				empData.add(tech.getUrl());
-				empData.add(tech.getDescription());
-				empData.add(tech.getDetailUrl());
-				if(tech.isCustomerStrategic()) {
-					empData.add("Y");
-				} else {
-					empData.add("N");
+			for (final RadarTechnologyTO technologyTo : radar.getTechnologies()) {
+				final List<String> technologyRecord = new ArrayList<String>();
+				technologyRecord.add(technologyTo.getTechnology());
+				technologyRecord.add(technologyTo.getTechGrouping());
+				technologyRecord.add(technologyTo.getMaturity());
+				technologyRecord.add("" + true);
+				technologyRecord.add("" + technologyTo.getBlipSize());
+				technologyRecord.add(technologyTo.getUrl());
+				technologyRecord.add(technologyTo.getDescription());
+				technologyRecord.add(technologyTo.getDetailUrl());
+				if (technologyTo.isCustomerStrategic()) {
+					technologyRecord.add("Y");
+				}
+				else {
+					technologyRecord.add("N");
 				}
 
-				printer.printRecord(empData);
+				printer.printRecord(technologyRecord);
 			}
 
 			// Close the printer
 			printer.close();
 
-			response.getOutputStream().print(strBuilder.toString());
-
+			// Write the contents of the StringBuilder to the HTTP response
+			response.getWriter().print(csvDataStrBuilder.toString());
 			response.flushBuffer();
-		} catch (Exception e) {
-			// TODO log properly
-			e.printStackTrace();
+		}
+		catch (final Exception e) {
+			LOGGER.error("An error occurred exporting data for radar with ID {} to CSV", radarId, e);
+			throw new ServletException("Failed to export data for radar " + radarId + " to CSV", e);
 		}
 
 	}
-
 }
