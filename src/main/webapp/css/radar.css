@@ -593,17 +593,17 @@ border-radius: 2px;
 }
 
 .nav-radar li.active.quad1 a, .nav-radar li:hover.quad1 a {
-    background-color: rgb(35,127,199);
+    background-color: #428bca;
 }
 
 .nav-radar li.active.quad2 a, .nav-radar li:hover.quad2 a {
-    background-color: rgb(213,44,35);
+    background-color: #d9534f;
 }
 
 .nav-radar li.active.quad3 a, .nav-radar li:hover.quad3 a {
-    background-color: rgb(77,165,54);
+    background-color: #5cb85c;
 }
 
 .nav-radar li.active.quad4 a, .nav-radar li:hover.quad4 a {
-    background-color: rgb(226,174,26);
+    background-color: #f0ad4e;
 }

@@ -318,7 +318,7 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 	};
 
 	//var quadrantColours = ['#3DB5BE', '#83AD78', '#E88744', '#8D2145'];
-	var quadrantColours = ['rgb(35,127,199)', 'rgb(213,44,35)', 'rgb(77,165,54)', 'rgb(226,174,26)'];
+	var quadrantColours = ['#428bca', '#d9534f', '#5cb85c', '#f0ad4e'];
 	var arcColours = ['rgb(223,223,223)', 'rgb(166,167,169)', 'rgb(190,191,193)', 'rgb(209,209,209)', 'rgb(223,223,223)'];
 	var arcWidths = [150, 125, 75, 50, 50];
 
