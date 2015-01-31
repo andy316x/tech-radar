@@ -36,7 +36,7 @@
 	
 	<div class="row">
 	
-	<form id="theForm" action="/radar/upload" method="post">
+	<form id="pdfExportForm" action="/radar/export/pdf" method="post">
 		<input hidden="true" id="id" name="id" value=""></input>
 	</form>	
 	
@@ -50,7 +50,7 @@
 		</div>
 		<div class="col-md-6 text-right">
 			<button class="btn btn-default" ng-click="exportCsv(selectedRadar.id)">Download Data</button>
-			<button class="btn btn-default" ng-click="exportSvg(selectedRadar.id)">Export PDF</button>
+			<button class="btn btn-default" ng-click="exportPdf(selectedRadar.id)">Export PDF</button>
 			<button class="btn btn-default">Share</button>
 			<button class="btn btn-danger" ng-click="go('/radar/'+selectedRadar.id+'/edit')" ng-show="loggedin==true">Edit</button>
 		</div>

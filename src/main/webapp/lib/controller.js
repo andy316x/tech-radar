@@ -273,8 +273,8 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 		window.setTimeout(checkFrame, 2000);
 	});
 
-	$scope.exportSvg = function(id) {
-		var form = document.getElementById('theForm');
+	$scope.exportPdf = function(id) {
+		var form = document.getElementById('pdfExportForm');
 		form['id'].value = id;
 		form.submit();
 	};
@@ -283,16 +283,6 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 		var form = document.getElementById('csvExportForm');
 		form['id'].value = id;
 		form.submit();
-	};
-
-	$scope.doCsvExport = function ( radarId ) {
-		$http({method: 'GET', url: '/radar/export/csv?id=' + radarId + '&nocache=' + (new Date()).getTime()}).
-		success(function(data, status, headers, config) {
-			$log.log(done);
-		}).
-		error(function(data, status, headers, config) {
-			$log.log('error');
-		});
 	};
 
 	$scope.doSave = function () {
