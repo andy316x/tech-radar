@@ -1,4 +1,4 @@
-package com.ai.techrader.mocked.drupal.impl;
+package com.ai.techradar.mocked.drupal.impl;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,8 +10,8 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 
-import com.ai.techrader.mocked.drupal.DrupalTechnology;
-import com.ai.techrader.mocked.drupal.FakeDrupalTechnologyService;
+import com.ai.techradar.mocked.drupal.DrupalTechnology;
+import com.ai.techradar.mocked.drupal.FakeDrupalTechnologyService;
 
 /**
  * Provides the implementation to allow a list of technologies to be retrieved from a file on the file system (instead of from Drupal).

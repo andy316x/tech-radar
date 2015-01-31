@@ -1,4 +1,4 @@
-package com.ai.techrader.mocked.drupal;
+package com.ai.techradar.mocked.drupal;
 
 /**
  * Stores data on a technology retrieved from {@link MockedDrupalTechnologyRestService}.

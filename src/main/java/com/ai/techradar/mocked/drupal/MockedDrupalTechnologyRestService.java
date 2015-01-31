@@ -1,4 +1,4 @@
-package com.ai.techrader.mocked.drupal;
+package com.ai.techradar.mocked.drupal;
 
 import java.util.List;
 

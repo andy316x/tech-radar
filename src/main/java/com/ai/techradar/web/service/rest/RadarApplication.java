@@ -5,7 +5,7 @@ import java.util.Set;
 
 import javax.ws.rs.core.Application;
 
-import com.ai.techrader.mocked.drupal.MockedDrupalTechnologyRestService;
+import com.ai.techradar.mocked.drupal.MockedDrupalTechnologyRestService;
 
 public class RadarApplication extends Application
 {
