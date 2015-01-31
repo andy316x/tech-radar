@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.ai.techradar.database.entities.Maturity;
-import com.ai.techradar.database.entities.MovementEnum;
 import com.ai.techradar.database.entities.Radar;
 import com.ai.techradar.database.entities.RadarMaturity;
 import com.ai.techradar.database.entities.RadarTechGrouping;
@@ -398,7 +397,7 @@ public class RadarServiceImpl implements RadarService {
 		query.createAlias("maturity", "maturity");
 
 		query.add(Restrictions.eq("radar.id", id));
-		query.add(Restrictions.eq("maturity.name", maturity));
+		query.add(Restrictions.ilike("maturity.name", maturity));
 
 		return (RadarMaturity)query.uniqueResult();
 	}
@@ -410,7 +409,7 @@ public class RadarServiceImpl implements RadarService {
 		query.createAlias("techGrouping", "tg");
 
 		query.add(Restrictions.eq("radar.id", id));
-		query.add(Restrictions.eq("tg.name", techGrouping));
+		query.add(Restrictions.ilike("tg.name", techGrouping));
 
 		return (RadarTechGrouping)query.uniqueResult();
 	}
@@ -423,19 +422,19 @@ public class RadarServiceImpl implements RadarService {
 
 	private Technology readTechnology(final String name, final Session session) {
 		final Criteria query = session.createCriteria(Technology.class);
-		query.add(Restrictions.eq("name", name));
+		query.add(Restrictions.ilike("name", name));
 		return (Technology)query.uniqueResult();
 	}
 
 	private Maturity readMaturity(final String name, final Session session) {
 		final Criteria query = session.createCriteria(Maturity.class);
-		query.add(Restrictions.eq("name", name));
+		query.add(Restrictions.ilike("name", name));
 		return (Maturity)query.uniqueResult();
 	}
 
 	private TechGrouping readTechGrouping(final String name, final Session session) {
 		final Criteria query = session.createCriteria(TechGrouping.class);
-		query.add(Restrictions.eq("name", name));
+		query.add(Restrictions.ilike("name", name));
 		return (TechGrouping)query.uniqueResult();
 	}
 

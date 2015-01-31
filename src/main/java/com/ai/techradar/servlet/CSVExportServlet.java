@@ -47,8 +47,16 @@ public class CSVExportServlet extends HttpServlet {
 			// Print radar CSV data to StringBuilder
 			final StringBuilder csvDataStrBuilder = new StringBuilder();
 			final CSVPrinter printer = new CSVPrinter(csvDataStrBuilder, CSVFormat.RFC4180.withHeader());
-			printer.printRecord("Technology", "Quadrant", "Maturity", "Moved / No Change", "Project Count", "Product URL", "Description",
-					"AI URL", "Customer Strategic");
+			printer.printRecord(
+					CSVUploadServlet.TECHNOLOGY_COLUMN_NAME, 
+					CSVUploadServlet.QUADRANT_COLUMN_NAME,
+					CSVUploadServlet.MATURITY_COLUMN_NAME,
+					CSVUploadServlet.MOVED_NO_CHANGE_COLUMN_NAME,
+					CSVUploadServlet.PROJECT_COUNT_COLUMN_NAME,
+					CSVUploadServlet.PRODUCT_URL_COLUMN_NAME,
+					CSVUploadServlet.DESCRIPTION_COLUMN_NAME,
+					CSVUploadServlet.AI_URL_COLUMN_NAME,
+					CSVUploadServlet.CUSTOMER_STRATEGIC_COLUMN_NAME);
 
 			for (final RadarTechnologyTO technologyTo : radar.getTechnologies()) {
 				final List<String> technologyRecord = new ArrayList<String>();

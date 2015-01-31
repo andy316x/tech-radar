@@ -7,9 +7,12 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -31,18 +34,38 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
-import com.ai.techradar.database.entities.Maturity;
 import com.ai.techradar.database.entities.MovementEnum;
-import com.ai.techradar.database.entities.TechGrouping;
 import com.ai.techradar.database.entities.Technology;
 import com.ai.techradar.database.hibernate.HibernateUtil;
 import com.ai.techradar.service.RadarService;
 import com.ai.techradar.service.SpringStarter;
+import com.ai.techradar.web.service.to.MaturityTO;
 import com.ai.techradar.web.service.to.RadarTO;
 import com.ai.techradar.web.service.to.RadarTechnologyTO;
-import com.ai.techradar.web.service.to.TechnologyTO;
+import com.ai.techradar.web.service.to.TechGroupingTO;
 
 public class CSVUploadServlet extends HttpServlet {
+
+	public static final String CUSTOMER_STRATEGIC_COLUMN_NAME = "Customer Strategic";
+	public static final String AI_URL_COLUMN_NAME = "AI URL";
+	public static final String DESCRIPTION_COLUMN_NAME = "Description";
+	public static final String PRODUCT_URL_COLUMN_NAME = "Product URL";
+	public static final String PROJECT_COUNT_COLUMN_NAME = "Project Count";
+	public static final String MOVED_NO_CHANGE_COLUMN_NAME = "Moved / No Change";
+	public static final String MATURITY_COLUMN_NAME = "Maturity";
+	public static final String QUADRANT_COLUMN_NAME = "Quadrant";
+	public static final String TECHNOLOGY_COLUMN_NAME = "Technology";
+
+	public static final List<String> COLUMNS = Arrays.asList(
+			CUSTOMER_STRATEGIC_COLUMN_NAME,
+			AI_URL_COLUMN_NAME,
+			DESCRIPTION_COLUMN_NAME,
+			PRODUCT_URL_COLUMN_NAME,
+			PROJECT_COUNT_COLUMN_NAME,
+			MOVED_NO_CHANGE_COLUMN_NAME,
+			MATURITY_COLUMN_NAME,
+			QUADRANT_COLUMN_NAME,
+			TECHNOLOGY_COLUMN_NAME);
 
 	private static final long serialVersionUID = 1199770769064383844L;
 
@@ -56,24 +79,32 @@ public class CSVUploadServlet extends HttpServlet {
 			final PrintWriter writer = response.getWriter();
 
 			final ObjectMapper objmapper = new ObjectMapper();
-			
+
 			final Set<String> technologiesFound = new HashSet<String>();
-			final Set<String> techGroupingsFound = new HashSet<String>();
-			final Set<String> maturitiesFound = new HashSet<String>();
 
 			try {
 				final Session session = HibernateUtil.getSessionFactory().openSession();
-				
+
 				final UploadResponse uploadResponse = new UploadResponse();
 				uploadResponse.setSuccess(true);
-				uploadResponse.setErrors(new ArrayList<String>());
-				
+				uploadResponse.setErrors(new HashSet<String>());
+
 				final List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
 
 				final Long id = getId(items);
 
 				final RadarTO radar = service.getRadarById(id);
 				radar.setTechnologies(new ArrayList<RadarTechnologyTO>());
+
+				final Map<String, String> techGroupings = new HashMap<String, String>();
+				for(final TechGroupingTO tg : radar.getTechGroupings()) {
+					techGroupings.put(tg.getName().toLowerCase(), tg.getName());
+				}
+
+				final Map<String, String> maturities = new HashMap<String, String>();
+				for(final MaturityTO m : radar.getMaturities()) {
+					maturities.put(m.getName().toLowerCase(), m.getName());
+				}
 
 				for (final FileItem item : items) {
 					if (!item.isFormField()) {
@@ -83,82 +114,79 @@ public class CSVUploadServlet extends HttpServlet {
 
 						final CSVParser parser = new CSVParser(in, CSVFormat.RFC4180.withHeader());
 						final List<CSVRecord> list = parser.getRecords();
-						
-						try {
-							
-							final StringBuilder strBuilder = new StringBuilder();
-							strBuilder.append("\"technologies\":[\n");
-							
-							Long i = new Long(1);
-							final List<TechnologyTO> techs = new ArrayList<TechnologyTO>();
-							for(final CSVRecord record : list) {
-								final String name = readString(record.get("Technology"));
-								final String quadrantName = readString(record.get("Quadrant"));
-								final String arcName = readString(record.get("Maturity"));
-								final MovementEnum movement = readMovement(record.get("moved / no change"));
-								
-								final int projectCount = readInt(record.get("project Count"));
-								final String productUrl = readString(record.get("Product URL"));
-								final String description = readString(record.get("Description"));
-								final String aiUrl = readString(record.get("AI URL"));
-								final boolean customerStrategic = readBoolean(record.get("Customer strategic"));
-								
-								final TechnologyTO tech = new TechnologyTO();
-								tech.setName(name);
-								tech.setBlipSize(projectCount);
-								tech.setUrl(productUrl);
-								tech.setDescription(description);
-								tech.setDetailUrl(aiUrl);
-								tech.setCustomerStrategic(customerStrategic);
-								techs.add(tech);
-								
-								if(i < list.size()) {
-									strBuilder.append(",");
-								}
-								strBuilder.append("\n");
-								
+
+						Long i = new Long(1);
+						for(final CSVRecord record : list) {
+							final RadarTechnologyTO radarTechnology = new RadarTechnologyTO();
+							radarTechnology.setId(i++);
+
+							// Technology column
+							try {
+								final String name = readString(record.get(TECHNOLOGY_COLUMN_NAME));
 								if(!StringUtils.isBlank(name)) {
+									radarTechnology.setTechnology(name);
 									technologiesFound.add(name);
 								} else {
-									uploadResponse.getErrors().add("Mandatory field 'Technology' is blank");
+									uploadResponse.getErrors().add("Row " + i + " is missing mandatory field ' " + TECHNOLOGY_COLUMN_NAME + "'");
 								}
-								
-								if(!StringUtils.isBlank(quadrantName)) {
-									techGroupingsFound.add(quadrantName);
-								} else {
-									uploadResponse.getErrors().add("Mandatory field 'Quadrant' is blank");
-								}
-								
-								if(!StringUtils.isBlank(arcName)) {
-									maturitiesFound.add(arcName);
-								} else {
-									uploadResponse.getErrors().add("Mandatory field 'Maturity' is blank");
-								}
+							} catch(final IllegalArgumentException ex) {
+								uploadResponse.getErrors().add("Mandatory column '" + TECHNOLOGY_COLUMN_NAME + "' does not exist in file");
+							}
 
-								final RadarTechnologyTO radarTechnology = new RadarTechnologyTO();
-								radarTechnology.setId(i++);
-								radarTechnology.setTechnology(name);
-								radarTechnology.setTechGrouping(quadrantName);
-								radarTechnology.setMaturity(arcName);
+							// Tech grouping column
+							try {
+								final String quadrantName = readString(record.get(QUADRANT_COLUMN_NAME));
+								if(!StringUtils.isBlank(quadrantName)) {
+									final String canonicalTechGrouping = quadrantName.trim().toLowerCase();
+									if(techGroupings.containsKey(canonicalTechGrouping)) {
+										radarTechnology.setTechGrouping(techGroupings.get(canonicalTechGrouping));
+									} else {
+										uploadResponse.getErrors().add("Row " + i + " has tech grouping '" + quadrantName + "' that is not in the radar");
+									}
+								} else {
+									uploadResponse.getErrors().add("Row " + i + " is missing mandatory field '" + QUADRANT_COLUMN_NAME + "'");
+								}
+							} catch(final IllegalArgumentException ex) {
+								uploadResponse.getErrors().add("Mandatory column '" + QUADRANT_COLUMN_NAME + "' does not exist in file");
+							}
+
+							// Maturity column
+							try {
+								final String arcName = readString(record.get(MATURITY_COLUMN_NAME));
+								if(!StringUtils.isBlank(arcName)) {
+									final String canonicalMaturity = arcName.trim().toLowerCase();
+									if(maturities.containsKey(canonicalMaturity)) {
+										radarTechnology.setMaturity(maturities.get(canonicalMaturity));
+									} else {
+										uploadResponse.getErrors().add("Row " + i + " has maturity '" + arcName + "' that is not in the radar");
+									}
+								} else {
+									uploadResponse.getErrors().add("Row " + i + " is missing mandatory field '" + MATURITY_COLUMN_NAME + "'");
+								}
+							} catch(final IllegalArgumentException ex) {
+								uploadResponse.getErrors().add("Mandatory column '" + MATURITY_COLUMN_NAME + "' does not exist in file");
+							}
+
+							// Movement column
+							try {
+								final MovementEnum movement = readMovement(record.get(MOVED_NO_CHANGE_COLUMN_NAME));
 								radarTechnology.setMovement(movement);
+							} catch(final IllegalArgumentException ex) {
+								uploadResponse.getErrors().add("Mandatory column '" + MOVED_NO_CHANGE_COLUMN_NAME + "' does not exist in file");
+							}
+
+							if(uploadResponse.getErrors().isEmpty()) {
 								radar.getTechnologies().add(radarTechnology);
 							}
-							
-							final ObjectMapper mapper = new ObjectMapper();
-							System.out.println(mapper.defaultPrettyPrintingWriter().writeValueAsString(techs));
-							
-						} catch(final IllegalArgumentException ex) {
-							uploadResponse.getErrors().add("Mandatory column heading not found, expected \"Technology\", \"Quadrant\", \"Maturity\", \"moved / no change\"");
+
 						}
 
 						parser.close();
 					}
 				}
-				
+
 				checkTechnologiesExist(technologiesFound, uploadResponse.getErrors(), session);
-				checkMaturitiesExist(maturitiesFound, uploadResponse.getErrors(), session);
-				checkTechGroupingsExist(techGroupingsFound, uploadResponse.getErrors(), session);
-				
+
 				uploadResponse.setRadar(radar);
 				if(!uploadResponse.getErrors().isEmpty()) {
 					uploadResponse.setSuccess(false);
@@ -175,7 +203,7 @@ public class CSVUploadServlet extends HttpServlet {
 
 				writer.append("</body>");
 				writer.append("</html>");
-				
+
 				session.close();
 
 			} catch (final FileUploadException e) {
@@ -189,71 +217,33 @@ public class CSVUploadServlet extends HttpServlet {
 		}
 
 	}
-	
-	private void checkTechnologiesExist(final Collection<String> technologies, final List<String> messages, final Session session) {
+
+	private void checkTechnologiesExist(final Collection<String> technologies, final Set<String> messages, final Session session) {
 		final Criteria query = session.createCriteria(Technology.class);
 
 		query.add(Restrictions.in("name", technologies));
-		
+
 		query.setProjection(Projections.property("name"));
-		
+
 		final Set<String> technologiesInDb = new HashSet<String>();
 		for(final String techName : (List<String>)query.list()) {
 			technologiesInDb.add(techName);
 		}
-		
+
 		for(final String techName : technologies) {
 			if(!technologiesInDb.contains(techName)) {
-				messages.add("Technology with name '" + techName + "' could not be found");
+				messages.add("Technology with name '" + techName + "' could not be found in tech radar");
 			}
 		}
 	}
-	
-	private void checkMaturitiesExist(final Collection<String> maturities, final List<String> messages, final Session session) {
-		final Criteria query = session.createCriteria(Maturity.class);
 
-		query.add(Restrictions.in("name", maturities));
-		
-		query.setProjection(Projections.property("name"));
-		
-		final Set<String> maturitiesInDb = new HashSet<String>();
-		for(final String maturityName : (List<String>)query.list()) {
-			maturitiesInDb.add(maturityName);
-		}
-		
-		for(final String maturityName : maturities) {
-			if(!maturitiesInDb.contains(maturityName)) {
-				messages.add("Maturity with name '" + maturityName + "' could not be found");
-			}
-		}
-	}
-	
-	private void checkTechGroupingsExist(final Collection<String> techGroupings, final List<String> messages, final Session session) {
-		final Criteria query = session.createCriteria(TechGrouping.class);
-
-		query.add(Restrictions.in("name", techGroupings));
-		
-		query.setProjection(Projections.property("name"));
-		
-		final Set<String> techGroupingsInDb = new HashSet<String>();
-		for(final String techGroupingName : (List<String>)query.list()) {
-			techGroupingsInDb.add(techGroupingName);
-		}
-		
-		for(final String techGroupingName : techGroupings) {
-			if(!techGroupingsInDb.contains(techGroupingName)) {
-				messages.add("Tech grouping with name '" + techGroupingName + "' could not be found");
-			}
-		}
-	}
-	
 	public static class UploadResponse implements Serializable {
 		private static final long serialVersionUID = 2606667506899689378L;
 		private boolean success;
 		private RadarTO radar;
-		private List<String> errors;
+		private Set<String> errors;
 		public UploadResponse() {
-			
+
 		}
 		public boolean isSuccess() {
 			return success;
@@ -267,10 +257,10 @@ public class CSVUploadServlet extends HttpServlet {
 		public void setRadar(RadarTO radar) {
 			this.radar = radar;
 		}
-		public List<String> getErrors() {
+		public Set<String> getErrors() {
 			return errors;
 		}
-		public void setErrors(List<String> errors) {
+		public void setErrors(Set<String> errors) {
 			this.errors = errors;
 		}
 	}
@@ -293,14 +283,14 @@ public class CSVUploadServlet extends HttpServlet {
 		if(str.trim().length()==0) {
 			return 0;
 		}
-		
+
 		try {
 			return Integer.parseInt(str);
 		} catch(final NumberFormatException ex) {
 			// TODO we should real inform the user
 			System.out.println("'" + str + "' is not a valid int");
 		}
-		
+
 		return 0;
 	}
 
@@ -348,6 +338,14 @@ public class CSVUploadServlet extends HttpServlet {
 			}
 		}
 		return null;
+	}
+
+	private static final String readVal(final CSVRecord record, final String key) {
+		try {
+			return record.get(key);
+		} catch(final IllegalArgumentException ex) {
+			return null;
+		}
 	}
 
 }
