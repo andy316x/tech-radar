@@ -104,9 +104,11 @@ public class RadarQuadrantChapterWriter extends RadarChapterWriter {
 	}
 
 	private void addLegend(final Document document) throws DocumentException {
+		final Arc outermostArc = arcsByIndex.lastEntry().getValue();
+		final int outermostArcRadius = outermostArc.getRadius();
+
 		final MultiColumnText multiColumnText = new MultiColumnText();
-		// TODO reduce the spacing of the columns
-		multiColumnText.addRegularColumns(document.left(), document.right(), 5f, 2);
+		multiColumnText.addRegularColumns(document.left(), document.right() - outermostArcRadius, 10f, 2);
 
 		for (int i = arcsByIndex.size() - 1; i >= 0; i--) {
 			final Arc arc = arcsByIndex.get(i);
