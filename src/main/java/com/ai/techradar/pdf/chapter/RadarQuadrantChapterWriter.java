@@ -201,18 +201,21 @@ public class RadarQuadrantChapterWriter {
 				final int maxBlipsPerArc = (arcRadius + innerArcRadius) / BLIP_SIZE / 2;
 				final int numberRails = (int) Math.ceil((float) numberTechnologies / maxBlipsPerArc);
 
+				// The number of blips per arc should be evenly spread (if we instead used maxBlipsPerArc, we could have an arc with the
+				// maximum number of blips, followed by an arc with only one blip, which would look uneven)
+				final int numberBlipsPerArc = (int) Math.ceil((float) numberTechnologies / numberRails);
+
 				// Sort the technologies by rail
-				// TODO this doesn't divide the technologies equally across the rails
-				int technologyCount = 0;
+				int technologyCount = 1;
 				int railIndex = 1;
 				int railRadius = ((arcRadius - innerArcRadius) / (numberRails + 1) * railIndex) + innerArcRadius;
 				for (final Integer technologyIndex : technologyIndexes) {
-					addToListMap(technologiesByRailRadius, railRadius, technologyIndex);
-
-					if (technologyCount > maxBlipsPerArc * railIndex) {
+					if (technologyCount > numberBlipsPerArc * railIndex) {
 						railIndex++;
 						railRadius = ((arcRadius - innerArcRadius) / (numberRails + 1) * railIndex) + innerArcRadius;
 					}
+
+					addToListMap(technologiesByRailRadius, railRadius, technologyIndex);
 					technologyCount++;
 				}
 			}
