@@ -19,7 +19,7 @@ public class RadarChapter {
 
 	public RadarChapter(final int index, final String heading, final Color highlightColour) {
 		this.index = index;
-		this.heading = heading;
+		this.heading = heading.toUpperCase(); // Headings should be in uppercase
 		this.highlightColour = highlightColour;
 	}
 

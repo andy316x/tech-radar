@@ -114,7 +114,7 @@ public class RadarQuadrantChapterWriter {
 	}
 
 	private void addHeading(final Document document) throws DocumentException {
-		final String chapterTitle = radarChapter.getHeading().toUpperCase();
+		final String chapterTitle = radarChapter.getHeading();
 		final com.lowagie.text.Font headerFont = new com.lowagie.text.Font(HEADER_FONT_FAMILY, HEADER_FONT_SIZE, HEADER_FONT_STYLE,
 				radarChapter.getHighlightColour());
 
