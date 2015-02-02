@@ -319,6 +319,7 @@ h1,.h1 {
 	border: 1px solid #e1e1e1;
 	width: 250px;
 	background-color: #FFFFFF;
+	position: relative;
 }
 
 .radar-card>div {

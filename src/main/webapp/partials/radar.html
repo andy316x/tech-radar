@@ -61,13 +61,9 @@
 		<div class="col-md-12" style="background-color:#EFEFEF;padding:25px 20px;">
 	
 			<div ng-repeat="radar in radars" class="radar-card">
-				<div style="margin-bottom: 20px;">
-					<div class="col-xs-6">
-						{{radar.name}}
-					</div>
-					<div class="col-xs-6 text-right">
-						<i class="glyphicon glyphicon-ok" style="color:green;"></i>
-					</div>
+				<i class="glyphicon glyphicon-ok" style="color: green;position: absolute;right: 25px;top: 18px;"></i>
+				<div style="margin: 0px 34px 0px 15px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
+					<span title="{{radar.name}}">{{radar.name}}</span>
 				</div>
 				<div style="text-align:center;">
 					<img src="/radar/img/radar_175.svg"></img>
