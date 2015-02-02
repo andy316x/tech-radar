@@ -14,7 +14,6 @@ import com.ai.techradar.pdf.Arc;
 import com.ai.techradar.web.service.to.MaturityTO;
 import com.ai.techradar.web.service.to.RadarTechnologyTO;
 import com.ai.techradar.web.service.to.TechGroupingTO;
-import com.lowagie.text.Chapter;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Image;
@@ -65,13 +64,11 @@ public class RadarQuadrantChapterWriter extends RadarChapterWriter {
 
 	@Override
 	public void writeTo(final Document document, final PdfWriter pdfWriter) throws DocumentException {
-		final Chapter chapter = new Chapter(radarChapter.getIndex());
 
 		selectTechnologiesForTechGrouping(techGrouping, technologies);
 		defineArcs(maturities);
 
-		addHeading(chapter);
-		document.add(chapter);
+		addHeading(document);
 		drawRadarQuadrant(document, pdfWriter);
 		addLegend(document);
 	}

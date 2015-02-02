@@ -27,8 +27,7 @@ public class RadarContentsChapterWriter extends RadarChapterWriter {
 
 	@Override
 	public void writeTo(final Document document, final PdfWriter pdfWriter) throws DocumentException {
-		final Chapter chapter = new Chapter(radarChapter.getIndex());
-		addHeading(chapter);
+		addHeading(document);
 		addContents(chapter);
 
 		document.add(chapter);

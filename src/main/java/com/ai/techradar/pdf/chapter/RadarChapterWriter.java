@@ -18,17 +18,17 @@ public abstract class RadarChapterWriter {
 	private static final int HEADER_FONT_STYLE = Font.BOLD;
 
 	protected final RadarChapter radarChapter;
+	protected final Chapter chapter;
 
 	public RadarChapterWriter(final RadarChapter radarChapter) {
 		this.radarChapter = radarChapter;
+		chapter = new Chapter(radarChapter.getIndex());
 	}
 
 	public abstract void writeTo(final Document document, final PdfWriter pdfWriter) throws DocumentException;
 
-	protected void addHeading(final Chapter chapter) {
-
+	protected void addHeading(final Document document) throws DocumentException {
 		final String chapterTitle = radarChapter.getHeading().toUpperCase();
-
 		final Font headerFont = new Font(HEADER_FONT_FAMILY, HEADER_FONT_SIZE, HEADER_FONT_STYLE, radarChapter.getHighlightColour());
 
 		final Chunk chunk = new Chunk(chapterTitle, headerFont);
@@ -38,6 +38,8 @@ public abstract class RadarChapterWriter {
 		chapter.setTitle(paragraph);
 
 		radarChapter.setPdfTitle(paragraph.toString());
+
+		document.add(chapter);
 	}
 
 }
