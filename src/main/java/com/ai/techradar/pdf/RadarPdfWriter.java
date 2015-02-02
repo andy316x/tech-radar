@@ -100,16 +100,12 @@ public class RadarPdfWriter {
 
 	private void addContent(final List<RadarChapter> radarChapters, final RadarTO radar, final Document document, final PdfWriter pdfWriter)
 			throws DocumentException {
-		int quadrantRotationDegrees = 0;
-
 		for (final RadarChapter radarChapter : radarChapters) {
 			final TechGroupingTO techGrouping = techGroupingByChapterIndex.get(radarChapter.getIndex());
 
 			final RadarQuadrantChapterWriter radarQuadrantChapterWriter = new RadarQuadrantChapterWriter(radarChapter, techGrouping,
 					radar.getMaturities(), radar.getTechnologies());
 			radarQuadrantChapterWriter.writeTo(document, pdfWriter);
-
-			quadrantRotationDegrees += 90;
 		}
 	}
 
@@ -125,12 +121,12 @@ public class RadarPdfWriter {
 		final int numberOfPages = pdfReader.getNumberOfPages();
 
 		// Put the last page at the beginning of the document
-		final List<Integer> pages = new ArrayList<Integer>();
-		pages.add(numberOfPages);
+		final List<Integer> pageNumbers = new ArrayList<Integer>();
+		pageNumbers.add(numberOfPages);
 		for (int i = 1; i < numberOfPages; i++) {
-			pages.add(i);
+			pageNumbers.add(i);
 		}
-		pdfReader.selectPages(pages);
+		pdfReader.selectPages(pageNumbers);
 		final PdfStamper pdfStamper = new PdfStamper(pdfReader, outputStream);
 
 		pdfStamper.close();

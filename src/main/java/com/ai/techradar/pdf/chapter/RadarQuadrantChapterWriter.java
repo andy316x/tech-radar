@@ -52,6 +52,8 @@ public class RadarQuadrantChapterWriter {
 	private final com.lowagie.text.Font KEY_TEXT_FONT = new com.lowagie.text.Font(com.lowagie.text.Font.HELVETICA, 8,
 			com.lowagie.text.Font.NORMAL);
 
+	private static final int IMAGE_Y_PADDING = 100;
+
 	private final TreeMap<Integer, Arc> arcsByIndex = new TreeMap<Integer, Arc>();
 	private final TreeMap<Integer, RadarTechnologyTO> technologiesByIndex = new TreeMap<Integer, RadarTechnologyTO>();
 	private final Map<String, List<Integer>> technologyIndexesByMaturity = new HashMap<String, List<Integer>>();
@@ -234,7 +236,7 @@ public class RadarQuadrantChapterWriter {
 
 		final Image image = new ImgTemplate(pdfTemplate);
 		final float imageXPosition = pdfWriter.getPageSize().getWidth() - outermostArcRadius;
-		final float imageYPosition = -outermostArcRadius + 100; // TODO hard-coded
+		final float imageYPosition = -outermostArcRadius + IMAGE_Y_PADDING;
 		image.setAbsolutePosition(imageXPosition, imageYPosition);
 		document.add(image);
 	}
@@ -245,7 +247,7 @@ public class RadarQuadrantChapterWriter {
 		final int width = arcRadius * 2;
 		final int height = arcRadius * 2;
 
-		final int startAngle = 90; // TODO quadrant rotation
+		final int startAngle = 90;
 		final int arcAngle = 90;
 
 		graphics2d.setColor(colour);
@@ -272,6 +274,7 @@ public class RadarQuadrantChapterWriter {
 		graphics2d.drawString(label.toUpperCase(), x, y);
 	}
 
+	// TODO draw triangles if moved
 	private void drawBlip(final int techologyIndex, final int railRadius, final int blipIndex, final int totalBlipsForRail,
 			final Color colour, final int radarWidth, final int radarHeight, final Graphics2D graphics2d) {
 		final double quadrantDegrees = 90;
