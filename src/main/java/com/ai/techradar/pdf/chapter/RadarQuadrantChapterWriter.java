@@ -14,6 +14,8 @@ import com.ai.techradar.pdf.Arc;
 import com.ai.techradar.web.service.to.MaturityTO;
 import com.ai.techradar.web.service.to.RadarTechnologyTO;
 import com.ai.techradar.web.service.to.TechGroupingTO;
+import com.lowagie.text.Chapter;
+import com.lowagie.text.Chunk;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Image;
@@ -28,7 +30,11 @@ import com.lowagie.text.pdf.PdfWriter;
 /**
  * Writes a chapter containing a radar quadrant for a radar PDF document.
  */
-public class RadarQuadrantChapterWriter extends RadarChapterWriter {
+public class RadarQuadrantChapterWriter {
+
+	private static final int HEADER_FONT_FAMILY = com.lowagie.text.Font.HELVETICA;
+	private static final int HEADER_FONT_SIZE = 14;
+	private static final int HEADER_FONT_STYLE = com.lowagie.text.Font.BOLD;
 
 	private static final Font ARC_LABEL_FONT = new Font("Verdana", Font.PLAIN, 10);
 	private static final int ARC_LABEL_HEIGHT = 20;
@@ -50,19 +56,23 @@ public class RadarQuadrantChapterWriter extends RadarChapterWriter {
 	private final TreeMap<Integer, RadarTechnologyTO> technologiesByIndex = new TreeMap<Integer, RadarTechnologyTO>();
 	private final Map<String, List<Integer>> technologyIndexesByMaturity = new HashMap<String, List<Integer>>();
 
+	private final RadarChapter radarChapter;
+	private final Chapter chapter;
+
 	private final TechGroupingTO techGrouping;
 	private final List<MaturityTO> maturities;
 	private final List<RadarTechnologyTO> technologies;
 
 	public RadarQuadrantChapterWriter(final RadarChapter radarChapter, final TechGroupingTO techGrouping,
 			final List<MaturityTO> maturities, final List<RadarTechnologyTO> technologies) {
-		super(radarChapter);
+		this.radarChapter = radarChapter;
 		this.techGrouping = techGrouping;
 		this.maturities = maturities;
 		this.technologies = technologies;
+
+		chapter = new Chapter(radarChapter.getIndex());
 	}
 
-	@Override
 	public void writeTo(final Document document, final PdfWriter pdfWriter) throws DocumentException {
 
 		selectTechnologiesForTechGrouping(techGrouping, technologies);
@@ -101,6 +111,22 @@ public class RadarQuadrantChapterWriter extends RadarChapterWriter {
 
 			arcsByIndex.put(i, arc);
 		}
+	}
+
+	private void addHeading(final Document document) throws DocumentException {
+		final String chapterTitle = radarChapter.getHeading().toUpperCase();
+		final com.lowagie.text.Font headerFont = new com.lowagie.text.Font(HEADER_FONT_FAMILY, HEADER_FONT_SIZE, HEADER_FONT_STYLE,
+				radarChapter.getHighlightColour());
+
+		final Chunk chunk = new Chunk(chapterTitle, headerFont);
+		chunk.setLocalDestination(chapterTitle);
+
+		final Paragraph paragraph = new Paragraph(chunk);
+		chapter.setTitle(paragraph);
+
+		radarChapter.setPdfTitle(paragraph.toString());
+
+		document.add(chapter);
 	}
 
 	private void addLegend(final Document document) throws DocumentException {
