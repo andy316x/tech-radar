@@ -277,6 +277,7 @@ public class RadarQuadrantChapterWriter {
 		graphics2d.drawString(label.toUpperCase(), x, y);
 	}
 
+	// TODO the blips seem to be very close to the right-hand side of the page making only part of them visible
 	// TODO draw triangles if moved
 	private void drawBlip(final int techologyIndex, final int railRadius, final int blipIndex, final int totalBlipsForRail,
 			final Color colour, final int radarWidth, final int radarHeight, final Graphics2D graphics2d) {
