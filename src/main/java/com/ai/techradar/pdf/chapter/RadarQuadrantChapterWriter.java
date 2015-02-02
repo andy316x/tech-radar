@@ -44,7 +44,7 @@ public class RadarQuadrantChapterWriter {
 			new Color(209, 209, 209), new Color(223, 223, 223) };
 
 	private static final Font BLIP_LABEL_FONT = new Font("Verdana", Font.PLAIN, 8);
-	private static final int BLIP_SIZE = 14;
+	private static final int BLIP_SIZE = 18;
 	private static final int BLIP_BORDER_SIZE = 4;
 
 	private static final com.lowagie.text.Font SUB_HEADING_FONT = new com.lowagie.text.Font(com.lowagie.text.Font.HELVETICA, 11,
@@ -290,8 +290,8 @@ public class RadarQuadrantChapterWriter {
 
 		final float centeringPadding = (BLIP_SIZE + BLIP_BORDER_SIZE) / 2;
 
-		final double xFromRadarCentre = blipCentreXFromRadarCentre - centeringPadding;
-		final double yFromRadarCentre = blipCentreYFromRadarCentre - centeringPadding;
+		final double xFromRadarCentre = blipCentreXFromRadarCentre;
+		final double yFromRadarCentre = blipCentreYFromRadarCentre;
 
 		// For the PDF writer the origin is at the top left of the diagram whereas all measurements so far are from the centre of the radar
 		// therefore minus from the radarWidth
@@ -327,8 +327,7 @@ public class RadarQuadrantChapterWriter {
 		}
 		else if (techologyIndex >= 100 && techologyIndex < 1000) {
 			// 3 digits
-			// TODO doesn't quite fit - could reduce the font, but I think the best thing to do would be to increase the blip size
-			final float horizontalCenteringPadding = centeringPadding - 9;
+			final float horizontalCenteringPadding = centeringPadding - 10;
 			graphics2d.drawString(String.valueOf(techologyIndex), x + horizontalCenteringPadding, y + centeringPadding);
 		}
 		else {
