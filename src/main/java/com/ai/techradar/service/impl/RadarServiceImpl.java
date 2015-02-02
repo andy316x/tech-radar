@@ -10,12 +10,15 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.sql.JoinType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.ai.techradar.database.entities.Maturity;
+import com.ai.techradar.database.entities.MovementEnum;
 import com.ai.techradar.database.entities.Radar;
 import com.ai.techradar.database.entities.RadarMaturity;
 import com.ai.techradar.database.entities.RadarTechGrouping;
@@ -37,7 +40,7 @@ import com.ai.techradar.web.service.to.TechGroupingTO;
 
 @SuppressWarnings("unchecked")
 public class RadarServiceImpl implements RadarService {
-	
+
 	@Autowired
 	@Qualifier("UserService")
 	private UserService userService;
@@ -63,7 +66,7 @@ public class RadarServiceImpl implements RadarService {
 			r.setId((Long)row[0]);
 			r.setName((String)row[1]);
 			r.setDateCreated((Date)row[2]);
-			
+
 			final UserInfo userInfo = userService.getUserInfo((String)row[3]);
 			if(userInfo.getSurname() != null) {
 				r.setCreatedBy(userInfo.getGivenName() + " " + userInfo.getSurname());	
@@ -85,52 +88,88 @@ public class RadarServiceImpl implements RadarService {
 		final Session session = HibernateUtil.getSessionFactory().openSession();
 		session.beginTransaction();
 
-		final Criteria query = session.createCriteria(Radar.class);
-		query.add(Restrictions.eq("id", id));
-
-		final Radar radar = (Radar)query.uniqueResult();
-
 		final RadarTO r = new RadarTO();
-		r.setId(radar.getId());
-		r.setName(radar.getName());
-		r.setDateCreated(radar.getCreatedDate());
 
+
+		// Maturities enrichment
 		final List<MaturityTO> maturities = new ArrayList<MaturityTO>();
-		final List<RadarMaturity> maturityEntities = radar.getRadarMaturities();
-		Collections.sort(maturityEntities, MATURITY_COMPARATOR);
-		for(final RadarMaturity radarMaturity : maturityEntities) {
+		
+		final Criteria maturitiesQuery = session.createCriteria(RadarMaturity.class);
+		final Criteria maturityJoinToRadar = maturitiesQuery.createCriteria("radar", "radar",  JoinType.INNER_JOIN);
+		maturitiesQuery.createAlias("maturity", "maturity",  JoinType.INNER_JOIN);
+		maturityJoinToRadar.add(Restrictions.eq("id", id));
+		maturitiesQuery.addOrder(Order.asc("theOrder"));
+		maturitiesQuery.setProjection(Projections.projectionList()
+				.add(Projections.property("radar.id"))
+				.add(Projections.property("radar.name"))
+				.add(Projections.property("radar.createdDate"))
+				.add(Projections.property("maturity.name")));
+
+		for(final Object[] row : (List<Object[]>)maturitiesQuery.list()) {
+			r.setId((Long)row[0]);
+			r.setName((String)row[1]);
+			r.setDateCreated((Date)row[2]);
+
 			final MaturityTO maturityTO = new MaturityTO();
-			maturityTO.setName(radarMaturity.getMaturity().getName());
+			maturityTO.setName((String)row[3]);
 			maturities.add(maturityTO);
 		}
+		r.setMaturities(maturities);
 
+
+		// Tech groupings enrichment
 		final List<TechGroupingTO> techGroupings = new ArrayList<TechGroupingTO>();
-		final List<RadarTechGrouping> techGroupingEntities = radar.getRadarTechGroupings();
-		Collections.sort(techGroupingEntities, TECH_GROUPING_COMPARATOR);
-		for(final RadarTechGrouping radarTechGrouping : techGroupingEntities) {
+		
+		final Criteria techGroupingsQuery = session.createCriteria(RadarTechGrouping.class);
+		final Criteria techGroupingJoinToRadar = techGroupingsQuery.createCriteria("radar", "radar",  JoinType.INNER_JOIN);
+		techGroupingsQuery.createAlias("techGrouping", "techGrouping",  JoinType.INNER_JOIN);
+		techGroupingJoinToRadar.add(Restrictions.eq("id", id));
+		techGroupingsQuery.addOrder(Order.asc("theOrder"));
+		techGroupingsQuery.setProjection(Projections.property("techGrouping.name"));
+
+		for(final String row : (List<String>)techGroupingsQuery.list()) {
 			final TechGroupingTO techGroupingTO = new TechGroupingTO();
-			techGroupingTO.setName(radarTechGrouping.getTechGrouping().getName());
+			techGroupingTO.setName(row);
 			techGroupings.add(techGroupingTO);
 		}
+		r.setTechGroupings(techGroupings);
 
+
+		// Technologies enrichment
 		final List<RadarTechnologyTO> technologies = new ArrayList<RadarTechnologyTO>();
 
-		for(final RadarTechnology z_ : radar.getRadarTechnologies()) {
+		final Criteria technologiesQuery = session.createCriteria(RadarTechnology.class);
+		final Criteria technologyJoinToRadar = technologiesQuery.createCriteria("radar", "radar", JoinType.INNER_JOIN);
+		technologiesQuery.createAlias("technology", "technology",  JoinType.INNER_JOIN);
+		final Criteria joinToRadarTechGrouping = technologiesQuery.createCriteria("radarTechGrouping", "radarTechGrouping", JoinType.INNER_JOIN);
+		joinToRadarTechGrouping.createAlias("techGrouping", "techGrouping", JoinType.INNER_JOIN);
+		final Criteria joinToRadarMaturity = technologiesQuery.createCriteria("radarMaturity", "radarMaturity", JoinType.INNER_JOIN);
+		joinToRadarMaturity.createAlias("maturity", "maturity", JoinType.INNER_JOIN);
+		technologyJoinToRadar.add(Restrictions.eq("id", id));
+		technologiesQuery.setProjection(Projections.projectionList()
+				.add(Projections.property("movement"))
+				.add(Projections.property("techGrouping.name"))
+				.add(Projections.property("maturity.name"))
+				.add(Projections.property("technology.name"))
+				.add(Projections.property("technology.usageCount"))
+				.add(Projections.property("technology.url"))
+				.add(Projections.property("technology.description"))
+				.add(Projections.property("technology.detailUrl"))
+				.add(Projections.property("technology.customerStrategic")));
+
+		for(final Object[] row : (List<Object[]>)technologiesQuery.list()) {
 			final RadarTechnologyTO tech = new RadarTechnologyTO();
-			tech.setMovement(z_.getMovement());
-			tech.setTechGrouping(z_.getRadarTechGrouping().getTechGrouping().getName());
-			tech.setMaturity(z_.getRadarMaturity().getMaturity().getName());
-			final Technology technology = z_.getTechnology();
-			tech.setTechnology(technology.getName());
-			tech.setBlipSize(technology.getUsageCount());
-			tech.setUrl(technology.getUrl());
-			tech.setDescription(technology.getDescription());
-			tech.setDetailUrl(technology.getDetailUrl());
-			tech.setCustomerStrategic(technology.isCustomerStrategic());
+			tech.setMovement((MovementEnum)row[0]);
+			tech.setTechGrouping((String)row[1]);
+			tech.setMaturity((String)row[2]);
+			tech.setTechnology((String)row[3]);
+			tech.setBlipSize((Integer)row[4]);
+			tech.setUrl((String)row[5]);
+			tech.setDescription((String)row[6]);
+			tech.setDetailUrl((String)row[7]);
+			tech.setCustomerStrategic((Boolean)row[8]);
 			technologies.add(tech);
 		}
-		r.setMaturities(maturities);
-		r.setTechGroupings(techGroupings);
 		r.setTechnologies(technologies);
 
 		session.getTransaction().commit();
@@ -138,34 +177,6 @@ public class RadarServiceImpl implements RadarService {
 
 		return r;
 	}
-
-	private static final Comparator<RadarMaturity> MATURITY_COMPARATOR = new Comparator<RadarMaturity>() {
-		public int compare(final RadarMaturity maturity1, final RadarMaturity maturity2) {
-			if(maturity1.getTheOrder() == maturity2.getTheOrder()) {
-				return 0;
-			}
-
-			if(maturity1.getTheOrder() < maturity2.getTheOrder()) {
-				return -1;
-			} else {
-				return 1;
-			}
-		}
-	};
-
-	private static final Comparator<RadarTechGrouping> TECH_GROUPING_COMPARATOR = new Comparator<RadarTechGrouping>() {
-		public int compare(final RadarTechGrouping maturity1, final RadarTechGrouping maturity2) {
-			if(maturity1.getTheOrder() == maturity2.getTheOrder()) {
-				return 0;
-			}
-
-			if(maturity1.getTheOrder() < maturity2.getTheOrder()) {
-				return -1;
-			} else {
-				return 1;
-			}
-		}
-	};
 
 	public RadarTO createRadar(final RadarTO radarTO) throws ValidationException {
 		final List<String> validations = new ArrayList<String>();
@@ -291,26 +302,26 @@ public class RadarServiceImpl implements RadarService {
 
 	public RadarTO addTechnologiesToRadar(final Long radarId, final List<RadarTechnologyTO> radarTechnologyTOs) throws ValidationException {
 		final List<String> validations = new ArrayList<String>();
-		
+
 		final String uid = AdminHandlerHelper.getCurrentUser();
 
 		final Session session = HibernateUtil.getSessionFactory().openSession();
 		session.beginTransaction();
 
 		try {
-			
+
 			if(!StringUtils.isBlank(uid)) {
-				
+
 				final User user = readUser(uid, session);
 				if(user==null) {
 					validations.add("Unable to find user with ID " + radarId);
 				}
-				
+
 				final Radar radar = readRadar(radarId, session);
 				if(radar==null) {
 					validations.add("Unable to find radar with ID " + radarId);
 				}
-				
+
 				if(!validations.isEmpty()) {
 					throw new ValidationException(validations);
 				}
@@ -355,11 +366,11 @@ public class RadarServiceImpl implements RadarService {
 						radarTechnology.setRadarTechGrouping(radarTechGrouping);
 						radarTechnology.setMovement(radarTechnologyTO.getMovement());
 						radarTechnology.setTheOrder(i++);
-						
+
 						radarTechnology.setAddedDate(new Date());
 						radarTechnology.setAddedBy(user);
 						user.getRadarTechnologies().add(radarTechnology);
-						
+
 						session.persist(radarTechnology);
 
 					}
@@ -375,7 +386,7 @@ public class RadarServiceImpl implements RadarService {
 					session.getTransaction().rollback();
 					throw new ValidationException(validations);
 				}	
-				
+
 			} else {
 				validations.add("User is not logged in");
 				throw new ValidationException(validations);
