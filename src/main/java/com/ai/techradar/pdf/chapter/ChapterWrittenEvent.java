@@ -27,8 +27,11 @@ public class ChapterWrittenEvent extends PdfPageEventHelper {
 	@Override
 	public void onChapter(final PdfWriter writer, final Document document, final float paragraphPosition, final Paragraph title) {
 		final RadarChapter chapter = chaptersByIndex.get(getIndexFromTitleParagraph(title));
-		chapter.setPdfTitle(title.toString());
-		chapter.setPdfPageNumber(writer.getPageNumber());
+		if (chapter != null) {
+			// The contents page will not exist in the chaptersByIndex map
+			chapter.setPdfTitle(title.toString());
+			chapter.setPdfPageNumber(writer.getPageNumber());
+		}
 	}
 
 	private int getIndexFromTitleParagraph(final Paragraph title) {

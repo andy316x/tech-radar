@@ -1,6 +1,8 @@
 package com.ai.techradar.pdf;
 
 import java.awt.Color;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,12 +11,15 @@ import java.util.Map;
 
 import com.ai.techradar.pdf.chapter.ChapterWrittenEvent;
 import com.ai.techradar.pdf.chapter.RadarChapter;
+import com.ai.techradar.pdf.chapter.RadarContentsChapterWriter;
 import com.ai.techradar.pdf.chapter.RadarQuadrantChapterWriter;
 import com.ai.techradar.web.service.to.RadarTO;
 import com.ai.techradar.web.service.to.TechGroupingTO;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.PageSize;
+import com.lowagie.text.pdf.PdfReader;
+import com.lowagie.text.pdf.PdfStamper;
 import com.lowagie.text.pdf.PdfWriter;
 
 /**
@@ -40,16 +45,24 @@ public class RadarPdfWriter {
 
 			// Create landscape document
 			final Document document = new Document(PageSize.A4.rotate());
-			final PdfWriter pdfWriter = PdfWriter.getInstance(document, outputStream);
+			final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+			final PdfWriter pdfWriter = PdfWriter.getInstance(document, byteArrayOutputStream);
 			pdfWriter.setPageEvent(new ChapterWrittenEvent(radarChapters));
 
+			// Write the PDF document
 			document.open();
-
-			// Write the PDF
 			addMetadata(radar, document);
 			addContent(radarChapters, radar, document, pdfWriter);
 
+			// Add the contents page now that the page numbers have been set (to the end of the document)
+			addContentsPage(document, pdfWriter, radarChapters);
+
+			byteArrayOutputStream.flush();
 			document.close();
+
+			// The contents page must now be moved to the beginning of the document
+			moveContentsPageToStartOfDocument(byteArrayOutputStream, outputStream);
+
 		}
 		catch (final Exception e) {
 			throw new IllegalStateException("Failed to write radar with ID " + radar.getId() + " to PDF", e);
@@ -60,10 +73,6 @@ public class RadarPdfWriter {
 		final List<RadarChapter> radarChapters = new ArrayList<RadarChapter>();
 
 		int chapterNumber = 1;
-
-		// TODO add contents page - don't know page numbers until end but must be added at beginning of document
-		// See PDFGeneratorSecond
-		// final RadarChapter contentsChapter = new RadarChapter(chapterNumber, "Contents", Color.BLACK);
 
 		// Add chapter for each tech grouping
 		final List<TechGroupingTO> techGroupings = radar.getTechGroupings();
@@ -94,14 +103,46 @@ public class RadarPdfWriter {
 		int quadrantRotationDegrees = 0;
 
 		for (final RadarChapter radarChapter : radarChapters) {
-			final TechGroupingTO techGrouping = techGroupingByChapterIndex.get(radarChapter.getIndex());
+			if (radarChapter.getIndex() == 0) {
+				final List<RadarChapter> contents = new ArrayList<RadarChapter>(radarChapters.subList(0, radarChapters.size() - 1));
+				final RadarContentsChapterWriter radarContentsChapterWriter = new RadarContentsChapterWriter(radarChapter, contents);
+				radarContentsChapterWriter.writeTo(document, pdfWriter);
+			}
+			else {
+				final TechGroupingTO techGrouping = techGroupingByChapterIndex.get(radarChapter.getIndex());
 
-			final RadarQuadrantChapterWriter radarQuadrantChapterWriter = new RadarQuadrantChapterWriter(radarChapter, techGrouping,
-					radar.getMaturities(), radar.getTechnologies());
-			radarQuadrantChapterWriter.writeTo(document, pdfWriter);
+				final RadarQuadrantChapterWriter radarQuadrantChapterWriter = new RadarQuadrantChapterWriter(radarChapter, techGrouping,
+						radar.getMaturities(), radar.getTechnologies());
+				radarQuadrantChapterWriter.writeTo(document, pdfWriter);
 
-			quadrantRotationDegrees += 90;
+				quadrantRotationDegrees += 90;
+			}
 		}
+	}
+
+	private void addContentsPage(final Document document, final PdfWriter pdfWriter, final List<RadarChapter> contents) throws IOException,
+			DocumentException {
+		final RadarChapter contentsChapter = new RadarChapter(0, "Contents", Color.BLACK);
+		final RadarContentsChapterWriter radarContentsChapterWriter = new RadarContentsChapterWriter(contentsChapter, contents);
+		radarContentsChapterWriter.writeTo(document, pdfWriter);
+	}
+
+	private void moveContentsPageToStartOfDocument(final ByteArrayOutputStream pdfWriterOutputStream, final OutputStream outputStream)
+			throws IOException, DocumentException {
+		final PdfReader pdfReader = new PdfReader(pdfWriterOutputStream.toByteArray());
+		final int numberOfPages = pdfReader.getNumberOfPages();
+
+		// Put the last page at the beginning of the document
+		final List<Integer> pages = new ArrayList<Integer>();
+		pages.add(numberOfPages);
+		for (int i = 1; i < numberOfPages - 1; i++) {
+			pages.add(i);
+		}
+		pdfReader.selectPages(pages);
+		final PdfStamper pdfStamper = new PdfStamper(pdfReader, outputStream);
+
+		pdfStamper.close();
+		pdfWriterOutputStream.close();
 	}
 
 	private static String toEmptyStringIfNull(final String value) {
