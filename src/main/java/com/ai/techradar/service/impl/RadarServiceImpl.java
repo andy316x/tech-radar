@@ -1,8 +1,6 @@
 package com.ai.techradar.service.impl;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -93,7 +91,7 @@ public class RadarServiceImpl implements RadarService {
 
 		// Maturities enrichment
 		final List<MaturityTO> maturities = new ArrayList<MaturityTO>();
-		
+
 		final Criteria maturitiesQuery = session.createCriteria(RadarMaturity.class);
 		final Criteria maturityJoinToRadar = maturitiesQuery.createCriteria("radar", "radar",  JoinType.INNER_JOIN);
 		maturitiesQuery.createAlias("maturity", "maturity",  JoinType.INNER_JOIN);
@@ -119,7 +117,7 @@ public class RadarServiceImpl implements RadarService {
 
 		// Tech groupings enrichment
 		final List<TechGroupingTO> techGroupings = new ArrayList<TechGroupingTO>();
-		
+
 		final Criteria techGroupingsQuery = session.createCriteria(RadarTechGrouping.class);
 		final Criteria techGroupingJoinToRadar = techGroupingsQuery.createCriteria("radar", "radar",  JoinType.INNER_JOIN);
 		techGroupingsQuery.createAlias("techGrouping", "techGrouping",  JoinType.INNER_JOIN);

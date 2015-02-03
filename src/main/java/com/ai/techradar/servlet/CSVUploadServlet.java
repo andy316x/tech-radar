@@ -8,7 +8,6 @@ import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -32,7 +31,6 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
 
 import com.ai.techradar.database.entities.MovementEnum;
 import com.ai.techradar.database.entities.Technology;
@@ -80,18 +78,19 @@ public class CSVUploadServlet extends HttpServlet {
 
 			final ObjectMapper objmapper = new ObjectMapper();
 
-			final Set<String> technologiesFound = new HashSet<String>();
-
 			try {
 				final Session session = HibernateUtil.getSessionFactory().openSession();
 
 				final UploadResponse uploadResponse = new UploadResponse();
 				uploadResponse.setSuccess(true);
 				uploadResponse.setErrors(new HashSet<String>());
+				uploadResponse.setWarnings(new HashSet<String>());
 
 				final List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
 
 				final Long id = getId(items);
+
+				final Map<String, String> knownTechnologies = getTechnologySet(session);
 
 				final RadarTO radar = service.getRadarById(id);
 				radar.setTechnologies(new ArrayList<RadarTechnologyTO>());
@@ -119,17 +118,25 @@ public class CSVUploadServlet extends HttpServlet {
 						for(final CSVRecord record : list) {
 							final RadarTechnologyTO radarTechnology = new RadarTechnologyTO();
 							radarTechnology.setId(i++);
+							boolean isRowValid = true;
 
 							// Technology column
 							try {
 								final String name = readString(record.get(TECHNOLOGY_COLUMN_NAME));
 								if(!StringUtils.isBlank(name)) {
-									radarTechnology.setTechnology(name);
-									technologiesFound.add(name);
+									final String canonicalTechnology = name.trim().toLowerCase();
+									if(knownTechnologies.containsKey(canonicalTechnology)) {
+										radarTechnology.setTechnology(knownTechnologies.get(canonicalTechnology));
+									} else {
+										isRowValid = false;
+										uploadResponse.getWarnings().add("Row " + i + " has technology '" + name + "' that could not be found in tech radar");
+									}
 								} else {
-									uploadResponse.getErrors().add("Row " + i + " is missing mandatory field ' " + TECHNOLOGY_COLUMN_NAME + "'");
+									isRowValid = false;
+									uploadResponse.getWarnings().add("Row " + i + " is missing mandatory field ' " + TECHNOLOGY_COLUMN_NAME + "'");
 								}
 							} catch(final IllegalArgumentException ex) {
+								isRowValid = false;
 								uploadResponse.getErrors().add("Mandatory column '" + TECHNOLOGY_COLUMN_NAME + "' does not exist in file");
 							}
 
@@ -141,12 +148,15 @@ public class CSVUploadServlet extends HttpServlet {
 									if(techGroupings.containsKey(canonicalTechGrouping)) {
 										radarTechnology.setTechGrouping(techGroupings.get(canonicalTechGrouping));
 									} else {
-										uploadResponse.getErrors().add("Row " + i + " has tech grouping '" + quadrantName + "' that is not in the radar");
+										isRowValid = false;
+										uploadResponse.getWarnings().add("Row " + i + " has tech grouping '" + quadrantName + "' that is not in the radar");
 									}
 								} else {
-									uploadResponse.getErrors().add("Row " + i + " is missing mandatory field '" + QUADRANT_COLUMN_NAME + "'");
+									isRowValid = false;
+									uploadResponse.getWarnings().add("Row " + i + " is missing mandatory field '" + QUADRANT_COLUMN_NAME + "'");
 								}
 							} catch(final IllegalArgumentException ex) {
+								isRowValid = false;
 								uploadResponse.getErrors().add("Mandatory column '" + QUADRANT_COLUMN_NAME + "' does not exist in file");
 							}
 
@@ -158,12 +168,15 @@ public class CSVUploadServlet extends HttpServlet {
 									if(maturities.containsKey(canonicalMaturity)) {
 										radarTechnology.setMaturity(maturities.get(canonicalMaturity));
 									} else {
-										uploadResponse.getErrors().add("Row " + i + " has maturity '" + arcName + "' that is not in the radar");
+										isRowValid = false;
+										uploadResponse.getWarnings().add("Row " + i + " has maturity '" + arcName + "' that is not in the radar");
 									}
 								} else {
-									uploadResponse.getErrors().add("Row " + i + " is missing mandatory field '" + MATURITY_COLUMN_NAME + "'");
+									isRowValid = false;
+									uploadResponse.getWarnings().add("Row " + i + " is missing mandatory field '" + MATURITY_COLUMN_NAME + "'");
 								}
 							} catch(final IllegalArgumentException ex) {
+								isRowValid = false;
 								uploadResponse.getErrors().add("Mandatory column '" + MATURITY_COLUMN_NAME + "' does not exist in file");
 							}
 
@@ -172,10 +185,11 @@ public class CSVUploadServlet extends HttpServlet {
 								final MovementEnum movement = readMovement(record.get(MOVED_NO_CHANGE_COLUMN_NAME));
 								radarTechnology.setMovement(movement);
 							} catch(final IllegalArgumentException ex) {
+								isRowValid = false;
 								uploadResponse.getErrors().add("Mandatory column '" + MOVED_NO_CHANGE_COLUMN_NAME + "' does not exist in file");
 							}
 
-							if(uploadResponse.getErrors().isEmpty()) {
+							if(isRowValid) {
 								radar.getTechnologies().add(radarTechnology);
 							}
 
@@ -185,10 +199,8 @@ public class CSVUploadServlet extends HttpServlet {
 					}
 				}
 
-				checkTechnologiesExist(technologiesFound, uploadResponse.getErrors(), session);
-
 				uploadResponse.setRadar(radar);
-				if(!uploadResponse.getErrors().isEmpty()) {
+				if(uploadResponse.getRadar().getTechnologies().isEmpty()) {
 					uploadResponse.setSuccess(false);
 				}
 
@@ -218,23 +230,17 @@ public class CSVUploadServlet extends HttpServlet {
 
 	}
 
-	private void checkTechnologiesExist(final Collection<String> technologies, final Set<String> messages, final Session session) {
+	private Map<String, String> getTechnologySet(final Session session) {
 		final Criteria query = session.createCriteria(Technology.class);
-
-		query.add(Restrictions.in("name", technologies));
 
 		query.setProjection(Projections.property("name"));
 
-		final Set<String> technologiesInDb = new HashSet<String>();
+		final Map<String, String> technologiesInDb = new HashMap<String, String>();
 		for(final String techName : (List<String>)query.list()) {
-			technologiesInDb.add(techName);
+			technologiesInDb.put(techName.trim().toLowerCase(), techName);
 		}
 
-		for(final String techName : technologies) {
-			if(!technologiesInDb.contains(techName)) {
-				messages.add("Technology with name '" + techName + "' could not be found in tech radar");
-			}
-		}
+		return technologiesInDb;
 	}
 
 	public static class UploadResponse implements Serializable {
@@ -242,26 +248,33 @@ public class CSVUploadServlet extends HttpServlet {
 		private boolean success;
 		private RadarTO radar;
 		private Set<String> errors;
+		private Set<String> warnings;
 		public UploadResponse() {
 
 		}
 		public boolean isSuccess() {
 			return success;
 		}
-		public void setSuccess(boolean success) {
+		public void setSuccess(final boolean success) {
 			this.success = success;
 		}
 		public RadarTO getRadar() {
 			return radar;
 		}
-		public void setRadar(RadarTO radar) {
+		public void setRadar(final RadarTO radar) {
 			this.radar = radar;
 		}
 		public Set<String> getErrors() {
 			return errors;
 		}
-		public void setErrors(Set<String> errors) {
+		public void setErrors(final Set<String> errors) {
 			this.errors = errors;
+		}
+		public Set<String> getWarnings() {
+			return warnings;
+		}
+		public void setWarnings(final Set<String> warnings) {
+			this.warnings = warnings;
 		}
 	}
 
@@ -274,24 +287,6 @@ public class CSVUploadServlet extends HttpServlet {
 		}
 
 		return str;
-	}
-
-	private static int readInt(final String str) {
-		if(str==null) {
-			return 0;
-		}
-		if(str.trim().length()==0) {
-			return 0;
-		}
-
-		try {
-			return Integer.parseInt(str);
-		} catch(final NumberFormatException ex) {
-			// TODO we should real inform the user
-			System.out.println("'" + str + "' is not a valid int");
-		}
-
-		return 0;
 	}
 
 	private static MovementEnum readMovement(final String str) {
@@ -312,21 +307,6 @@ public class CSVUploadServlet extends HttpServlet {
 		return null;
 	}
 
-	private static boolean readBoolean(final String str) {
-		if(str==null) {
-			return false;
-		}
-		if(str.trim().length()==0) {
-			return false;
-		}
-
-		if(str.trim().substring(0, 1).equalsIgnoreCase("y")) {
-			return true;
-		}
-
-		return false;
-	}
-
 	private static Long getId(final List<FileItem> items) {
 		for (final FileItem item : items) {
 			if (item.isFormField()) {
@@ -338,14 +318,6 @@ public class CSVUploadServlet extends HttpServlet {
 			}
 		}
 		return null;
-	}
-
-	private static final String readVal(final CSVRecord record, final String key) {
-		try {
-			return record.get(key);
-		} catch(final IllegalArgumentException ex) {
-			return null;
-		}
 	}
 
 }
