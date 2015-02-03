@@ -72,7 +72,7 @@ techRadarControllers.controller('CommonViewCtrl', function ($scope, $http, $loca
 	};
 	getUserInfo();
 
-
+	$scope.theUrl = window.location.href;
 
 	// Navigation
 	$scope.go = function ( path ) {
@@ -231,6 +231,7 @@ techRadarControllers.controller('RadarsCtrl', function ($scope, $http, $location
 techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location, $routeParams, $log) {
 
 	$scope.uploadingTechnologies = false;
+	$scope.showShare = false;
 	$scope.errors = [];
 	$scope.msgs = [];
 

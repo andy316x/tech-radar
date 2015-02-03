@@ -48,6 +48,7 @@
 		</div>
 		<div class="col-md-6 text-right">
 			<form id="uploadform" action="/radar/uploadcsv" method="post" target="theframe" enctype="multipart/form-data">
+				<a class="btn btn-default" ng-click="go('/radar/'+selectedRadar.id)">Cancel</a>
 				<button class="btn btn-default" ng-click="exportCsv(selectedRadar.id)">Download Data</button>
 				<input id="id" name="id" type="hidden"></input>
 				<div id='file_browse_wrapper'>
@@ -68,6 +69,7 @@
 				<button class="btn btn-default" ng-click="doDelete(selectedRadar.id)">Delete</button>
 				<button class="btn btn-primary" ng-click="doSave()">Save</button>
 				<button class="btn btn-success">Publish</button>
+				<input type="submit" style="display:none"></input>
 			</form>
 		</div>
 	</div>
@@ -90,9 +92,11 @@
 	
 		<div class="col-md-12">
 			<div class="col-md-6">
-				<ul class="nav nav-pills">
-					<li class="active"><a href="#">All</a></li>
-					<li ng-repeat="quadrant in selectedRadar.radar.quadrants"><a href="#">{{quadrant.name}}</a></li>
+				<ul class="nav nav-pills nav-radar">
+					<li ng-class="radarIndex == 0 ? 'active' : ''"><a href="javascript:void(0)" ng-click="selectIndex(0)">All</a></li>
+					<li ng-repeat="quadrant in selectedRadar.radar.quadrants" ng-class="(radarIndex == $index+1 ? 'active' : '') + ' quad' + ($index+1)">
+						<a href="javascript:void(0)" ng-click="selectIndex($index+1)">{{quadrant.name}}</a>
+					</li>
 				</ul>
 			</div>
 			<div class="col-md-6 text-right" style="padding:10px;">
