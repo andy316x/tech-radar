@@ -77,7 +77,13 @@
 	<iframe id="theframe" name="theframe" style="display:none;"></iframe>
 
 	<div class="col-md-12" style="background-color:#EFEFEF;padding:25px 20px;">
-	
+		
+		<div class="col-md-12">
+			<div class="alert alert-success" role="alert" ng-repeat="msg in msgs">
+				{{msg}}
+			</div>
+		</div>
+		
 		<div class="col-md-12">
 			<div class="alert alert-danger" role="alert" ng-repeat="error in errors">
 				{{error}}
@@ -85,8 +91,8 @@
 		</div>
 		
 		<div class="col-md-12">
-			<div class="alert alert-success" role="alert" ng-repeat="msg in msgs">
-				{{msg}}
+			<div class="alert alert-warning" role="alert" ng-repeat="warning in warnings">
+				{{warning}}
 			</div>
 		</div>
 	
