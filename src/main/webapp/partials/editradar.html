@@ -66,13 +66,20 @@
       					</div>
     				</div>
 				</div>
+				
 				<button class="btn btn-default" ng-click="doDelete(selectedRadar.id)">Delete</button>
 				<button class="btn btn-primary" ng-click="doSave()">Save</button>
 				<button class="btn btn-success">Publish</button>
+				<button class="btn btn-success" ng-click="addTechVisible=true">Edit Technologies</button>
+				
 				<input type="submit" style="display:none"></input>
 			</form>
 		</div>
 	</div>
+	
+	
+	<div ng-add-tech="" visible="addTechVisible" do-save = "doSave()" selected-radar="selectedRadar"></div>
+	
 	
 	<iframe id="theframe" name="theframe" style="display:none;"></iframe>
 

@@ -226,13 +226,15 @@ techRadarControllers.controller('RadarsCtrl', function ($scope, $http, $location
 
 });
 
-techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location, $routeParams, $log) {
+techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location, $routeParams, $modal, $log) {
 
 	$scope.uploadingTechnologies = false;
 	$scope.showShare = false;
 	$scope.errors = [];
 	$scope.warnings = [];
 	$scope.msgs = [];
+	
+	$scope.addTechVisible = false;
 	
 	$scope.theUrl = window.location.href;
 
@@ -291,6 +293,8 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 	};
 
 	$scope.doSave = function () {
+		$scope.addTechVisible = false;
+		
 		$http.post('/radar/rest/radar/addtech/' + $scope.selectedRadar.id, $scope.selectedRadar.technologies).
 		success(function(data, status, headers, config) {
 			$location.path('/radar/' + $scope.selectedRadar.id);
