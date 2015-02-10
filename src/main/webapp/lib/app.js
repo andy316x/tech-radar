@@ -30,6 +30,12 @@ techRadarApp.config(['$routeProvider',function($routeProvider) {
 		templateUrl: 'partials/viewtechnology.html',
 		controller: 'TechnologyCtrl'
 	})
+	
+	// Skills
+	.when('/skill', {
+		templateUrl: 'partials/skill.html',
+		controller: 'SkillsCtrl'
+	})
 
 	// Default
 	.otherwise({

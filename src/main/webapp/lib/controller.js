@@ -446,6 +446,12 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 
 });
 
+techRadarControllers.controller('SkillsCtrl', function ($scope, $http, $location, $routeParams, $modal, $log) {
+
+	
+
+});
+
 techRadarControllers.controller('ModalInstanceCtrl', function ($scope, $modalInstance, items) {
 
 	$scope.items = items;

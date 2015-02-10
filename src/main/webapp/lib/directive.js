@@ -432,7 +432,7 @@ techRadarDirectives.directive('ngTechRatings', function ($http) {
 	};
 });
 
-techRadarDirectives.directive('ngTechMaturities', function ($http) {
+techRadarDirectives.directive('ngTechMaturities', function () {
 	return {
 		restrict: 'A',
 		template: '<svg width="{{scaleFactor*1000}}" height="{{scaleFactor*200}}" version="1.1" xmlns="http://www.w3.org/2000/svg">' +
@@ -448,6 +448,41 @@ techRadarDirectives.directive('ngTechMaturities', function ($http) {
 		'  <circle r="{{scaleFactor*200}}" cx="{{scaleFactor*1050}}" cy="{{scaleFactor*200}}" fill="none" style="stroke-width:2;stroke:rgb(255,255,255)"></circle>' +
 		'</svg>',
 		link: function ($scope, element, attrs) {
+
+			$scope.scaleFactor = 1;
+
+			$scope.getWidth = function () {
+				return element[0].offsetWidth;
+			};
+
+			$scope.$watch($scope.getWidth, function (width) {
+				$scope.scaleFactor = width/1000;
+			});
+		}
+	};
+});
+
+techRadarDirectives.directive('ngSkillLevel', function () {
+	return {
+		restrict: 'A',
+		template: '<svg width="{{scaleFactor*1000}}" height="{{scaleFactor*200}}" version="1.1" xmlns="http://www.w3.org/2000/svg">' +
+		'  <g ng-repeat="skillLevel in skillLevels">' +
+		'    <text x="{{scaleFactor*(100+$index*200)}}" y="{{scaleFactor*190}}" style="text-anchor:middle">{{skillLevel.name}}</text>' +
+		'    <g ng-repeat="sl in skillLevel.technologies">' +
+		'      <rect x="{{scaleFactor*(10+$parent.$index*200)}}" y="{{scaleFactor*(140-($index*35))}}" rx="{{scaleFactor*5}}" ry="{{scaleFactor*5}}" width="{{scaleFactor*190}}" height="{{scaleFactor*30}}" style="{{\'fill:\'+skillLevel.fill+\';stroke:\'+skillLevel.stroke+\'stroke-width:1\'}}"></rect>' +
+		'      <text x="{{scaleFactor*(100+$parent.$index*200)}}" y="{{scaleFactor*(160-($index*35))}}" style="text-anchor:middle" fill="{{skillLevel.textFill}}">{{sl.name}}</text>' +
+		'    </g>' +
+		'  </g>' +
+		'</svg>',
+		link: function ($scope, element, attrs) {
+			
+			$scope.skillLevels = [
+			                    {name:'LEADER',   fill:'#5CB85C',stroke:'#5CB85C',textFill:'#FFFFFF',technologies:[{name:'Google Web Toolkit'},{name:'Bamboo'}]},
+			                    {name:'EXPERT',   fill:'#F0AD4E',stroke:'#F0AD4E',textFill:'#FFFFFF',technologies:[{name:'C++'},{name:'.Net'},{name:'C#'}]},
+			                    {name:'COMPETENT',fill:'#5BC0DE',stroke:'#5BC0DE',textFill:'#FFFFFF',technologies:[{name:'Java EE'},{name:'Java SE'},{name:'Python'},{name:'Shell Script'},{name:'SQL'}]},
+			                    {name:'LEARNING', fill:'#428BCA',stroke:'#428BCA',textFill:'#FFFFFF',technologies:[{name:'XPath'},{name:'XSD'}]},
+			                    {name:'WATCHING', fill:'#FFFFFF',stroke:'#CCCCCC',textFill:'#333333',technologies:[{name:'XSLT'},{name:'COM/ActiveX'},{name:'EMITE'}]}
+			                      ];
 
 			$scope.scaleFactor = 1;
 

@@ -11,9 +11,9 @@
 		</div>
 		<div class="navbar-collapse collapse">
 			<ul class="nav navbar-nav navbar-right">
-				<li class="active"><a href="#/radar">Radars</a></li>
+				<li><a href="#/radar">Radars</a></li>
 				<li><a href="#/technology">Technologies</a></li>
-				<li><a href="#/skill">Skills Profile</a></li>
+				<li class="active"><a href="#/skill">Skills Profile</a></li>
 				<li ng-show="loggedin==true"><a>{{name}}  <img ng-click="loginclick=!loginclick" class="img img-rounded" src="/radar/img/128.jpg"></a></li>
 				<li ng-show="loggedin==false">
 					<a  ng-click="loginclick=!loginclick">Sign in  <img class="img img-rounded" src="/radar/img/icon_8204.png"></a>
@@ -36,54 +36,42 @@
 	
 		<div class="col-md-12 clearfix" style="margin-bottom: 0;border-bottom: 1px solid #CCC;padding-bottom: 20px;">
 			<div class="col-md-6">
-				<ul class="nav nav-pills">
-					<li  class="active"><a href="#">All</a></li>
-					<li><a href="#">UK Services</a></li>
-					<li><a href="#">Cyber</a></li>
-					<li><a href="#">Communications</a></li>
-					<li><a href="#">My Radars</a></li>
-				</ul>
+				<h1>
+					<img class="img img-rounded" style="width:40px;height:40px;border-radius:20px;" src="/radar/img/128.jpg">
+					<strong>Andy (UK Services):</strong>
+					<span> Skills Profile</span>
+				</h1>
 			</div>
-			<div class="col-md-3">
+			<div class="col-md-3" style="margin-top:8px">
 				<div class="search-wrapper">
 					<input ng-search="" on-radar-selected="goApply('/radar/' + id)" on-technology-selected="goApply('/technology/' + id)" type="text" class="form-control typeahead" placeholder="Search"></input>
 					<i class="glyphicon glyphicon-search"></i>
 				</div>
 			</div>
-			<div class="col-md-3 text-right">
-				<!-- <button class="btn btn-success" ng-click="open('lg')">Modal</button> -->
-				<button class="btn btn-success" ng-click="newRadarVisible=true" ng-show="loggedin==true">New Radar</button>
+			<div class="col-md-3 text-right" style="margin-top:8px">
+				<button class="btn btn-default">Update Connect CV</button>
+				<button class="btn btn-success">Add Skill</button>
 			</div>
 		</div>
 		
-		<div ng-new-radar="" visible="newRadarVisible" radar-created="onRadarCreated(radar)"></div>
-		
 		<div class="col-md-12" style="background-color:#EFEFEF;padding:25px 20px;">
-	
-			<div ng-repeat="radar in radars" class="radar-card">
-				<i class="glyphicon glyphicon-ok" style="color: green;position: absolute;right: 25px;top: 18px;"></i>
-				<div style="margin: 0px 34px 0px 15px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
-					<span title="{{radar.name}}">{{radar.name}}</span>
-				</div>
-				<div style="text-align:center;">
-					<img src="/radar/img/radar_175.svg"></img>
-				</div>
-				<div>
-					<img class="img img-rounded" src="/radar/img/128.jpg">
-					<div style="padding-left:60px;">
-						<div><strong>{{radar.createdBy}}</strong></div>
-						<div><small>(UK Services)</small></div>
-						<div><small>Published <strong>{{radar.dateCreated | date:'dd MMM yy'}}</strong></small></div>
-					</div>
-				</div>
-				<div>
-					<button class="btn btn-primary btn-block" ng-click="go('/radar/' + radar.id)">View</button>
-				</div>
+		
+			<div>
+				<ul class="nav nav-pills">
+					<li class="active"><a href="#/skill">All</a></li>
+					<li><a href="#/skill">Platforms</a></li>
+					<li><a href="#/skill">Solutions</a></li>
+					<li><a href="#/skill">Languages &amp; Frameworks</a></li>
+					<li><a href="#/skill">Techniques</a></li>
+					<li><a href="#/skill">Tools</a></li>
+				</ul>
 			</div>
 			
-			<form method=post>
-    			
-			</form>
+			<div style="margin-top:20px">
+	
+				<div ng-skill-level=""></div>
+				
+			</div>
 			
 		</div>
 
