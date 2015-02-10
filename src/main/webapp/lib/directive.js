@@ -226,6 +226,257 @@ techRadarDirectives.directive('ngNewRadar', function ($http) {
 	};
 });
 
+
+techRadarDirectives.directive('ngAddTech', function ($http) {
+	return {
+		restrict: 'A',
+		scope: {
+			visible: '=',
+			selectedRadar: '=',
+			doSave: '&'
+		},
+		template: '<div class="modal" >' +
+		'  <div class="modal-dialog">' +
+		'    <div class="modal-content">' +
+		'      <div class="modal-header">' +
+		'        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>' +
+		'        <h4 class="modal-title">Add Technologies</h4>' +
+		'      </div>' +
+		'      <div class="modal-body">' +
+		
+		'		<div class="container-fluid main-content">' +
+		'		 <div class="row">' +
+		'		  <div class="col-md-12" style="background-color:#EFEFEF;padding:25px 20px;">' +
+		'		    <div class="col-md-6">' +
+		
+		'			 <div class="search-wrapper">' +
+		'				<input ng-model="searchText" type="text" class="form-control typeahead" placeholder="Filter technologies..."></input>' +
+		'				<i class="glyphicon glyphicon-search"></i>' +
+		'			 </div>' +
+
+		'			 <div class="technology-wrapper">' +
+		'				<div ng-repeat="technology in technologies | filter:{name:searchText}" class="technology-card{{selectedTechnology.id==technology.id?\' active\':\'\'}}" ng-click="technologySelected(technology)">' +
+		'					<span>{{$index+1}}. {{technology.name}}<i ng-show="isInRadar(technology.name)" class="glyphicon glyphicon-screenshot"></i></span>' +
+		'				</div>' +
+		'			 </div>' +
+		
+		'		    </div>' +
+		
+		'		    <div class="col-md-6"> ' +
+		'		    <div class="technology-wrapper" style="margin:0" ng-show="selectedTechnology!=undefined"> ' +
+					
+		'				<div class="clearfix" style="padding: 20px 15px 20px 5px;border-bottom: 1px solid #CCCCCC;">' +
+		'					<div class="col-xs-6">' +
+		'						<h1>{{selectedTechnology.name}}</h1>' +
+		'					</div>' +
+		'				</div>' +
+						
+		'				<div style="padding: 10px; border-bottom: 1px solid #CCCCCC">' +
+
+		'		         <div class="container-fluid main-content">' +
+		'		          <div class="row">' +
+		'					<div class="col-xs-6 text-left">' +
+		'					 <h4>Maturity</h4>' +
+		'					 <div class="btn-group-vertical" role="group" aria-label="Maturity">' +
+		'					   <button ng-repeat="maturityOption in maturityOptions" ng-click="setMaturity(maturityOption.value)" ng-class="[btnStyle,btnDefaultStyle,{{maturityOption.value.replace(\' \',\'\')}}Style]">{{maturityOption.label}}</button>' +
+		'				     </div>' +
+		'				    </div>' +
+		
+		'					<div class="col-xs-6 text-right">' +
+		'					 <h4>Tech Group</h4>' +
+		'					 <div class="btn-group-vertical" role="group" aria-label="Tech Group">' +
+		'					  <button ng-repeat="techGroupingOption in techGroupingOptions" ng-click="setTechGroup(techGroupingOption.value)" ng-class="[btnStyle,btnDefaultStyle,{{techGroupingOption.value.replace(\' \',\'\')}}Style]">{{techGroupingOption.label}}</button>' +
+		'					 </div>' +
+		'				    </div>' +
+		'		         </div>' +
+		'				</div>' +
+
+		'				</div>' +
+		'				<div class="text-right" style="padding: 10px; border-bottom: 1px solid #CCCCCC">' +
+		'                <div>{{validationMessage}}</div>' +
+		'                <button type="button" ng-hide="isInRadar(selectedTechnology.name)" ng-click="add()" class="btn btn-success">Add</button>' +
+		'                <button type="button" ng-show="isInRadar(selectedTechnology.name)" ng-click="remove()" class="btn btn-success">Remove</button>' +
+		'				</div>' +
+		'		    </div>' +
+		
+		'		   </div>' +
+		'		  </div>' +
+		'		 </div>' +
+
+		'      <div class="modal-footer">' +
+		'        <button type="button" ng-click="doSave()" class="btn btn-success">Save</button>' +
+		'      </div>' +
+		'    </div>' +
+		'  </div>' +
+		'</div>',
+		link: function ($scope, element, attrs) {
+			
+			$scope.btnStyle = "btn";
+			$scope.btnDefaultStyle = "btn-default";
+			
+			$scope.maturity = "invest";
+			$scope.maturityOptions = [];
+			
+			$http.get('/radar/rest/maturity').
+			success(function(data, status, headers, config) {
+				for(var i = data.length-1; i >= 0; i--) {
+					$scope.maturityOptions.push({label:$scope.capitaliseFirstLetter(data[i].name), value:data[i].name});
+				}
+			}).
+			error(function(data, status, headers, config) {
+				$log.log('failed to load maturity levels');
+			});
+			
+			$scope.techGroupingOptions = [];
+			$http.get('/radar/rest/techgrouping').
+			success(function(data, status, headers, config) {
+				for(var i = 0; i < data.length; i++) {
+					$scope.techGroupingOptions.push({label:data[i].name, value:data[i].name});
+				}
+			}).
+			error(function(data, status, headers, config) {
+				$log.log('failed to load tech groupings');
+			});
+			
+			$scope.capitaliseFirstLetter = function (string)	{
+			    return string.charAt(0).toUpperCase() + string.slice(1);
+			}
+			
+			$scope.technologies = [];
+
+			$http({method: 'GET', url: '/radar/rest/technology?nocache=' + (new Date()).getTime()}).
+			success(function(data, status, headers, config) {
+				if(data.length > 0) {
+					$scope.selectedTechnology = undefined;
+					for(var i = 0; i < data.length; i++) {
+						$scope.technologies.push(data[i]);
+					}
+				}
+			}).
+			error(function(data, status, headers, config) {
+				$log.log('error getting technology list');
+			});
+			
+			$scope.setMaturity = function(maturity) {
+				$scope.maturity = maturity;
+				$scope.setMaturityStyle(maturity);
+				
+				if ($scope.techFromRadar != undefined){
+					$scope.techFromRadar.maturity = maturity;
+				}
+			}
+			
+			$scope.setTechGroup = function(techGroup) {
+				$scope.techGroup = techGroup;
+				$scope.setTechGroupStyle(techGroup);
+				
+				if ($scope.techFromRadar != undefined){
+					$scope.techFromRadar.techGrouping = techGroup;
+				}
+			}
+			
+			$scope.technologySelected = function(technology) {
+				$scope.selectedTechnology = technology;
+				
+				$scope.searchText = $scope.selectedTechnology.name;
+				
+				if (($scope.techFromRadar = $scope.getTechFromRadar($scope.selectedTechnology.name)) != undefined){
+					$scope.maturity = $scope.techFromRadar.maturity;
+					$scope.techGroup = $scope.techFromRadar.techGrouping;
+				} else {
+					//  both of these attributes are currently undefined in selectedTechnology object
+					$scope.maturity = $scope.selectedTechnology.maturity;
+					$scope.techGroup = $scope.selectedTechnology.techGrouping;
+				}
+				
+				$scope.setMaturityStyle($scope.maturity);
+				$scope.setTechGroupStyle($scope.techGroup);
+			};
+			
+			$scope.setMaturityStyle = function (maturity){
+				for(var i = 0; i < $scope.maturityOptions.length; i++) {
+					$scope[$scope.maturityOptions[i].value.replace(' ','') + 'Style'] = ''; 
+				}
+				if (maturity != undefined){
+					$scope[maturity.replace(' ','') + 'Style'] = 'active';
+				}
+			}
+			
+			$scope.setTechGroupStyle = function (techGroup){
+				for(var i = 0; i < $scope.techGroupingOptions.length; i++) {
+					$scope[$scope.techGroupingOptions[i].value.replace(' ','') + 'Style'] = ''; 
+				}
+				if (techGroup != undefined){
+					$scope[techGroup.replace(' ','') + 'Style'] = 'active';
+				}
+			}
+			
+			$scope.isInRadar = function (techName){
+				return $scope.getTechFromRadar(techName) != undefined;
+			}
+			
+			$scope.getTechFromRadar = function (techName){
+				if ($scope.selectedRadar.technologies == undefined){
+					return undefined;
+				}
+				
+				for(var i = 0; i < $scope.selectedRadar.technologies.length; i++) {
+					if ($scope.selectedRadar.technologies[i].technology == techName){
+						return $scope.selectedRadar.technologies[i];
+					}
+				}
+				return undefined;
+			}
+
+			$scope.$watch('visible', function (newVal, oldVal, scope) {
+				if(newVal != oldVal) {
+					if(newVal == true) {
+						element.children(":first").modal('show');
+					} else {
+						element.children(":first").modal('hide');
+					}
+				}
+			}, false);
+
+			element.children(":first").on('hide.bs.modal', function(e) {
+				$scope.visible = false;
+			});
+
+			$scope.add = function() {
+				
+				if ($scope.maturity == undefined){
+					$scope.validationMessage = "Select maturity.";
+					return;
+				}
+				
+				if ($scope.techGroup == undefined){
+					$scope.validationMessage = "Select technology group.";
+					return;
+				}
+				$scope.validationMessage = "";
+				
+				newTech = {id: 1,
+						techGrouping: $scope.techGroup,
+						maturity: $scope.maturity,
+						technology: $scope.selectedTechnology.name};
+				
+				$scope.selectedRadar.technologies.push(newTech);
+			};
+
+			$scope.remove = function() {
+				for(var i = 0; i < $scope.selectedRadar.technologies.length; i++) {
+					if ($scope.selectedRadar.technologies[i].technology == $scope.selectedTechnology.name){
+						$scope.selectedRadar.technologies.splice(i,1);
+						return;
+					}
+				}
+			};
+
+		}
+	};
+});
+
+
 techRadarDirectives.directive('ngTechnologyModal', function ($http) {
 	return {
 		restrict: 'A',
