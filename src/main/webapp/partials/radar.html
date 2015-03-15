@@ -39,7 +39,7 @@
 				<ul class="nav nav-pills">
 					<li class="{{filter=='All'?'active':''}}"><a href="#" ng-click="filter = 'All'">All</a></li>
 					<li class="{{filter==businessUnit.name?'active':''}}" ng-repeat="businessUnit in businessUnits"><a href="#" ng-click="$parent.filter = businessUnit.name">{{businessUnit.name}}</a></li>
-					<li class="{{filter=='My Radars'?'active':''}}"><a href="#" ng-click="filter = 'My Radars'">My Radars</a></li>
+					<li class="{{filter=='My Radars'?'active':''}}" ng-show="uid != null"><a href="#" ng-click="filter = 'My Radars'">My Radars</a></li>
 				</ul>
 			</div>
 			<div class="col-md-3">
