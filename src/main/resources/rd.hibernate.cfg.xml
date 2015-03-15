@@ -45,6 +45,7 @@
         <mapping class="com.ai.techradar.database.entities.RadarMaturity"/>
         <mapping class="com.ai.techradar.database.entities.User"/>
         <mapping class="com.ai.techradar.database.entities.UserTechnology"/>
+        <mapping class="com.ai.techradar.database.entities.BusinessUnit"/>
         
  	</session-factory>
 

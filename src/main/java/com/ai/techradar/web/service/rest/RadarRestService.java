@@ -5,6 +5,7 @@ import java.util.List;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -110,6 +111,37 @@ public class RadarRestService extends AbstractTechRadarRestService {
 			throw new WebApplicationException(e);
 		} catch (IllegalArgumentException e) {
 			throw new WebApplicationException(e);
+		} finally {
+			AdminHandlerHelper.logout();
+		}
+
+	}
+
+	@PUT
+	@Path("/{radarId}")
+	@ApiOperation(value="Update a radar",response=Response.class)
+	@Produces("application/json")
+	public Response updateRadar(
+			@Context SecurityContext securityContext,
+			@PathParam("radarId") final Long radarId,
+			@ApiParam("the radar") final RadarTO radar) {
+
+		if(securityContext.getUserPrincipal()!=null) {
+			AdminHandlerHelper.login(securityContext.getUserPrincipal().getName());
+		}
+
+		try {
+
+			final RadarTO newRadar = radarService.updateRadar(radar);
+
+			return Response.ok(newRadar).build();
+
+		} catch (SecurityException e) {
+			throw new WebApplicationException(e);
+		} catch (IllegalArgumentException e) {
+			throw new WebApplicationException(e);
+		} catch (ValidationException e) {
+			return Response.status(Status.BAD_REQUEST).entity(e.getValidations()).build();
 		} finally {
 			AdminHandlerHelper.logout();
 		}

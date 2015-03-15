@@ -7,7 +7,9 @@ techRadarDirectives.directive('ngRadar', function ($routeParams) {
 			radar: '=',
 			selectedBlip: '=',
 			centreIndex: '=',
-			onBlipClicked: '&'
+			editable: '=',
+			onBlipClicked: '&',
+			onBlipMoved: '&'
 		},
 		link: function ($scope, element, attrs) {
 			var el = element[0];
@@ -17,7 +19,12 @@ techRadarDirectives.directive('ngRadar', function ($routeParams) {
 			var doDraw;
 			if(quadrantName != null && typeof quadrantName !== "undefined"){
 				doDraw = function(r) {
-					$scope.theRadar = Radar.draw_Quadrant(el, r, quadrantName, {
+					$scope.theRadar = Radar.draw_Quadrant(el, r, quadrantName, $scope.editable, {
+						onblipmove: function(blip) {
+							$scope.$apply(function(){
+								$scope.onBlipMoved({blip:blip});
+							});
+						},
 						onblipclick: function(blip) {
 							$scope.$apply(function(){
 								$scope.onBlipClicked({blip:blip});
@@ -37,7 +44,12 @@ techRadarDirectives.directive('ngRadar', function ($routeParams) {
 				};
 			}else{
 				doDraw = function(r) {
-					$scope.theRadar = Radar.draw(el, r, {
+					$scope.theRadar = Radar.draw(el, r, $scope.editable, {
+						onblipmove: function(blip) {
+							$scope.$apply(function(){
+								$scope.onBlipMoved({blip:blip});
+							});
+						},
 						onblipclick: function(blip) {
 							$scope.$apply(function(){
 								$scope.onBlipClicked({blip:blip});
@@ -109,6 +121,14 @@ techRadarDirectives.directive('ngNewRadar', function ($http) {
 		'          <label>Name</label>' +
 		'          <input type="text" class="form-control" ng-model="name" placeholder="Enter name"></input>' +
 		'        </div>' +
+		'        <div class="form-group">' +
+		'          <label>Description</label>' +
+		'          <textarea class="form-control" ng-model="description" placeholder="Enter description"></textarea>' +
+		'        </div>' +
+		'        <div class="form-group">' +
+		'          <label>Business Unit</label>' +
+		'          <select class="form-control" ng-model="businessUnit" ng-options="businessUnit.label as businessUnit.label for businessUnit in businessUnitOptions"></select>' +
+		'        </div>' +
 		'        <div style="position:relative;">' +
 		'          <img src="/radar/img/radar_175.svg" style="width: 100%;">' +
 		'          <span style="position:absolute;right:110px;bottom:150px;">' + 
@@ -178,7 +198,21 @@ techRadarDirectives.directive('ngNewRadar', function ($http) {
 				}
 			}).
 			error(function(data, status, headers, config) {
-				$log.log('failed to load tech groupings');
+				console.log('failed to load tech groupings');
+			});
+			
+			$scope.businessUnitOptions = [];
+			$http.get('/radar/rest/businessunit').
+			success(function(data, status, headers, config) {
+				for(var i = 0; i < data.length; i++) {
+					if(i == 0) {
+						$scope.businessUnit = data[i].name;
+					}
+					$scope.businessUnitOptions.push({label:data[i].name, value:data[i].name});
+				}
+			}).
+			error(function(data, status, headers, config) {
+				console.log('failed to load business units');
 			});
 
 			$scope.$watch('visible', function (newVal, oldVal, scope) {
@@ -198,6 +232,12 @@ techRadarDirectives.directive('ngNewRadar', function ($http) {
 			$scope.save = function() {
 				var radar = {
 						name: $scope.name,
+						description: $scope.description,
+						businessUnit: $scope.businessUnit,
+						approved: false,
+						published: false,
+						majorVersion: 0,
+						minorVersion: 0,
 						dateCreated: new Date().getTime(),
 						techGroupings: [
 						                {name: $scope.techGrouping1},
@@ -324,7 +364,7 @@ techRadarDirectives.directive('ngAddTech', function ($http) {
 				}
 			}).
 			error(function(data, status, headers, config) {
-				$log.log('failed to load maturity levels');
+				console.log('failed to load maturity levels');
 			});
 			
 			$scope.techGroupingOptions = [];
@@ -335,7 +375,7 @@ techRadarDirectives.directive('ngAddTech', function ($http) {
 				}
 			}).
 			error(function(data, status, headers, config) {
-				$log.log('failed to load tech groupings');
+				console.log('failed to load tech groupings');
 			});
 			
 			$scope.capitaliseFirstLetter = function (string)	{
@@ -354,7 +394,7 @@ techRadarDirectives.directive('ngAddTech', function ($http) {
 				}
 			}).
 			error(function(data, status, headers, config) {
-				$log.log('error getting technology list');
+				console.log('error getting technology list');
 			});
 			
 			$scope.setMaturity = function(maturity) {
@@ -528,7 +568,7 @@ techRadarDirectives.directive('ngTechnologyModal', function ($http) {
 		'            <img ng-repeat="rating in ratings" src="/radar/img/icon_8204.png" title="{{rating.user + \' - \' + rating.skillLevel}}" data-toggle="tooltip" data-placement="bottom" tooltip=\"\"" style="width: 50px;border-radius: 25px;background-color: #DEDEDE;margin: 5px;padding: 1px;box-shadow: 1px 1px 1px #333;"></img>' + 
 		'          </div>' + 
 		'          <div ng-repeat="otherRadar in otherRadars">' + 
-		'            <strong>{{otherRadar.addedByUid}}</strong> added <a href="/radar/#/technology/{{technology.id}}">{{technology.name}}</a> to <a href="/radar/#/radar/{{otherRadar.radarId}}">{{otherRadar.radarName}}</a> {{otherRadar.addedDate | prettydate}}' + 
+		'            <strong>{{otherRadar.addedByUid}}</strong> added <a href="/radar/#/technology/{{technology.techId}}">{{technology.name}}</a> to <a href="/radar/#/radar/{{otherRadar.radarId}}">{{otherRadar.radarName}}</a> {{otherRadar.addedDate | prettydate}}' + 
 		'          </div>' + 
 		'        </div>' + 
 		'      </div>' +
@@ -539,7 +579,7 @@ techRadarDirectives.directive('ngTechnologyModal', function ($http) {
 
 			$scope.$watch('technology', function (newVal, oldVal, scope) {
 				if(newVal != oldVal) {
-					reloadTechnology(newVal.id);
+					reloadTechnology(newVal.techId);
 				}
 			}, false);
 
@@ -557,7 +597,7 @@ techRadarDirectives.directive('ngTechnologyModal', function ($http) {
 					}
 				}).
 				error(function(data, status, headers, config) {
-					$log.log('failed to load user ratings for technology with ID ' + techId);
+					console.log('failed to load user ratings for technology with ID ' + techId);
 				});
 
 				// Load technology radars
@@ -570,7 +610,7 @@ techRadarDirectives.directive('ngTechnologyModal', function ($http) {
 					}
 				}).
 				error(function(data, status, headers, config) {
-					$log.log('failed to load user radars for technology with ID ' + techId);
+					console.log('failed to load user radars for technology with ID ' + techId);
 				});
 			};
 

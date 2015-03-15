@@ -15,26 +15,26 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.Response.Status;
 
+import com.ai.techradar.service.BusinessUnitService;
 import com.ai.techradar.service.SpringStarter;
-import com.ai.techradar.service.TechGroupingService;
 import com.ai.techradar.service.ValidationException;
 import com.ai.techradar.util.AdminHandlerHelper;
-import com.ai.techradar.web.service.to.TechGroupingTO;
+import com.ai.techradar.web.service.to.BusinessUnitTO;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 
-@Path("techgrouping")
-@Api(value="/techgrouping",description="Tech grouping service")
-public class TechGroupingRestService extends AbstractTechRadarRestService {
+@Path("businessunit")
+@Api(value="/businessunit",description="Business unit service")
+public class BusinessUnitRestService extends AbstractTechRadarRestService {
 
-	private TechGroupingService techGroupingService = (TechGroupingService)SpringStarter.getContext().getBean("TechGroupingService");
+	private BusinessUnitService businessUnitService = (BusinessUnitService)SpringStarter.getContext().getBean("BusinessUnitService");
 
 	@GET
 	@Path("/")
-	@ApiOperation(value="Get tech groupings",response=Response.class)
+	@ApiOperation(value="Get business units",response=Response.class)
 	@Produces("application/json")
-	public Response getTechGroupings(@Context SecurityContext securityContext) {
+	public Response getBusinessUnits(@Context SecurityContext securityContext) {
 
 		if(securityContext.getUserPrincipal()!=null) {
 			AdminHandlerHelper.login(securityContext.getUserPrincipal().getName());
@@ -42,7 +42,7 @@ public class TechGroupingRestService extends AbstractTechRadarRestService {
 
 		try {
 
-			final List<TechGroupingTO> rs = techGroupingService.getTechGroupings();
+			final List<BusinessUnitTO> rs = businessUnitService.getBusinessUnits();
 
 			return Response.ok(rs).build();
 
@@ -58,11 +58,11 @@ public class TechGroupingRestService extends AbstractTechRadarRestService {
 
 	@POST
 	@Path("/")
-	@ApiOperation(value="Create a tech grouping",response=Response.class)
+	@ApiOperation(value="Create a business unit",response=Response.class)
 	@Produces("application/json")
-	public Response createTechGrouping(
+	public Response createBusinessUnit(
 			@Context SecurityContext securityContext,
-			@ApiParam("the tech grouping") final TechGroupingTO techGrouping) {
+			@ApiParam("the business unit") final BusinessUnitTO businessUnit) {
 
 		if(securityContext.getUserPrincipal()!=null) {
 			AdminHandlerHelper.login(securityContext.getUserPrincipal().getName());
@@ -70,9 +70,9 @@ public class TechGroupingRestService extends AbstractTechRadarRestService {
 
 		try {
 
-			final TechGroupingTO newTechGrouping = techGroupingService.createTechGrouping(techGrouping);
+			final BusinessUnitTO newBusinessUnit = businessUnitService.createBusinessUnit(businessUnit);
 
-			return Response.ok(newTechGrouping).build();
+			return Response.ok(newBusinessUnit).build();
 
 		} catch (SecurityException e) {
 			throw new WebApplicationException(e);
@@ -87,13 +87,13 @@ public class TechGroupingRestService extends AbstractTechRadarRestService {
 	}
 
 	@PUT
-	@Path("/{techGroupingId}")
-	@ApiOperation(value="Update a tech grouping",response=Response.class)
+	@Path("/{businessUnitId}")
+	@ApiOperation(value="Update a business unit",response=Response.class)
 	@Produces("application/json")
-	public Response updateTechGrouping(
+	public Response updateBusinessUnit(
 			@Context SecurityContext securityContext,
-			@PathParam("techGroupingId") final Long techGroupingId,
-			@ApiParam("the tech grouping") final TechGroupingTO techGrouping) {
+			@PathParam("businessUnitId") final Long businessUnitId,
+			@ApiParam("the business unit") final BusinessUnitTO businessUnit) {
 
 		if(securityContext.getUserPrincipal()!=null) {
 			AdminHandlerHelper.login(securityContext.getUserPrincipal().getName());
@@ -101,9 +101,9 @@ public class TechGroupingRestService extends AbstractTechRadarRestService {
 
 		try {
 
-			final TechGroupingTO newTechGrouping = techGroupingService.updateTechGrouping(techGrouping);
+			final BusinessUnitTO newBusinessUnit = businessUnitService.updateBusinessUnit(businessUnit);
 
-			return Response.ok(newTechGrouping).build();
+			return Response.ok(newBusinessUnit).build();
 
 		} catch (SecurityException e) {
 			throw new WebApplicationException(e);
@@ -116,12 +116,12 @@ public class TechGroupingRestService extends AbstractTechRadarRestService {
 	}
 
 	@DELETE
-	@Path("/{techGroupingId}")
-	@ApiOperation(value="Delete a tech grouping",response=Response.class)
+	@Path("/{businessUnitId}")
+	@ApiOperation(value="Delete a business unit",response=Response.class)
 	@Produces("application/json")
-	public Response deleteTechGrouping(
+	public Response deleteBusinessUnit(
 			@Context SecurityContext securityContext,
-			@PathParam("techGroupingId") final Long techGroupingId) {
+			@PathParam("businessUnitId") final Long businessUnitId) {
 
 		if(securityContext.getUserPrincipal()!=null) {
 			AdminHandlerHelper.login(securityContext.getUserPrincipal().getName());
@@ -129,7 +129,7 @@ public class TechGroupingRestService extends AbstractTechRadarRestService {
 
 		try {
 
-			final Boolean result = techGroupingService.deleteTechGrouping(techGroupingId);
+			final Boolean result = businessUnitService.deleteBusinessUnit(businessUnitId);
 
 			return Response.ok(result).build();
 

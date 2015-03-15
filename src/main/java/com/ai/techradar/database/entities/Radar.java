@@ -18,12 +18,26 @@ import org.hibernate.annotations.Index;
 public class Radar {
 
 	private Long id;
-	
+
 	private String name;
+
+	private String description;
+
+	private BusinessUnit businessUnit;
+
+	private boolean published;
+
+	private Date lastPublishedDate;
+
+	private boolean approved;
 
 	private Date createdDate;
 
 	private User createdBy;
+
+	private int majorVersion;
+
+	private int minorVersion;
 
 	private List<RadarTechnology> radarTechnologies;
 
@@ -56,6 +70,48 @@ public class Radar {
 		this.name = name;
 	}
 
+	@Column(name = "description", length = 4000)
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(final String description) {
+		this.description = description;
+	}
+
+	@ManyToOne
+	public BusinessUnit getBusinessUnit() {
+		return businessUnit;
+	}
+
+	public void setBusinessUnit(final BusinessUnit businessUnit) {
+		this.businessUnit = businessUnit;
+	}
+
+	public boolean isPublished() {
+		return published;
+	}
+
+	public void setPublished(final boolean published) {
+		this.published = published;
+	}
+
+	public Date getLastPublishedDate() {
+		return lastPublishedDate;
+	}
+
+	public void setLastPublishedDate(final Date lastPublishedDate) {
+		this.lastPublishedDate = lastPublishedDate;
+	}
+
+	public boolean isApproved() {
+		return approved;
+	}
+
+	public void setApproved(final boolean approved) {
+		this.approved = approved;
+	}
+
 	public Date getCreatedDate() {
 		return createdDate;
 	}
@@ -71,6 +127,22 @@ public class Radar {
 
 	public void setCreatedBy(final User createdBy) {
 		this.createdBy = createdBy;
+	}
+
+	public int getMajorVersion() {
+		return majorVersion;
+	}
+
+	public void setMajorVersion(final int majorVersion) {
+		this.majorVersion = majorVersion;
+	}
+
+	public int getMinorVersion() {
+		return minorVersion;
+	}
+
+	public void setMinorVersion(final int minorVersion) {
+		this.minorVersion = minorVersion;
 	}
 
 	@OneToMany(mappedBy="radar", cascade=CascadeType.ALL)
@@ -99,5 +171,5 @@ public class Radar {
 	public void setRadarTechGroupings(final List<RadarTechGrouping> radarTechGroupings) {
 		this.radarTechGroupings = radarTechGroupings;
 	}
-	
+
 }

@@ -81,6 +81,13 @@ techRadarControllers.controller('CommonViewCtrl', function ($scope, $http, $loca
 			$location.path( path );
 		});
 	};
+	
+	
+	// TODO create a modal service, this is hack here 
+	// to remove the modal backdrop on navigation
+	$scope.$on('$locationChangeStart', function(event, newUrl) {
+		$('.modal-backdrop').hide();
+	});
 
 });
 
@@ -208,6 +215,8 @@ techRadarControllers.controller('TechnologyCtrl', function ($scope, $http, $loca
 techRadarControllers.controller('RadarsCtrl', function ($scope, $http, $location, $routeParams, $modal, $log) {
 
 	$scope.radars = [];
+	
+	$scope.filter = 'All';
 
 	$scope.newRadarVisible = false;
 
@@ -215,13 +224,56 @@ techRadarControllers.controller('RadarsCtrl', function ($scope, $http, $location
 		$scope.newRadarVisible = false;
 		$scope.radars.push(radar);
 	};
+	
+	var filterPredicates = [{
+		doFilter: function(radar) {
+			if($scope.filter == 'All') {
+				return true;
+			} else if($scope.filter == 'My Radars') {
+				return $scope.uid === radar.createdBy;
+			} else {
+				if($scope.filter == radar.businessUnit) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		}
+	},{
+		doFilter: function(radar) {
+			if(radar.published === true) {
+				return true;
+			} else {
+				return $scope.uid === radar.createdBy;
+			}
+		}
+	}];
+	
+	$scope.filterRadar = function(criteria) {
+		return function(radar) {
+			for(var i = 0; i < filterPredicates.length; i++) {
+				if(!filterPredicates[i].doFilter(radar)) {
+					return false;
+				}
+			}
+			return true;
+		};
+	};
 
 	$http({method: 'GET', url: '/radar/rest/radar?nocache=' + (new Date()).getTime()}).
 	success(function(data, status, headers, config) {
 		$scope.radars = data;
 	}).
 	error(function(data, status, headers, config) {
-		$log.log('error');
+		$log.error('Error getting radars');
+	});
+	
+	$http({method: 'GET', url: '/radar/rest/businessunit'}).
+	success(function(data, status, headers, config) {
+		$scope.businessUnits = data;
+	}).
+	error(function(data, status, headers, config) {
+		$log.error('Error getting business units');
 	});
 
 });
@@ -314,6 +366,43 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 			$log.error('Failed to delete radar');
 			$log.error(data);
 		});
+	};
+	
+	$scope.doPublish = function ( radarId ) {
+		var updateRadar = {
+			id: $scope.selectedRadar.id,
+			name: $scope.selectedRadar.name,
+			description: $scope.selectedRadar.description,
+			businessUnit: $scope.selectedRadar.businessUnit,
+			published: true,
+			lastPublishedDate: new Date().getTime(),
+			approved: $scope.selectedRadar.approved,
+			majorVersion: $scope.selectedRadar.majorVersion+1,
+			minorVersion: 0,
+			dateCreated: $scope.selectedRadar.dateCreated
+		};
+		
+		$http.put('/radar/rest/radar/' + radarId, updateRadar).
+		success(function(data, status, headers, config) {
+			$scope.selectedRadar.published = data.published;
+			$scope.selectedRadar.lastPublishedDate = data.lastPublishedDate;
+			$scope.selectedRadar.majorVersion = data.majorVersion;
+			$scope.selectedRadar.minorVersion = data.minorVersion;
+		}).
+		error(function(data, status, headers, config) {
+			$log.error('Failed to publish radar');
+			$log.error(data);
+		});
+	};
+	
+	$scope.blipMoved = function(blip) {
+		for(var i = 0; i < $scope.selectedRadar.technologies.length; i++) {
+			if($scope.selectedRadar.technologies[i].technology === blip.name) {
+				$scope.selectedRadar.technologies[i].techGrouping = blip.techGrouping;
+				$scope.selectedRadar.technologies[i].maturity = blip.arc;
+				$log.log('Moving ' + blip.name + ' to tech grouping ' + blip.techGrouping + ' and arc ' + blip.arc);
+			}
+		}
 	};
 
 	//var quadrantColours = ['#3DB5BE', '#83AD78', '#E88744', '#8D2145'];
@@ -412,6 +501,7 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 				(function(row){
 					var customerStrategic = row.customerStrategic;
 					var newItem = {
+							techId: row.id,
 							id: i+1,
 							name: row.technology,
 							show: false,

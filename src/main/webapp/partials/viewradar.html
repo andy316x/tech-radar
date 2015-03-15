@@ -7,7 +7,7 @@
 					class="icon-bar"></span> <span class="icon-bar"></span> <span
 					class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="#">The Radar</a>
+			<a class="navbar-brand" href="#"><strong>tech</strong><span>radar</span> <code>{beta}</code></a>
 		</div>
 		<div class="navbar-collapse collapse">
 			<ul class="nav navbar-nav navbar-right">
@@ -44,21 +44,30 @@
 		<input hidden="true" id="id" name="id" value=""></input>
 	</form>	
 	
-	<div class="col-md-12 clearfix" style="margin-bottom: 0;border-bottom: 1px solid #CCC;padding-bottom: 20px;">
-		<div class="col-md-6">
-			<h1><i class="glyphicon glyphicon-ok" style="color:green;"></i> {{selectedRadar.name}}</h1>
+	<div class="col-md-12" style="margin-bottom: 0;border-bottom: 1px solid #CCC;padding-bottom: 10px;">
+		<div class="clearfix">
+			<div class="col-md-6">
+				<h1>
+					<i class="glyphicon glyphicon-ok" ng-show="selectedRadar.published == true" style="color:green;"></i>
+					<i class="glyphicon glyphicon-pencil" ng-show="selectedRadar.published != true" style="color:red;"></i>
+					<span> {{selectedRadar.name}}</span><span class="text-muted"> {{selectedRadar.businessUnit}}</span><span class="text-muted"><small> v{{selectedRadar.majorVersion}}.{{selectedRadar.minorVersion}}</small></span>
+				</h1>
+			</div>
+			<div class="col-md-6 text-right">
+				<button class="btn btn-default" ng-click="exportCsv(selectedRadar.id)">Download Data</button>
+				<button class="btn btn-default" ng-click="exportPdf(selectedRadar.id)">Export PDF</button>
+				<button class="btn btn-default" ng-click="showShare=!showShare">Share</button>
+				<div ng-show="showShare==true" class="popover fade bottom in" style="position: absolute;z-index: 100;top: 38px;left: 353px;display: block;width: 322px;padding: 0px 0px 0px 0px;">
+      				<div class="arrow" style="margin-left:27px"></div>
+      				<div class="popover-content">
+      					<input class="form-control" ng-model="theUrl"></input>
+      				</div>
+    			</div>
+				<button class="btn btn-danger" ng-click="go('/radar/'+selectedRadar.id+'/edit')" ng-show="loggedin==true && uid==selectedRadar.createdBy">Edit</button>
+			</div>
 		</div>
-		<div class="col-md-6 text-right">
-			<button class="btn btn-default" ng-click="exportCsv(selectedRadar.id)">Download Data</button>
-			<button class="btn btn-default" ng-click="exportPdf(selectedRadar.id)">Export PDF</button>
-			<button class="btn btn-default" ng-click="showShare=!showShare">Share</button>
-			<div ng-show="showShare==true" class="popover fade bottom in" style="position: absolute;z-index: 100;top: 38px;left: 353px;display: block;width: 322px;padding: 0px 0px 0px 0px;">
-      			<div class="arrow" style="margin-left:27px"></div>
-      			<div class="popover-content">
-      				<input class="form-control" ng-model="theUrl"></input>
-      			</div>
-    		</div>
-			<button class="btn btn-danger" ng-click="go('/radar/'+selectedRadar.id+'/edit')" ng-show="loggedin==true">Edit</button>
+		<div style="margin-top:10px;">
+			<span>{{selectedRadar.description}}</span>
 		</div>
 	</div>
 
@@ -87,7 +96,7 @@
 		
 		<div class="col-md-12" style="padding:50px 10%;">
 		
-			<div id="radar" ng-radar="" radar="selectedRadar.radar" selected-blip="selectedItem" centre-index="radarIndex" on-blip-clicked="blipClicked(blip)"></div>
+			<div id="radar" ng-radar="" radar="selectedRadar.radar" selected-blip="selectedItem" centre-index="radarIndex" on-blip-clicked="blipClicked(blip)" editable="false"></div>
 			
 			<!-- Left technology overlay -->
 			<div ng-show="radarIndex==2" class="arc-overlay arc-overlay-left">

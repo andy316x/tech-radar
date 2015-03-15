@@ -7,7 +7,7 @@
 					class="icon-bar"></span> <span class="icon-bar"></span> <span
 					class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="#">The Radar</a>
+			<a class="navbar-brand" href="#"><strong>tech</strong><span>radar</span> <code>{beta}</code></a>
 		</div>
 		<div class="navbar-collapse collapse">
 			<ul class="nav navbar-nav navbar-right">
@@ -37,11 +37,9 @@
 		<div class="col-md-12 clearfix" style="margin-bottom: 0;border-bottom: 1px solid #CCC;padding-bottom: 20px;">
 			<div class="col-md-6">
 				<ul class="nav nav-pills">
-					<li  class="active"><a href="#">All</a></li>
-					<li><a href="#">UK Services</a></li>
-					<li><a href="#">Cyber</a></li>
-					<li><a href="#">Communications</a></li>
-					<li><a href="#">My Radars</a></li>
+					<li class="{{filter=='All'?'active':''}}"><a href="#" ng-click="filter = 'All'">All</a></li>
+					<li class="{{filter==businessUnit.name?'active':''}}" ng-repeat="businessUnit in businessUnits"><a href="#" ng-click="$parent.filter = businessUnit.name">{{businessUnit.name}}</a></li>
+					<li class="{{filter=='My Radars'?'active':''}}"><a href="#" ng-click="filter = 'My Radars'">My Radars</a></li>
 				</ul>
 			</div>
 			<div class="col-md-3">
@@ -58,26 +56,34 @@
 		
 		<div ng-new-radar="" visible="newRadarVisible" radar-created="onRadarCreated(radar)"></div>
 		
-		<div class="col-md-12" style="background-color:#EFEFEF;padding:25px 20px;">
+		<div class="col-md-12 clearfix" style="background-color:#EFEFEF;padding:25px 20px;">
 	
-			<div ng-repeat="radar in radars" class="radar-card">
-				<i class="glyphicon glyphicon-ok" style="color: green;position: absolute;right: 25px;top: 18px;"></i>
-				<div style="margin: 0px 34px 0px 15px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
-					<span title="{{radar.name}}">{{radar.name}}</span>
+			<div ng-repeat="radar in radars | filter:filterRadar(radar, $index)" class="radar-card">
+				<div class="icon-rounded ok" ng-show="radar.published == true"><i class="glyphicon glyphicon-ok" title="This radar has been published"></i></div>
+				<div class="icon-rounded pencil" ng-show="radar.published != true"><i class="glyphicon glyphicon-pencil" title="This radar is still in draft"></i></div>
+				<div class="radar-card-title">
+					<div><span title="{{radar.name}}">{{radar.name}}</span></div>
+					<div class="text-muted"><small>v{{radar.majorVersion}}.{{radar.minorVersion}}</small></div>
 				</div>
-				<div style="text-align:center;">
+				<div class="radar-card-content">
 					<img src="/radar/img/radar_175.svg"></img>
+					<span class="badge" ng-show="radar.approved == true" style="margin-top:-95px;background-color:#5cb85c">Approved radar</span>
 				</div>
-				<div>
+				<div class="radar-card-footer">
 					<img class="img img-rounded" src="/radar/img/128.jpg">
 					<div style="padding-left:60px;">
 						<div><strong>{{radar.createdBy}}</strong></div>
-						<div><small>(UK Services)</small></div>
-						<div><small>Published <strong>{{radar.dateCreated | date:'dd MMM yy'}}</strong></small></div>
+						<div><small>({{radar.businessUnit}})</small></div>
+						<div ng-show="radar.published == true"><small>Last published <strong>{{radar.lastPublishedDate | date:'dd MMM yy'}}</strong></small></div>
+						<div ng-show="radar.published != true"><small>Created <strong>{{radar.dateCreated | date:'dd MMM yy'}}</strong></small></div>
 					</div>
 				</div>
-				<div>
+				<div ng-show="uid != radar.createdBy" class="radar-card-button-panel">
 					<button class="btn btn-primary btn-block" ng-click="go('/radar/' + radar.id)">View</button>
+				</div>
+				<div ng-show="uid == radar.createdBy" class="radar-card-button-panel clearfix">
+					<div><div><button class="btn btn-danger btn-block" ng-click="go('/radar/' + radar.id + '/edit')">Edit</button></div></div>
+					<div><div><button class="btn btn-primary btn-block" ng-click="go('/radar/' + radar.id)">View</button></div></div>
 				</div>
 			</div>
 			

@@ -2,6 +2,10 @@ var rad=function(deg){
 	return deg*Math.PI/180;
 };
 
+var deg=function(rad){
+	return rad*180/Math.PI;
+};
+
 var global_radar;
 var global_totalArc;
 
@@ -10,7 +14,7 @@ var maxRadius = 100;
 
 var Radar = {
 		
-	draw: function(element, radar, callback) {
+	draw: function(element, radar, editable, callback) {
 		
 		var w = element.offsetWidth;
 		var h = w;
@@ -149,6 +153,7 @@ var Radar = {
 			this._drawArc(svg, cumulativeArc, cumulativeArc + r, w/2, h/2, radar.arcs[i].color);
 			
 			var arc = {
+				name: radar.arcs[i].name,
 				innerRadius: cumulativeArc,
 				outerRadius: cumulativeArc + r,
 				index: i
@@ -181,7 +186,7 @@ var Radar = {
 			this._drawArcAxisText(svg, arc.innerRadius, arc.outerRadius, w, h, radar.arcs[i].name, scaleFactor);
 		}
 		
-		this._drawKey(svg,w,h,scaleFactor);
+		//this._drawKey(svg,w,h,scaleFactor);
 		
 		var translation = [[1, 1, 'end', 1, 0], [-1, 1, 'start', 0, 1], [-1, -1, 'start', 0, 1], [1, -1, 'end', 1, 0]];
 		
@@ -343,7 +348,7 @@ var Radar = {
 			angle = angle + 90;
 			quadrant.endAngle = angle;
 		}
-		this._drawBlips(svg,blips,callback);
+		this._drawBlips(svg,blips,radar.quadrants,arcs,w,h,editable,callback);
 		
 		var context = {
 			oldZoom: 0	
@@ -467,7 +472,7 @@ var Radar = {
 		.text(text);
 	},
 	
-	_drawBlips: function(svg,blipGroups,callback) {
+	_drawBlips: function(svg,blipGroups,quadrants,arcs,w,h,editable,callback) {
 		var blipsList = [];
 		
 		for(var i = 0; i < blipGroups.length; i++) {
@@ -480,24 +485,55 @@ var Radar = {
 			})(blipGroups[i]);
 		}
 		
-		var dragGroup = d3.behavior.drag()
-		.origin(function(d,i) { 
-			var t = d3.select(this);
-		    return {
-		        x: t.attr("x") + d3.transform(t.attr("transform")).translate[0],
-		        y: t.attr("y") + d3.transform(t.attr("transform")).translate[1]
-		    };
-		})
-		.on('dragstart', function(d, i) {
-		    d3.selectAll('.blip').attr('opacity',0.3);
-			d3.select('#blip-'+d.item.id).attr('opacity',1.0);
-		  }).on('drag', function(d, i) {
-		    d.x = d3.event.x;
-		    d.y = d3.event.y;
-		    d3.select(this).attr("transform", "translate("+d3.event.x+","+d3.event.y+")");
-		  }).on('dragend', function(d, i) {
-			  d3.selectAll('.blip').attr('opacity',1.0);
-		  });
+		if(editable === true) {
+			var dragGroup = d3.behavior.drag()
+			.origin(function(d,i) { 
+				var t = d3.select(this);
+			    return {
+			        x: t.attr("x") + d3.transform(t.attr("transform")).translate[0],
+			        y: t.attr("y") + d3.transform(t.attr("transform")).translate[1]
+			    };
+			})
+			.on('dragstart', function(d, i) {
+			    d3.selectAll('.blip').attr('opacity',0.3);
+				d3.select('#blip-'+d.item.id).attr('opacity',1.0);
+			  }).on('drag', function(d, i) {
+			    d.x = d3.event.x;
+			    d.y = d3.event.y;
+			    d3.select(this).attr("transform", "translate("+d3.event.x+","+d3.event.y+")");
+			  }).on('dragend', function(d, i) {
+				  var g = d3.select(this);
+				  var text = g.select('text');
+				  var x = ((parseInt(text.attr('x')) + d3.transform(g.attr("transform")).translate[0]) - (w/2))/d.scaleFactor;
+				  var y = -1*((parseInt(text.attr('y')) + d3.transform(g.attr("transform")).translate[1]) - (h/2))/d.scaleFactor;
+				  
+				  var r = Math.sqrt(x*x + y*y);
+				  var theta = deg(Math.atan(y / x));
+				  var offset = 0;
+				  var index = 0;
+				  if(x < 0 && y < 0) {
+					  index = 1;
+					  offset = 180;
+				  } else if(x < 0 && y > 0) {
+					  index = 2;
+					  offset = 180;
+				  } else if(x > 0 && y < 0) {
+					  index = 0;
+					  offset = 360;
+				  } else if(x > 0 && y > 0) {
+					  index = 3;
+					  offset = 0;
+				  }
+				  
+				  for(var i = 0; i < arcs.length; i++) {
+					  if(arcs[i].innerRadius < r*d.scaleFactor && r*d.scaleFactor < arcs[i].outerRadius) {
+						  callback.onblipmove({name:d.item.name,techGrouping:quadrants[index].name,arc:arcs[i].name});
+					  }
+				  }
+				  
+				  d3.selectAll('.blip').attr('opacity',1.0);
+			  });
+		}
 		
 		var link = svg.selectAll('g').data(blipsList).enter().append("g")
 		.attr('id', function(d){ return 'blip-'+d.item.id;})
@@ -512,32 +548,36 @@ var Radar = {
 		.on('mouseleave', function(d) {
 			callback.onblipleave(d.item);
 		})
-		.call(dragGroup);
+		
+		if(editable === true) {
+			link.call(dragGroup);
+		}
 	
 		var blip = link.append('path');
 	
 		blip.attr('d', function(d){
-			if (d.item.movement == 'c'){
-				return "M5,82.9422876 C32.8460969,99.0192375 67.1539031,99.0192375 95,82.9422876 C95.0000034,50.7883845 77.8460999,21.0769515 50,5 C22.1539001,21.0769515 4.99999658,50.7883845 5,82.9422876 L5,82.9422876 Z";
-			}else{
+			//if (d.item.movement == 'c'){
+			//	return "M5,82.9422876 C32.8460969,99.0192375 67.1539031,99.0192375 95,82.9422876 C95.0000034,50.7883845 77.8460999,21.0769515 50,5 C22.1539001,21.0769515 4.99999658,50.7883845 5,82.9422876 L5,82.9422876 Z";
+			//}else{
 				return 'M420.084,282.092c-1.073,0-2.16,0.103-3.243,0.313c-6.912,1.345-13.188,8.587-11.423,16.874c1.732,8.141,8.632,13.711,17.806,13.711c0.025,0,0.052,0,0.074-0.003c0.551-0.025,1.395-0.011,2.225-0.109c4.404-0.534,8.148-2.218,10.069-6.487c1.747-3.886,2.114-7.993,0.913-12.118C434.379,286.944,427.494,282.092,420.084,282.092';
-			}
+			//}
 		});
 	
 		blip.attr('fill',function(d){ return d.color;})
 			.attr('transform',function(d){
-				if(d.item.movement == 'c') {
-					return 'scale('+d.scaleFactor*0.32+') translate(' + (d.x - d.scaleFactor*15)/(d.scaleFactor*0.32) + ', ' + (d.y - d.scaleFactor*17)/(d.scaleFactor*0.32) + ')';
-				} else {
+				//if(d.item.movement == 'c') {
+				//	return 'scale('+d.scaleFactor*0.32+') translate(' + (d.x - d.scaleFactor*15)/(d.scaleFactor*0.32) + ', ' + (d.y - d.scaleFactor*17)/(d.scaleFactor*0.32) + ')';
+				//} else {
 					return 'scale('+((d.scaleFactor*30)/34)+') translate('+(-404+d.x*(34/(d.scaleFactor*30))-17)+', '+(-282+d.y*(34/(d.scaleFactor*30))-17)+')';
-				}
+				//}
 			});
 		
 		blip.style("filter", "url(#drop-shadow)");
 	
 		link.append('text')
 			.attr('x',function(d){ return d.x;})
-			.attr('y',function(d){ return d.item.movement=='c'?d.y+(d.scaleFactor*6):d.y+(d.scaleFactor*4);})
+			//.attr('y',function(d){ return d.item.movement=='c'?d.y+(d.scaleFactor*6):d.y+(d.scaleFactor*4);})
+			.attr('y',function(d){ return d.y+(d.scaleFactor*4);})
 			.attr('font-size',function(d){ return d.scaleFactor*12;})
 			.attr({'font-style':'italic','font-weight':'bold','fill':'white'})
 			.text(function(d){return d.item.id;})

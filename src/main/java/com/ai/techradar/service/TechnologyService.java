@@ -12,7 +12,11 @@ public interface TechnologyService {
 
 	TechnologyTO getTechnologyById(Long id);
 
-	TechnologyTO createTechnology(TechnologyTO technology);
+	TechnologyTO createTechnology(TechnologyTO technology) throws ValidationException;
+	
+	TechnologyTO updateTechnology(TechnologyTO technology);
+	
+	boolean deleteTechnology(Long id);
 
 	UserTechnologyTO setUserTechnology(Long technologyId, UserTechnologyTO technology) throws ValidationException;
 

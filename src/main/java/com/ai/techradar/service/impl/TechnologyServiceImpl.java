@@ -28,6 +28,7 @@ import com.ai.techradar.web.service.to.UserTechnologyTO;
 @SuppressWarnings("unchecked")
 public class TechnologyServiceImpl implements TechnologyService {
 
+	@Override
 	public List<TechnologyTO> getTechnologies() {
 		final Session session = HibernateUtil.getSessionFactory().openSession();
 		session.beginTransaction();
@@ -56,6 +57,7 @@ public class TechnologyServiceImpl implements TechnologyService {
 		return ts;
 	}
 
+	@Override
 	public TechnologyTO getTechnologyById(final Long id) {
 		final Session session = HibernateUtil.getSessionFactory().openSession();
 		session.beginTransaction();
@@ -82,24 +84,101 @@ public class TechnologyServiceImpl implements TechnologyService {
 		return technology;
 	}
 
-	public TechnologyTO createTechnology(final TechnologyTO technology) {
+	@Override
+	public TechnologyTO createTechnology(final TechnologyTO technology) throws ValidationException {
 		final Session session = HibernateUtil.getSessionFactory().openSession();
 		session.beginTransaction();
 
-		final Technology technologyEntity = new Technology();
-		technologyEntity.setName(technology.getName());
-		technologyEntity.setDescription(technology.getDescription());
+		final List<String> validations = new ArrayList<String>();
 
-		final Long id = (Long)session.save(technologyEntity);
+		if(technology != null) {
+			if(!StringUtils.isBlank(technology.getName())) {
+				final Technology existingTechnology = readTechnology(technology.getName(), session);
+
+				if(existingTechnology == null) {
+					final Technology technologyEntity = new Technology();
+					technologyEntity.setName(technology.getName());
+					technologyEntity.setDescription(technology.getDescription());
+					technologyEntity.setUrl(technology.getUrl());
+					technologyEntity.setDetailUrl(technology.getDetailUrl());
+					technologyEntity.setUsageCount(technology.getBlipSize());
+					technologyEntity.setCustomerStrategic(technology.isCustomerStrategic());
+
+					final Long id = (Long)session.save(technologyEntity);
+
+					technology.setId(id);
+				} else {
+					validations.add("Technology '" + technology.getName() + "' already exists in tech radar");
+				}
+			} else {
+				validations.add("Missing mandatory field 'technology name'");
+			}
+		} else {
+			validations.add("Missing mandatory field 'technology'");
+		}
 
 		session.getTransaction().commit();
 		session.close();
 
-		technology.setId(id);
+		if(!validations.isEmpty()) {
+			throw new ValidationException(validations);
+		}
 
 		return technology;
 	}
 
+	@Override
+	public TechnologyTO updateTechnology(final TechnologyTO technologyTO) {
+		final Session session = HibernateUtil.getSessionFactory().openSession();
+		session.beginTransaction();
+
+		final Criteria query = session.createCriteria(Technology.class);
+		query.add(Restrictions.eq("id", technologyTO.getId()));
+
+		final Technology technology = (Technology) query.uniqueResult();
+
+		if(technology != null) {
+			// TODO validate input
+			technology.setName(technologyTO.getName());
+			technology.setDescription(technologyTO.getDescription());
+			technology.setCustomerStrategic(technologyTO.isCustomerStrategic());
+			technology.setDetailUrl(technologyTO.getDetailUrl());
+			technology.setUrl(technologyTO.getUrl());
+			technology.setUsageCount(technologyTO.getBlipSize());
+		} else {
+			// TODO error
+		}
+
+		session.getTransaction().commit();
+		session.close();
+
+		return technologyTO;
+	}
+
+	@Override
+	public boolean deleteTechnology(final Long id) {
+		boolean result = false;
+
+		final Session session = HibernateUtil.getSessionFactory().openSession();
+		session.beginTransaction();
+
+		final Criteria query = session.createCriteria(Technology.class);
+		query.add(Restrictions.eq("id", id));
+
+		final Technology technology = (Technology) query.uniqueResult();
+
+		if(technology != null) {
+			session.delete(technology);
+			result = true;
+		}
+
+		session.getTransaction().commit();
+		session.close();
+
+		return result;
+	}
+
+	@Override
 	public UserTechnologyTO setUserTechnology(final Long technologyId, final UserTechnologyTO userTechnology) throws ValidationException {
 		final List<String> validations = new ArrayList<String>();
 
@@ -175,6 +254,7 @@ public class TechnologyServiceImpl implements TechnologyService {
 		return userTechnology;
 	}
 
+	@Override
 	public List<UserTechnologyTO> getTechnologyUsers(final Long technologyId) throws ValidationException {
 		final List<UserTechnologyTO> results = new ArrayList<UserTechnologyTO>();
 
@@ -213,6 +293,7 @@ public class TechnologyServiceImpl implements TechnologyService {
 		return results;
 	}
 
+	@Override
 	public List<RadarTechnologyTO> getTechnologyRadars(final Long technologyId) throws ValidationException {
 		final List<RadarTechnologyTO> results = new ArrayList<RadarTechnologyTO>();
 
@@ -233,12 +314,12 @@ public class TechnologyServiceImpl implements TechnologyService {
 
 			// Restrict to technologies with the input ID
 			joinToRadarTechnology.add(Restrictions.eq("id", technologyId));
-			
+
 			// Project to only columns that are needed (keep Hibernate efficient)
 			query.setProjection(Projections.projectionList()
 					.add(Projections.property("addedDate"))
 					.add(Projections.property("addedBy.username"))
-					
+
 					.add(Projections.property("radar.id"))
 					.add(Projections.property("radar.name"))
 					);
@@ -272,6 +353,12 @@ public class TechnologyServiceImpl implements TechnologyService {
 		query.add(Restrictions.eq("user.username", username));
 
 		return (UserTechnology)query.uniqueResult();
+	}
+
+	private Technology readTechnology(final String name, final Session session) {
+		final Criteria query = session.createCriteria(Technology.class);
+		query.add(Restrictions.ilike("name", name));
+		return (Technology)query.uniqueResult();
 	}
 
 	private Technology readTechnology(final Long id, final Session session) {

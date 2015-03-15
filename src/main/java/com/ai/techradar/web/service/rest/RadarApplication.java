@@ -18,6 +18,7 @@ public class RadarApplication extends Application
 		singletons.add(new TechnologyRestService());
 		singletons.add(new MaturityRestService());
 		singletons.add(new TechGroupingRestService());
+		singletons.add(new BusinessUnitRestService());
 		singletons.add(new MeRestService());
 		singletons.add(new SwaggerDocsRestService());
 

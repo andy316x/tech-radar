@@ -18,6 +18,8 @@
 	
 	<bean id="MaturityService" class="com.ai.techradar.service.impl.MaturityServiceImpl"></bean>
 	
+	<bean id="BusinessUnitService" class="com.ai.techradar.service.impl.BusinessUnitServiceImpl"></bean>
+	
 	<bean id="FakeDrupalTechnologyService" class="com.ai.techradar.mocked.drupal.impl.FakeDrupalTechnologyServiceImpl"></bean>
 	
 	<!-- User services -->

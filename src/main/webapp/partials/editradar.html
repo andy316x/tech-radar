@@ -7,7 +7,7 @@
 					class="icon-bar"></span> <span class="icon-bar"></span> <span
 					class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="#">The Radar</a>
+			<a class="navbar-brand" href="#"><strong>tech</strong><span>radar</span> <code>{beta}</code></a>
 		</div>
 		<div class="navbar-collapse collapse">
 			<ul class="nav navbar-nav navbar-right">
@@ -43,8 +43,13 @@
 	</form>	
 	
 	<div class="col-md-12 clearfix" style="margin-bottom: 0;border-bottom: 1px solid #CCC;padding-bottom: 20px;overflow:visible;">
+		<div class="clearfix">
 		<div class="col-md-6">
-			<h1><i class="glyphicon glyphicon-ok" style="color:green;"></i> <strong>Editing</strong> <span class="muted" style="margin-left:20px;">{{selectedRadar.name}}</span></h1>
+			<h1>
+				<i class="glyphicon glyphicon-ok" ng-show="selectedRadar.published == true" style="color:green;"></i>
+				<i class="glyphicon glyphicon-pencil" ng-show="selectedRadar.published != true" style="color:red;"></i>
+				<span> <strong>Editing</strong> <span class="muted" style="margin-left:20px;">{{selectedRadar.name}}</span><span class="text-muted"> {{selectedRadar.businessUnit}}</span><span class="text-muted"><small> v{{selectedRadar.majorVersion}}.{{selectedRadar.minorVersion}}</small></span>
+			</h1>
 		</div>
 		<div class="col-md-6 text-right">
 			<form id="uploadform" action="/radar/uploadcsv" method="post" target="theframe" enctype="multipart/form-data">
@@ -69,11 +74,15 @@
 				
 				<button class="btn btn-default" ng-click="doDelete(selectedRadar.id)">Delete</button>
 				<button class="btn btn-primary" ng-click="doSave()">Save</button>
-				<button class="btn btn-success">Publish</button>
-				<button class="btn btn-success" ng-click="addTechVisible=true">Edit Technologies</button>
+				<button class="btn btn-success" ng-click="doPublish(selectedRadar.id)">Publish</button>
+				<!-- <button class="btn btn-success" ng-click="addTechVisible=true">Edit Technologies</button> -->
 				
 				<input type="submit" style="display:none"></input>
 			</form>
+		</div>
+		</div>
+		<div style="margin-top:10px;">
+			<span>{{selectedRadar.description}}</span>
 		</div>
 	</div>
 	
@@ -125,7 +134,7 @@
 		</div>
 		
 		<div class="col-md-12" style="padding:50px 100px;">
-			<div id="radar" ng-radar="" radar="selectedRadar.radar" selected-blip="selectedItem"></div>
+			<div id="radar" ng-radar="" radar="selectedRadar.radar" selected-blip="selectedItem" on-blip-moved="blipMoved(blip)" editable="true"></div>
 		</div>
 		
 	</div>

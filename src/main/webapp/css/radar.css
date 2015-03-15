@@ -313,17 +313,64 @@ h1,.h1 {
 }
 
 .radar-card {
-	display: inline-block;
 	margin: 10px;
 	padding: 10px;
 	border: 1px solid #e1e1e1;
 	width: 250px;
 	background-color: #FFFFFF;
 	position: relative;
+	float: left;
 }
 
-.radar-card>div {
+.radar-card-title {
+	margin: 0px 34px 0px 15px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.radar-card-content {
+	text-align: center;
+	padding-bottom: 5px;
+}
+
+.radar-card-footer {
 	padding: 5px 0;
+}
+
+.radar-card-button-panel {
+	padding: 5px 0;
+}
+
+.radar-card-button-panel > div {
+	width: 50%;
+	float: left;
+}
+
+.radar-card-button-panel > div > div {
+	margin: 0 2px;
+}
+
+.radar-card .icon-rounded {
+	position: absolute;
+	width: 26px;
+	height: 26px;
+	border-radius: 13px;
+	right: 14px;
+	top: 15px;
+	text-align: center;
+	font-size: 15px;
+	padding: 5px 0;
+}
+
+.radar-card .icon-rounded.ok {
+	background-color: rgb(223, 234, 211);
+	color: green;
+}
+
+.radar-card .icon-rounded.pencil {
+	background-color: rgb(238, 213, 194);
+	color: red;
 }
 
 .radar-card .img-rounded {

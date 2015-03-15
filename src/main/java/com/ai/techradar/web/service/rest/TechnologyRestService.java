@@ -2,8 +2,10 @@ package com.ai.techradar.web.service.rest;
 
 import java.util.List;
 
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -25,7 +27,7 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 
 @Path("technology")
-@Api(value="/technology",description="Radar service")
+@Api(value="/technology",description="Technology service")
 public class TechnologyRestService extends AbstractTechRadarRestService {
 
 	private TechnologyService technologyService = (TechnologyService)SpringStarter.getContext().getBean("TechnologyService");
@@ -103,6 +105,65 @@ public class TechnologyRestService extends AbstractTechRadarRestService {
 			final TechnologyTO newTechnology = technologyService.createTechnology(technology);
 
 			return Response.ok(newTechnology).build();
+
+		} catch (SecurityException e) {
+			throw new WebApplicationException(e);
+		} catch (IllegalArgumentException e) {
+			throw new WebApplicationException(e);
+		} catch (ValidationException e) {
+			return Response.status(Status.BAD_REQUEST).entity(e.getValidations()).build();
+		} finally {
+			AdminHandlerHelper.logout();
+		}
+
+	}
+
+	@PUT
+	@Path("/{technologyId}")
+	@ApiOperation(value="Update a technology",response=Response.class)
+	@Produces("application/json")
+	public Response updateTechnology(
+			@Context SecurityContext securityContext,
+			@PathParam("technologyId") final Long technologyId,
+			@ApiParam("the technology") final TechnologyTO technology) {
+
+		if(securityContext.getUserPrincipal()!=null) {
+			AdminHandlerHelper.login(securityContext.getUserPrincipal().getName());
+		}
+
+		try {
+
+			final TechnologyTO newTechnology = technologyService.updateTechnology(technology);
+
+			return Response.ok(newTechnology).build();
+
+		} catch (SecurityException e) {
+			throw new WebApplicationException(e);
+		} catch (IllegalArgumentException e) {
+			throw new WebApplicationException(e);
+		} finally {
+			AdminHandlerHelper.logout();
+		}
+
+	}
+
+	@DELETE
+	@Path("/{technologyId}")
+	@ApiOperation(value="Delete a technology",response=Response.class)
+	@Produces("application/json")
+	public Response deleteTechnology(
+			@Context SecurityContext securityContext,
+			@PathParam("technologyId") final Long technologyId) {
+
+		if(securityContext.getUserPrincipal()!=null) {
+			AdminHandlerHelper.login(securityContext.getUserPrincipal().getName());
+		}
+
+		try {
+
+			final Boolean result = technologyService.deleteTechnology(technologyId);
+
+			return Response.ok(result).build();
 
 		} catch (SecurityException e) {
 			throw new WebApplicationException(e);

@@ -10,7 +10,9 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.Response.Status;
 
+import com.ai.techradar.service.BusinessUnitService;
 import com.ai.techradar.service.MaturityService;
 import com.ai.techradar.service.RadarService;
 import com.ai.techradar.service.SpringStarter;
@@ -18,6 +20,7 @@ import com.ai.techradar.service.TechGroupingService;
 import com.ai.techradar.service.TechnologyService;
 import com.ai.techradar.service.ValidationException;
 import com.ai.techradar.util.AdminHandlerHelper;
+import com.ai.techradar.web.service.to.BusinessUnitTO;
 import com.ai.techradar.web.service.to.MaturityTO;
 import com.ai.techradar.web.service.to.RadarTO;
 import com.ai.techradar.web.service.to.TechGroupingTO;
@@ -29,13 +32,15 @@ import com.wordnik.swagger.annotations.ApiParam;
 @Path("dataupload")
 @Api(value="/dataupload",description="Bulk load data service")
 public class DataUploadRestService extends AbstractTechRadarRestService {
-	
+
 	private TechnologyService technologyService = (TechnologyService)SpringStarter.getContext().getBean("TechnologyService");
-	
+
 	private MaturityService maturityService = (MaturityService)SpringStarter.getContext().getBean("MaturityService");
-	
+
 	private TechGroupingService techGroupingService = (TechGroupingService)SpringStarter.getContext().getBean("TechGroupingService");
-	
+
+	private BusinessUnitService businessUnitService = (BusinessUnitService)SpringStarter.getContext().getBean("BusinessUnitService");
+
 	private RadarService radarService = (RadarService)SpringStarter.getContext().getBean("RadarService");
 
 	@POST
@@ -45,7 +50,7 @@ public class DataUploadRestService extends AbstractTechRadarRestService {
 	public Response startApp(
 			@Context SecurityContext securityContext,
 			@ApiParam("the radar") final Data data) {
-		
+
 		if(securityContext.getUserPrincipal()!=null) {
 			AdminHandlerHelper.login(securityContext.getUserPrincipal().getName());
 		}
@@ -61,6 +66,12 @@ public class DataUploadRestService extends AbstractTechRadarRestService {
 			if(data.getMaturities()!=null) {
 				for(final MaturityTO maturity : data.getMaturities()) {
 					maturityService.createMaturity(maturity);
+				}
+			}
+
+			if(data.getBusinessUnits()!=null) {
+				for(final BusinessUnitTO businessUnit : data.getBusinessUnits()) {
+					businessUnitService.createBusinessUnit(businessUnit);
 				}
 			}
 
@@ -84,6 +95,8 @@ public class DataUploadRestService extends AbstractTechRadarRestService {
 			throw new WebApplicationException(e);
 		} catch (IllegalArgumentException e) {
 			throw new WebApplicationException(e);
+		} catch (ValidationException e) {
+			return Response.status(Status.BAD_REQUEST).entity(e.getValidations()).build();
 		} finally {
 			AdminHandlerHelper.logout();
 		}
@@ -99,6 +112,8 @@ public class DataUploadRestService extends AbstractTechRadarRestService {
 		private List<MaturityTO> maturities;
 
 		private List<TechGroupingTO> techGroupings;
+
+		private List<BusinessUnitTO> businessUnits;
 
 		private RadarTO radar;
 
@@ -124,6 +139,14 @@ public class DataUploadRestService extends AbstractTechRadarRestService {
 
 		public void setTechGroupings(final List<TechGroupingTO> techGroupings) {
 			this.techGroupings = techGroupings;
+		}
+
+		public List<BusinessUnitTO> getBusinessUnits() {
+			return businessUnits;
+		}
+
+		public void setBusinessUnits(final List<BusinessUnitTO> businessUnits) {
+			this.businessUnits = businessUnits;
 		}
 
 		public RadarTO getRadar() {

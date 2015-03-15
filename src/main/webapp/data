@@ -11,6 +11,18 @@
 },
 {
   "name": "Solution Technology"
+},
+{
+  "name": "Integrate"
+},
+{
+  "name": "Host"
+},
+{
+  "name": "Process"
+},
+{
+  "name": "Present"
 }
 ],
 
@@ -30,8 +42,31 @@
 },
 {
   "name": "watch"
+},
+{
+  "name": "adopt"
 }
 ],
+
+
+"businessUnits":[
+{
+  "name": "UKS:NS"
+},
+{
+  "name": "UKS:Gov"
+},
+{
+  "name": "UKS:ES"
+},
+{
+  "name": "IS&S"
+},
+{
+  "name": "CS"
+}
+],
+
 
 "technologies":[ {
   "name" : "Bamboo",
@@ -1329,5 +1364,336 @@
   "detailUrl" : null,
   "customerStrategic" : false,
   "description" : null
-} ]
+}, {
+  "name":"WorldWind",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}, {
+  "name":"BASIS Technology",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}, {
+  "name":"UIMA",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}, {
+  "name":"React",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}, {
+  "name":"Stanford CoreNLP",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}, {
+  "name":"Apache Jena",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}, {
+  "name":"Apache Flume",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}, {
+  "name":"OpenCV",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}, {
+  "name":"RESTEasy",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}, {
+  "name":"Oozie",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}, {
+  "name":"JUNG",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}, {
+  "name":"Prefuse",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}, {
+  "name":"Apache Kafka",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}, {
+  "name":"Lexalytics",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}, {
+  "name":"Google Knoweledge Vault",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}, {
+  "name":"SWT (standard widget toolkit)",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}, {
+  "name":"GATE",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}, {
+  "name":"EmberJS",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}, {
+  "name":"LibreOffice",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}, {
+  "name":"FRED",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}, {
+  "name":"Leidos DigitalEdge",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}, {
+  "name":"JMS",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}, {
+  "name":"Text-Analysis",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}, {
+  "name":"Apache Camel",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}, {
+  "name":"Apache Spark",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}, {
+  "name":"Apache Clerezza",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}, {
+  "name":"NetOwl",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}, {
+  "name":"Apache Nutch",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}, {
+  "name":"Groovy",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}, {
+  "name":"PostgreSQL",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}, {
+  "name":"Tinkerpop",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}, {
+  "name":"Apache Lucene",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}, {
+  "name":"NLTK",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}, {
+  "name":"Pingar",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}, {
+  "name":"ElasticSearch",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}, {
+  "name":"Language-Detection",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}, {
+  "name":"Apache Stanbol",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}, {
+  "name":"Hadoop Ecosystem",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}, {
+  "name":"Hawt.io",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}, {
+  "name":"Linkurious",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}, {
+  "name":"OrientDB",
+  "id" : null,
+  "url" : null,
+  "blipSize" : 0,
+  "detailUrl" : null,
+  "customerStrategic" : false,
+  "description" : null
+}
+
+
+ ]
 }

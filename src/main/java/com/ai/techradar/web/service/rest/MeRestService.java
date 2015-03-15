@@ -25,7 +25,7 @@ import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 
 @Path("me")
-@Api(value="/me",description="Radar service")
+@Api(value="/me",description="Me service")
 public class MeRestService extends AbstractTechRadarRestService {
 
 	private UserService userService = (UserService)SpringStarter.getContext().getBean("UserService");

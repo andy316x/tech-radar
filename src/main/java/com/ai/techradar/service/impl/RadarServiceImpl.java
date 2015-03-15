@@ -15,6 +15,7 @@ import org.hibernate.sql.JoinType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import com.ai.techradar.database.entities.BusinessUnit;
 import com.ai.techradar.database.entities.Maturity;
 import com.ai.techradar.database.entities.MovementEnum;
 import com.ai.techradar.database.entities.Radar;
@@ -50,10 +51,18 @@ public class RadarServiceImpl implements RadarService {
 		final Criteria query = session.createCriteria(Radar.class);
 
 		query.createAlias("createdBy", "createdBy");
+		query.createAlias("businessUnit", "businessUnit");
 
 		query.setProjection(Projections.projectionList()
 				.add(Projections.property("id"))
 				.add(Projections.property("name"))
+				.add(Projections.property("description"))
+				.add(Projections.property("businessUnit.name"))
+				.add(Projections.property("published"))
+				.add(Projections.property("lastPublishedDate"))
+				.add(Projections.property("approved"))
+				.add(Projections.property("majorVersion"))
+				.add(Projections.property("minorVersion"))
 				.add(Projections.property("createdDate"))
 				.add(Projections.property("createdBy.username"))
 				);
@@ -63,9 +72,16 @@ public class RadarServiceImpl implements RadarService {
 			final RadarTO r = new RadarTO();
 			r.setId((Long)row[0]);
 			r.setName((String)row[1]);
-			r.setDateCreated((Date)row[2]);
+			r.setDescription((String)row[2]);
+			r.setBusinessUnit((String)row[3]);
+			r.setPublished((Boolean)row[4]);
+			r.setLastPublishedDate((Date)row[5]);
+			r.setApproved((Boolean)row[6]);
+			r.setMajorVersion((Integer)row[7]);
+			r.setMinorVersion((Integer)row[8]);
+			r.setDateCreated((Date)row[9]);
 
-			final UserInfo userInfo = userService.getUserInfo((String)row[3]);
+			final UserInfo userInfo = userService.getUserInfo((String)row[10]);
 			if(userInfo.getSurname() != null) {
 				r.setCreatedBy(userInfo.getGivenName() + " " + userInfo.getSurname());	
 			} else {
@@ -96,20 +112,38 @@ public class RadarServiceImpl implements RadarService {
 		final Criteria maturityJoinToRadar = maturitiesQuery.createCriteria("radar", "radar",  JoinType.INNER_JOIN);
 		maturitiesQuery.createAlias("maturity", "maturity",  JoinType.INNER_JOIN);
 		maturityJoinToRadar.add(Restrictions.eq("id", id));
+		maturityJoinToRadar.createAlias("businessUnit", "businessUnit", JoinType.INNER_JOIN);
+		maturityJoinToRadar.createAlias("createdBy", "createdBy", JoinType.INNER_JOIN);
 		maturitiesQuery.addOrder(Order.asc("theOrder"));
 		maturitiesQuery.setProjection(Projections.projectionList()
 				.add(Projections.property("radar.id"))
 				.add(Projections.property("radar.name"))
+				.add(Projections.property("radar.description"))
+				.add(Projections.property("businessUnit.name"))
+				.add(Projections.property("radar.published"))
+				.add(Projections.property("radar.lastPublishedDate"))
+				.add(Projections.property("radar.approved"))
+				.add(Projections.property("radar.majorVersion"))
+				.add(Projections.property("radar.minorVersion"))
 				.add(Projections.property("radar.createdDate"))
+				.add(Projections.property("createdBy.username"))
 				.add(Projections.property("maturity.name")));
 
 		for(final Object[] row : (List<Object[]>)maturitiesQuery.list()) {
 			r.setId((Long)row[0]);
 			r.setName((String)row[1]);
-			r.setDateCreated((Date)row[2]);
+			r.setDescription((String)row[2]);
+			r.setBusinessUnit((String)row[3]);
+			r.setPublished((Boolean)row[4]);
+			r.setLastPublishedDate((Date)row[5]);
+			r.setApproved((Boolean)row[6]);
+			r.setMajorVersion((Integer)row[7]);
+			r.setMinorVersion((Integer)row[8]);
+			r.setDateCreated((Date)row[9]);
+			r.setCreatedBy((String)row[10]);
 
 			final MaturityTO maturityTO = new MaturityTO();
-			maturityTO.setName((String)row[3]);
+			maturityTO.setName((String)row[11]);
 			maturities.add(maturityTO);
 		}
 		r.setMaturities(maturities);
@@ -148,6 +182,7 @@ public class RadarServiceImpl implements RadarService {
 				.add(Projections.property("movement"))
 				.add(Projections.property("techGrouping.name"))
 				.add(Projections.property("maturity.name"))
+				.add(Projections.property("technology.id"))
 				.add(Projections.property("technology.name"))
 				.add(Projections.property("technology.usageCount"))
 				.add(Projections.property("technology.url"))
@@ -160,12 +195,13 @@ public class RadarServiceImpl implements RadarService {
 			tech.setMovement((MovementEnum)row[0]);
 			tech.setTechGrouping((String)row[1]);
 			tech.setMaturity((String)row[2]);
-			tech.setTechnology((String)row[3]);
-			tech.setBlipSize((Integer)row[4]);
-			tech.setUrl((String)row[5]);
-			tech.setDescription((String)row[6]);
-			tech.setDetailUrl((String)row[7]);
-			tech.setCustomerStrategic((Boolean)row[8]);
+			tech.setId((Long)row[3]);
+			tech.setTechnology((String)row[4]);
+			tech.setBlipSize((Integer)row[5]);
+			tech.setUrl((String)row[6]);
+			tech.setDescription((String)row[7]);
+			tech.setDetailUrl((String)row[8]);
+			tech.setCustomerStrategic((Boolean)row[9]);
 			technologies.add(tech);
 		}
 		r.setTechnologies(technologies);
@@ -184,8 +220,14 @@ public class RadarServiceImpl implements RadarService {
 
 		try {
 
+			// Create new blank radar
 			final Radar radar = new Radar();
 			radar.setCreatedDate(new Date());
+			radar.setPublished(false);
+			radar.setLastPublishedDate(null);
+			radar.setApproved(false);
+			radar.setMajorVersion(0);
+			radar.setMinorVersion(0);
 
 
 			// Created by
@@ -196,10 +238,34 @@ public class RadarServiceImpl implements RadarService {
 			}
 
 
+			// Name
 			if(!StringUtils.isBlank(radarTO.getName())) {
 				radar.setName(radarTO.getName());
 			} else {
 				validations.add("Mandatory field 'name' has not been supplied");
+			}
+
+
+			// Description
+			if(!StringUtils.isBlank(radarTO.getDescription())) {
+				radar.setDescription(radarTO.getDescription());
+			} else {
+				validations.add("Mandatory field 'description' has not been supplied");
+			}
+
+
+			// Business Unit
+			final String businessUnitName = radarTO.getBusinessUnit();
+			if(!StringUtils.isBlank(businessUnitName)) {
+				final BusinessUnit businessUnit = readBusinessUnit(businessUnitName, session);
+				if(businessUnit!=null) {
+					radar.setBusinessUnit(businessUnit);
+					businessUnit.getRadars().add(radar);
+				} else {
+					validations.add("Unable to find business unit '" + businessUnitName + "' in tech radar");
+				}
+			} else {
+				validations.add("Mandatory field 'business unit' has not been supplied");
 			}
 
 			final Long id = (Long)session.save(radar);
@@ -208,7 +274,7 @@ public class RadarServiceImpl implements RadarService {
 
 			final List<MaturityTO> radarMaturityTOs = radarTO.getMaturities();
 			if(radarMaturityTOs!=null && !radarMaturityTOs.isEmpty()) {
-				if(radarMaturityTOs.size() > 3) {
+				if(radarMaturityTOs.size() > 0) {
 					int i = 0;
 					for(final MaturityTO radarMaturityTO : radarMaturityTOs) {
 						final Maturity maturity = readMaturity(radarMaturityTO.getName(), session);
@@ -223,7 +289,7 @@ public class RadarServiceImpl implements RadarService {
 						}
 					}
 				} else {
-					validations.add(radarMaturityTOs.size() + " maturities supplied, at least 4 required");
+					validations.add(radarMaturityTOs.size() + " maturities supplied, at least 1 required");
 				}
 			} else {
 				validations.add("No maturities");
@@ -323,6 +389,8 @@ public class RadarServiceImpl implements RadarService {
 				if(!validations.isEmpty()) {
 					throw new ValidationException(validations);
 				}
+				
+				radar.setMinorVersion(radar.getMinorVersion()+1);
 
 				// Remove all the existing technologies
 				// TODO at the moment an upload removes all previous 
@@ -447,6 +515,12 @@ public class RadarServiceImpl implements RadarService {
 		return (TechGrouping)query.uniqueResult();
 	}
 
+	private BusinessUnit readBusinessUnit(final String name, final Session session) {
+		final Criteria query = session.createCriteria(BusinessUnit.class);
+		query.add(Restrictions.ilike("name", name));
+		return (BusinessUnit)query.uniqueResult();
+	}
+
 	private User readUser(final String username, final Session session) {
 		final Criteria query = session.createCriteria(User.class);
 		query.add(Restrictions.eq("username", username));
@@ -464,6 +538,36 @@ public class RadarServiceImpl implements RadarService {
 		session.persist(newUser);
 
 		return newUser;
+	}
+
+
+	@Override
+	public RadarTO updateRadar(final RadarTO radarTO) throws ValidationException {
+		final Session session = HibernateUtil.getSessionFactory().openSession();
+		session.beginTransaction();
+
+		final Criteria query = session.createCriteria(Radar.class);
+		query.add(Restrictions.eq("id", radarTO.getId()));
+
+		final Radar radar = (Radar) query.uniqueResult();
+
+		if(radar != null) {
+			// TODO validate input
+			radar.setName(radarTO.getName());
+			radar.setDescription(radarTO.getDescription());
+			radar.setPublished(radarTO.isPublished());
+			radar.setLastPublishedDate(radarTO.getLastPublishedDate());
+			radar.setApproved(radarTO.isApproved());
+			radar.setMajorVersion(radarTO.getMajorVersion());
+			radar.setMinorVersion(radarTO.getMinorVersion());
+		} else {
+			// TODO error
+		}
+
+		session.getTransaction().commit();
+		session.close();
+
+		return radarTO;
 	}
 
 }

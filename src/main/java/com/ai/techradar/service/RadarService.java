@@ -13,6 +13,8 @@ public interface RadarService {
 
 	RadarTO createRadar(RadarTO radar) throws ValidationException;
 	
+	RadarTO updateRadar(RadarTO radar) throws ValidationException;
+	
 	boolean deleteRadarById(Long id);
 	
 	RadarTO addTechnologiesToRadar(Long radarId, List<RadarTechnologyTO> radarTechnologyTOs) throws ValidationException;

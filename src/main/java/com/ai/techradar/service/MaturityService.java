@@ -8,6 +8,10 @@ public interface MaturityService {
 
 	List<MaturityTO> getMaturities();
 
-	MaturityTO createMaturity(MaturityTO maturity);
+	MaturityTO createMaturity(MaturityTO maturity) throws ValidationException;
+	
+	MaturityTO updateMaturity(MaturityTO maturity);
+	
+	boolean deleteMaturity(Long id);
 
 }
