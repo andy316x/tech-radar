@@ -252,8 +252,14 @@ body {
 	-ms-filter: grayscale(100%);
 	-o-filter: grayscale(100%);
 	filter: grayscale(100%);
-	filter: url(grayscale.svg); /* Firefox 4+ */
-	filter: gray; /* IE 6-9 */
+}
+
+.baefooter img:hover {
+  -webkit-filter: grayscale(0%);
+  -moz-filter: grayscale(0%);
+  -ms-filter: grayscale(0%);
+  -o-filter: grayscale(0%);
+  filter: none;
 }
 
 .baefooter li a {
