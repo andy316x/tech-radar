@@ -247,19 +247,181 @@ body {
 
 .baefooter img {
 	width: 135px;
+	
 	-webkit-filter: grayscale(100%);
+	-webkit-animation-name: out;
+	-webkit-animation-duration: 1s;
+	
 	-moz-filter: grayscale(100%);
+	-moz-animation-name: out;
+	-moz-animation-duration: 1s;
+	
 	-ms-filter: grayscale(100%);
+	-ms-animation-name: out;
+	-ms-animation-duration: 1s;
+	
 	-o-filter: grayscale(100%);
+	-o-animation-name: out;
+	-o-animation-duration: 1s;
+	
 	filter: grayscale(100%);
+	animation-name: out;
+	animation-duration: 1s;
 }
 
 .baefooter img:hover {
-  -webkit-filter: grayscale(0%);
-  -moz-filter: grayscale(0%);
-  -ms-filter: grayscale(0%);
-  -o-filter: grayscale(0%);
-  filter: none;
+	-webkit-filter: grayscale(0%);
+	-webkit-animation-name: in;
+	-webkit-animation-duration: 0.5s;
+	
+	-moz-filter: grayscale(0%);
+	-moz-animation-name: in;
+	-moz-animation-duration: 0.5s;
+	
+	-ms-filter: grayscale(0%);
+	-ms-animation-name: in;
+	-ms-animation-duration: 0.5s;
+	
+	-o-filter: grayscale(0%);
+	-o-animation-name: in;
+	-o-animation-duration: 0.5s;
+	
+	filter: grayscale(0%);
+	animation-name: in;
+	animation-duration: 0.5s;
+}
+
+@-webkit-keyframes in {
+	from {-webkit-filter: grayscale(100%);}
+	to {-webkit-filter: grayscale(0%);}
+}
+
+@-moz-keyframes in {
+	from {-moz-filter: grayscale(100%);}
+	to {-moz-filter: grayscale(0%);}
+}
+
+@-ms-keyframes in {
+	from {-ms-filter: grayscale(100%);}
+	to {-ms-filter: grayscale(0%);}
+}
+
+@-o-keyframes in {
+	from {-o-filter: grayscale(100%);}
+	to {-o-filter: grayscale(0%);}
+}
+
+@keyframes in {
+	from {filter: grayscale(100%);}
+	to {filter: grayscale(0%);}
+}
+
+@-webkit-keyframes out {
+	from {-webkit-filter: grayscale(0%);}
+	to {-webkit-filter: grayscale(100%);}
+}
+
+@-moz-keyframes out {
+	from {-moz-filter: grayscale(0%);}
+	to {-moz-filter: grayscale(100%);}
+}
+
+@-ms-keyframes out {
+	from {-ms-filter: grayscale(0%);}
+	to {-ms-filter: grayscale(100%);}
+}
+
+@-o-keyframes out {
+	from {-o-filter: grayscale(0%);}
+	to {-o-filter: grayscale(100%);}
+}
+
+@keyframes out {
+	from {filter: grayscale(0%);}
+	to {filter: grayscale(100%);}
+}
+
+/* social */
+.social-icon-list {
+	float: right;
+}
+
+.social-icon-list li {
+	float: right;
+	margin-right: 10px;
+	cursor: pointer;
+	height: 44px;
+    width: 44px;
+	position: relative;
+	opacity: 0.9;
+}
+
+.social-icon-list li a {
+	height: 0;
+    width: 0;
+	display: inline-block;
+	position: absolute;
+	top: 22px;
+	left: 22px;
+	margin: auto;
+	background-size: 44px 44px;
+	background-position: center; 
+	border-radius: 22px;
+	transition: width 1.1s cubic-bezier(0.19, 1, 0.22, 1), height 1.1s cubic-bezier(0.19, 1, 0.22, 1),
+	top 1.1s cubic-bezier(0.19, 1, 0.22, 1), left 1.1s cubic-bezier(0.19, 1, 0.22, 1),
+	border-radius 1.5s cubic-bezier(0.19, 1, 0.22, 1) 0.2s;
+}
+
+.no-csstransitions .social-icon-list li:hover {
+	background-position: 0 44px;
+}
+
+.social-icon-list li:hover a {
+	width: 44px;
+	height: 44px;
+	border-radius: 0px;
+	top: 0;
+	left: 0;
+}
+
+.social-icon-list .twitter-icon {
+	background-image: url("../img/social/twitter.png");
+}
+
+.social-icon-list .twitter-icon:hover a {
+	background-image: url("../img/social/twitterColour.png");
+}
+
+.social-icon-list .fb-icon {
+	background-image: url("../img/social/facebook.png");
+}
+
+.social-icon-list .fb-icon:hover a {
+	background-image: url("../img/social/facebookColour.png");
+}
+
+.social-icon-list .in-icon {
+	background-image: url("../img/social/linkedin.png");
+}
+
+.social-icon-list .in-icon:hover a {
+	background-image: url("../img/social/linkedinColour.png");
+}
+
+.social-icon-list .flickr-icon {
+	background-image: url("../img/social/flickr.png");
+}
+
+.social-icon-list .flickr-icon:hover a {
+	background-image: url("../img/social/flickrColour.png");
+}
+
+.social-icon-list .youtube-icon {
+	background-image: url("../img/social/youtube.png");
+}
+
+.social-icon-list .youtube-icon:hover a {
+	background-image: url("../img/social/youtubeColour.png");
 }
 
 .baefooter li a {
