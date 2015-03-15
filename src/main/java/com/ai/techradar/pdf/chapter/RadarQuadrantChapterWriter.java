@@ -97,9 +97,8 @@ public class RadarQuadrantChapterWriter {
 	}
 
 	private void defineArcs(final List<MaturityTO> maturities) {
-
-		for (int i = 0; i < ARC_RADIUSES.length; i++) {
-			final MaturityTO maturity = maturities.get(i);
+		int i = 0;
+		for (final MaturityTO maturity : maturities) {
 			final String maturityName = maturity.getName();
 			final int radius = ARC_RADIUSES[i];
 			final Color colour = ARC_COLOURS[i];
@@ -112,6 +111,8 @@ public class RadarQuadrantChapterWriter {
 			}
 
 			arcsByIndex.put(i, arc);
+			
+			i++;
 		}
 	}
 
