@@ -273,21 +273,21 @@ techRadarDirectives.directive('ngAddTech', function ($http) {
 		scope: {
 			visible: '=',
 			selectedRadar: '=',
-			doSave: '&'
+			onSave: '&',
+			onCancel: '&'
 		},
 		template: '<div class="modal" >' +
 		'  <div class="modal-dialog">' +
 		'    <div class="modal-content">' +
 		'      <div class="modal-header">' +
 		'        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>' +
-		'        <h4 class="modal-title">Add Technologies</h4>' +
+		'        <h4 class="modal-title">Select Technologies</h4>' +
 		'      </div>' +
 		'      <div class="modal-body">' +
 		
 		'		<div class="container-fluid main-content">' +
-		'		 <div class="row">' +
-		'		  <div class="col-md-12" style="background-color:#EFEFEF;padding:25px 20px;">' +
-		'		    <div class="col-md-6">' +
+		'		 <div ng-show="stage==\'1\'" class="row">' +
+		'		  <div class="col-md-12">' +
 		
 		'			 <div class="search-wrapper">' +
 		'				<input ng-model="searchText" type="text" class="form-control typeahead" placeholder="Filter technologies..."></input>' +
@@ -295,167 +295,61 @@ techRadarDirectives.directive('ngAddTech', function ($http) {
 		'			 </div>' +
 
 		'			 <div class="technology-wrapper">' +
-		'				<div ng-repeat="technology in technologies | filter:{name:searchText}" class="technology-card{{selectedTechnology.id==technology.id?\' active\':\'\'}}" ng-click="technologySelected(technology)">' +
-		'					<span>{{$index+1}}. {{technology.name}}<i ng-show="isInRadar(technology.name)" class="glyphicon glyphicon-screenshot"></i></span>' +
+		'				<div ng-repeat="technology in technologies | filter:{name:searchText}" class="technology-card{{technology.selected==true?\' active\':\'\'}}" ng-click="technologySelected(technology)">' +
+		'					<span>{{technology.name}}</span>' +
 		'				</div>' +
 		'			 </div>' +
 		
-		'		    </div>' +
-		
-		'		    <div class="col-md-6"> ' +
-		'		    <div class="technology-wrapper" style="margin:0" ng-show="selectedTechnology!=undefined"> ' +
-					
-		'				<div class="clearfix" style="padding: 20px 15px 20px 5px;border-bottom: 1px solid #CCCCCC;">' +
-		'					<div class="col-xs-6">' +
-		'						<h1>{{selectedTechnology.name}}</h1>' +
-		'					</div>' +
-		'				</div>' +
-						
-		'				<div style="padding: 10px; border-bottom: 1px solid #CCCCCC">' +
-
-		'		         <div class="container-fluid main-content">' +
-		'		          <div class="row">' +
-		'					<div class="col-xs-6 text-left">' +
-		'					 <h4>Maturity</h4>' +
-		'					 <div class="btn-group-vertical" role="group" aria-label="Maturity">' +
-		'					   <button ng-repeat="maturityOption in maturityOptions" ng-click="setMaturity(maturityOption.value)" ng-class="[btnStyle,btnDefaultStyle,{{maturityOption.value.replace(\' \',\'\')}}Style]">{{maturityOption.label}}</button>' +
-		'				     </div>' +
-		'				    </div>' +
-		
-		'					<div class="col-xs-6 text-right">' +
-		'					 <h4>Tech Group</h4>' +
-		'					 <div class="btn-group-vertical" role="group" aria-label="Tech Group">' +
-		'					  <button ng-repeat="techGroupingOption in techGroupingOptions" ng-click="setTechGroup(techGroupingOption.value)" ng-class="[btnStyle,btnDefaultStyle,{{techGroupingOption.value.replace(\' \',\'\')}}Style]">{{techGroupingOption.label}}</button>' +
-		'					 </div>' +
-		'				    </div>' +
-		'		         </div>' +
-		'				</div>' +
-
-		'				</div>' +
-		'				<div class="text-right" style="padding: 10px; border-bottom: 1px solid #CCCCCC">' +
-		'                <div>{{validationMessage}}</div>' +
-		'                <button type="button" ng-hide="isInRadar(selectedTechnology.name)" ng-click="add()" class="btn btn-success">Add</button>' +
-		'                <button type="button" ng-show="isInRadar(selectedTechnology.name)" ng-click="remove()" class="btn btn-success">Remove</button>' +
-		'				</div>' +
+		'		    <div class="text-right" style="margin-top: 10px;">' +
+		'		      <span><strong>{{countSelected(technologies)}}</strong> of <strong>{{technologies.length}}</strong> selected</span>' +
 		'		    </div>' +
 		
 		'		   </div>' +
 		'		  </div>' +
 		'		 </div>' +
+		
+		'		 <div ng-show="stage==\'2\'" class="row">' +
+		'		  <div class="col-md-12">' +
+		
+		'			<div class="clearfix" style="margin-bottom:10px;">' +
+		'				<div class="col-sm-4"><strong>Technology</strong></div>' +
+		'				<div class="col-sm-4"><strong>Maturity</strong></div>' +
+		'				<div class="col-sm-4"><strong>Tech Grouping</strong></div>' +
+		'			</div>' +
+		'			 <div style="overflow-y:scroll;overflow-x:hidden;height:340px;">' +
+		'				<div ng-repeat="technology in technologies | filter:{name:searchText}" class="clearfix" ng-show="technology.selected==true">' +
+		'					<div class="col-sm-4"><span>{{technology.name}}</span></div>' +
+		'					<div class="col-sm-4"><select class="form-control" ng-model="technology.maturity" ng-options="maturity.label as maturity.value for maturity in $parent.maturityOptions"></select></div>' +
+		'					<div class="col-sm-4"><select class="form-control" ng-model="technology.techGrouping" ng-options="techGrouping.label as techGrouping.value for techGrouping in $parent.techGroupingOptions"></select></div>' +
+		'				</div>' +
+		'			 </div>' +
+		
+		'		   </div>' +
+		'		  </div>' +
+		'		 </div>' +
+		
+		'       <div class="error-panel">'+
+		'         <div ng-repeat="error in errors" class="alert alert-danger" style="margin:5px;">{{error.text}}</div>'+
+		'       </div>'+
 
-		'      <div class="modal-footer">' +
-		'        <button type="button" ng-click="doSave()" class="btn btn-success">Save</button>' +
+		'      <div class="modal-footer clearfix">' +
+		'        <div class="col-sm-6 text-left">' +
+		'          <button ng-show="stage==\'2\'" ng-click="stage=\'1\'" class="btn btn-default">Back</button>' +
+		'        </div>' +
+		'        <div class="col-sm-6 text-right">' +
+		'          <button ng-click="doCancel()" class="btn btn-default">Cancel</button>' +
+		'          <button ng-show="stage==\'1\'" ng-click="stage=\'2\'" class="btn btn-success">Next</button>' +
+		'          <button ng-show="stage==\'2\'" ng-click="doSave()" class="btn btn-success">Save</button>' +
+		'        </div>' +
 		'      </div>' +
 		'    </div>' +
 		'  </div>' +
 		'</div>',
 		link: function ($scope, element, attrs) {
 			
-			$scope.btnStyle = "btn";
-			$scope.btnDefaultStyle = "btn-default";
+			$scope.stage = '1';
 			
-			$scope.maturity = "invest";
-			$scope.maturityOptions = [];
-			
-			$http.get('/radar/rest/maturity').
-			success(function(data, status, headers, config) {
-				for(var i = data.length-1; i >= 0; i--) {
-					$scope.maturityOptions.push({label:$scope.capitaliseFirstLetter(data[i].name), value:data[i].name});
-				}
-			}).
-			error(function(data, status, headers, config) {
-				console.log('failed to load maturity levels');
-			});
-			
-			$scope.techGroupingOptions = [];
-			$http.get('/radar/rest/techgrouping').
-			success(function(data, status, headers, config) {
-				for(var i = 0; i < data.length; i++) {
-					$scope.techGroupingOptions.push({label:data[i].name, value:data[i].name});
-				}
-			}).
-			error(function(data, status, headers, config) {
-				console.log('failed to load tech groupings');
-			});
-			
-			$scope.capitaliseFirstLetter = function (string)	{
-			    return string.charAt(0).toUpperCase() + string.slice(1);
-			}
-			
-			$scope.technologies = [];
-
-			$http({method: 'GET', url: '/radar/rest/technology?nocache=' + (new Date()).getTime()}).
-			success(function(data, status, headers, config) {
-				if(data.length > 0) {
-					$scope.selectedTechnology = undefined;
-					for(var i = 0; i < data.length; i++) {
-						$scope.technologies.push(data[i]);
-					}
-				}
-			}).
-			error(function(data, status, headers, config) {
-				console.log('error getting technology list');
-			});
-			
-			$scope.setMaturity = function(maturity) {
-				$scope.maturity = maturity;
-				$scope.setMaturityStyle(maturity);
-				
-				if ($scope.techFromRadar != undefined){
-					$scope.techFromRadar.maturity = maturity;
-				}
-			}
-			
-			$scope.setTechGroup = function(techGroup) {
-				$scope.techGroup = techGroup;
-				$scope.setTechGroupStyle(techGroup);
-				
-				if ($scope.techFromRadar != undefined){
-					$scope.techFromRadar.techGrouping = techGroup;
-				}
-			}
-			
-			$scope.technologySelected = function(technology) {
-				$scope.selectedTechnology = technology;
-				
-				$scope.searchText = $scope.selectedTechnology.name;
-				
-				if (($scope.techFromRadar = $scope.getTechFromRadar($scope.selectedTechnology.name)) != undefined){
-					$scope.maturity = $scope.techFromRadar.maturity;
-					$scope.techGroup = $scope.techFromRadar.techGrouping;
-				} else {
-					//  both of these attributes are currently undefined in selectedTechnology object
-					$scope.maturity = $scope.selectedTechnology.maturity;
-					$scope.techGroup = $scope.selectedTechnology.techGrouping;
-				}
-				
-				$scope.setMaturityStyle($scope.maturity);
-				$scope.setTechGroupStyle($scope.techGroup);
-			};
-			
-			$scope.setMaturityStyle = function (maturity){
-				for(var i = 0; i < $scope.maturityOptions.length; i++) {
-					$scope[$scope.maturityOptions[i].value.replace(' ','') + 'Style'] = ''; 
-				}
-				if (maturity != undefined){
-					$scope[maturity.replace(' ','') + 'Style'] = 'active';
-				}
-			}
-			
-			$scope.setTechGroupStyle = function (techGroup){
-				for(var i = 0; i < $scope.techGroupingOptions.length; i++) {
-					$scope[$scope.techGroupingOptions[i].value.replace(' ','') + 'Style'] = ''; 
-				}
-				if (techGroup != undefined){
-					$scope[techGroup.replace(' ','') + 'Style'] = 'active';
-				}
-			}
-			
-			$scope.isInRadar = function (techName){
-				return $scope.getTechFromRadar(techName) != undefined;
-			}
-			
-			$scope.getTechFromRadar = function (techName){
+			var getTechFromRadar = function (techName){
 				if ($scope.selectedRadar.technologies == undefined){
 					return undefined;
 				}
@@ -466,7 +360,83 @@ techRadarDirectives.directive('ngAddTech', function ($http) {
 					}
 				}
 				return undefined;
-			}
+			};
+			
+			var isInRadar = function (techName){
+				return getTechFromRadar(techName) != undefined;
+			};
+			
+			var setTechnologySelection = function() {
+				for(var i = 0; i < $scope.technologies.length; i++) {
+					var techInRadar = getTechFromRadar($scope.technologies[i].name);
+					if(typeof techInRadar !== 'undefined') {
+						$scope.technologies[i].selected = true;
+						$scope.technologies[i].maturity = techInRadar.maturity;
+						$scope.technologies[i].techGrouping = techInRadar.techGrouping;
+					} else {
+						$scope.technologies[i].selected = false;
+					}
+				}
+			};
+			
+			$scope.technologies = [];
+			$http({method: 'GET', url: '/radar/rest/technology?nocache=' + (new Date()).getTime()}).
+			success(function(data, status, headers, config) {
+				for(var i = 0; i < data.length; i++) {
+					$scope.technologies.push(data[i]);
+				}
+				setTechnologySelection();
+			}).
+			error(function(data, status, headers, config) {
+				console.log('error getting technology list');
+			});
+			
+			$scope.technologySelected = function(technology) {
+				if(technology.selected == true) {
+					technology.selected = false;
+				} else {
+					technology.selected = true;
+				}
+			};
+			
+			$scope.countSelected = function(technologies) {
+				var count = 0;
+				for(var i = 0; i < technologies.length; i++) {
+					if(technologies[i].selected==true) {
+						count++;
+					}
+				}
+				return count;
+			};
+			
+			var updateOptions = function() {
+				if(typeof $scope.selectedRadar !== 'undefined'){
+					if(typeof $scope.selectedRadar.maturities !== 'undefined') {
+						$scope.maturityOptions = [];
+						for(var i = 0; i < $scope.selectedRadar.maturities.length; i++) {
+							var maturity = $scope.selectedRadar.maturities[i];
+							if(typeof maturity !== 'undefined') {
+								$scope.maturityOptions.push({label:maturity.name, value:maturity.name});
+							}
+						}
+					}
+					
+					if(typeof $scope.selectedRadar.techGroupings !== 'undefined') {
+						$scope.techGroupingOptions = [];
+						for(var i = 0; i < $scope.selectedRadar.techGroupings.length; i++) {
+							var techGrouping = $scope.selectedRadar.techGroupings[i];
+							if(typeof techGrouping !== 'undefined') {
+								$scope.techGroupingOptions.push({label:techGrouping.name, value:techGrouping.name});
+							}
+						}
+					}
+				}
+			};
+			
+			$scope.$watch('selectedRadar', function (newVal, oldVal, scope) {
+				updateOptions();
+				setTechnologySelection();
+			}, false);
 
 			$scope.$watch('visible', function (newVal, oldVal, scope) {
 				if(newVal != oldVal) {
@@ -481,35 +451,37 @@ techRadarDirectives.directive('ngAddTech', function ($http) {
 			element.children(":first").on('hide.bs.modal', function(e) {
 				$scope.visible = false;
 			});
-
-			$scope.add = function() {
-				
-				if ($scope.maturity == undefined){
-					$scope.validationMessage = "Select maturity.";
-					return;
-				}
-				
-				if ($scope.techGroup == undefined){
-					$scope.validationMessage = "Select technology group.";
-					return;
-				}
-				$scope.validationMessage = "";
-				
-				newTech = {id: 1,
-						techGrouping: $scope.techGroup,
-						maturity: $scope.maturity,
-						technology: $scope.selectedTechnology.name};
-				
-				$scope.selectedRadar.technologies.push(newTech);
-			};
-
-			$scope.remove = function() {
-				for(var i = 0; i < $scope.selectedRadar.technologies.length; i++) {
-					if ($scope.selectedRadar.technologies[i].technology == $scope.selectedTechnology.name){
-						$scope.selectedRadar.technologies.splice(i,1);
-						return;
+			
+			$scope.doSave = function() {
+				$scope.errors = [];
+				var newTechs = [];
+				for(var i = 0; i < $scope.technologies.length; i++) {
+					if($scope.technologies[i].selected==true) {
+						var valid = true;
+						if(typeof $scope.technologies[i].maturity == 'undefined') {
+							valid = false;
+							$scope.errors.push({text:$scope.technologies[i].name + ' has no maturity set'});
+						}
+						if(typeof $scope.technologies[i].techGrouping == 'undefined') {
+							valid = false;
+							$scope.errors.push({text:$scope.technologies[i].name + ' has no tech grouping set'});
+						}
+						if(valid == true) {
+							newTechs.push({
+								technology:$scope.technologies[i].name,
+								maturity:$scope.technologies[i].maturity,
+								techGrouping:$scope.technologies[i].techGrouping
+							});
+						}
 					}
 				}
+				if($scope.errors.length == 0) {
+					$scope.onSave({techs:newTechs});
+				}
+			};
+			
+			$scope.doCancel = function() {
+				$scope.onCancel();
 			};
 
 		}
@@ -655,17 +627,17 @@ techRadarDirectives.directive('ngTechRatings', function ($http) {
 		scope: {
 			ratings: '='
 		},
-		template: '<svg width="{{scaleFactor*1000}}" height="{{scaleFactor*400}}" version="1.1" xmlns="http://www.w3.org/2000/svg">' +
-		'  <rect x="{{scaleFactor*5}}"   y="{{scaleFactor*(10+(300-300*(watching.length/max)))}}"  rx="{{scaleFactor*20}}" ry="{{scaleFactor*20}}" width="{{scaleFactor*(190)}}" height="{{scaleFactor*(300*(watching.length/max))}}"  style="fill:#FFFFFF;stroke-width:1;stroke:#CCCCCC"></rect>' +
-		'  <rect x="{{scaleFactor*205}}" y="{{scaleFactor*(10+(300-300*(learning.length/max)))}}"  rx="{{scaleFactor*20}}" ry="{{scaleFactor*20}}" width="{{scaleFactor*190}}"   height="{{scaleFactor*(300*(learning.length/max))}}"  style="fill:#428BCA;stroke-width:1;stroke:#428BCA"></rect>' +
-		'  <rect x="{{scaleFactor*405}}" y="{{scaleFactor*(10+(300-300*(competent.length/max)))}}" rx="{{scaleFactor*20}}" ry="{{scaleFactor*20}}" width="{{scaleFactor*190}}"   height="{{scaleFactor*(300*(competent.length/max))}}" style="fill:#5BC0DE;stroke-width:1;stroke:#5BC0DE"></rect>' +
-		'  <rect x="{{scaleFactor*605}}" y="{{scaleFactor*(10+(300-300*(expert.length/max)))}}"    rx="{{scaleFactor*20}}" ry="{{scaleFactor*20}}" width="{{scaleFactor*190}}"   height="{{scaleFactor*(300*(expert.length/max))}}"    style="fill:#F0AD4E;stroke-width:1;stroke:#F0AD4E"></rect>' +
-		'  <rect x="{{scaleFactor*805}}" y="{{scaleFactor*(10+(300-300*(leader.length/max)))}}"    rx="{{scaleFactor*20}}" ry="{{scaleFactor*20}}" width="{{scaleFactor*190}}"   height="{{scaleFactor*(300*(leader.length/max))}}"    style="fill:#5CB85C;stroke-width:1;stroke:#5CB85C"></rect>' +
-		'  <text x="{{scaleFactor*100}}" y="{{scaleFactor*350}}" text-anchor="middle" fill="#333333" style="{{\'font-size: \' + scaleFactor*20 + \'px; font-weight: 900;\'">Watching</text>' +
-		'  <text x="{{scaleFactor*300}}" y="{{scaleFactor*350}}" text-anchor="middle" fill="#333333" style="{{\'font-size: \' + scaleFactor*20 + \'px; font-weight: 900;\'">Learning</text>' +
-		'  <text x="{{scaleFactor*500}}" y="{{scaleFactor*350}}" text-anchor="middle" fill="#333333" style="{{\'font-size: \' + scaleFactor*20 + \'px; font-weight: 900;\'">Competent</text>' +
-		'  <text x="{{scaleFactor*700}}" y="{{scaleFactor*350}}" text-anchor="middle" fill="#333333" style="{{\'font-size: \' + scaleFactor*20 + \'px; font-weight: 900;\'">Expert</text>' +
-		'  <text x="{{scaleFactor*900}}" y="{{scaleFactor*350}}" text-anchor="middle" fill="#333333" style="{{\'font-size: \' + scaleFactor*20 + \'px; font-weight: 900;\'">Leader</text>' +
+		template: '<svg svg-width="{{scaleFactor*1000}}" svg-height="{{scaleFactor*400}}" version="1.1" xmlns="http://www.w3.org/2000/svg">' +
+		'  <rect svg-x="{{scaleFactor*5}}"   svg-y="{{scaleFactor*(10+(300-300*(watching.length/max)))}}"  svg-rx="{{scaleFactor*20}}" svg-ry="{{scaleFactor*20}}" svg-width="{{scaleFactor*(190)}}" svg-height="{{scaleFactor*(300*(watching.length/max))}}"  svg-fill="#FFFFFF" stroke-width="1" svg-stroke="#CCCCCC"></rect>' +
+		'  <rect svg-x="{{scaleFactor*205}}" svg-y="{{scaleFactor*(10+(300-300*(learning.length/max)))}}"  svg-rx="{{scaleFactor*20}}" svg-ry="{{scaleFactor*20}}" svg-width="{{scaleFactor*190}}"   svg-height="{{scaleFactor*(300*(learning.length/max))}}"  svg-fill="#428BCA" stroke-width="1" svg-stroke="#428BCA"></rect>' +
+		'  <rect svg-x="{{scaleFactor*405}}" svg-y="{{scaleFactor*(10+(300-300*(competent.length/max)))}}" svg-rx="{{scaleFactor*20}}" svg-ry="{{scaleFactor*20}}" svg-width="{{scaleFactor*190}}"   svg-height="{{scaleFactor*(300*(competent.length/max))}}" svg-fill="#5BC0DE" stroke-width="1" svg-stroke="#5BC0DE"></rect>' +
+		'  <rect svg-x="{{scaleFactor*605}}" svg-y="{{scaleFactor*(10+(300-300*(expert.length/max)))}}"    svg-rx="{{scaleFactor*20}}" svg-ry="{{scaleFactor*20}}" svg-width="{{scaleFactor*190}}"   svg-height="{{scaleFactor*(300*(expert.length/max))}}"    svg-fill="#F0AD4E" stroke-width="1" svg-stroke="#F0AD4E"></rect>' +
+		'  <rect svg-x="{{scaleFactor*805}}" svg-y="{{scaleFactor*(10+(300-300*(leader.length/max)))}}"    svg-rx="{{scaleFactor*20}}" svg-ry="{{scaleFactor*20}}" svg-width="{{scaleFactor*190}}"   svg-height="{{scaleFactor*(300*(leader.length/max))}}"    svg-fill="#5CB85C" stroke-width="1" svg-stroke="#5CB85C"></rect>' +
+		'  <text svg-x="{{scaleFactor*100}}" svg-y="{{scaleFactor*350}}" text-anchor="middle" fill="#333333" style="{{\'font-size: \' + scaleFactor*20 + \'px; font-weight: 900;\'">Watching</text>' +
+		'  <text svg-x="{{scaleFactor*300}}" svg-y="{{scaleFactor*350}}" text-anchor="middle" fill="#333333" style="{{\'font-size: \' + scaleFactor*20 + \'px; font-weight: 900;\'">Learning</text>' +
+		'  <text svg-x="{{scaleFactor*500}}" svg-y="{{scaleFactor*350}}" text-anchor="middle" fill="#333333" style="{{\'font-size: \' + scaleFactor*20 + \'px; font-weight: 900;\'">Competent</text>' +
+		'  <text svg-x="{{scaleFactor*700}}" svg-y="{{scaleFactor*350}}" text-anchor="middle" fill="#333333" style="{{\'font-size: \' + scaleFactor*20 + \'px; font-weight: 900;\'">Expert</text>' +
+		'  <text svg-x="{{scaleFactor*900}}" svg-y="{{scaleFactor*350}}" text-anchor="middle" fill="#333333" style="{{\'font-size: \' + scaleFactor*20 + \'px; font-weight: 900;\'">Leader</text>' +
 		'</svg>',
 		link: function ($scope, element, attrs) {
 
@@ -756,23 +728,26 @@ techRadarDirectives.directive('ngTechMaturities', function () {
 techRadarDirectives.directive('ngSkillLevel', function () {
 	return {
 		restrict: 'A',
-		template: '<svg width="{{scaleFactor*1000}}" height="{{scaleFactor*200}}" version="1.1" xmlns="http://www.w3.org/2000/svg">' +
-		'  <g ng-repeat="skillLevel in skillLevels">' +
-		'    <text x="{{scaleFactor*(100+$index*200)}}" y="{{scaleFactor*190}}" style="text-anchor:middle">{{skillLevel.name}}</text>' +
+		scope: {
+			skillLevels: '='
+		},
+		template: '<svg svg-width="{{scaleFactor*1000}}" svg-height="{{scaleFactor*(highest*40 + 100)}}" version="1.1" xmlns="http://www.w3.org/2000/svg">' +
+		'  <g ng-repeat="skillLevel in skills">' +
+		'    <text svg-x="{{scaleFactor*(100+$index*200)}}" svg-y="{{scaleFactor*(highest*40)}}" text-anchor="middle">{{skillLevel.name}}</text>' +
 		'    <g ng-repeat="sl in skillLevel.technologies">' +
-		'      <rect x="{{scaleFactor*(10+$parent.$index*200)}}" y="{{scaleFactor*(140-($index*35))}}" rx="{{scaleFactor*5}}" ry="{{scaleFactor*5}}" width="{{scaleFactor*190}}" height="{{scaleFactor*30}}" style="{{\'fill:\'+skillLevel.fill+\';stroke:\'+skillLevel.stroke+\'stroke-width:1\'}}"></rect>' +
-		'      <text x="{{scaleFactor*(100+$parent.$index*200)}}" y="{{scaleFactor*(160-($index*35))}}" style="text-anchor:middle" fill="{{skillLevel.textFill}}">{{sl.name}}</text>' +
+		'      <rect svg-x="{{scaleFactor*(10+$parent.$index*200)}}" svg-y="{{scaleFactor*((highest*40 - 50)-($index*35))}}" svg-rx="{{scaleFactor*5}}" svg-ry="{{scaleFactor*5}}" svg-width="{{scaleFactor*190}}" svg-height="{{scaleFactor*30}}" svg-fill="{{skillLevel.fill}}" svg-stroke="{{skillLevel.stroke}}" stroke-width="1"></rect>' +
+		'      <text svg-x="{{scaleFactor*(100+$parent.$index*200)}}" svg-y="{{scaleFactor*((highest*40 - 30)-($index*35))}}" text-anchor="middle" svg-fill="{{skillLevel.textFill}}">{{sl.name}}</text>' +
 		'    </g>' +
 		'  </g>' +
 		'</svg>',
 		link: function ($scope, element, attrs) {
 			
-			$scope.skillLevels = [
-			                    {name:'LEADER',   fill:'#5CB85C',stroke:'#5CB85C',textFill:'#FFFFFF',technologies:[{name:'Google Web Toolkit'},{name:'Bamboo'}]},
-			                    {name:'EXPERT',   fill:'#F0AD4E',stroke:'#F0AD4E',textFill:'#FFFFFF',technologies:[{name:'C++'},{name:'.Net'},{name:'C#'}]},
-			                    {name:'COMPETENT',fill:'#5BC0DE',stroke:'#5BC0DE',textFill:'#FFFFFF',technologies:[{name:'Java EE'},{name:'Java SE'},{name:'Python'},{name:'Shell Script'},{name:'SQL'}]},
-			                    {name:'LEARNING', fill:'#428BCA',stroke:'#428BCA',textFill:'#FFFFFF',technologies:[{name:'XPath'},{name:'XSD'}]},
-			                    {name:'WATCHING', fill:'#FFFFFF',stroke:'#CCCCCC',textFill:'#333333',technologies:[{name:'XSLT'},{name:'COM/ActiveX'},{name:'EMITE'}]}
+			$scope.skills = [
+			                    {name:'LEADER',   fill:'#5CB85C',stroke:'#5CB85C',textFill:'#FFFFFF',technologies:[]},
+			                    {name:'EXPERT',   fill:'#F0AD4E',stroke:'#F0AD4E',textFill:'#FFFFFF',technologies:[]},
+			                    {name:'COMPETENT',fill:'#5BC0DE',stroke:'#5BC0DE',textFill:'#FFFFFF',technologies:[]},
+			                    {name:'LEARNING', fill:'#428BCA',stroke:'#428BCA',textFill:'#FFFFFF',technologies:[]},
+			                    {name:'WATCHING', fill:'#FFFFFF',stroke:'#CCCCCC',textFill:'#333333',technologies:[]}
 			                      ];
 
 			$scope.scaleFactor = 1;
@@ -781,9 +756,131 @@ techRadarDirectives.directive('ngSkillLevel', function () {
 				return element[0].offsetWidth;
 			};
 
+			$scope.$watch('skillLevels', function (newval, oldval) {
+				var theMax = 0;
+				for(var i = 0; i < newval.length; i++) {
+					var skill = newval[i];
+					if(skill.skillLevel == 'Leader') {
+						$scope.skills[0].technologies.push({name:skill.technology});
+						if($scope.skills[0].technologies.length > theMax) {
+							theMax = $scope.skills[0].technologies.length;
+						}
+					} else if(skill.skillLevel == 'Expert') {
+						$scope.skills[1].technologies.push({name:skill.technology});
+						if($scope.skills[1].technologies.length > theMax) {
+							theMax = $scope.skills[1].technologies.length;
+						}
+					} else if(skill.skillLevel == 'Competent') {
+						$scope.skills[2].technologies.push({name:skill.technology});
+						if($scope.skills[2].technologies.length > theMax) {
+							theMax = $scope.skills[2].technologies.length;
+						}
+					} else if(skill.skillLevel == 'Learning') {
+						$scope.skills[3].technologies.push({name:skill.technology});
+						if($scope.skills[3].technologies.length > theMax) {
+							theMax = $scope.skills[3].technologies.length;
+						}
+					} else if(skill.skillLevel == 'Watching') {
+						$scope.skills[4].technologies.push({name:skill.technology});
+						if($scope.skills[4].technologies.length > theMax) {
+							theMax = $scope.skills[4].technologies.length;
+						}
+					}
+				}
+				$scope.highest = theMax;
+			}, true);
+			
 			$scope.$watch($scope.getWidth, function (width) {
 				$scope.scaleFactor = width/1000;
 			});
+		}
+	};
+});
+
+techRadarDirectives.directive('svgWidth', function () {
+	return {
+		restrict: 'A',
+		link: function ($scope, element, attrs) {
+			attrs.$observe('svgWidth', function(value) {
+				element.attr('width', Math.floor(value));
+		    });
+		}
+	};
+});
+
+techRadarDirectives.directive('svgHeight', function () {
+	return {
+		restrict: 'A',
+		link: function ($scope, element, attrs) {
+			attrs.$observe('svgHeight', function(value) {
+				element.attr('height', Math.floor(value));
+		    });
+		}
+	};
+});
+
+techRadarDirectives.directive('svgX', function () {
+	return {
+		restrict: 'A',
+		link: function ($scope, element, attrs) {
+			attrs.$observe('svgX', function(value) {
+				element.attr('x', Math.floor(value));
+		    });
+		}
+	};
+});
+
+techRadarDirectives.directive('svgY', function () {
+	return {
+		restrict: 'A',
+		link: function ($scope, element, attrs) {
+			attrs.$observe('svgY', function(value) {
+				element.attr('y', Math.floor(value));
+		    });
+		}
+	};
+});
+
+techRadarDirectives.directive('svgRx', function () {
+	return {
+		restrict: 'A',
+		link: function ($scope, element, attrs) {
+			attrs.$observe('svgRx', function(value) {
+				element.attr('rx', Math.floor(value));
+		    });
+		}
+	};
+});
+
+techRadarDirectives.directive('svgRy', function () {
+	return {
+		restrict: 'A',
+		link: function ($scope, element, attrs) {
+			attrs.$observe('svgRy', function(value) {
+				element.attr('ry', Math.floor(value));
+		    });
+		}
+	};
+});
+
+techRadarDirectives.directive('svgFill', function () {
+	return {
+		restrict: 'A',
+		link: function ($scope, element, attrs) {
+			attrs.$observe('svgFill', function(value) {
+				element.attr('fill', value);
+		    });
+		}
+	};
+});
+
+techRadarDirectives.directive('svgStroke', function () {
+	return {
+		restrict: 'A',
+		link: function ($scope, element, attrs) {
+			attrs.$observe('svgStroke', function(value) {
+				element.attr('stroke', value);
+		    });
 		}
 	};
 });

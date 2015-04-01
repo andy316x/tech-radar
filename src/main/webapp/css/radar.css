@@ -15,17 +15,13 @@ li {
 
 
 #file_browse_wrapper {
-width: 93px;
-height: 33px;
 background-color: #5cb85c;
-border-color: #4cae4c;
-border: none;
-overflow: hidden;
-display: inline-block;
-margin: -2px 0px -13px 1px;
+border: 1px solid #4cae4c;
+display: inline;
+margin: 0 4px 0 0;
 border-radius: 2px;
 color: #fff;
-padding: 7px 8px 0px 0px;
+padding: 5px 8px 9px 10px;
 cursor: pointer;
 position: relative;
 overflow: visible;
@@ -245,6 +241,18 @@ body {
 	padding: 30px 0 150px 0;
 }
 
+.mainFooter {
+  position: relative;
+  margin: 0 20px 0 175px;
+  padding: 10px 0;
+}
+
+.mainFooter > a {
+  position: absolute;
+  top: 26px;
+  left: -145px;
+}
+
 .baefooter img {
 	width: 135px;
 	
@@ -341,6 +349,10 @@ body {
 	to {filter: grayscale(100%);}
 }
 
+
+
+
+
 /* social */
 .social-icon-list {
 	float: right;
@@ -348,7 +360,7 @@ body {
 
 .social-icon-list li {
 	float: right;
-	margin-right: 10px;
+	margin-left: 10px;
 	cursor: pointer;
 	height: 44px;
     width: 44px;
@@ -670,8 +682,10 @@ border-radius: 2px;
   border-radius: 4px;
 }
 
-.technology-wrapper h1 {
-  
+.modal .modal-body .technology-wrapper {
+  height: 300px;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .technology-card {

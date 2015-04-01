@@ -54,7 +54,7 @@
 		<div class="col-md-6 text-right">
 			<form id="uploadform" action="/radar/uploadcsv" method="post" target="theframe" enctype="multipart/form-data">
 				<a class="btn btn-default" ng-click="go('/radar/'+selectedRadar.id)">Cancel</a>
-				<button class="btn btn-default" ng-click="exportCsv(selectedRadar.id)">Download Data</button>
+				<button class="btn btn-success" ng-click="addTechVisible=true">Edit Technologies</button>
 				<input id="id" name="id" type="hidden"></input>
 				<div id='file_browse_wrapper'>
 					Upload Data
@@ -75,7 +75,6 @@
 				<button class="btn btn-default" ng-click="doDelete(selectedRadar.id)">Delete</button>
 				<button class="btn btn-primary" ng-click="doSave()">Save</button>
 				<button class="btn btn-success" ng-click="doPublish(selectedRadar.id)">Publish</button>
-				<!-- <button class="btn btn-success" ng-click="addTechVisible=true">Edit Technologies</button> -->
 				
 				<input type="submit" style="display:none"></input>
 			</form>
@@ -87,7 +86,7 @@
 	</div>
 	
 	
-	<div ng-add-tech="" visible="addTechVisible" do-save = "doSave()" selected-radar="selectedRadar"></div>
+	<div ng-add-tech="" visible="addTechVisible" on-save="addTechs(techs)" on-cancel="addTechVisible=false" selected-radar="selectedRadar"></div>
 	
 	
 	<iframe id="theframe" name="theframe" style="display:none;"></iframe>

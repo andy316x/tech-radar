@@ -9,6 +9,8 @@
            http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
 	<context:annotation-config />
+	
+	<bean id="MeService" class="com.ai.techradar.service.impl.MeServiceImpl"></bean>
 
 	<bean id="RadarService" class="com.ai.techradar.service.impl.RadarServiceImpl"></bean>
 	

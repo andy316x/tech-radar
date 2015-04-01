@@ -32,13 +32,13 @@
 
 <div class="container-fluid main-content">
 	
-	<div class="row">
+	<div ng-show="uid != null" class="row">
 	
 		<div class="col-md-12 clearfix" style="margin-bottom: 0;border-bottom: 1px solid #CCC;padding-bottom: 20px;">
 			<div class="col-md-6">
 				<h1>
 					<img class="img img-rounded" style="width:40px;height:40px;border-radius:20px;" src="/radar/img/128.jpg">
-					<strong>Andy (UK Services):</strong>
+					<strong>{{uid}}:</strong>
 					<span> Skills Profile</span>
 				</h1>
 			</div>
@@ -69,7 +69,7 @@
 			
 			<div style="margin-top:20px">
 	
-				<div ng-skill-level=""></div>
+				<div ng-skill-level="" skill-levels="skillLevels"></div>
 				
 			</div>
 			
@@ -77,4 +77,23 @@
 
 		
 	</div>
+	
+	
+	<div ng-show="uid==null" class="row ng-cloak">
+	
+		<div class="col-md-12 clearfix" style="margin-bottom: 0;border-bottom: 1px solid #CCC;padding-bottom: 20px;">
+			<div class="col-md-6">
+				<h1>
+					Please log in to view your skills profile
+				</h1>
+			</div>
+		</div>
+		
+		<div class="col-md-12" style="background-color:#EFEFEF;padding:25px 20px;">
+			
+		</div>
+
+		
+	</div>
+	
 </div>

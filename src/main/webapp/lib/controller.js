@@ -87,6 +87,7 @@ techRadarControllers.controller('CommonViewCtrl', function ($scope, $http, $loca
 	// to remove the modal backdrop on navigation
 	$scope.$on('$locationChangeStart', function(event, newUrl) {
 		$('.modal-backdrop').hide();
+		$('.modal-open').removeClass('modal-open'); 
 	});
 
 });
@@ -95,7 +96,7 @@ techRadarControllers.controller('TechnologiesCtrl', function ($scope, $http, $lo
 
 	$scope.technologies = [];
 
-	$http({method: 'GET', url: '/radar/rest/technology?nocache=' + (new Date()).getTime()}).
+	$http({method: 'GET', url: 'http://localhost:8280/radar/1.0.0/technology', headers: {'Authorization': 'Bearer f23e66562fbc67da4b779735f21bce4'}}).
 	success(function(data, status, headers, config) {
 		if(data.length > 0) {
 			$scope.selectedTechnology = data[0];
@@ -344,9 +345,17 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 		form.submit();
 	};
 
-	$scope.doSave = function () {
+	$scope.addTechs = function (techs) {
 		$scope.addTechVisible = false;
 		
+		console.log(techs);
+		
+		$scope.selectedRadar.technologies = techs;
+		
+		mapRadar($scope.selectedRadar);
+	};
+	
+	$scope.doSave = function () {
 		$http.post('/radar/rest/radar/addtech/' + $scope.selectedRadar.id, $scope.selectedRadar.technologies).
 		success(function(data, status, headers, config) {
 			$location.path('/radar/' + $scope.selectedRadar.id);
@@ -429,9 +438,9 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 	};
 
 	$scope.skillLevelSelected = function(technology, skillLevel) {
-		$http.post('/radar/rest/technology/' + technology.id + '/user', {skillLevel:skillLevel}).
+		$http.post('/radar/rest/technology/' + technology.techId + '/user', {skillLevel:skillLevel}).
 		success(function(data, status, headers, config) {
-			$log.log('Successfully set technology \'' + technology.name + '\' (ID: ' + technology.id + ') to skill level \'' + skillLevel + '\'');
+			$log.log('Successfully set technology \'' + technology.name + '\' (ID: ' + technology.techId + ') to skill level \'' + skillLevel + '\'');
 		}).
 		error(function(data, status, headers, config) {
 			$log.error('Failed to add technologies to radar');
@@ -542,6 +551,17 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 
 techRadarControllers.controller('SkillsCtrl', function ($scope, $http, $location, $routeParams, $modal, $log) {
 
+	$scope.skillLevels = [];
+	
+	$http({method: 'GET', url: '/radar/rest/me/skillLevel?nocache=' + (new Date()).getTime()}).
+	success(function(data, status, headers, config) {
+		for(var i = 0; i < data.length; i++) {
+			$scope.skillLevels.push(data[i]);
+		}
+	}).
+	error(function(data, status, headers, config) {
+		$log.error('Failed to load user technologies');
+	});
 	
 
 });

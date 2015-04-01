@@ -1,6 +1,7 @@
 package com.ai.techradar.web.service.rest;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -12,15 +13,19 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
+import com.ai.techradar.service.MeService;
 import com.ai.techradar.service.SpringStarter;
 import com.ai.techradar.service.UserService;
 import com.ai.techradar.service.UserService.ServiceContactFailedException;
 import com.ai.techradar.service.UserService.UserDoesNotExistException;
 import com.ai.techradar.service.UserService.UserInfo;
+import com.ai.techradar.service.ValidationException;
 import com.ai.techradar.util.AdminHandlerHelper;
+import com.ai.techradar.web.service.to.UserTechnologyTO;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 
@@ -29,6 +34,8 @@ import com.wordnik.swagger.annotations.ApiOperation;
 public class MeRestService extends AbstractTechRadarRestService {
 
 	private UserService userService = (UserService)SpringStarter.getContext().getBean("UserService");
+	
+	private MeService meService = (MeService)SpringStarter.getContext().getBean("MeService");
 
 	@GET
 	@Path("/")
@@ -67,6 +74,35 @@ public class MeRestService extends AbstractTechRadarRestService {
 			AdminHandlerHelper.logout();
 		}
 		
+	}
+	
+	@GET
+	@Path("/skillLevel")
+	@ApiOperation(value="Get my skill levels",response=Response.class)
+	@Produces("application/json")
+	public Response getMySkillLevels(
+			@Context SecurityContext securityContext) {
+
+		if(securityContext.getUserPrincipal()!=null) {
+			AdminHandlerHelper.login(securityContext.getUserPrincipal().getName());
+		}
+
+		try {
+
+			final List<UserTechnologyTO> mySkillLevels = meService.getMySkillLevels();
+
+			return Response.ok(mySkillLevels).build();
+
+		} catch(final ValidationException ex) {
+			return Response.status(Status.BAD_REQUEST).entity(ex.getValidations()).build();
+		} catch (SecurityException e) {
+			throw new WebApplicationException(e);
+		} catch (IllegalArgumentException e) {
+			throw new WebApplicationException(e);
+		} finally {
+			AdminHandlerHelper.logout();
+		}
+
 	}
 
 	public static class UserTO implements Serializable {
