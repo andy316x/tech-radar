@@ -15,26 +15,26 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
 
+import com.ai.techradar.service.QuadrantService;
 import com.ai.techradar.service.SpringStarter;
-import com.ai.techradar.service.TechGroupingService;
 import com.ai.techradar.service.ValidationException;
 import com.ai.techradar.util.AdminHandlerHelper;
-import com.ai.techradar.web.service.to.TechGroupingTO;
+import com.ai.techradar.web.service.to.QuadrantTO;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 
-@Path("techgrouping")
-@Api(value="/techgrouping",description="Tech grouping service")
-public class TechGroupingRestService extends AbstractTechRadarRestService {
+@Path("quadrant")
+@Api(value="/quadrant",description="Quadrant service")
+public class QuadrantRestService extends AbstractTechRadarRestService {
 
-	private TechGroupingService techGroupingService = (TechGroupingService)SpringStarter.getContext().getBean("TechGroupingService");
+	private QuadrantService quadrantService = (QuadrantService)SpringStarter.getContext().getBean("QuadrantService");
 
 	@GET
 	@Path("/")
-	@ApiOperation(value="Get tech groupings",response=Response.class)
+	@ApiOperation(value="Get quadrants",response=Response.class)
 	@Produces("application/json")
-	public Response getTechGroupings(@Context SecurityContext securityContext) {
+	public Response getQuadrants(@Context SecurityContext securityContext) {
 
 		if(securityContext.getUserPrincipal()!=null) {
 			AdminHandlerHelper.login(securityContext.getUserPrincipal().getName());
@@ -42,7 +42,7 @@ public class TechGroupingRestService extends AbstractTechRadarRestService {
 
 		try {
 
-			final List<TechGroupingTO> rs = techGroupingService.getTechGroupings();
+			final List<QuadrantTO> rs = quadrantService.getQuadrants();
 
 			return Response.ok(rs).build();
 
@@ -58,11 +58,11 @@ public class TechGroupingRestService extends AbstractTechRadarRestService {
 
 	@POST
 	@Path("/")
-	@ApiOperation(value="Create a tech grouping",response=Response.class)
+	@ApiOperation(value="Create a quadrant",response=Response.class)
 	@Produces("application/json")
-	public Response createTechGrouping(
+	public Response createQuadrant(
 			@Context SecurityContext securityContext,
-			@ApiParam("the tech grouping") final TechGroupingTO techGrouping) {
+			@ApiParam("the quadrant") final QuadrantTO quadrant) {
 
 		if(securityContext.getUserPrincipal()!=null) {
 			AdminHandlerHelper.login(securityContext.getUserPrincipal().getName());
@@ -70,9 +70,9 @@ public class TechGroupingRestService extends AbstractTechRadarRestService {
 
 		try {
 
-			final TechGroupingTO newTechGrouping = techGroupingService.createTechGrouping(techGrouping);
+			final QuadrantTO newQuadrant = quadrantService.createQuadrant(quadrant);
 
-			return Response.ok(newTechGrouping).build();
+			return Response.ok(newQuadrant).build();
 
 		} catch (SecurityException e) {
 			throw new WebApplicationException(e);
@@ -87,13 +87,13 @@ public class TechGroupingRestService extends AbstractTechRadarRestService {
 	}
 
 	@PUT
-	@Path("/{techGroupingId}")
-	@ApiOperation(value="Update a tech grouping",response=Response.class)
+	@Path("/{quadrantId}")
+	@ApiOperation(value="Update a quadrant",response=Response.class)
 	@Produces("application/json")
-	public Response updateTechGrouping(
+	public Response updateQuadrant(
 			@Context SecurityContext securityContext,
-			@PathParam("techGroupingId") final Long techGroupingId,
-			@ApiParam("the tech grouping") final TechGroupingTO techGrouping) {
+			@PathParam("quadrantId") final Long quadrantId,
+			@ApiParam("the quadrant") final QuadrantTO quadrant) {
 
 		if(securityContext.getUserPrincipal()!=null) {
 			AdminHandlerHelper.login(securityContext.getUserPrincipal().getName());
@@ -101,9 +101,9 @@ public class TechGroupingRestService extends AbstractTechRadarRestService {
 
 		try {
 
-			final TechGroupingTO newTechGrouping = techGroupingService.updateTechGrouping(techGrouping);
+			final QuadrantTO newQuadrant = quadrantService.updateQuadrant(quadrant);
 
-			return Response.ok(newTechGrouping).build();
+			return Response.ok(newQuadrant).build();
 
 		} catch (SecurityException e) {
 			throw new WebApplicationException(e);
@@ -116,12 +116,12 @@ public class TechGroupingRestService extends AbstractTechRadarRestService {
 	}
 
 	@DELETE
-	@Path("/{techGroupingId}")
-	@ApiOperation(value="Delete a tech grouping",response=Response.class)
+	@Path("/{quadrantId}")
+	@ApiOperation(value="Delete a quadrant",response=Response.class)
 	@Produces("application/json")
-	public Response deleteTechGrouping(
+	public Response deleteQuadrant(
 			@Context SecurityContext securityContext,
-			@PathParam("techGroupingId") final Long techGroupingId) {
+			@PathParam("quadrantId") final Long quadrantId) {
 
 		if(securityContext.getUserPrincipal()!=null) {
 			AdminHandlerHelper.login(securityContext.getUserPrincipal().getName());
@@ -129,7 +129,7 @@ public class TechGroupingRestService extends AbstractTechRadarRestService {
 
 		try {
 
-			final Boolean result = techGroupingService.deleteTechGrouping(techGroupingId);
+			final Boolean result = quadrantService.deleteQuadrant(quadrantId);
 
 			return Response.ok(result).build();
 

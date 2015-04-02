@@ -25,7 +25,7 @@ public class RadarTechnology {
 
 	private RadarMaturity radarMaturity;
 
-	private RadarTechGrouping radarTechGrouping;
+	private RadarQuadrant radarQuadrant;
 
 	private MovementEnum movement;
 
@@ -92,12 +92,12 @@ public class RadarTechnology {
 	}
 
 	@ManyToOne
-	public RadarTechGrouping getRadarTechGrouping() {
-		return radarTechGrouping;
+	public RadarQuadrant getRadarQuadrant() {
+		return radarQuadrant;
 	}
 
-	public void setRadarTechGrouping(final RadarTechGrouping radarTechGrouping) {
-		this.radarTechGrouping = radarTechGrouping;
+	public void setRadarQuadrant(final RadarQuadrant radarQuadrant) {
+		this.radarQuadrant = radarQuadrant;
 	}
 
 	public MovementEnum getMovement() {

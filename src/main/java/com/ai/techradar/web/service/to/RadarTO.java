@@ -32,7 +32,7 @@ public class RadarTO {
 
 	private List<MaturityTO> maturities;
 
-	private List<TechGroupingTO> techGroupings;
+	private List<QuadrantTO> quadrants;
 
 	public RadarTO() {
 
@@ -142,12 +142,12 @@ public class RadarTO {
 		this.maturities = maturities;
 	}
 
-	public List<TechGroupingTO> getTechGroupings() {
-		return techGroupings;
+	public List<QuadrantTO> getQuadrants() {
+		return quadrants;
 	}
 
-	public void setTechGroupings(List<TechGroupingTO> techGroupings) {
-		this.techGroupings = techGroupings;
+	public void setQuadrants(List<QuadrantTO> quadrants) {
+		this.quadrants = quadrants;
 	}
 
 }

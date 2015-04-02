@@ -13,7 +13,7 @@ import java.util.TreeMap;
 import com.ai.techradar.pdf.Arc;
 import com.ai.techradar.web.service.to.MaturityTO;
 import com.ai.techradar.web.service.to.RadarTechnologyTO;
-import com.ai.techradar.web.service.to.TechGroupingTO;
+import com.ai.techradar.web.service.to.QuadrantTO;
 import com.lowagie.text.Chapter;
 import com.lowagie.text.Chunk;
 import com.lowagie.text.Document;
@@ -61,11 +61,11 @@ public class RadarQuadrantChapterWriter {
 	private final RadarChapter radarChapter;
 	private final Chapter chapter;
 
-	private final TechGroupingTO techGrouping;
+	private final QuadrantTO techGrouping;
 	private final List<MaturityTO> maturities;
 	private final List<RadarTechnologyTO> technologies;
 
-	public RadarQuadrantChapterWriter(final RadarChapter radarChapter, final TechGroupingTO techGrouping,
+	public RadarQuadrantChapterWriter(final RadarChapter radarChapter, final QuadrantTO techGrouping,
 			final List<MaturityTO> maturities, final List<RadarTechnologyTO> technologies) {
 		this.radarChapter = radarChapter;
 		this.techGrouping = techGrouping;
@@ -85,10 +85,10 @@ public class RadarQuadrantChapterWriter {
 		addLegend(document);
 	}
 
-	private void selectTechnologiesForTechGrouping(final TechGroupingTO techGrouping, final List<RadarTechnologyTO> technologies) {
+	private void selectTechnologiesForTechGrouping(final QuadrantTO quadrant, final List<RadarTechnologyTO> technologies) {
 		int technologyIndex = 1;
 		for (final RadarTechnologyTO technology : technologies) {
-			if (techGrouping.getName().equals(technology.getTechGrouping())) {
+			if (quadrant.getName().equals(technology.getQuadrant())) {
 				technologiesByIndex.put(technologyIndex, technology);
 				addToListMap(technologyIndexesByMaturity, technology.getMaturity(), technologyIndex);
 			}

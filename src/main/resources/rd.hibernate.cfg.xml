@@ -39,9 +39,10 @@
         <mapping class="com.ai.techradar.database.entities.Radar"/>
         <mapping class="com.ai.techradar.database.entities.Technology"/>
         <mapping class="com.ai.techradar.database.entities.Maturity"/>
+        <mapping class="com.ai.techradar.database.entities.Quadrant"/>
         <mapping class="com.ai.techradar.database.entities.TechGrouping"/>
         <mapping class="com.ai.techradar.database.entities.RadarTechnology"/>
-        <mapping class="com.ai.techradar.database.entities.RadarTechGrouping"/>
+        <mapping class="com.ai.techradar.database.entities.RadarQuadrant"/>
         <mapping class="com.ai.techradar.database.entities.RadarMaturity"/>
         <mapping class="com.ai.techradar.database.entities.User"/>
         <mapping class="com.ai.techradar.database.entities.UserTechnology"/>

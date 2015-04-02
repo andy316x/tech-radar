@@ -191,7 +191,7 @@ techRadarDirectives.directive('ngNewRadar', function ($http) {
 			$scope.techGrouping2 = 'Dev Language';
 			$scope.techGrouping3 = 'Platform';
 			$scope.techGrouping4 = 'Solution Technology';
-			$http.get('/radar/rest/techgrouping').
+			$http.get('/radar/rest/quadrant').
 			success(function(data, status, headers, config) {
 				for(var i = 0; i < data.length; i++) {
 					$scope.techGroupingOptions.push({label:data[i].name, value:data[i].name});
@@ -239,7 +239,7 @@ techRadarDirectives.directive('ngNewRadar', function ($http) {
 						majorVersion: 0,
 						minorVersion: 0,
 						dateCreated: new Date().getTime(),
-						techGroupings: [
+						quadrants: [
 						                {name: $scope.techGrouping1},
 						                {name: $scope.techGrouping2},
 						                {name: $scope.techGrouping3},
@@ -320,7 +320,7 @@ techRadarDirectives.directive('ngAddTech', function ($http) {
 		'				<div ng-repeat="technology in technologies | filter:{name:searchText}" class="clearfix" ng-show="technology.selected==true">' +
 		'					<div class="col-sm-4"><span>{{technology.name}}</span></div>' +
 		'					<div class="col-sm-4"><select class="form-control" ng-model="technology.maturity" ng-options="maturity.label as maturity.value for maturity in $parent.maturityOptions"></select></div>' +
-		'					<div class="col-sm-4"><select class="form-control" ng-model="technology.techGrouping" ng-options="techGrouping.label as techGrouping.value for techGrouping in $parent.techGroupingOptions"></select></div>' +
+		'					<div class="col-sm-4"><select class="form-control" ng-model="technology.quadrant" ng-options="quadrant.label as quadrant.value for quadrant in $parent.quadrantOptions"></select></div>' +
 		'				</div>' +
 		'			 </div>' +
 		
@@ -372,9 +372,17 @@ techRadarDirectives.directive('ngAddTech', function ($http) {
 					if(typeof techInRadar !== 'undefined') {
 						$scope.technologies[i].selected = true;
 						$scope.technologies[i].maturity = techInRadar.maturity;
-						$scope.technologies[i].techGrouping = techInRadar.techGrouping;
+						$scope.technologies[i].quadrant = techInRadar.quadrant;
 					} else {
 						$scope.technologies[i].selected = false;
+						if(typeof $scope.maturityOptions != 'undefined' && $scope.maturityOptions.length > 0) {
+							$scope.technologies[i].maturity = $scope.maturityOptions[0].value;
+						}
+						for(var j = 0; j < $scope.quadrantOptions.length; j++) {
+							if($scope.technologies[i].techGrouping == $scope.quadrantOptions[j].value) {
+								$scope.technologies[i].quadrant = $scope.technologies[i].techGrouping;
+							}
+						}
 					}
 				}
 			};
@@ -421,12 +429,12 @@ techRadarDirectives.directive('ngAddTech', function ($http) {
 						}
 					}
 					
-					if(typeof $scope.selectedRadar.techGroupings !== 'undefined') {
-						$scope.techGroupingOptions = [];
-						for(var i = 0; i < $scope.selectedRadar.techGroupings.length; i++) {
-							var techGrouping = $scope.selectedRadar.techGroupings[i];
-							if(typeof techGrouping !== 'undefined') {
-								$scope.techGroupingOptions.push({label:techGrouping.name, value:techGrouping.name});
+					if(typeof $scope.selectedRadar.quadrants !== 'undefined') {
+						$scope.quadrantOptions = [];
+						for(var i = 0; i < $scope.selectedRadar.quadrants.length; i++) {
+							var quadrant = $scope.selectedRadar.quadrants[i];
+							if(typeof quadrant !== 'undefined') {
+								$scope.quadrantOptions.push({label:quadrant.name, value:quadrant.name});
 							}
 						}
 					}
@@ -462,7 +470,7 @@ techRadarDirectives.directive('ngAddTech', function ($http) {
 							valid = false;
 							$scope.errors.push({text:$scope.technologies[i].name + ' has no maturity set'});
 						}
-						if(typeof $scope.technologies[i].techGrouping == 'undefined') {
+						if(typeof $scope.technologies[i].quadrant == 'undefined') {
 							valid = false;
 							$scope.errors.push({text:$scope.technologies[i].name + ' has no tech grouping set'});
 						}
@@ -470,6 +478,7 @@ techRadarDirectives.directive('ngAddTech', function ($http) {
 							newTechs.push({
 								technology:$scope.technologies[i].name,
 								maturity:$scope.technologies[i].maturity,
+								quadrant:$scope.technologies[i].quadrant,
 								techGrouping:$scope.technologies[i].techGrouping
 							});
 						}
@@ -733,10 +742,10 @@ techRadarDirectives.directive('ngSkillLevel', function () {
 		},
 		template: '<svg svg-width="{{scaleFactor*1000}}" svg-height="{{scaleFactor*(highest*40 + 100)}}" version="1.1" xmlns="http://www.w3.org/2000/svg">' +
 		'  <g ng-repeat="skillLevel in skills">' +
-		'    <text svg-x="{{scaleFactor*(100+$index*200)}}" svg-y="{{scaleFactor*(highest*40)}}" text-anchor="middle">{{skillLevel.name}}</text>' +
+		'    <text svg-x="{{scaleFactor*(100+$index*200)}}" svg-y="{{scaleFactor*(highest*40 + 10)}}" text-anchor="middle">{{skillLevel.name}}</text>' +
 		'    <g ng-repeat="sl in skillLevel.technologies">' +
-		'      <rect svg-x="{{scaleFactor*(10+$parent.$index*200)}}" svg-y="{{scaleFactor*((highest*40 - 50)-($index*35))}}" svg-rx="{{scaleFactor*5}}" svg-ry="{{scaleFactor*5}}" svg-width="{{scaleFactor*190}}" svg-height="{{scaleFactor*30}}" svg-fill="{{skillLevel.fill}}" svg-stroke="{{skillLevel.stroke}}" stroke-width="1"></rect>' +
-		'      <text svg-x="{{scaleFactor*(100+$parent.$index*200)}}" svg-y="{{scaleFactor*((highest*40 - 30)-($index*35))}}" text-anchor="middle" svg-fill="{{skillLevel.textFill}}">{{sl.name}}</text>' +
+		'      <rect svg-x="{{scaleFactor*(10+$parent.$index*200)}}" svg-y="{{scaleFactor*((highest*40 - 40)-($index*35))}}" svg-rx="{{scaleFactor*5}}" svg-ry="{{scaleFactor*5}}" svg-width="{{scaleFactor*190}}" svg-height="{{scaleFactor*30}}" svg-fill="{{skillLevel.fill}}" svg-stroke="{{skillLevel.stroke}}" stroke-width="1"></rect>' +
+		'      <text svg-x="{{scaleFactor*(100+$parent.$index*200)}}" svg-y="{{scaleFactor*((highest*40 - 20)-($index*35))}}" text-anchor="middle" svg-fill="{{skillLevel.textFill}}">{{sl.name}}</text>' +
 		'    </g>' +
 		'  </g>' +
 		'</svg>',

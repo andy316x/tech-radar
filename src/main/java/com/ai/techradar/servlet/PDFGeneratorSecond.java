@@ -18,7 +18,7 @@ import com.ai.techradar.servlet.RadarPreviewServlet.Quadrant;
 import com.ai.techradar.web.service.to.MaturityTO;
 import com.ai.techradar.web.service.to.RadarTO;
 import com.ai.techradar.web.service.to.RadarTechnologyTO;
-import com.ai.techradar.web.service.to.TechGroupingTO;
+import com.ai.techradar.web.service.to.QuadrantTO;
 import com.lowagie.text.Anchor;
 import com.lowagie.text.Chapter;
 import com.lowagie.text.Chunk;
@@ -111,24 +111,24 @@ public class PDFGeneratorSecond extends PdfPageEventHelper {
 			}
 
 			final Map<String, Quadrant> quadrantMap = new HashMap<String, Quadrant>();
-			for (final TechGroupingTO techGrouping : radar.getTechGroupings()) {
-				final Quadrant quadrant = new Quadrant(techGrouping.getName(),
+			for (final QuadrantTO quad : radar.getQuadrants()) {
+				final Quadrant quadrant = new Quadrant(quad.getName(),
 						QUADRANT_COLOURS[quadrantMap.size()]);
 				quadrant.setStartTheta(quadrantMap.size() * 90);
-				quadrantMap.put(techGrouping.getName(), quadrant);
+				quadrantMap.put(quad.getName(), quadrant);
 			}
 
 			// add technologies to quad
 
 			for (final RadarTechnologyTO tech : radar.getTechnologies()) {
-				String techGroupingName = tech.getTechGrouping();
-				List<RadarTechnologyTO> techGrouping = map.get(techGroupingName);
-				if (techGrouping == null) {
-					techGrouping = new ArrayList<RadarTechnologyTO>();
-					map.put(techGroupingName, techGrouping);
+				String quadrantName = tech.getQuadrant();
+				List<RadarTechnologyTO> quadrant = map.get(quadrantName);
+				if (quadrant == null) {
+					quadrant = new ArrayList<RadarTechnologyTO>();
+					map.put(quadrantName, quadrant);
 				}
-				techGrouping.add(tech);
-				quadrantMap.get(tech.getTechGrouping()).getItems().add(tech);
+				quadrant.add(tech);
+				quadrantMap.get(tech.getQuadrant()).getItems().add(tech);
 			}
 
 			int chapNumber = 1;

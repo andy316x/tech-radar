@@ -38,9 +38,9 @@ import com.ai.techradar.database.hibernate.HibernateUtil;
 import com.ai.techradar.service.RadarService;
 import com.ai.techradar.service.SpringStarter;
 import com.ai.techradar.web.service.to.MaturityTO;
+import com.ai.techradar.web.service.to.QuadrantTO;
 import com.ai.techradar.web.service.to.RadarTO;
 import com.ai.techradar.web.service.to.RadarTechnologyTO;
-import com.ai.techradar.web.service.to.TechGroupingTO;
 
 public class CSVUploadServlet extends HttpServlet {
 
@@ -95,9 +95,9 @@ public class CSVUploadServlet extends HttpServlet {
 				final RadarTO radar = service.getRadarById(id);
 				radar.setTechnologies(new ArrayList<RadarTechnologyTO>());
 
-				final Map<String, String> techGroupings = new HashMap<String, String>();
-				for(final TechGroupingTO tg : radar.getTechGroupings()) {
-					techGroupings.put(tg.getName().toLowerCase(), tg.getName());
+				final Map<String, String> quadrants = new HashMap<String, String>();
+				for(final QuadrantTO tg : radar.getQuadrants()) {
+					quadrants.put(tg.getName().toLowerCase(), tg.getName());
 				}
 
 				final Map<String, String> maturities = new HashMap<String, String>();
@@ -140,16 +140,16 @@ public class CSVUploadServlet extends HttpServlet {
 								uploadResponse.getErrors().add("Mandatory column '" + TECHNOLOGY_COLUMN_NAME + "' does not exist in file");
 							}
 
-							// Tech grouping column
+							// Quadrant column
 							try {
 								final String quadrantName = readString(record.get(QUADRANT_COLUMN_NAME));
 								if(!StringUtils.isBlank(quadrantName)) {
-									final String canonicalTechGrouping = quadrantName.trim().toLowerCase();
-									if(techGroupings.containsKey(canonicalTechGrouping)) {
-										radarTechnology.setTechGrouping(techGroupings.get(canonicalTechGrouping));
+									final String canonicalQuadrant = quadrantName.trim().toLowerCase();
+									if(quadrants.containsKey(canonicalQuadrant)) {
+										radarTechnology.setQuadrant(quadrants.get(canonicalQuadrant));
 									} else {
 										isRowValid = false;
-										uploadResponse.getWarnings().add("Row " + i + " has tech grouping '" + quadrantName + "' that is not in the radar");
+										uploadResponse.getWarnings().add("Row " + i + " has quadrant '" + quadrantName + "' that is not in the radar");
 									}
 								} else {
 									isRowValid = false;

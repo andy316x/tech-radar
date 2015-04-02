@@ -20,9 +20,9 @@ import com.ai.techradar.database.entities.Maturity;
 import com.ai.techradar.database.entities.MovementEnum;
 import com.ai.techradar.database.entities.Radar;
 import com.ai.techradar.database.entities.RadarMaturity;
-import com.ai.techradar.database.entities.RadarTechGrouping;
+import com.ai.techradar.database.entities.RadarQuadrant;
 import com.ai.techradar.database.entities.RadarTechnology;
-import com.ai.techradar.database.entities.TechGrouping;
+import com.ai.techradar.database.entities.Quadrant;
 import com.ai.techradar.database.entities.Technology;
 import com.ai.techradar.database.entities.User;
 import com.ai.techradar.database.entities.UserTechnology;
@@ -35,7 +35,7 @@ import com.ai.techradar.util.AdminHandlerHelper;
 import com.ai.techradar.web.service.to.MaturityTO;
 import com.ai.techradar.web.service.to.RadarTO;
 import com.ai.techradar.web.service.to.RadarTechnologyTO;
-import com.ai.techradar.web.service.to.TechGroupingTO;
+import com.ai.techradar.web.service.to.QuadrantTO;
 
 @SuppressWarnings("unchecked")
 public class RadarServiceImpl implements RadarService {
@@ -149,22 +149,22 @@ public class RadarServiceImpl implements RadarService {
 		r.setMaturities(maturities);
 
 
-		// Tech groupings enrichment
-		final List<TechGroupingTO> techGroupings = new ArrayList<TechGroupingTO>();
+		// Quadrants enrichment
+		final List<QuadrantTO> quadrants = new ArrayList<QuadrantTO>();
 
-		final Criteria techGroupingsQuery = session.createCriteria(RadarTechGrouping.class);
-		final Criteria techGroupingJoinToRadar = techGroupingsQuery.createCriteria("radar", "radar",  JoinType.INNER_JOIN);
-		techGroupingsQuery.createAlias("techGrouping", "techGrouping",  JoinType.INNER_JOIN);
+		final Criteria quadrantsQuery = session.createCriteria(RadarQuadrant.class);
+		final Criteria techGroupingJoinToRadar = quadrantsQuery.createCriteria("radar", "radar", JoinType.INNER_JOIN);
+		quadrantsQuery.createAlias("quadrant", "quadrant",  JoinType.INNER_JOIN);
 		techGroupingJoinToRadar.add(Restrictions.eq("id", id));
-		techGroupingsQuery.addOrder(Order.asc("theOrder"));
-		techGroupingsQuery.setProjection(Projections.property("techGrouping.name"));
+		quadrantsQuery.addOrder(Order.asc("theOrder"));
+		quadrantsQuery.setProjection(Projections.property("quadrant.name"));
 
-		for(final String row : (List<String>)techGroupingsQuery.list()) {
-			final TechGroupingTO techGroupingTO = new TechGroupingTO();
-			techGroupingTO.setName(row);
-			techGroupings.add(techGroupingTO);
+		for(final String row : (List<String>)quadrantsQuery.list()) {
+			final QuadrantTO quadrantTO = new QuadrantTO();
+			quadrantTO.setName(row);
+			quadrants.add(quadrantTO);
 		}
-		r.setTechGroupings(techGroupings);
+		r.setQuadrants(quadrants);
 
 
 		// Technologies enrichment
@@ -172,15 +172,16 @@ public class RadarServiceImpl implements RadarService {
 
 		final Criteria technologiesQuery = session.createCriteria(RadarTechnology.class);
 		final Criteria technologyJoinToRadar = technologiesQuery.createCriteria("radar", "radar", JoinType.INNER_JOIN);
-		technologiesQuery.createAlias("technology", "technology",  JoinType.INNER_JOIN);
-		final Criteria joinToRadarTechGrouping = technologiesQuery.createCriteria("radarTechGrouping", "radarTechGrouping", JoinType.INNER_JOIN);
-		joinToRadarTechGrouping.createAlias("techGrouping", "techGrouping", JoinType.INNER_JOIN);
+		final Criteria technologyJoinToTechGrouping = technologiesQuery.createCriteria("technology", "technology",  JoinType.INNER_JOIN);
+		technologyJoinToTechGrouping.createAlias("techGrouping", "techGrouping",  JoinType.INNER_JOIN);
+		final Criteria joinToRadarQuadrant = technologiesQuery.createCriteria("radarQuadrant", "radarQuadrant", JoinType.INNER_JOIN);
+		joinToRadarQuadrant.createAlias("quadrant", "quadrant", JoinType.INNER_JOIN);
 		final Criteria joinToRadarMaturity = technologiesQuery.createCriteria("radarMaturity", "radarMaturity", JoinType.INNER_JOIN);
 		joinToRadarMaturity.createAlias("maturity", "maturity", JoinType.INNER_JOIN);
 		technologyJoinToRadar.add(Restrictions.eq("id", id));
 		technologiesQuery.setProjection(Projections.projectionList()
 				.add(Projections.property("movement"))
-				.add(Projections.property("techGrouping.name"))
+				.add(Projections.property("quadrant.name"))
 				.add(Projections.property("maturity.name"))
 				.add(Projections.property("technology.id"))
 				.add(Projections.property("technology.name"))
@@ -188,12 +189,13 @@ public class RadarServiceImpl implements RadarService {
 				.add(Projections.property("technology.url"))
 				.add(Projections.property("technology.description"))
 				.add(Projections.property("technology.detailUrl"))
-				.add(Projections.property("technology.customerStrategic")));
+				.add(Projections.property("technology.customerStrategic"))
+				.add(Projections.property("techGrouping.name")));
 
 		for(final Object[] row : (List<Object[]>)technologiesQuery.list()) {
 			final RadarTechnologyTO tech = new RadarTechnologyTO();
 			tech.setMovement((MovementEnum)row[0]);
-			tech.setTechGrouping((String)row[1]);
+			tech.setQuadrant((String)row[1]);
 			tech.setMaturity((String)row[2]);
 			tech.setId((Long)row[3]);
 			tech.setTechnology((String)row[4]);
@@ -202,6 +204,7 @@ public class RadarServiceImpl implements RadarService {
 			tech.setDescription((String)row[7]);
 			tech.setDetailUrl((String)row[8]);
 			tech.setCustomerStrategic((Boolean)row[9]);
+			tech.setTechGrouping((String)row[10]);
 			technologies.add(tech);
 		}
 		r.setTechnologies(technologies);
@@ -295,16 +298,16 @@ public class RadarServiceImpl implements RadarService {
 				validations.add("No maturities");
 			}
 
-			final List<TechGroupingTO> radarTechGroupingTOs = radarTO.getTechGroupings();
+			final List<QuadrantTO> radarTechGroupingTOs = radarTO.getQuadrants();
 			if(radarTechGroupingTOs!=null && !radarTechGroupingTOs.isEmpty()) {
 				if(radarTechGroupingTOs.size() == 4) {
 					int i = 0;
-					for(final TechGroupingTO radarTechGroupingTO : radarTechGroupingTOs) {
-						final TechGrouping techGrouping = readTechGrouping(radarTechGroupingTO.getName(), session);
+					for(final QuadrantTO radarTechGroupingTO : radarTechGroupingTOs) {
+						final Quadrant techGrouping = readTechGrouping(radarTechGroupingTO.getName(), session);
 						if(techGrouping!=null) {
-							final RadarTechGrouping radarTechGrouping = new RadarTechGrouping();
+							final RadarQuadrant radarTechGrouping = new RadarQuadrant();
 							radarTechGrouping.setRadar(radar);
-							radarTechGrouping.setTechGrouping(techGrouping);
+							radarTechGrouping.setQuadrant(techGrouping);
 							radarTechGrouping.setTheOrder(i++);
 							session.persist(radarTechGrouping);
 						} else {
@@ -348,7 +351,7 @@ public class RadarServiceImpl implements RadarService {
 			session.delete(radarTechnology);
 		}
 
-		for(final RadarTechGrouping radarTechGrouping : radar.getRadarTechGroupings()) {
+		for(final RadarQuadrant radarTechGrouping : radar.getRadarQuadrants()) {
 			session.delete(radarTechGrouping);
 		}
 
@@ -419,17 +422,17 @@ public class RadarServiceImpl implements RadarService {
 							validations.add("Unable to find maturity '" + maturityName + "' in radar with ID " + radarId);
 						}
 
-						final String techGroupingName = radarTechnologyTO.getTechGrouping();
-						final RadarTechGrouping radarTechGrouping = readRadarTechGrouping(radarId, techGroupingName, session);
-						if(radarTechGrouping==null) {
-							validations.add("Unable to find tech grouping '" + techGroupingName + "' in radar with ID " + radarId);
+						final String quadrantName = radarTechnologyTO.getQuadrant();
+						final RadarQuadrant radarQuadrant = readRadarQuadrant(radarId, quadrantName, session);
+						if(radarQuadrant==null) {
+							validations.add("Unable to find quadrant '" + quadrantName + "' in radar with ID " + radarId);
 						}
 
 						final RadarTechnology radarTechnology = new RadarTechnology();
 						radarTechnology.setTechnology(technology);
 						radarTechnology.setRadar(radar);
 						radarTechnology.setRadarMaturity(radarMaturity);
-						radarTechnology.setRadarTechGrouping(radarTechGrouping);
+						radarTechnology.setRadarQuadrant(radarQuadrant);
 						radarTechnology.setMovement(radarTechnologyTO.getMovement());
 						radarTechnology.setTheOrder(i++);
 
@@ -479,16 +482,16 @@ public class RadarServiceImpl implements RadarService {
 		return (RadarMaturity)query.uniqueResult();
 	}
 
-	private RadarTechGrouping readRadarTechGrouping(final Long id, final String techGrouping, final Session session) {
-		final Criteria query = session.createCriteria(RadarTechGrouping.class);
+	private RadarQuadrant readRadarQuadrant(final Long id, final String techGrouping, final Session session) {
+		final Criteria query = session.createCriteria(RadarQuadrant.class);
 
 		query.createAlias("radar", "radar");
-		query.createAlias("techGrouping", "tg");
+		query.createAlias("quadrant", "q");
 
 		query.add(Restrictions.eq("radar.id", id));
-		query.add(Restrictions.ilike("tg.name", techGrouping));
+		query.add(Restrictions.ilike("q.name", techGrouping));
 
-		return (RadarTechGrouping)query.uniqueResult();
+		return (RadarQuadrant)query.uniqueResult();
 	}
 
 	private Radar readRadar(final Long id, final Session session) {
@@ -509,10 +512,10 @@ public class RadarServiceImpl implements RadarService {
 		return (Maturity)query.uniqueResult();
 	}
 
-	private TechGrouping readTechGrouping(final String name, final Session session) {
-		final Criteria query = session.createCriteria(TechGrouping.class);
+	private Quadrant readTechGrouping(final String name, final Session session) {
+		final Criteria query = session.createCriteria(Quadrant.class);
 		query.add(Restrictions.ilike("name", name));
-		return (TechGrouping)query.uniqueResult();
+		return (Quadrant)query.uniqueResult();
 	}
 
 	private BusinessUnit readBusinessUnit(final String name, final Session session) {

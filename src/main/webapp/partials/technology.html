@@ -65,8 +65,11 @@
 				
 				<div class="technology-wrapper">
 				
-					<div ng-repeat="technology in technologies | filter:{name:searchText}" class="technology-card{{selectedTechnology.id==technology.id?' active':''}}" ng-click="technologySelected(technology)">
-						<span href="#/technology/{{technology.id}}">{{$index+1}}. {{technology.name}}<i class="glyphicon glyphicon-thumbs-up"></i></span>
+					<div ng-repeat="techGrouping in techGroupings">
+						<div style="border-bottom: 1px solid #CCC;padding: 10px 5px;"><strong>{{techGrouping.name}}</strong></div>
+						<div ng-repeat="technology in techGrouping.technologies | filter:{name:searchText}" class="technology-card{{selectedTechnology.id==technology.id?' active':''}}" ng-click="technologySelected(technology)">
+							<span href="#/technology/{{technology.id}}">{{technology.ind}}. {{technology.name}}<i class="glyphicon glyphicon-thumbs-up"></i></span>
+						</div>
 					</div>
 				
 				</div>
@@ -78,7 +81,8 @@
 				
 					<div class="clearfix" style="padding: 20px 15px 20px 5px;border-bottom: 1px solid #CCCCCC;">
 						<div class="col-xs-6">
-							<h1>{{selectedTechnology.name}}</h1>
+							<h1 style="margin-top:0">{{selectedTechnology.name}}</h1>
+							<p style="margin:0"><small class="text-muted">{{selectedTechnology.techGrouping}}</small></p>
 						</div>
 						<div class="col-xs-6 text-right">
 							<button class="btn btn-default">Edit</button>

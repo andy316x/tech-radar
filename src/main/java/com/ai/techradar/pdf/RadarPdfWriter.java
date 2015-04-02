@@ -14,7 +14,7 @@ import com.ai.techradar.pdf.chapter.RadarChapter;
 import com.ai.techradar.pdf.chapter.RadarContentsWriter;
 import com.ai.techradar.pdf.chapter.RadarQuadrantChapterWriter;
 import com.ai.techradar.web.service.to.RadarTO;
-import com.ai.techradar.web.service.to.TechGroupingTO;
+import com.ai.techradar.web.service.to.QuadrantTO;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.PageSize;
@@ -31,7 +31,7 @@ public class RadarPdfWriter {
 
 	private final RadarTO radar;
 
-	private final Map<Integer, TechGroupingTO> techGroupingByChapterIndex = new HashMap<Integer, TechGroupingTO>();
+	private final Map<Integer, QuadrantTO> quadrantByChapterIndex = new HashMap<Integer, QuadrantTO>();
 
 	public RadarPdfWriter(final RadarTO radar) {
 		this.radar = radar;
@@ -74,17 +74,17 @@ public class RadarPdfWriter {
 
 		int chapterNumber = 1;
 
-		// Add chapter for each tech grouping
-		final List<TechGroupingTO> techGroupings = radar.getTechGroupings();
-		for (int i = 0; i < techGroupings.size(); i++) {
-			final TechGroupingTO techGrouping = techGroupings.get(i);
+		// Add chapter for each quadrant
+		final List<QuadrantTO> quadrants = radar.getQuadrants();
+		for (int i = 0; i < quadrants.size(); i++) {
+			final QuadrantTO quadrant = quadrants.get(i);
 
-			// For the time being choose the quadrant colour based on the order the tech groupings appear in the list
+			// For the time being choose the quadrant colour based on the order the quadrants appear in the list
 			final Color quadrantColour = Color.decode(QUADRANT_COLOURS[i]);
 
-			final RadarChapter radarChapter = new RadarChapter(chapterNumber, techGrouping.getName(), quadrantColour);
+			final RadarChapter radarChapter = new RadarChapter(chapterNumber, quadrant.getName(), quadrantColour);
 			radarChapters.add(radarChapter);
-			techGroupingByChapterIndex.put(radarChapter.getIndex(), techGrouping);
+			quadrantByChapterIndex.put(radarChapter.getIndex(), quadrant);
 
 			chapterNumber++;
 		}
@@ -101,9 +101,9 @@ public class RadarPdfWriter {
 	private void addContent(final List<RadarChapter> radarChapters, final RadarTO radar, final Document document, final PdfWriter pdfWriter)
 			throws DocumentException {
 		for (final RadarChapter radarChapter : radarChapters) {
-			final TechGroupingTO techGrouping = techGroupingByChapterIndex.get(radarChapter.getIndex());
+			final QuadrantTO quadrant = quadrantByChapterIndex.get(radarChapter.getIndex());
 
-			final RadarQuadrantChapterWriter radarQuadrantChapterWriter = new RadarQuadrantChapterWriter(radarChapter, techGrouping,
+			final RadarQuadrantChapterWriter radarQuadrantChapterWriter = new RadarQuadrantChapterWriter(radarChapter, quadrant,
 					radar.getMaturities(), radar.getTechnologies());
 			radarQuadrantChapterWriter.writeTo(document, pdfWriter);
 		}

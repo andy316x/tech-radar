@@ -61,7 +61,7 @@ public class CSVExportServlet extends HttpServlet {
 			for (final RadarTechnologyTO technologyTo : radar.getTechnologies()) {
 				final List<String> technologyRecord = new ArrayList<String>();
 				technologyRecord.add(technologyTo.getTechnology());
-				technologyRecord.add(technologyTo.getTechGrouping());
+				technologyRecord.add(technologyTo.getQuadrant());
 				technologyRecord.add(technologyTo.getMaturity());
 				technologyRecord.add("" + true);
 				technologyRecord.add("" + technologyTo.getBlipSize());

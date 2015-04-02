@@ -9,11 +9,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.SecurityContext;
 
 import com.ai.techradar.service.BusinessUnitService;
 import com.ai.techradar.service.MaturityService;
+import com.ai.techradar.service.QuadrantService;
 import com.ai.techradar.service.RadarService;
 import com.ai.techradar.service.SpringStarter;
 import com.ai.techradar.service.TechGroupingService;
@@ -22,6 +23,7 @@ import com.ai.techradar.service.ValidationException;
 import com.ai.techradar.util.AdminHandlerHelper;
 import com.ai.techradar.web.service.to.BusinessUnitTO;
 import com.ai.techradar.web.service.to.MaturityTO;
+import com.ai.techradar.web.service.to.QuadrantTO;
 import com.ai.techradar.web.service.to.RadarTO;
 import com.ai.techradar.web.service.to.TechGroupingTO;
 import com.ai.techradar.web.service.to.TechnologyTO;
@@ -37,6 +39,8 @@ public class DataUploadRestService extends AbstractTechRadarRestService {
 
 	private MaturityService maturityService = (MaturityService)SpringStarter.getContext().getBean("MaturityService");
 
+	private QuadrantService quadrantService = (QuadrantService)SpringStarter.getContext().getBean("QuadrantService");
+	
 	private TechGroupingService techGroupingService = (TechGroupingService)SpringStarter.getContext().getBean("TechGroupingService");
 
 	private BusinessUnitService businessUnitService = (BusinessUnitService)SpringStarter.getContext().getBean("BusinessUnitService");
@@ -56,6 +60,12 @@ public class DataUploadRestService extends AbstractTechRadarRestService {
 		}
 
 		try {
+			
+			if(data.getTechGroupings()!=null) {
+				for(final TechGroupingTO techGrouping : data.getTechGroupings()) {
+					techGroupingService.createTechGrouping(techGrouping);
+				}
+			}
 
 			if(data.getTechnologies()!=null) {
 				for(final TechnologyTO technology : data.getTechnologies()) {
@@ -76,8 +86,8 @@ public class DataUploadRestService extends AbstractTechRadarRestService {
 			}
 
 			if(data.getTechnologies()!=null) {
-				for(final TechGroupingTO techGrouping : data.getTechGroupings()) {
-					techGroupingService.createTechGrouping(techGrouping);
+				for(final QuadrantTO techGrouping : data.getQuadrants()) {
+					quadrantService.createQuadrant(techGrouping);
 				}
 			}
 
@@ -106,16 +116,26 @@ public class DataUploadRestService extends AbstractTechRadarRestService {
 	public static class Data implements Serializable {
 
 		private static final long serialVersionUID = -8462502804978330944L;
+		
+		private List<TechGroupingTO> techGroupings;
 
 		private List<TechnologyTO> technologies;
 
 		private List<MaturityTO> maturities;
 
-		private List<TechGroupingTO> techGroupings;
+		private List<QuadrantTO> quadrants;
 
 		private List<BusinessUnitTO> businessUnits;
 
 		private RadarTO radar;
+
+		public List<TechGroupingTO> getTechGroupings() {
+			return techGroupings;
+		}
+
+		public void setTechGroupings(final List<TechGroupingTO> techGroupings) {
+			this.techGroupings = techGroupings;
+		}
 
 		public List<TechnologyTO> getTechnologies() {
 			return technologies;
@@ -133,12 +153,12 @@ public class DataUploadRestService extends AbstractTechRadarRestService {
 			this.maturities = maturities;
 		}
 
-		public List<TechGroupingTO> getTechGroupings() {
-			return techGroupings;
+		public List<QuadrantTO> getQuadrants() {
+			return quadrants;
 		}
 
-		public void setTechGroupings(final List<TechGroupingTO> techGroupings) {
-			this.techGroupings = techGroupings;
+		public void setQuadrants(final List<QuadrantTO> quadrants) {
+			this.quadrants = quadrants;
 		}
 
 		public List<BusinessUnitTO> getBusinessUnits() {

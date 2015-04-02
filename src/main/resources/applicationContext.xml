@@ -16,9 +16,11 @@
 	
 	<bean id="TechnologyService" class="com.ai.techradar.service.impl.TechnologyServiceImpl"></bean>
 	
-	<bean id="TechGroupingService" class="com.ai.techradar.service.impl.TechGroupingServiceImpl"></bean>
+	<bean id="QuadrantService" class="com.ai.techradar.service.impl.QuadrantServiceImpl"></bean>
 	
 	<bean id="MaturityService" class="com.ai.techradar.service.impl.MaturityServiceImpl"></bean>
+	
+	<bean id="TechGroupingService" class="com.ai.techradar.service.impl.TechGroupingServiceImpl"></bean>
 	
 	<bean id="BusinessUnitService" class="com.ai.techradar.service.impl.BusinessUnitServiceImpl"></bean>
 	

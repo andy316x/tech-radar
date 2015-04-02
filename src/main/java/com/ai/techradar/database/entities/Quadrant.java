@@ -13,22 +13,24 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Index;
 
 @Entity
-public class TechGrouping {
+public class Quadrant {
 
 	private Long id;
 
 	private String name;
 	
-	private List<Technology> technologies;
+	private boolean techGrouping;
 
-	public TechGrouping() {
+	private List<RadarQuadrant> radarQuadrants;
+
+	public Quadrant() {
 		// this form used by Hibernate
 	}
 
 	@Id
 	@GeneratedValue(generator="increment")
 	@GenericGenerator(name="increment", strategy = "increment")
-	@Column(name="TECH_GROUPING_ID")
+	@Column(name="QUADRANT_ID")
 	public Long getId() {
 		return id;
 	}
@@ -37,7 +39,7 @@ public class TechGrouping {
 		this.id = id;
 	}
 
-	@Index(name="techGroupingNameIndex")
+	@Index(name="quadrantNameIndex")
 	public String getName() {
 		return name;
 	}
@@ -46,13 +48,21 @@ public class TechGrouping {
 		this.name = name;
 	}
 
-	@OneToMany(mappedBy="techGrouping", cascade=CascadeType.ALL)
-	public List<Technology> getTechnologies() {
-		return technologies;
+	public boolean isTechGrouping() {
+		return techGrouping;
 	}
 
-	public void setTechnologies(final List<Technology> technologies) {
-		this.technologies = technologies;
+	public void setTechGrouping(final boolean techGrouping) {
+		this.techGrouping = techGrouping;
+	}
+
+	@OneToMany(mappedBy="quadrant", cascade=CascadeType.ALL)
+	public List<RadarQuadrant> getRadarQuadrants() {
+		return radarQuadrants;
+	}
+
+	public void setRadarQuadrants(final List<RadarQuadrant> radarQuadrants) {
+		this.radarQuadrants = radarQuadrants;
 	}
 
 }

@@ -1,12 +1,14 @@
 package com.ai.techradar.web.service.to;
 
-public class TechGroupingTO {
+public class QuadrantTO {
 
 	private Long id;
 
 	private String name;
+	
+	private boolean techGrouping;
 
-	public TechGroupingTO() {
+	public QuadrantTO() {
 
 	}
 
@@ -24,6 +26,14 @@ public class TechGroupingTO {
 
 	public void setName(final String name) {
 		this.name = name;
+	}
+
+	public boolean isTechGrouping() {
+		return techGrouping;
+	}
+
+	public void setTechGrouping(final boolean techGrouping) {
+		this.techGrouping = techGrouping;
 	}
 	
 }

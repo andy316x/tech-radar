@@ -13,11 +13,11 @@ import javax.persistence.OneToMany;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-public class RadarTechGrouping {
+public class RadarQuadrant {
 
 	private Long id;
 
-	private TechGrouping techGrouping;
+	private Quadrant quadrant;
 
 	private Radar radar;
 
@@ -25,14 +25,14 @@ public class RadarTechGrouping {
 
 	private int theOrder;
 
-	public RadarTechGrouping() {
+	public RadarQuadrant() {
 		// this form used by Hibernate
 	}
 
 	@Id
 	@GeneratedValue(generator="increment")
 	@GenericGenerator(name="increment", strategy = "increment")
-	@Column(name="RADAR_TECH_GROUPING_ID")
+	@Column(name="RADAR_QUADRANT_ID")
 	public Long getId() {
 		return id;
 	}
@@ -42,12 +42,12 @@ public class RadarTechGrouping {
 	}
 
 	@ManyToOne
-	public TechGrouping getTechGrouping() {
-		return techGrouping;
+	public Quadrant getQuadrant() {
+		return quadrant;
 	}
 
-	public void setTechGrouping(final TechGrouping techGrouping) {
-		this.techGrouping = techGrouping;
+	public void setQuadrant(final Quadrant quadrant) {
+		this.quadrant = quadrant;
 	}
 
 	@ManyToOne
@@ -59,7 +59,7 @@ public class RadarTechGrouping {
 		this.radar = radar;
 	}
 
-	@OneToMany(mappedBy="radarTechGrouping", cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="radarQuadrant", cascade=CascadeType.ALL)
 	public List<RadarTechnology> getRadarTechnologies() {
 		return radarTechnologies;
 	}

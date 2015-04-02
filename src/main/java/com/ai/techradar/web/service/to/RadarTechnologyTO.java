@@ -11,6 +11,8 @@ public class RadarTechnologyTO {
 	private String technology;
 
 	private String maturity;
+	
+	private String quadrant;
 
 	private String techGrouping;
 
@@ -44,7 +46,7 @@ public class RadarTechnologyTO {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(final Long id) {
 		this.id = id;
 	}
 
@@ -52,7 +54,7 @@ public class RadarTechnologyTO {
 		return technology;
 	}
 
-	public void setTechnology(String technology) {
+	public void setTechnology(final String technology) {
 		this.technology = technology;
 	}
 
@@ -60,15 +62,23 @@ public class RadarTechnologyTO {
 		return maturity;
 	}
 
-	public void setMaturity(String maturity) {
+	public void setMaturity(final String maturity) {
 		this.maturity = maturity;
+	}
+
+	public String getQuadrant() {
+		return quadrant;
+	}
+
+	public void setQuadrant(final String quadrant) {
+		this.quadrant = quadrant;
 	}
 
 	public String getTechGrouping() {
 		return techGrouping;
 	}
 
-	public void setTechGrouping(String techGrouping) {
+	public void setTechGrouping(final String techGrouping) {
 		this.techGrouping = techGrouping;
 	}
 
@@ -76,7 +86,7 @@ public class RadarTechnologyTO {
 		return addedDate;
 	}
 
-	public void setAddedDate(Date addedDate) {
+	public void setAddedDate(final Date addedDate) {
 		this.addedDate = addedDate;
 	}
 
@@ -84,7 +94,7 @@ public class RadarTechnologyTO {
 		return addedByUid;
 	}
 
-	public void setAddedByUid(String addedByUid) {
+	public void setAddedByUid(final String addedByUid) {
 		this.addedByUid = addedByUid;
 	}
 
@@ -92,7 +102,7 @@ public class RadarTechnologyTO {
 		return addedByFriendlyName;
 	}
 
-	public void setAddedByFriendlyName(String addedByFriendlyName) {
+	public void setAddedByFriendlyName(final String addedByFriendlyName) {
 		this.addedByFriendlyName = addedByFriendlyName;
 	}
 
@@ -100,7 +110,7 @@ public class RadarTechnologyTO {
 		return movement;
 	}
 
-	public void setMovement(MovementEnum movement) {
+	public void setMovement(final MovementEnum movement) {
 		this.movement = movement;
 	}
 
@@ -108,7 +118,7 @@ public class RadarTechnologyTO {
 		return blipSize;
 	}
 
-	public void setBlipSize(int blipSize) {
+	public void setBlipSize(final int blipSize) {
 		this.blipSize = blipSize;
 	}
 
@@ -116,7 +126,7 @@ public class RadarTechnologyTO {
 		return url;
 	}
 
-	public void setUrl(String url) {
+	public void setUrl(final String url) {
 		this.url = url;
 	}
 
@@ -124,7 +134,7 @@ public class RadarTechnologyTO {
 		return description;
 	}
 
-	public void setDescription(String description) {
+	public void setDescription(final String description) {
 		this.description = description;
 	}
 
@@ -132,7 +142,7 @@ public class RadarTechnologyTO {
 		return detailUrl;
 	}
 
-	public void setDetailUrl(String detailUrl) {
+	public void setDetailUrl(final String detailUrl) {
 		this.detailUrl = detailUrl;
 	}
 
@@ -140,7 +150,7 @@ public class RadarTechnologyTO {
 		return customerStrategic;
 	}
 
-	public void setCustomerStrategic(boolean customerStrategic) {
+	public void setCustomerStrategic(final boolean customerStrategic) {
 		this.customerStrategic = customerStrategic;
 	}
 
@@ -148,7 +158,7 @@ public class RadarTechnologyTO {
 		return radarId;
 	}
 
-	public void setRadarId(Long radarId) {
+	public void setRadarId(final Long radarId) {
 		this.radarId = radarId;
 	}
 
@@ -156,7 +166,7 @@ public class RadarTechnologyTO {
 		return radarName;
 	}
 
-	public void setRadarName(String radarName) {
+	public void setRadarName(final String radarName) {
 		this.radarName = radarName;
 	}
 
@@ -170,4 +180,5 @@ public class RadarTechnologyTO {
 
 		return clone;
 	}
+	
 }

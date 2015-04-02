@@ -94,14 +94,33 @@ techRadarControllers.controller('CommonViewCtrl', function ($scope, $http, $loca
 
 techRadarControllers.controller('TechnologiesCtrl', function ($scope, $http, $location, $routeParams, $log) {
 
-	$scope.technologies = [];
+	$scope.techGroupings = [];
 
-	$http({method: 'GET', url: 'http://localhost:8280/radar/1.0.0/technology', headers: {'Authorization': 'Bearer f23e66562fbc67da4b779735f21bce4'}}).
+	$http({method: 'GET', url: '/radar/rest/technology?nocache=' + (new Date()).getTime()}).
 	success(function(data, status, headers, config) {
+		$scope.techGroupings = [];
+		var techGroupingToIndexMap = {};
 		if(data.length > 0) {
 			$scope.selectedTechnology = data[0];
+			var currentIndex = -1;
 			for(var i = 0; i < data.length; i++) {
-				$scope.technologies.push(data[i]);
+				var techGrouping = {name:data[i].techGrouping,technologies:[]};
+				var index = techGroupingToIndexMap[techGrouping.name];
+				if(typeof index == 'undefined') {
+					currentIndex++;
+					techGroupingToIndexMap[techGrouping.name] = currentIndex;
+					$scope.techGroupings.push(techGrouping);
+					index = currentIndex;
+					
+				}
+				$scope.techGroupings[index].technologies.push(data[i]);
+			}
+			
+			var count = 0;
+			for(var i = 0; i < $scope.techGroupings.length; i++) {
+				for(var j = 0; j < $scope.techGroupings[i].technologies.length; j++) {
+					$scope.techGroupings[i].technologies[j].ind = ++count;
+				}
 			}
 		}
 	}).
@@ -407,7 +426,7 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 	$scope.blipMoved = function(blip) {
 		for(var i = 0; i < $scope.selectedRadar.technologies.length; i++) {
 			if($scope.selectedRadar.technologies[i].technology === blip.name) {
-				$scope.selectedRadar.technologies[i].techGrouping = blip.techGrouping;
+				$scope.selectedRadar.technologies[i].quadrant = blip.techGrouping;
 				$scope.selectedRadar.technologies[i].maturity = blip.arc;
 				$log.log('Moving ' + blip.name + ' to tech grouping ' + blip.techGrouping + ' and arc ' + blip.arc);
 			}
@@ -485,7 +504,7 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 		
 		$scope.quads = [];
 
-		for(var i = 0; i < theRadar.techGroupings.length; i++) {
+		for(var i = 0; i < theRadar.quadrants.length; i++) {
 			(function(row){
 				quadrant = {
 						id: row.name,
@@ -502,7 +521,7 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 				$scope.quads.push(quad);
 				theRadar.quadrantMap[row.name] = quadrant;
 				theRadar.radar.quadrants.push(quadrant);
-			})(theRadar.techGroupings[i]);
+			})(theRadar.quadrants[i]);
 		}
 
 		if(theRadar.technologies!=null && typeof theRadar.technologies!='undefined') {
@@ -525,8 +544,8 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 							customerStrategic: customerStrategic,
 							url: row.url
 					};
-					$scope.quads[theRadar.quadrantMap[row.techGrouping].ind].arcs[theRadar.arcMap[row.maturity].ind].techs.push(newItem);
-					theRadar.quadrantMap[row.techGrouping].items.push(newItem);
+					$scope.quads[theRadar.quadrantMap[row.quadrant].ind].arcs[theRadar.arcMap[row.maturity].ind].techs.push(newItem);
+					theRadar.quadrantMap[row.quadrant].items.push(newItem);
 				})(theRadar.technologies[i]);
 			}
 		}

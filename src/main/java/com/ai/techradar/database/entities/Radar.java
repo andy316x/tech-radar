@@ -43,7 +43,7 @@ public class Radar {
 
 	private List<RadarMaturity> radarMaturities;
 
-	private List<RadarTechGrouping> radarTechGroupings;
+	private List<RadarQuadrant> radarQuadrants;
 
 	public Radar() {
 		// this form used by Hibernate
@@ -164,12 +164,12 @@ public class Radar {
 	}
 
 	@OneToMany(mappedBy="radar", cascade=CascadeType.ALL)
-	public List<RadarTechGrouping> getRadarTechGroupings() {
-		return radarTechGroupings;
+	public List<RadarQuadrant> getRadarQuadrants() {
+		return radarQuadrants;
 	}
 
-	public void setRadarTechGroupings(final List<RadarTechGrouping> radarTechGroupings) {
-		this.radarTechGroupings = radarTechGroupings;
+	public void setRadarQuadrants(final List<RadarQuadrant> radarQuadrants) {
+		this.radarQuadrants = radarQuadrants;
 	}
 
 }

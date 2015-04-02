@@ -14,6 +14,7 @@ import org.hibernate.sql.JoinType;
 import com.ai.techradar.database.entities.Radar;
 import com.ai.techradar.database.entities.RadarTechnology;
 import com.ai.techradar.database.entities.SkillLevelEnum;
+import com.ai.techradar.database.entities.TechGrouping;
 import com.ai.techradar.database.entities.Technology;
 import com.ai.techradar.database.entities.User;
 import com.ai.techradar.database.entities.UserTechnology;
@@ -34,11 +35,13 @@ public class TechnologyServiceImpl implements TechnologyService {
 		session.beginTransaction();
 
 		final Criteria query = session.createCriteria(Technology.class);
+		query.createAlias("techGrouping", "techGrouping");
 
 		query.setProjection(Projections.projectionList()
 				.add(Projections.property("id"))
 				.add(Projections.property("name"))
 				.add(Projections.property("description"))
+				.add(Projections.property("techGrouping.name"))
 				);
 
 		final List<TechnologyTO> ts = new ArrayList<TechnologyTO>();
@@ -47,6 +50,7 @@ public class TechnologyServiceImpl implements TechnologyService {
 			t.setId((Long)row[0]);
 			t.setName((String)row[1]);
 			t.setDescription((String)row[2]);
+			t.setTechGrouping((String)row[3]);
 
 			ts.add(t);
 		}
@@ -77,6 +81,7 @@ public class TechnologyServiceImpl implements TechnologyService {
 		technology.setDescription(technologyEntity.getDescription());
 		technology.setDetailUrl(technologyEntity.getDetailUrl());
 		technology.setCustomerStrategic(technologyEntity.isCustomerStrategic());
+		technology.setTechGrouping(technologyEntity.getTechGrouping().getName());
 
 		session.getTransaction().commit();
 		session.close();
@@ -96,17 +101,32 @@ public class TechnologyServiceImpl implements TechnologyService {
 				final Technology existingTechnology = readTechnology(technology.getName(), session);
 
 				if(existingTechnology == null) {
-					final Technology technologyEntity = new Technology();
-					technologyEntity.setName(technology.getName());
-					technologyEntity.setDescription(technology.getDescription());
-					technologyEntity.setUrl(technology.getUrl());
-					technologyEntity.setDetailUrl(technology.getDetailUrl());
-					technologyEntity.setUsageCount(technology.getBlipSize());
-					technologyEntity.setCustomerStrategic(technology.isCustomerStrategic());
 
-					final Long id = (Long)session.save(technologyEntity);
+					if(!StringUtils.isBlank(technology.getTechGrouping())) {
 
-					technology.setId(id);
+						final TechGrouping techGrouping = readTechGrouping(technology.getTechGrouping(), session);
+
+						if(techGrouping != null) {
+
+							final Technology technologyEntity = new Technology();
+							technologyEntity.setName(technology.getName());
+							technologyEntity.setDescription(technology.getDescription());
+							technologyEntity.setUrl(technology.getUrl());
+							technologyEntity.setDetailUrl(technology.getDetailUrl());
+							technologyEntity.setUsageCount(technology.getBlipSize());
+							technologyEntity.setCustomerStrategic(technology.isCustomerStrategic());
+							technologyEntity.setTechGrouping(techGrouping);
+
+							final Long id = (Long)session.save(technologyEntity);
+
+							technology.setId(id);
+
+						} else {
+							validations.add("Tech grouping with name '" + technology.getTechGrouping() + "' does not exist in tech radar");
+						}
+					} else {
+						validations.add("Missing mandatory field 'tech grouping'");
+					}
 				} else {
 					validations.add("Technology '" + technology.getName() + "' already exists in tech radar");
 				}
@@ -138,13 +158,30 @@ public class TechnologyServiceImpl implements TechnologyService {
 		final Technology technology = (Technology) query.uniqueResult();
 
 		if(technology != null) {
-			// TODO validate input
-			technology.setName(technologyTO.getName());
-			technology.setDescription(technologyTO.getDescription());
-			technology.setCustomerStrategic(technologyTO.isCustomerStrategic());
-			technology.setDetailUrl(technologyTO.getDetailUrl());
-			technology.setUrl(technologyTO.getUrl());
-			technology.setUsageCount(technologyTO.getBlipSize());
+
+			if(!StringUtils.isBlank(technologyTO.getTechGrouping())) {
+
+				final TechGrouping techGrouping = readTechGrouping(technologyTO.getTechGrouping(), session);
+
+				if(techGrouping != null) {
+
+					// TODO validate input
+					technology.setName(technologyTO.getName());
+					technology.setDescription(technologyTO.getDescription());
+					technology.setCustomerStrategic(technologyTO.isCustomerStrategic());
+					technology.setDetailUrl(technologyTO.getDetailUrl());
+					technology.setUrl(technologyTO.getUrl());
+					technology.setUsageCount(technologyTO.getBlipSize());
+					technology.setTechGrouping(techGrouping);
+
+				} else {
+					// TODO validate
+				}
+
+			} else {
+				// TODO validate
+			}
+
 		} else {
 			// TODO error
 		}
@@ -365,6 +402,12 @@ public class TechnologyServiceImpl implements TechnologyService {
 		final Criteria query = session.createCriteria(Technology.class);
 		query.add(Restrictions.eq("id", id));
 		return (Technology)query.uniqueResult();
+	}
+
+	private TechGrouping readTechGrouping(final String name, final Session session) {
+		final Criteria query = session.createCriteria(TechGrouping.class);
+		query.add(Restrictions.ilike("name", name));
+		return (TechGrouping)query.uniqueResult();
 	}
 
 	private User readUser(final String username, final Session session) {

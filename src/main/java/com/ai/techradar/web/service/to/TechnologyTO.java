@@ -17,6 +17,8 @@ public class TechnologyTO {
 	private String detailUrl;
 
 	private boolean customerStrategic;
+	
+	private String techGrouping;
 
 	public TechnologyTO() {
 
@@ -76,6 +78,14 @@ public class TechnologyTO {
 
 	public void setCustomerStrategic(final boolean customerStrategic) {
 		this.customerStrategic = customerStrategic;
+	}
+
+	public String getTechGrouping() {
+		return techGrouping;
+	}
+
+	public void setTechGrouping(final String techGrouping) {
+		this.techGrouping = techGrouping;
 	}
 
 }

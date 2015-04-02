@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -32,6 +33,8 @@ public class Technology {
 	private List<RadarTechnology> radarTechnologies;
 
 	private List<UserTechnology> users;
+	
+	private TechGrouping techGrouping;
 
 	public Technology() {
 		// this form used by Hibernate
@@ -115,6 +118,15 @@ public class Technology {
 
 	public void setUsers(final List<UserTechnology> users) {
 		this.users = users;
+	}
+
+	@ManyToOne
+	public TechGrouping getTechGrouping() {
+		return techGrouping;
+	}
+
+	public void setTechGrouping(final TechGrouping techGrouping) {
+		this.techGrouping = techGrouping;
 	}
 
 }
