@@ -546,16 +546,12 @@ var Radar = {
 			link.call(dragGroup);
 		}
 	
-		var blip = link.append('path');
-	
-		blip.attr('d', function(d){
-				return 'M420.084,282.092c-1.073,0-2.16,0.103-3.243,0.313c-6.912,1.345-13.188,8.587-11.423,16.874c1.732,8.141,8.632,13.711,17.806,13.711c0.025,0,0.052,0,0.074-0.003c0.551-0.025,1.395-0.011,2.225-0.109c4.404-0.534,8.148-2.218,10.069-6.487c1.747-3.886,2.114-7.993,0.913-12.118C434.379,286.944,427.494,282.092,420.084,282.092';
-		});
-	
-		blip.attr('fill',function(d){ return d.color;})
-			.attr('transform',function(d){
-					return 'scale('+((d.scaleFactor*30)/34)+') translate('+(-404+d.x*(34/(d.scaleFactor*30))-17)+', '+(-282+d.y*(34/(d.scaleFactor*30))-17)+')';
-			});
+		var blip = link.append('circle');
+		//TODO - what's the appropriate radius?
+		blip.attr('r', function(d){return d.scaleFactor * 13;})
+		.attr('cx',function(d){return d.x;})
+		.attr('cy', function(d){return d.y})
+		.attr('fill',function(d){ return d.color;});
 		
 		blip.style("filter", "url(#drop-shadow)");
 	
