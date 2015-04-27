@@ -146,7 +146,9 @@ techRadarDirectives.directive('ngNewRadar', function ($http) {
 			}, false);
 
 			element.children(":first").on('hide.bs.modal', function(e) {
-				$scope.visible = false;
+				$scope.$apply(function(){
+					$scope.visible = false;
+				});
 			});
 
 			$scope.save = function() {
