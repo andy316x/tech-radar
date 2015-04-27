@@ -837,3 +837,8 @@ border-radius: 2px;
 .nav-radar li.active.quad4 a, .nav-radar li:hover.quad4 a {
     background-color: #f0ad4e;
 }
+
+.containerGroup {
+	user-select: none;
+	-webkit-user-select: none;
+}

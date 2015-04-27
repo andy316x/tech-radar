@@ -12,8 +12,20 @@ var global_totalArc;
 var maxSample = 30;
 var maxRadius = 100;
 
+function findNamed(name, list, notFoundValue){
+	for(var k = 0; k < list.length; k++){
+		if(list[k].name == name){
+			return k;
+		}
+	}
+	return 0;
+}
+
+function longestChild(prev, list){
+	return Math.max(prev, list.length);
+}
+
 var Radar = {
-		
 	draw: function(element, radar, editable, callback) {
 		
 		var w = element.offsetWidth;
@@ -22,6 +34,7 @@ var Radar = {
 		global_radar = radar;
 
 		var scaleFactor = w/1000;
+		var scaleFactorLarge = scaleFactor*6;
 		var allRails = [];
 		var maxBlips = new Array(radar.arcs.length);
 		for(var i = 0; i < radar.quadrants.length; i++) {
@@ -32,55 +45,45 @@ var Radar = {
 			}
 		
 			for(var j = 0; j < quadrant.items.length; j++) {
-				var arcIndex = function(arcName){
-					for(var k = 0; k < radar.arcs.length; k++){
-						if(radar.arcs[k].name == arcName){
-							return k;
-						}
-					}
-					return 0;
-				}(quadrant.items[j].arc);
+				var arcIndex = findNamed(quadrant.items[j].arc, radar.arcs, 0);
 				allRails[i][arcIndex].push(quadrant.items[j]);
 			}
 			
-			for(var j = 0; j < radar.arcs.length;j++){
-				if(typeof maxBlips[j] === "undefined" || maxBlips[j] < allRails[i][j].length){
-					maxBlips[j] = allRails[i][j].length;
-				}
+			for(var j = 0; j < radar.arcs.length; j++){
+				maxBlips[j] = allRails[i][j].reduce(longestChild,0);
 			}
 		}
 		
-		var totalMaxBlips = 0;
-		for(var i = 0; i < radar.arcs.length; i++){
-			if(maxBlips[i] == 0){
-				maxBlips[i] = 1;
-			}
-			totalMaxBlips += maxBlips[i];
-		}
+		var totalMaxBlips = maxBlips.reduce(function(prev, curr){
+			//No value counts as 1
+			return prev + (curr || 1);
+		},0);
 		
-		for(var i = 0; i < radar.arcs.length; i++){
-			maxBlips[i] = Math.sqrt((maxBlips[i]/totalMaxBlips)/(1/(radar.arcs.length - i)));
-			if(totalMaxBlips === 0){
-				maxBlips[i] = 1;
+		maxBlips = maxBlips.map(function(maxBlip){
+			var t = Math.sqrt((maxBlips/totalMaxBlips)/(1/(radar.arcs.length - i)));
+			if(t === 0){
+				return 1;
 			}
-		}
+		});
 		
-		var totalArc = 0;
-		for(var i = 0; i < radar.arcs.length; i++) {
-			totalArc = totalArc + radar.arcs[i].r;
-		}
+		
+		var totalArc = radar.arcs.reduce(function(prev, curr){
+			return prev + curr.r;
+		},0);
 		global_totalArc = totalArc;
 		
+		//Clear bound element
+		//Not sure why this is done like so.
 		while (element.firstChild) {
 			element.removeChild(element.firstChild);
 		}
 		
 		var centres = [
 		               [w/2, w/2, w],
-		               [w - scaleFactor*6, w - scaleFactor*6, w + scaleFactor*6],
-		               [scaleFactor*6, w - scaleFactor*6, w + scaleFactor*6],
-		               [scaleFactor*6, w/2 - scaleFactor*6, w + scaleFactor*6],
-		               [w - scaleFactor*6, w/2 - scaleFactor*6, w + scaleFactor*6],
+		               [w - scaleFactorLarge, w - scaleFactorLarge, w + scaleFactorLarge],
+		               [scaleFactorLarge, w - scaleFactorLarge, w + scaleFactorLarge],
+		               [scaleFactorLarge, w/2 - scaleFactorLarge, w + scaleFactorLarge],
+		               [w - scaleFactorLarge, w/2 - scaleFactorLarge, w + scaleFactorLarge],
 		               ];
 		
 		var canvas=d3.select(element)
@@ -88,15 +91,16 @@ var Radar = {
 			.attr('xmlns:xmlns:xlink','http://www.w3.org/1999/xlink')
 			.attr('width',w)
 			.attr('height',h)
+			//TODO - is this necessary?  Seems costly
 		canvas.selectAll('*').remove();
 		
-		var svg = canvas.append('g');
+		var containerGroup = canvas.append('g').attr('class', 'containerGroup');
 		
-		function transition(svg, start, end) {
+		function transition(container, start, end) {
 			var center = [w / 2, h / 2],
 			i = d3.interpolateZoom(start, end);
 			
-			svg
+			container
 			.attr("transform", transform(start))
 			.transition()
 			.delay(250)
@@ -110,7 +114,7 @@ var Radar = {
 		}
 		
 		// filters go in defs element
-		var defs = svg.append("defs");
+		var defs = containerGroup.append("defs");
 
 		// create filter with id #drop-shadow
 		// height=130% so that the shadow is not clipped
@@ -146,47 +150,43 @@ var Radar = {
 		var cumulativeArc = 0;
 		var arcMap = {};
 		var arcs = [];
-		for(var i = 0; i < radar.arcs.length; i++) {
+		var self = this;
+		radar.arcs.forEach(function(_arc){
+			var r = (_arc.r / totalArc)*(w/2);
 			
-			var r = (radar.arcs[i].r / totalArc)*(w/2);
-			
-			this._drawArc(svg, cumulativeArc, cumulativeArc + r, w/2, h/2, radar.arcs[i].color);
+			self._drawArc(containerGroup, cumulativeArc, cumulativeArc + r, w/2, h/2, _arc.color);
 			
 			var arc = {
-				name: radar.arcs[i].name,
+				name: _arc.name,
 				innerRadius: cumulativeArc,
 				outerRadius: cumulativeArc + r,
 				index: i
 			};
-			arcMap[radar.arcs[i].id] = arc;
+			arcMap[_arc.id] = arc;
 			arcs.push(arc);
 			
 			cumulativeArc = cumulativeArc + r;
-		}
+		});
 		
 		var axisWidth = scaleFactor*25;
-		svg.append('rect')
+		containerGroup.append('rect')
 			.attr('x',0)
 			.attr('y',(h/2)-(axisWidth/2))
 			.attr('width',w)
 			.attr('height',scaleFactor*axisWidth)
 			.attr('fill','rgb(236,236,236)');
 		
-		svg.append('rect')
+		containerGroup.append('rect')
 			.attr('x',(w/2)-(axisWidth/2))
 			.attr('y',0)
 			.attr('width',scaleFactor*axisWidth)
 			.attr('height',h)
 			.attr('fill','rgb(236,236,236)');
 		
-		for(var i = 0; i < radar.arcs.length; i++) {
-			
-			var arc = arcMap[radar.arcs[i].id];
-			
-			this._drawArcAxisText(svg, arc.innerRadius, arc.outerRadius, w, h, radar.arcs[i].name, scaleFactor);
-		}
-		
-		//this._drawKey(svg,w,h,scaleFactor);
+		radar.arcs.forEach(function(_arc){
+			var arc = arcMap[_arc.id];
+			self._drawArcAxisText(containerGroup, arc.innerRadius, arc.outerRadius, w, h, _arc.name, scaleFactor);
+		});
 		
 		var translation = [[1, 1, 'end', 1, 0], [-1, 1, 'start', 0, 1], [-1, -1, 'start', 0, 1], [1, -1, 'end', 1, 0]];
 		
@@ -200,16 +200,17 @@ var Radar = {
 			
 			var labelx = (w/2) + translation[i][0]*(w/2);
 			var labely = (h/2) + translation[i][1]*0.95*(h/2);
-			var textElement = svg.append('text')
+			var textElement = containerGroup.append('text')
 				.attr({'x':labelx+translation[i][4]*scaleFactor*20,'y':labely,'font-size':scaleFactor*18,'font-weight':'bold','fill':'#333'})
 				.style({'text-anchor':translation[i][2]})
 				.text(quadrant.name);
 			
-			svg.append('circle')
-			.attr('r',scaleFactor*6)
+			//label colour marker
+			containerGroup.append('circle')
+			.attr('r',scaleFactorLarge)
 			.attr('fill',quadrant.color)
 			.attr('cx',labelx+scaleFactor*10-translation[i][3]*(scaleFactor*20+textElement.node().getComputedTextLength()))
-			.attr('cy',labely-scaleFactor*6);
+			.attr('cy',labely-scaleFactorLarge);
 			
 			var arcRails = allRails[i];
 			
@@ -348,7 +349,7 @@ var Radar = {
 			angle = angle + 90;
 			quadrant.endAngle = angle;
 		}
-		this._drawBlips(svg,blips,radar.quadrants,arcs,w,h,editable,callback);
+		this._drawBlips(containerGroup,blips,radar.quadrants,arcs,w,h,editable,callback);
 		
 		var context = {
 			oldZoom: 0	
@@ -363,7 +364,7 @@ var Radar = {
 				d3.selectAll('a circle, a path').attr('opacity',1.0);
 			},
 			zoom: function(index) {
-				svg.call(transition, centres[context.oldZoom], centres[index]);
+				containerGroup.call(transition, centres[context.oldZoom], centres[index]);
 				context.oldZoom = index;
 			}
 		};
@@ -473,19 +474,11 @@ var Radar = {
 	},
 	
 	_drawBlips: function(svg,blipGroups,quadrants,arcs,w,h,editable,callback) {
-		var blipsList = [];
+		var blipsList = blipGroups.reduce(function(prev, curr){
+			return prev.concat(curr);
+		},[]);
 		
-		for(var i = 0; i < blipGroups.length; i++) {
-			(function(blips){
-				for(var j = 0; j < blips.length; j++) {
-					(function(b){
-						blipsList.push(b);
-					})(blips[j]);
-				}
-			})(blipGroups[i]);
-		}
-		
-		if(editable === true) {
+		if(editable) {
 			var dragGroup = d3.behavior.drag()
 			.origin(function(d,i) { 
 				var t = d3.select(this);
@@ -556,27 +549,18 @@ var Radar = {
 		var blip = link.append('path');
 	
 		blip.attr('d', function(d){
-			//if (d.item.movement == 'c'){
-			//	return "M5,82.9422876 C32.8460969,99.0192375 67.1539031,99.0192375 95,82.9422876 C95.0000034,50.7883845 77.8460999,21.0769515 50,5 C22.1539001,21.0769515 4.99999658,50.7883845 5,82.9422876 L5,82.9422876 Z";
-			//}else{
 				return 'M420.084,282.092c-1.073,0-2.16,0.103-3.243,0.313c-6.912,1.345-13.188,8.587-11.423,16.874c1.732,8.141,8.632,13.711,17.806,13.711c0.025,0,0.052,0,0.074-0.003c0.551-0.025,1.395-0.011,2.225-0.109c4.404-0.534,8.148-2.218,10.069-6.487c1.747-3.886,2.114-7.993,0.913-12.118C434.379,286.944,427.494,282.092,420.084,282.092';
-			//}
 		});
 	
 		blip.attr('fill',function(d){ return d.color;})
 			.attr('transform',function(d){
-				//if(d.item.movement == 'c') {
-				//	return 'scale('+d.scaleFactor*0.32+') translate(' + (d.x - d.scaleFactor*15)/(d.scaleFactor*0.32) + ', ' + (d.y - d.scaleFactor*17)/(d.scaleFactor*0.32) + ')';
-				//} else {
 					return 'scale('+((d.scaleFactor*30)/34)+') translate('+(-404+d.x*(34/(d.scaleFactor*30))-17)+', '+(-282+d.y*(34/(d.scaleFactor*30))-17)+')';
-				//}
 			});
 		
 		blip.style("filter", "url(#drop-shadow)");
 	
 		link.append('text')
 			.attr('x',function(d){ return d.x;})
-			//.attr('y',function(d){ return d.item.movement=='c'?d.y+(d.scaleFactor*6):d.y+(d.scaleFactor*4);})
 			.attr('y',function(d){ return d.y+(d.scaleFactor*4);})
 			.attr('font-size',function(d){ return d.scaleFactor*12;})
 			.attr({'font-style':'italic','font-weight':'bold','fill':'white'})
