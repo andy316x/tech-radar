@@ -12,76 +12,56 @@ techRadarDirectives.directive('ngRadar', function ($routeParams) {
 			onBlipMoved: '&'
 		},
 		link: function ($scope, element, attrs) {
-			var el = element[0];
-
+            var el = element[0];
 			var quadrantName = $routeParams.quadrant;
+            var interactions = {
+                onblipmove: function(blip) {
+                    $scope.$apply(function(){
+                        $scope.onBlipMoved({blip:blip});
+                    });
+                },
+                onblipclick: function(blip) {
+                    $scope.$apply(function(){
+                        $scope.onBlipClicked({blip:blip});
+                    });
+                },
+                onbliphover: function(blip) {
+                    $scope.$apply(function(){
+                        $scope.selectedBlip = blip;
+                    });
+                },
+                onblipleave: function(blip) {
+                    $scope.$apply(function(){
+                        $scope.selectedBlip = null;
+                    });
+                }
+            };
 
 			var doDraw;
-			if(quadrantName != null && typeof quadrantName !== "undefined"){
+			if(quadrantName){
 				doDraw = function(r) {
-					$scope.theRadar = Radar.draw_Quadrant(el, r, quadrantName, $scope.editable, {
-						onblipmove: function(blip) {
-							$scope.$apply(function(){
-								$scope.onBlipMoved({blip:blip});
-							});
-						},
-						onblipclick: function(blip) {
-							$scope.$apply(function(){
-								$scope.onBlipClicked({blip:blip});
-							});
-						},
-						onbliphover: function(blip) {
-							$scope.$apply(function(){
-								$scope.selectedBlip = blip;
-							});
-						},
-						onblipleave: function(blip) {
-							$scope.$apply(function(){
-								$scope.selectedBlip = null;
-							});
-						}
-					});
+					$scope.theRadar = Radar.draw_Quadrant(el, r, quadrantName, $scope.editable, interactions);
 				};
 			}else{
 				doDraw = function(r) {
-					$scope.theRadar = Radar.draw(el, r, $scope.editable, {
-						onblipmove: function(blip) {
-							$scope.$apply(function(){
-								$scope.onBlipMoved({blip:blip});
-							});
-						},
-						onblipclick: function(blip) {
-							$scope.$apply(function(){
-								$scope.onBlipClicked({blip:blip});
-							});
-						},
-						onbliphover: function(blip) {
-							$scope.$apply(function(){
-								$scope.selectedBlip = blip;
-							});
-						},
-						onblipleave: function(blip) {
-							$scope.$apply(function(){
-								$scope.selectedBlip = null;
-							});
-						}
-					});
+					$scope.theRadar = Radar.draw(el, r, $scope.editable, interactions);
 				};
 			}
 
-			if($scope.radar != null && typeof $scope.radar != 'undefined') {
+			if($scope.radar) {
 				doDraw($scope.radar);
 			}
 
 			$scope.$watch('radar', function (newVal, oldVal, scope) {
-				if(newVal != null && typeof newVal != 'undefined') {
+				if(newVal) {
 					doDraw(newVal);
 				}
 			}, true);
 
 			$scope.$watch('selectedBlip', function (newVal, oldVal, scope) {
-				if($scope.theRadar != null && typeof $scope.theRadar != 'undefined') {
-					if(newVal == null || typeof newVal == 'undefined') {
+                //TODO - oldVal/scope parameters redundant?
+				if($scope.theRadar) {
+					if(newVal) {
 						$scope.theRadar.unselectBlip(newVal);
 					} else {
 						$scope.theRadar.selectBlip(newVal);
@@ -90,7 +70,7 @@ techRadarDirectives.directive('ngRadar', function ($routeParams) {
 			}, true);
 			
 			$scope.$watch('centreIndex', function (newVal, oldVal, scope) {
-				if($scope.theRadar != null && typeof $scope.theRadar != 'undefined') {
+				if($scope.theRadar) {
 					$scope.theRadar.zoom(newVal);
 				}
 			}, false);
