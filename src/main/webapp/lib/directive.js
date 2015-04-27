@@ -288,28 +288,28 @@ techRadarDirectives.directive('ngAddTech', function ($http) {
 			$scope.doSave = function() {
 				$scope.errors = [];
 				var newTechs = [];
-				for(var i = 0; i < $scope.technologies.length; i++) {
-					if($scope.technologies[i].selected==true) {
-						var valid = true;
-						if(typeof $scope.technologies[i].maturity == 'undefined') {
+                $scope.technologies.forEach(function(tech){
+                    if(tech.selected){
+                        var valid = true;
+						if(!(tech.maturity)) {
 							valid = false;
-							$scope.errors.push({text:$scope.technologies[i].name + ' has no maturity set'});
+							$scope.errors.push({text:tech.name + ' has no maturity set'});
 						}
-						if(typeof $scope.technologies[i].quadrant == 'undefined') {
+						if(!(tech.quadrant)) {
 							valid = false;
-							$scope.errors.push({text:$scope.technologies[i].name + ' has no tech grouping set'});
+							$scope.errors.push({text:tech.name + ' has no tech grouping set'});
 						}
-						if(valid == true) {
+						if(valid) {
 							newTechs.push({
-								technology:$scope.technologies[i].name,
-								maturity:$scope.technologies[i].maturity,
-								quadrant:$scope.technologies[i].quadrant,
-								techGrouping:$scope.technologies[i].techGrouping
+								technology:tech.name,
+								maturity:tech.maturity,
+								quadrant:tech.quadrant,
+								techGrouping:tech.techGrouping
 							});
 						}
-					}
-				}
-				if($scope.errors.length == 0) {
+                    }
+                });
+				if(!($scope.errors.length)) {
 					$scope.onSave({techs:newTechs});
 				}
 			};
