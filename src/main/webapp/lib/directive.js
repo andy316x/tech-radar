@@ -93,51 +93,41 @@ techRadarDirectives.directive('ngNewRadar', function ($http) {
 		},
 		templateUrl: 'templates/new-radar.html',
 		link: function ($scope, element, attrs) {
-			
 			$scope.selectGrouping = function(index, grouping) {
-				if(index===1) {
-					$scope.techGrouping1 = grouping;
-				} else if(index===2) {
-					$scope.techGrouping2 = grouping;
-				} else if(index===3) {
-					$scope.techGrouping3 = grouping;
-				} else if(index===4) {
-					$scope.techGrouping4 = grouping;
-				}
+					$scope['techGrouping'+index] = grouping;
 			};
 
 			$scope.techGroupingOptions = [];
+            //TODO - get defaults from outside
 			$scope.techGrouping1 = 'Dev Tool';
 			$scope.techGrouping2 = 'Dev Language';
 			$scope.techGrouping3 = 'Platform';
 			$scope.techGrouping4 = 'Solution Technology';
 			$http.get('/radar/rest/quadrant').
-			success(function(data, status, headers, config) {
-				for(var i = 0; i < data.length; i++) {
-					$scope.techGroupingOptions.push({label:data[i].name, value:data[i].name});
-				}
+			success(function(data) {
+				data.forEach(function(d){
+					$scope.techGroupingOptions.push({label:d.name, value:d.name});
+				});
 			}).
 			error(function(data, status, headers, config) {
 				console.log('failed to load tech groupings');
 			});
 			
 			$scope.businessUnitOptions = [];
-			$http.get('/radar/rest/businessunit').
-			success(function(data, status, headers, config) {
-				for(var i = 0; i < data.length; i++) {
-					if(i == 0) {
-						$scope.businessUnit = data[i].name;
-					}
-					$scope.businessUnitOptions.push({label:data[i].name, value:data[i].name});
-				}
-			}).
-			error(function(data, status, headers, config) {
+			$http.get('/radar/rest/businessunit')
+			.success(function(data) {
+				data.forEach(function(d){
+					$scope.businessUnitOptions.push({label:d.name, value:d.name});
+				});
+				$scope.businessUnit = $scope.businessUnitOptions[0].value;
+			})
+			.error(function(data, status, headers, config) {
 				console.log('failed to load business units');
 			});
 
 			$scope.$watch('visible', function (newVal, oldVal, scope) {
 				if(newVal != oldVal) {
-					if(newVal == true) {
+					if(newVal) {
 						element.children(":first").modal('show');
 					} else {
 						element.children(":first").modal('hide');
