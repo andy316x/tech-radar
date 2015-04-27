@@ -188,75 +188,7 @@ techRadarDirectives.directive('ngAddTech', function ($http) {
 			onSave: '&',
 			onCancel: '&'
 		},
-		template: '<div class="modal" >' +
-		'  <div class="modal-dialog">' +
-		'    <div class="modal-content">' +
-		'      <div class="modal-header">' +
-		'        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>' +
-		'        <h4 class="modal-title">Select Technologies</h4>' +
-		'      </div>' +
-		'      <div class="modal-body">' +
-		
-		'		<div class="container-fluid main-content">' +
-		'		 <div ng-show="stage==\'1\'" class="row">' +
-		'		  <div class="col-md-12">' +
-		
-		'			 <div class="search-wrapper">' +
-		'				<input ng-model="searchText" type="text" class="form-control typeahead" placeholder="Filter technologies..."></input>' +
-		'				<i class="glyphicon glyphicon-search"></i>' +
-		'			 </div>' +
-
-		'			 <div class="technology-wrapper">' +
-		'				<div ng-repeat="technology in technologies | filter:{name:searchText}" class="technology-card{{technology.selected==true?\' active\':\'\'}}" ng-click="technologySelected(technology)">' +
-		'					<span>{{technology.name}}</span>' +
-		'				</div>' +
-		'			 </div>' +
-		
-		'		    <div class="text-right" style="margin-top: 10px;">' +
-		'		      <span><strong>{{countSelected(technologies)}}</strong> of <strong>{{technologies.length}}</strong> selected</span>' +
-		'		    </div>' +
-		
-		'		   </div>' +
-		'		  </div>' +
-		'		 </div>' +
-		
-		'		 <div ng-show="stage==\'2\'" class="row">' +
-		'		  <div class="col-md-12">' +
-		
-		'			<div class="clearfix" style="margin-bottom:10px;">' +
-		'				<div class="col-sm-4"><strong>Technology</strong></div>' +
-		'				<div class="col-sm-4"><strong>Maturity</strong></div>' +
-		'				<div class="col-sm-4"><strong>Tech Grouping</strong></div>' +
-		'			</div>' +
-		'			 <div style="overflow-y:scroll;overflow-x:hidden;height:340px;">' +
-		'				<div ng-repeat="technology in technologies | filter:{name:searchText}" class="clearfix" ng-show="technology.selected==true">' +
-		'					<div class="col-sm-4"><span>{{technology.name}}</span></div>' +
-		'					<div class="col-sm-4"><select class="form-control" ng-model="technology.maturity" ng-options="maturity.label as maturity.value for maturity in $parent.maturityOptions"></select></div>' +
-		'					<div class="col-sm-4"><select class="form-control" ng-model="technology.quadrant" ng-options="quadrant.label as quadrant.value for quadrant in $parent.quadrantOptions"></select></div>' +
-		'				</div>' +
-		'			 </div>' +
-		
-		'		   </div>' +
-		'		  </div>' +
-		'		 </div>' +
-		
-		'       <div class="error-panel">'+
-		'         <div ng-repeat="error in errors" class="alert alert-danger" style="margin:5px;">{{error.text}}</div>'+
-		'       </div>'+
-
-		'      <div class="modal-footer clearfix">' +
-		'        <div class="col-sm-6 text-left">' +
-		'          <button ng-show="stage==\'2\'" ng-click="stage=\'1\'" class="btn btn-default">Back</button>' +
-		'        </div>' +
-		'        <div class="col-sm-6 text-right">' +
-		'          <button ng-click="doCancel()" class="btn btn-default">Cancel</button>' +
-		'          <button ng-show="stage==\'1\'" ng-click="stage=\'2\'" class="btn btn-success">Next</button>' +
-		'          <button ng-show="stage==\'2\'" ng-click="doSave()" class="btn btn-success">Save</button>' +
-		'        </div>' +
-		'      </div>' +
-		'    </div>' +
-		'  </div>' +
-		'</div>',
+		templateUrl: 'templates/add-tech.html',
 		link: function ($scope, element, attrs) {
 			
 			$scope.stage = '1';
