@@ -64,8 +64,7 @@ techRadarDirectives.directive('ngRadar', function ($routeParams) {
                 //TODO - oldVal/scope parameters redundant?
 				if($scope.theRadar) {
 					if(newVal) {
-						$scope.theRadar.unselectBlip(newVal);
-					} else {
+						$scope.theRadar.unselectBlip(oldVal);
 						$scope.theRadar.selectBlip(newVal);
 					}
 				}
@@ -150,6 +149,7 @@ techRadarDirectives.directive('ngNewRadar', function ($http) {
 						published: false,
 						majorVersion: 0,
 						minorVersion: 0,
+                    //TODO - server side time
 						dateCreated: new Date().getTime(),
 						quadrants: [
 						                {name: $scope.techGrouping1},
@@ -157,19 +157,19 @@ techRadarDirectives.directive('ngNewRadar', function ($http) {
 						                {name: $scope.techGrouping3},
 						                {name: $scope.techGrouping4}
 						                ],
-						                maturities: [
-						                             {name: 'phase out'},
-						                             {name: 'maintain'},
-						                             {name: 'invest'},
-						                             {name: 'assess'},
-						                             {name: 'watch'}
-						                             ]
+                        maturities: [
+                                     {name: 'phase out'},
+                                     {name: 'maintain'},
+                                     {name: 'invest'},
+                                     {name: 'assess'},
+                                     {name: 'watch'}
+                                     ]
 				};
 				$http.post('/radar/rest/radar', radar).
-				success(function(data, status, headers, config) {
+				success(function(data) {
 					$scope.radarCreated({radar: data});
 				}).
-				error(function(data, status, headers, config) {
+				error(function(data) {
 					$scope.errors = data;
 				});
 			};
@@ -190,97 +190,78 @@ techRadarDirectives.directive('ngAddTech', function ($http) {
 		},
 		templateUrl: 'templates/add-tech.html',
 		link: function ($scope, element, attrs) {
+			$scope.stage = 1;
 			
-			$scope.stage = '1';
-			
-			var getTechFromRadar = function (techName){
+			function getTechFromRadar(techName){
 				if ($scope.selectedRadar.technologies == undefined){
 					return undefined;
 				}
 				
 				for(var i = 0; i < $scope.selectedRadar.technologies.length; i++) {
-					if ($scope.selectedRadar.technologies[i].technology == techName){
+					if ($scope.selectedRadar.technologies[i].technology === techName){
 						return $scope.selectedRadar.technologies[i];
 					}
 				}
 				return undefined;
 			};
 			
-			var isInRadar = function (techName){
+			function isInRadar(techName){
 				return getTechFromRadar(techName) != undefined;
 			};
 			
-			var setTechnologySelection = function() {
-				for(var i = 0; i < $scope.technologies.length; i++) {
-					var techInRadar = getTechFromRadar($scope.technologies[i].name);
+			function setTechnologySelection() {
+				$scope.technologies.forEach(function(t){
+					var techInRadar = getTechFromRadar(t.name);
 					if(typeof techInRadar !== 'undefined') {
-						$scope.technologies[i].selected = true;
-						$scope.technologies[i].maturity = techInRadar.maturity;
-						$scope.technologies[i].quadrant = techInRadar.quadrant;
+						t.selected = true;
+						t.maturity = techInRadar.maturity;
+						t.quadrant = techInRadar.quadrant;
 					} else {
-						$scope.technologies[i].selected = false;
+						t.selected = false;
 						if(typeof $scope.maturityOptions != 'undefined' && $scope.maturityOptions.length > 0) {
-							$scope.technologies[i].maturity = $scope.maturityOptions[0].value;
+							t.maturity = $scope.maturityOptions[0].value;
 						}
 						for(var j = 0; j < $scope.quadrantOptions.length; j++) {
-							if($scope.technologies[i].techGrouping == $scope.quadrantOptions[j].value) {
-								$scope.technologies[i].quadrant = $scope.technologies[i].techGrouping;
+							if(t.techGrouping == $scope.quadrantOptions[j].value) {
+								t.quadrant = t.techGrouping;
 							}
 						}
 					}
-				}
+				})
 			};
 			
 			$scope.technologies = [];
 			$http({method: 'GET', url: '/radar/rest/technology?nocache=' + (new Date()).getTime()}).
-			success(function(data, status, headers, config) {
-				for(var i = 0; i < data.length; i++) {
-					$scope.technologies.push(data[i]);
-				}
+			success(function(data) {
+                $scope.technologies = $scope.technologies.concat(data);
 				setTechnologySelection();
 			}).
-			error(function(data, status, headers, config) {
+			error(function(data) {
 				console.log('error getting technology list');
 			});
 			
 			$scope.technologySelected = function(technology) {
-				if(technology.selected == true) {
-					technology.selected = false;
-				} else {
-					technology.selected = true;
-				}
+				technology.selected = !(technology.selected);
 			};
 			
 			$scope.countSelected = function(technologies) {
-				var count = 0;
-				for(var i = 0; i < technologies.length; i++) {
-					if(technologies[i].selected==true) {
-						count++;
-					}
-				}
-				return count;
+                return technologies.filter(function(curr){
+                    return curr.selected;
+                }).length;
 			};
 			
-			var updateOptions = function() {
-				if(typeof $scope.selectedRadar !== 'undefined'){
-					if(typeof $scope.selectedRadar.maturities !== 'undefined') {
-						$scope.maturityOptions = [];
-						for(var i = 0; i < $scope.selectedRadar.maturities.length; i++) {
-							var maturity = $scope.selectedRadar.maturities[i];
-							if(typeof maturity !== 'undefined') {
-								$scope.maturityOptions.push({label:maturity.name, value:maturity.name});
-							}
-						}
+			function updateOptions() {
+				if($scope.selectedRadar){
+					if($scope.selectedRadar.maturities) {
+						$scope.maturityOptions = $scope.selectedRadar.maturities.map(function(m){
+                            return {label:m.name, value:m.name};
+                        });
 					}
 					
-					if(typeof $scope.selectedRadar.quadrants !== 'undefined') {
-						$scope.quadrantOptions = [];
-						for(var i = 0; i < $scope.selectedRadar.quadrants.length; i++) {
-							var quadrant = $scope.selectedRadar.quadrants[i];
-							if(typeof quadrant !== 'undefined') {
-								$scope.quadrantOptions.push({label:quadrant.name, value:quadrant.name});
-							}
-						}
+					if($scope.selectedRadar.quadrants) {
+						$scope.quadrantOptions = $scope.selectedRadar.quadrants.map(function(quadrant){
+                            return {label:quadrant.name, value:quadrant.name};
+                        });
 					}
 				}
 			};
