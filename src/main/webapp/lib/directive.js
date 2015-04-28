@@ -343,6 +343,7 @@ techRadarDirectives.directive('ngTechnologyModal', function ($http) {
 
 			var reloadTechnology = function(techId) {
 				// Load technology ratings
+				//TODO - Caching?
 				$scope.ratings = [];
 				$http({method: 'GET', url: '/radar/rest/technology/' + techId + '/user?nocache=' + (new Date()).getTime()}).
 				success(function(data, status, headers, config) {
@@ -379,7 +380,7 @@ techRadarDirectives.directive('ngTechnologyModal', function ($http) {
 					}
 				}
 			}, false);
-
+			
 			element.children(":first").on('hide.bs.modal', function(e) {
 				$scope.visible = false;
 			});
@@ -407,22 +408,11 @@ techRadarDirectives.directive('ngTechnologyModal', function ($http) {
 
 techRadarDirectives.directive('ngTechRatings', function ($http) {
 	return {
-		restrict: 'A',
+		restrict: 'E',
 		scope: {
 			ratings: '='
 		},
-		template: '<svg svg-width="{{scaleFactor*1000}}" svg-height="{{scaleFactor*400}}" version="1.1" xmlns="http://www.w3.org/2000/svg">' +
-		'  <rect svg-x="{{scaleFactor*5}}"   svg-y="{{scaleFactor*(10+(300-300*(watching.length/max)))}}"  svg-rx="{{scaleFactor*20}}" svg-ry="{{scaleFactor*20}}" svg-width="{{scaleFactor*(190)}}" svg-height="{{scaleFactor*(300*(watching.length/max))}}"  svg-fill="#FFFFFF" stroke-width="1" svg-stroke="#CCCCCC"></rect>' +
-		'  <rect svg-x="{{scaleFactor*205}}" svg-y="{{scaleFactor*(10+(300-300*(learning.length/max)))}}"  svg-rx="{{scaleFactor*20}}" svg-ry="{{scaleFactor*20}}" svg-width="{{scaleFactor*190}}"   svg-height="{{scaleFactor*(300*(learning.length/max))}}"  svg-fill="#428BCA" stroke-width="1" svg-stroke="#428BCA"></rect>' +
-		'  <rect svg-x="{{scaleFactor*405}}" svg-y="{{scaleFactor*(10+(300-300*(competent.length/max)))}}" svg-rx="{{scaleFactor*20}}" svg-ry="{{scaleFactor*20}}" svg-width="{{scaleFactor*190}}"   svg-height="{{scaleFactor*(300*(competent.length/max))}}" svg-fill="#5BC0DE" stroke-width="1" svg-stroke="#5BC0DE"></rect>' +
-		'  <rect svg-x="{{scaleFactor*605}}" svg-y="{{scaleFactor*(10+(300-300*(expert.length/max)))}}"    svg-rx="{{scaleFactor*20}}" svg-ry="{{scaleFactor*20}}" svg-width="{{scaleFactor*190}}"   svg-height="{{scaleFactor*(300*(expert.length/max))}}"    svg-fill="#F0AD4E" stroke-width="1" svg-stroke="#F0AD4E"></rect>' +
-		'  <rect svg-x="{{scaleFactor*805}}" svg-y="{{scaleFactor*(10+(300-300*(leader.length/max)))}}"    svg-rx="{{scaleFactor*20}}" svg-ry="{{scaleFactor*20}}" svg-width="{{scaleFactor*190}}"   svg-height="{{scaleFactor*(300*(leader.length/max))}}"    svg-fill="#5CB85C" stroke-width="1" svg-stroke="#5CB85C"></rect>' +
-		'  <text svg-x="{{scaleFactor*100}}" svg-y="{{scaleFactor*350}}" text-anchor="middle" fill="#333333" style="{{\'font-size: \' + scaleFactor*20 + \'px; font-weight: 900;\'">Watching</text>' +
-		'  <text svg-x="{{scaleFactor*300}}" svg-y="{{scaleFactor*350}}" text-anchor="middle" fill="#333333" style="{{\'font-size: \' + scaleFactor*20 + \'px; font-weight: 900;\'">Learning</text>' +
-		'  <text svg-x="{{scaleFactor*500}}" svg-y="{{scaleFactor*350}}" text-anchor="middle" fill="#333333" style="{{\'font-size: \' + scaleFactor*20 + \'px; font-weight: 900;\'">Competent</text>' +
-		'  <text svg-x="{{scaleFactor*700}}" svg-y="{{scaleFactor*350}}" text-anchor="middle" fill="#333333" style="{{\'font-size: \' + scaleFactor*20 + \'px; font-weight: 900;\'">Expert</text>' +
-		'  <text svg-x="{{scaleFactor*900}}" svg-y="{{scaleFactor*350}}" text-anchor="middle" fill="#333333" style="{{\'font-size: \' + scaleFactor*20 + \'px; font-weight: 900;\'">Leader</text>' +
-		'</svg>',
+		templateUrl: 'templates/tech-ratings.html',
 		link: function ($scope, element, attrs) {
 
 			$scope.scaleFactor = 1;
@@ -448,21 +438,13 @@ techRadarDirectives.directive('ngTechRatings', function ($http) {
 				$scope.leader = [];
 
 				if(ratings != null && typeof ratings != 'undefined') {
-					for(var i = 0; i < ratings.length; i++) {
-						if(ratings[i].skillLevel === 'Watching') {
-							$scope.watching.push(ratings[i]);
-						} else if(ratings[i].skillLevel === 'Learning') {
-							$scope.learning.push(ratings[i]);
-						} else if(ratings[i].skillLevel === 'Competent') {
-							$scope.competent.push(ratings[i]);
-						} else if(ratings[i].skillLevel === 'Expert') {
-							$scope.expert.push(ratings[i]);
-						} else if(ratings[i].skillLevel === 'Leader') {
-							$scope.leader.push(ratings[i]);
+					ratings.forEach(function(rating){
+						if(rating.skillLevel){
+							$scope[rating.skillLevel.toLowerCase()].push(rating);
 						}
-					}
+					});
 				}
-
+				
 				var max = Math.max(
 						$scope.watching.length,
 						$scope.learning.length,

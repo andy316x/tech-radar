@@ -842,3 +842,12 @@ border-radius: 2px;
 	user-select: none;
 	-webkit-user-select: none;
 }
+
+ng-tech-ratings {
+	display: block;
+}
+ng-tech-ratings svg text {
+	 text-anchor: middle;
+	 fill: #333333;
+	 font-weight: 900; 
+}
