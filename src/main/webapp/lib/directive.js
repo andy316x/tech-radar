@@ -463,19 +463,8 @@ techRadarDirectives.directive('ngTechRatings', function ($http) {
 
 techRadarDirectives.directive('ngTechMaturities', function () {
 	return {
-		restrict: 'A',
-		template: '<svg width="{{scaleFactor*1000}}" height="{{scaleFactor*200}}" version="1.1" xmlns="http://www.w3.org/2000/svg">' +
-		'  <circle r="{{scaleFactor*1000}}" cx="{{scaleFactor*1050}}" cy="{{scaleFactor*200}}" fill="rgb(223,223,223)"></circle>' +
-		'  <circle r="{{scaleFactor*800}}" cx="{{scaleFactor*1050}}" cy="{{scaleFactor*200}}" fill="rgb(209,209,209)"></circle>' +
-		'  <circle r="{{scaleFactor*600}}" cx="{{scaleFactor*1050}}" cy="{{scaleFactor*200}}" fill="rgb(190,191,193)"></circle>' +
-		'  <circle r="{{scaleFactor*400}}" cx="{{scaleFactor*1050}}" cy="{{scaleFactor*200}}" fill="rgb(166,167,169)"></circle>' +
-		'  <circle r="{{scaleFactor*200}}" cx="{{scaleFactor*1050}}" cy="{{scaleFactor*200}}" fill="rgb(223,223,223)"></circle>' +
-		
-		'  <circle r="{{scaleFactor*800}}" cx="{{scaleFactor*1050}}" cy="{{scaleFactor*200}}" fill="none" style="stroke-width:2;stroke:rgb(255,255,255)"></circle>' +
-		'  <circle r="{{scaleFactor*600}}" cx="{{scaleFactor*1050}}" cy="{{scaleFactor*200}}" fill="none" style="stroke-width:2;stroke:rgb(255,255,255)"></circle>' +
-		'  <circle r="{{scaleFactor*400}}" cx="{{scaleFactor*1050}}" cy="{{scaleFactor*200}}" fill="none" style="stroke-width:2;stroke:rgb(255,255,255)"></circle>' +
-		'  <circle r="{{scaleFactor*200}}" cx="{{scaleFactor*1050}}" cy="{{scaleFactor*200}}" fill="none" style="stroke-width:2;stroke:rgb(255,255,255)"></circle>' +
-		'</svg>',
+		restrict: 'E',
+		templateUrl: 'templates/tech-maturities.html',
 		link: function ($scope, element, attrs) {
 
 			$scope.scaleFactor = 1;

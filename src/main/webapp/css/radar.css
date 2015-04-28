@@ -851,3 +851,7 @@ ng-tech-ratings svg text {
 	 fill: #333333;
 	 font-weight: 900; 
 }
+
+ng-tech-maturities {
+	display: block;
+}
