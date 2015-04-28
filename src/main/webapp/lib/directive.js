@@ -332,55 +332,7 @@ techRadarDirectives.directive('ngTechnologyModal', function ($http) {
 			loggedInUser: '=',
 			onSkillLevelSelected: '&'
 		},
-		template: '<div class="modal modal-xl fade">' +
-		'  <div class="modal-dialog">' +
-		'    <div class="modal-content">' +
-		'      <div class="modal-header">' +
-		'        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>' +
-		'        <h4 class="modal-title">{{technology.name}}</h4>' +
-		'      </div>' +
-		'      <div class="modal-body clearfix">' +
-		'        <div class="col-sm-6">' + 
-		'          <blockquote>' + 
-		'            <p ng-show="technology.description!=null">{{technology.description}}</p>' + 
-		'            <p ng-show="technology.description==null">No description</p>' + 
-		'            <footer><strong>{{technology.name}}</strong> is advocated by <cite title="Andy Wilson">Andy Wilson</cite></footer>' + 
-		'          </blockquote>' + 
-		'          <div class="btn-group btn-group-justified" role="group" aria-label="...">' +
-		'            <div class="btn-group" role="group">' +
-		'              <button type="button" class="btn btn-xs btn-danger {{currentSkillLevel==null?\'active\':\'\'}}" ng-click="selectSkillLevel(null)">None</button>' +
-		'            </div>' +
-		'            <div class="btn-group" role="group">' +
-		'              <button type="button" class="btn btn-xs btn-default {{currentSkillLevel==\'Watching\'?\'active\':\'\'}}" ng-click="selectSkillLevel(\'Watching\')">Watching</button>' +
-		'            </div>' +
-		'            <div class="btn-group" role="group">' +
-		'              <button type="button" class="btn btn-xs btn-primary {{currentSkillLevel==\'Learning\'?\'active\':\'\'}}" ng-click="selectSkillLevel(\'Learning\')">Learning</button>' +
-		'            </div>' +
-		'            <div class="btn-group" role="group">' +
-		'              <button type="button" class="btn btn-xs btn-info {{currentSkillLevel==\'Competent\'?\'active\':\'\'}}" ng-click="selectSkillLevel(\'Competent\')">Competent</button>' +
-		'            </div>' +
-		'            <div class="btn-group" role="group">' +
-		'              <button type="button" class="btn btn-xs btn-warning {{currentSkillLevel==\'Expert\'?\'active\':\'\'}}" ng-click="selectSkillLevel(\'Expert\')">Expert</button>' +
-		'            </div>' +
-		'            <div class="btn-group" role="group">' +
-		'              <button type="button" class="btn btn-xs btn-success {{currentSkillLevel==\'Leader\'?\'active\':\'\'}}" ng-click="selectSkillLevel(\'Leader\')">Leader</button>' +
-		'            </div>' +
-		'          </div>' +
-		'        </div>' +
-		'        <div class="col-sm-6">' + 
-		'          <div ng-show="ratings.length > 0" ng-tech-ratings="" ratings="ratings"></div>' + 
-		'          <div ng-show="ratings.length == 0" style="margin-bottom:10px">Be the first to rate your skill level for this technology</div>' + 
-		'          <div style="margin-bottom:10px">' + 
-		'            <img ng-repeat="rating in ratings" src="/radar/img/icon_8204.png" title="{{rating.user + \' - \' + rating.skillLevel}}" data-toggle="tooltip" data-placement="bottom" tooltip=\"\"" style="width: 50px;border-radius: 25px;background-color: #DEDEDE;margin: 5px;padding: 1px;box-shadow: 1px 1px 1px #333;"></img>' + 
-		'          </div>' + 
-		'          <div ng-repeat="otherRadar in otherRadars">' + 
-		'            <strong>{{otherRadar.addedByUid}}</strong> added <a href="/radar/#/technology/{{technology.techId}}">{{technology.name}}</a> to <a href="/radar/#/radar/{{otherRadar.radarId}}">{{otherRadar.radarName}}</a> {{otherRadar.addedDate | prettydate}}' + 
-		'          </div>' + 
-		'        </div>' + 
-		'      </div>' +
-		'    </div>' +
-		'  </div>' +
-		'</div>',
+		templateUrl: 'templates/technology-modal.html',
 		link: function ($scope, element, attrs) {
 
 			$scope.$watch('technology', function (newVal, oldVal, scope) {
@@ -395,12 +347,12 @@ techRadarDirectives.directive('ngTechnologyModal', function ($http) {
 				$http({method: 'GET', url: '/radar/rest/technology/' + techId + '/user?nocache=' + (new Date()).getTime()}).
 				success(function(data, status, headers, config) {
 					$scope.currentSkillLevel = null;
-					for(var i = 0; i < data.length; i++) {
-						$scope.ratings.push(data[i]);
-						if(data[i].user === $scope.loggedInUser) {
-							$scope.currentSkillLevel =  data[i].skillLevel;
+					data.forEach(function(skill){
+						$scope.ratings.push(skill);
+						if(skill.user === $scope.loggedInUser) {
+							$scope.currentSkillLevel =  skill.skillLevel;
 						}
-					}
+					});
 				}).
 				error(function(data, status, headers, config) {
 					console.log('failed to load user ratings for technology with ID ' + techId);
@@ -410,19 +362,17 @@ techRadarDirectives.directive('ngTechnologyModal', function ($http) {
 				// TODO omit current radar
 				$scope.otherRadars = [];
 				$http({method: 'GET', url: '/radar/rest/technology/' + techId + '/radar?nocache=' + (new Date()).getTime()}).
-				success(function(data, status, headers, config) {
-					for(var i = 0; i < data.length; i++) {
-						$scope.otherRadars.push(data[i]);
-					}
+				success(function(data) {
+                    $scope.otherRadars = $scope.otherRadars.concat(data);
 				}).
-				error(function(data, status, headers, config) {
+				error(function() {
 					console.log('failed to load user radars for technology with ID ' + techId);
 				});
 			};
 
 			$scope.$watch('visible', function (newVal, oldVal, scope) {
 				if(newVal != oldVal) {
-					if(newVal == true) {
+					if(newVal) {
 						element.children(":first").modal('show');
 					} else {
 						element.children(":first").modal('hide');
@@ -440,6 +390,7 @@ techRadarDirectives.directive('ngTechnologyModal', function ($http) {
 				for(var i = 0; i < $scope.ratings.length; i++) {
 					if($scope.ratings[i].user === $scope.loggedInUser) {
 						toBeRemoved = i;
+						break;
 					}
 				}
 				if(toBeRemoved != -1) {
@@ -449,10 +400,9 @@ techRadarDirectives.directive('ngTechnologyModal', function ($http) {
 					$scope.ratings.push({user:$scope.loggedInUser,skillLevel:skillLevel});
 				}
 				$scope.onSkillLevelSelected({skillLevel:skillLevel});
-			};
-
+			}
 		}
-	};
+	}
 });
 
 techRadarDirectives.directive('ngTechRatings', function ($http) {
@@ -565,15 +515,7 @@ techRadarDirectives.directive('ngSkillLevel', function () {
 		scope: {
 			skillLevels: '='
 		},
-		template: '<svg svg-width="{{scaleFactor*1000}}" svg-height="{{scaleFactor*(highest*40 + 100)}}" version="1.1" xmlns="http://www.w3.org/2000/svg">' +
-		'  <g ng-repeat="skillLevel in skills">' +
-		'    <text svg-x="{{scaleFactor*(100+$index*200)}}" svg-y="{{scaleFactor*(highest*40 + 10)}}" text-anchor="middle">{{skillLevel.name}}</text>' +
-		'    <g ng-repeat="sl in skillLevel.technologies">' +
-		'      <rect svg-x="{{scaleFactor*(10+$parent.$index*200)}}" svg-y="{{scaleFactor*((highest*40 - 40)-($index*35))}}" svg-rx="{{scaleFactor*5}}" svg-ry="{{scaleFactor*5}}" svg-width="{{scaleFactor*190}}" svg-height="{{scaleFactor*30}}" svg-fill="{{skillLevel.fill}}" svg-stroke="{{skillLevel.stroke}}" stroke-width="1"></rect>' +
-		'      <text svg-x="{{scaleFactor*(100+$parent.$index*200)}}" svg-y="{{scaleFactor*((highest*40 - 20)-($index*35))}}" text-anchor="middle" svg-fill="{{skillLevel.textFill}}">{{sl.name}}</text>' +
-		'    </g>' +
-		'  </g>' +
-		'</svg>',
+		templateUrl: 'templates/skill-level',
 		link: function ($scope, element, attrs) {
 			
 			$scope.skills = [
