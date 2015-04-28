@@ -11,6 +11,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
 
+import com.ai.techradar.database.entities.Maturity;
 import com.ai.techradar.database.entities.Radar;
 import com.ai.techradar.database.entities.RadarTechnology;
 import com.ai.techradar.database.entities.SkillLevelEnum;
@@ -342,15 +343,18 @@ public class TechnologyServiceImpl implements TechnologyService {
 
 			// Join out to technology
 			final Criteria joinToRadarTechnology = query.createCriteria("technology", "technology", JoinType.INNER_JOIN);
+			// Restrict to technologies with the input ID
+			joinToRadarTechnology.add(Restrictions.eq("id", technologyId));
 
 			// Join out to radar
 			query.createAlias("radar", "radar", JoinType.INNER_JOIN);
+			
+			//Join out to maturity
+			query.createAlias("radarMaturity", "radarMaturity", JoinType.INNER_JOIN);
 
 			// Join out to user who added the technology
-			query.createCriteria("addedBy", "addedBy", JoinType.INNER_JOIN);
+			query.createAlias("addedBy", "addedBy", JoinType.INNER_JOIN);
 
-			// Restrict to technologies with the input ID
-			joinToRadarTechnology.add(Restrictions.eq("id", technologyId));
 
 			// Project to only columns that are needed (keep Hibernate efficient)
 			query.setProjection(Projections.projectionList()
@@ -359,6 +363,8 @@ public class TechnologyServiceImpl implements TechnologyService {
 
 					.add(Projections.property("radar.id"))
 					.add(Projections.property("radar.name"))
+					
+					.add(Projections.property("radarMaturity.maturity"))
 					);
 
 			for(final Object[] row : (List<Object[]>)query.list()) {
@@ -369,6 +375,8 @@ public class TechnologyServiceImpl implements TechnologyService {
 
 				radarTechnologyTO.setRadarId((Long)row[2]);
 				radarTechnologyTO.setRadarName((String)row[3]);
+				
+				radarTechnologyTO.setMaturity(((Maturity)row[4]).getName());
 
 				results.add(radarTechnologyTO);
 			}
