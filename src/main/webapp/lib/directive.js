@@ -482,13 +482,12 @@ techRadarDirectives.directive('ngTechMaturities', function () {
 
 techRadarDirectives.directive('ngSkillLevel', function () {
 	return {
-		restrict: 'A',
+		restrict: 'E',
 		scope: {
 			skillLevels: '='
 		},
-		templateUrl: 'templates/skill-level',
+		templateUrl: 'templates/skill-level.html',
 		link: function ($scope, element, attrs) {
-			
 			$scope.skills = [
 			                    {name:'LEADER',   fill:'#5CB85C',stroke:'#5CB85C',textFill:'#FFFFFF',technologies:[]},
 			                    {name:'EXPERT',   fill:'#F0AD4E',stroke:'#F0AD4E',textFill:'#FFFFFF',technologies:[]},
@@ -496,6 +495,13 @@ techRadarDirectives.directive('ngSkillLevel', function () {
 			                    {name:'LEARNING', fill:'#428BCA',stroke:'#428BCA',textFill:'#FFFFFF',technologies:[]},
 			                    {name:'WATCHING', fill:'#FFFFFF',stroke:'#CCCCCC',textFill:'#333333',technologies:[]}
 			                      ];
+			var indexes = {
+					'Leader':0,
+					'Expert':1,
+					'Competent':2,
+					'Learning':3,
+					'Watching':4,
+			};
 
 			$scope.scaleFactor = 1;
 
@@ -505,34 +511,14 @@ techRadarDirectives.directive('ngSkillLevel', function () {
 
 			$scope.$watch('skillLevels', function (newval, oldval) {
 				var theMax = 0;
-				for(var i = 0; i < newval.length; i++) {
-					var skill = newval[i];
-					if(skill.skillLevel == 'Leader') {
-						$scope.skills[0].technologies.push({name:skill.technology});
-						if($scope.skills[0].technologies.length > theMax) {
-							theMax = $scope.skills[0].technologies.length;
-						}
-					} else if(skill.skillLevel == 'Expert') {
-						$scope.skills[1].technologies.push({name:skill.technology});
-						if($scope.skills[1].technologies.length > theMax) {
-							theMax = $scope.skills[1].technologies.length;
-						}
-					} else if(skill.skillLevel == 'Competent') {
-						$scope.skills[2].technologies.push({name:skill.technology});
-						if($scope.skills[2].technologies.length > theMax) {
-							theMax = $scope.skills[2].technologies.length;
-						}
-					} else if(skill.skillLevel == 'Learning') {
-						$scope.skills[3].technologies.push({name:skill.technology});
-						if($scope.skills[3].technologies.length > theMax) {
-							theMax = $scope.skills[3].technologies.length;
-						}
-					} else if(skill.skillLevel == 'Watching') {
-						$scope.skills[4].technologies.push({name:skill.technology});
-						if($scope.skills[4].technologies.length > theMax) {
-							theMax = $scope.skills[4].technologies.length;
-						}
-					}
+				if(newval){
+					newval.forEach(function(skill){
+						var idx = indexes[skill.skillLevel];
+						$scope.skills[idx].technologies.push({name:skill.technology});
+					});
+					$scope.skills.forEach(function(skill){
+						theMax = Math.max(theMax, skill.technologies.length);
+					});
 				}
 				$scope.highest = theMax;
 			}, true);
@@ -540,6 +526,7 @@ techRadarDirectives.directive('ngSkillLevel', function () {
 			$scope.$watch($scope.getWidth, function (width) {
 				$scope.scaleFactor = width/1000;
 			});
+			
 		}
 	};
 });
