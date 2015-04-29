@@ -150,6 +150,7 @@ techRadarControllers.controller('TechnologiesCtrl', function ($scope, $http, $lo
 					technology.otherRadars = [];
 					for(var i = 0; i < data.length; i++) {
 						technology.otherRadars.push(data[i]);
+						$scope.otherRadars.push(data[i]);
 					}
 				}).
 				error(function(data, status, headers, config) {

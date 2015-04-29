@@ -461,21 +461,87 @@ techRadarDirectives.directive('ngTechRatings', function ($http) {
 	};
 });
 
-techRadarDirectives.directive('ngTechMaturities', function () {
+techRadarDirectives.directive('ngTechMaturities', function ($window) {
 	return {
 		restrict: 'E',
+		scope: {
+			selectedTech: "=",
+		},
 		templateUrl: 'templates/tech-maturities.html',
 		link: function ($scope, element, attrs) {
-
+			$scope.imageDimension = 64;
 			$scope.scaleFactor = 1;
-
-			$scope.getWidth = function () {
-				return element[0].offsetWidth;
+			
+			$scope.$watch("selectedTech", function (n, o) {
+				layout();
+			}, true);
+			
+			$scope.otherRefs = [];
+			var maturityX = {
+					"watch":15,
+					"assess":33,
+					"invest":54,
+					"maintain":73,
+					"phase out":95,
+			}
+			var maturityY;
+			
+			function nextY(maturity){
+				return maturityY[maturity] += 7;
+			}
+			
+			function currentMaturityCount(maturity){
+				return $scope.otherRefs.reduce(function(prev, ref){
+					if(ref.maturity === maturity){
+						return prev + 1;
+					}
+				}, 0);
+			}
+			
+			function addRef(newRef){
+				var toAdd = newRef;
+				if(currentMaturityCount(newRef.maturity) === 4){
+					var matching = $scope.otherRefs.filter(function(ref){
+						return ref.maturity == newRef.maturity;
+					});
+					var filtered = $scope.otherRefs.filter(function(ref){
+						return ref.maturity !== newRef.maturity;
+					})
+					$scope.otherRefs = filtered;
+					toAdd = {
+							maturity: newRef.maturity,
+							x: maturityX[newRef.maturity],
+							y: 15,
+							radars: []
+					};
+					matching.forEach(function(m){
+						toAdd.radars.push(m.radar);
+					});
+				}
+				$scope.otherRefs.push(toAdd);
+			}
+			
+			function layout(){
+				maturityY =	{
+						"watch":-3,
+						"assess":-3,
+						"invest":-3,
+						"maintain":-3,
+						"phase out":-3,
+				};
+				$scope.otherRefs = [];
+				if($scope.selectedTech && $scope.selectedTech.otherRadars){
+					$scope.selectedTech.otherRadars.forEach(function(other){
+						addRef({
+							maturity: other.maturity,
+							x: maturityX[other.maturity],
+							y: nextY(other.maturity),
+							radar: other.radarName
+						});
+					});
+				}
 			};
-
-			$scope.$watch($scope.getWidth, function (width) {
-				$scope.scaleFactor = width/1000;
-			});
+			layout();
 		}
 	};
 });

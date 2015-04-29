@@ -713,7 +713,19 @@ border-radius: 2px;
   color: #FFFFFF;
 }
 
+.advocate {
+	position: relative;
+}
 
+.advocate img {
+	position: relative;
+	width: 50px;
+	border-radius: 25px;
+	margin: 5px;
+	padding: 1px;
+	border: 1px solid black;
+	opacity: 0.2;
+}
 
 
 
@@ -853,5 +865,31 @@ ng-tech-ratings svg text {
 }
 
 ng-tech-maturities {
+	font-family: Arial;
 	display: block;
+	user-select : none;
+	-webkit-user-select: none;
+}
+
+ng-tech-maturities svg text {
+	font-size: 2px;
+}
+
+ng-tech-maturities svg g {
+	cursor: pointer;
+}
+
+ng-tech-maturities svg g circle {
+	stroke-width: 0.2;
+}
+
+ng-tech-maturities svg g:hover circle{
+	stroke-width: 0.5;
+}
+
+ng-tech-maturities svg g.mention text {
+	text-align: center;
+	text-anchor: middle;
+	font-size: 5px;
+	alignment-baseline: middle;
 }

@@ -63,7 +63,7 @@
 					<i class="glyphicon glyphicon-search"></i>
 				</div>
 				
-				<div class="technology-wrapper">
+				<div class="technology-list-wrapper">
 				
 					<div ng-repeat="techGrouping in techGroupings">
 						<div style="border-bottom: 1px solid #CCC;padding: 10px 5px;"><strong>{{techGrouping.name}}</strong></div>
@@ -95,7 +95,7 @@
 						<p>{{selectedTechnology.description}}</p>
 					</div>
 					
-					<div style="padding: 10px; border-bottom: 1px solid #CCCCCC; min-height:120px;">
+					<div class="advocate" style="padding: 10px; border-bottom: 1px solid #CCCCCC; min-height:120px;">
 						<h4>Advocate</h4>
 						<img src="/radar/img/icon_8204.png" style="width: 50px;border-radius: 25px;margin: 5px;padding: 1px;position: absolute;border: 1px solid black;opacity: 0.2;"></img>
 						<p style="padding-left: 70px"><em>"{{selectedTechnology.description}}"</em></p>
@@ -103,7 +103,7 @@
 					
 					<div style="padding: 10px; border-bottom: 1px solid #CCCCCC">
 						<h4>Maturity</h4>
-						<ng-tech-maturities></ng-tech-maturities>
+						<ng-tech-maturities selected-tech="selectedTechnology"></ng-tech-maturities>
 					</div>
 					
 					<div style="padding: 10px; border-bottom: 1px solid #CCCCCC">
