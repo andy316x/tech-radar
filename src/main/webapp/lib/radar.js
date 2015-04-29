@@ -25,10 +25,10 @@ function longestChild(prev, list){
 	return Math.max(prev, list.length);
 }
 
-var Radar = {
-	draw: function(element, radar, editable, callback) {
-		
+var Radar = function(){
+	this.draw = function(element, radar, editable, callback) {
 		var w = element.offsetWidth;
+		//TODO - fit into parent?
 		var h = w;
 		
 		global_radar = radar;
@@ -154,7 +154,7 @@ var Radar = {
 		radar.arcs.forEach(function(_arc){
 			var r = (_arc.r / totalArc)*(w/2);
 			
-			self._drawArc(containerGroup, cumulativeArc, cumulativeArc + r, w/2, h/2, _arc.color);
+			_drawArc(containerGroup, cumulativeArc, cumulativeArc + r, w/2, h/2, _arc.color);
 			
 			var arc = {
 				name: _arc.name,
@@ -185,7 +185,7 @@ var Radar = {
 		
 		radar.arcs.forEach(function(_arc){
 			var arc = arcMap[_arc.id];
-			self._drawArcAxisText(containerGroup, arc.innerRadius, arc.outerRadius, w, h, _arc.name, scaleFactor);
+			_drawArcAxisText(containerGroup, arc.innerRadius, arc.outerRadius, w, h, _arc.name, scaleFactor);
 		});
 		
 		var translation = [[1, 1, 'end', 1, 0], [-1, 1, 'start', 0, 1], [-1, -1, 'start', 0, 1], [1, -1, 'end', 1, 0]];
@@ -349,7 +349,7 @@ var Radar = {
 			angle = angle + 90;
 			quadrant.endAngle = angle;
 		}
-		this._drawBlips(containerGroup,blips,radar.quadrants,arcs,w,h,editable,callback);
+		_drawBlips(containerGroup,blips,radar.quadrants,arcs,w,h,editable,callback);
 		
 		var context = {
 			oldZoom: 0	
@@ -368,9 +368,9 @@ var Radar = {
 				context.oldZoom = index;
 			}
 		};
-	},
+	};
 	
-	_drawArc: function(svg, innerRadius, outerRadius, x, y, color) {
+	var _drawArc = function(svg, innerRadius, outerRadius, x, y, color) {
 		var arc=d3.svg.arc()
 			.innerRadius(innerRadius)
 			.outerRadius(outerRadius)
@@ -381,9 +381,9 @@ var Radar = {
 			.attr('d',arc)
 			.attr('fill',color)
 			.attr('transform','translate('+x+', '+y+')');
-	},
+	};
 	
-	_drawArcQuad: function(svg, innerRadius, outerRadius, x, y, color, quadrantNo) {
+	var _drawArcQuad = function(svg, innerRadius, outerRadius, x, y, color, quadrantNo) {
 		var startAngle;
 		var endAngle;
 		
@@ -421,9 +421,9 @@ var Radar = {
 			.attr('d',arc)
 			.attr('fill',color)
 			.attr('transform','translate('+x+', '+y+')');
-	},
+	};
 	
-	_drawArcAxisText: function(svg, innerRadius, outerRadius, totalWidth, totalHeight, text, sf) {
+	var _drawArcAxisText = function(svg, innerRadius, outerRadius, totalWidth, totalHeight, text, sf) {
 		var x = (totalWidth/2)+innerRadius+((outerRadius-innerRadius)/2);
 		var y = totalHeight/2;
 		svg.append('text')
@@ -436,9 +436,9 @@ var Radar = {
 			.attr({'x':x2,'y':y+sf*3,'text-anchor':'middle','fill':'#000'})
 			.style({'font-size':(sf*13) + 'px','font-weight':900})
 			.text(text.charAt(0).toUpperCase() + text.slice(1));
-	},
+	};
 	
-	_drawArcAxisTextQuad: function(svg, innerRadius, outerRadius, totalWidth, totalHeight, text, sf, quadrantNo, hMin) {
+	var _drawArcAxisTextQuad = function(svg, innerRadius, outerRadius, totalWidth, totalHeight, text, sf, quadrantNo, hMin) {
 		var x;
 		var y;
 		
@@ -471,9 +471,9 @@ var Radar = {
 		.attr({'x':x,'y':y+sf*3,'text-anchor':'middle','fill':'#000'})
 		.style({'font-size':(sf*12) + 'px','font-weight':900})
 		.text(text);
-	},
+	};
 	
-	_drawBlips: function(svg,blipGroups,quadrants,arcs,w,h,editable,callback) {
+	var _drawBlips = function(svg,blipGroups,quadrants,arcs,w,h,editable,callback) {
 		var blipsList = blipGroups.reduce(function(prev, curr){
 			return prev.concat(curr);
 		},[]);
@@ -528,7 +528,9 @@ var Radar = {
 			  });
 		}
 		
-		var link = svg.selectAll('g').data(blipsList).enter().append("g")
+		var selection = svg.selectAll('g').data(blipsList);
+		
+		var link = selection.enter().append("g")
 		.attr('id', function(d){ return 'blip-'+d.item.id;})
 		.attr('class', 'blip')
 		.style({'text-decoration':'none','cursor':'pointer'})
@@ -542,7 +544,12 @@ var Radar = {
 			callback.onblipleave(d.item);
 		})
 		
-		if(editable === true) {
+		//Update
+		selection.classed('hovered', function(d){
+			return d.hovered;
+		});
+		
+		if(editable) {
 			link.call(dragGroup);
 		}
 	
@@ -565,9 +572,9 @@ var Radar = {
 			.append("svg:title")
 			.text(function(d){return d.item.name;});
 		
-	},
+	};
 	
-	_drawKey: function(svg,w,h,sf){
+	var _drawKey = function(svg,w,h,sf){
 		var x=w-(sf*125);
 		var y=sf*60;
 		var triangleKey="New or moved";
@@ -590,9 +597,9 @@ var Radar = {
 		svg.append('text')
 			.attr({'x':x+sf*20,'y':y+sf*26,'fill':colour,'font-size':(sf*0.8)+'em'})
 			.text(circleKey);
-	},
+	};
 	
-	_drawKeyQuad: function(svg,w,h,sf, quadrantNo){
+	var _drawKeyQuad = function(svg,w,h,sf, quadrantNo){
 		var x;
 		var y;
 		
@@ -634,6 +641,6 @@ var Radar = {
 		svg.append('text')
 			.attr({'x':x+sf*10,'y':y+sf*15,'fill':colour,'font-size':(sf*0.8)+'em'})
 			.text(circleKey);
-	},
+	};
 	
 };

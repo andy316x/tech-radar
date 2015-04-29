@@ -42,11 +42,11 @@ techRadarDirectives.directive('ngRadar', function ($routeParams) {
 			var doDraw;
 			if(quadrantName){
 				doDraw = function(r) {
-					$scope.theRadar = Radar.draw_Quadrant(el, r, quadrantName, $scope.editable, interactions);
+					$scope.theRadar = new Radar().draw_Quadrant(el, r, quadrantName, $scope.editable, interactions);
 				};
 			}else{
 				doDraw = function(r) {
-					$scope.theRadar = Radar.draw(el, r, $scope.editable, interactions);
+					$scope.theRadar = new Radar().draw(el, r, $scope.editable, interactions);
 				};
 			}
 
