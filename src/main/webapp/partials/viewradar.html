@@ -96,14 +96,14 @@
 		
 		<div class="col-md-12" style="padding:50px 10%;">
 		
-			<div id="radar" ng-radar="" radar="selectedRadar.radar" selected-blip="selectedItem" centre-index="radarIndex" on-blip-clicked="blipClicked(blip)" editable="false"></div>
+			<ng-radar id="radar" radar="selectedRadar.radar" selected-blip="selectedItem" centre-index="radarIndex" on-blip-clicked="blipClicked(blip)" editable="false"></ng-radar>
 			
 			<!-- Left technology overlay -->
 			<div ng-show="radarIndex==2" class="arc-overlay arc-overlay-left">
 				<div>
 					<div class="col-xs-6" ng-repeat="arc in quads[1].arcs">
 						<strong>{{arc.name | uppercase}}</strong>
-						<div ng-repeat="tech in arc.techs">
+						<div class="summaryTech" ng-repeat="tech in arc.techs" ng-mouseover="focus(tech)">
 							{{tech.id}}. {{tech.name}}
 						</div>
 					</div>
@@ -113,7 +113,7 @@
 				<div>
 					<div class="col-xs-6" ng-repeat="arc in quads[2].arcs">
 						<strong>{{arc.name | uppercase}}</strong>
-						<div ng-repeat="tech in arc.techs">
+						<div class="summaryTech" ng-repeat="tech in arc.techs" ng-mouseover="focus(tech)">
 							{{tech.id}}. {{tech.name}}
 						</div>
 					</div>
@@ -125,7 +125,7 @@
 				<div>
 					<div class="col-xs-6" ng-repeat="arc in quads[0].arcs">
 						<strong>{{arc.name | uppercase}}</strong>
-						<div ng-repeat="tech in arc.techs">
+						<div class="summaryTech" ng-repeat="tech in arc.techs" ng-mouseover="focus(tech)">
 							{{tech.id}}. {{tech.name}}
 						</div>
 					</div>
@@ -135,7 +135,7 @@
 				<div>
 					<div class="col-xs-6" ng-repeat="arc in quads[3].arcs">
 						<strong>{{arc.name | uppercase}}</strong>
-						<div ng-repeat="tech in arc.techs">
+						<div class="summaryTech" ng-repeat="tech in arc.techs" ng-mouseover="focus(tech)">
 							{{tech.id}}. {{tech.name}}
 						</div>
 					</div>

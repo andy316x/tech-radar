@@ -4,7 +4,7 @@ var techRadarDirectives = angular.module('techRadarDirectives', []);
 
 techRadarDirectives.directive('ngRadar', function ($routeParams) {
 	return {
-		restrict: 'A',
+		restrict: 'E',
 		scope: {
 			radar: '=',
 			selectedBlip: '=',
@@ -15,7 +15,6 @@ techRadarDirectives.directive('ngRadar', function ($routeParams) {
 		},
 		link: function ($scope, element, attrs) {
             var el = element[0];
-			var quadrantName = $routeParams.quadrant;
             var interactions = {
                 onblipmove: function(blip) {
                     $scope.$apply(function(){
@@ -39,16 +38,9 @@ techRadarDirectives.directive('ngRadar', function ($routeParams) {
                 }
             };
 
-			var doDraw;
-			if(quadrantName){
-				doDraw = function(r) {
-					$scope.theRadar = new Radar().draw_Quadrant(el, r, quadrantName, $scope.editable, interactions);
-				};
-			}else{
-				doDraw = function(r) {
-					$scope.theRadar = new Radar().draw(el, r, $scope.editable, interactions);
-				};
-			}
+			var doDraw = function(r) {
+                $scope.theRadar = new Radar(el, r, $scope.editable, interactions).draw();
+            };
 
 			if($scope.radar) {
 				doDraw($scope.radar);

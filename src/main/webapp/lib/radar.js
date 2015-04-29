@@ -6,9 +6,6 @@ var deg=function(rad){
 	return rad*180/Math.PI;
 };
 
-var global_radar;
-var global_totalArc;
-
 var maxSample = 30;
 var maxRadius = 100;
 
@@ -18,25 +15,16 @@ function findNamed(name, list, notFoundValue){
 			return k;
 		}
 	}
-	return 0;
+	return notFoundValue;
 }
 
 function longestChild(prev, list){
 	return Math.max(prev, list.length);
 }
 
-var Radar = function(){
-	this.draw = function(element, radar, editable, callback) {
-		var w = element.offsetWidth;
-		//TODO - fit into parent?
-		var h = w;
-		
-		global_radar = radar;
-
-		var scaleFactor = w/1000;
-		var scaleFactorLarge = scaleFactor*6;
-		var allRails = [];
-		var maxBlips = new Array(radar.arcs.length);
+var Radar = function(element, radar, editable, callback){
+    var _getAllRails = function(){
+        var allRails = [];
 		for(var i = 0; i < radar.quadrants.length; i++) {
 			var quadrant = radar.quadrants[i];
 			allRails.push([]);
@@ -48,29 +36,22 @@ var Radar = function(){
 				var arcIndex = findNamed(quadrant.items[j].arc, radar.arcs, 0);
 				allRails[i][arcIndex].push(quadrant.items[j]);
 			}
-			
-			for(var j = 0; j < radar.arcs.length; j++){
-				maxBlips[j] = allRails[i][j].reduce(longestChild,0);
-			}
 		}
+        return allRails;
+    };
+    
+	this.draw = function() {
+		var w = element.offsetWidth;
+		//TODO - fit into parent (i.e. min of parent width/height)?
+		var h = w;
 		
-		var totalMaxBlips = maxBlips.reduce(function(prev, curr){
-			//No value counts as 1
-			return prev + (curr || 1);
-		},0);
-		
-		maxBlips = maxBlips.map(function(maxBlip){
-			var t = Math.sqrt((maxBlips/totalMaxBlips)/(1/(radar.arcs.length - i)));
-			if(t === 0){
-				return 1;
-			}
-		});
-		
+		var scaleFactor = w/1000;
+		var scaleFactorLarge = scaleFactor*6;
+		var allRails = _getAllRails();
 		
 		var totalArc = radar.arcs.reduce(function(prev, curr){
 			return prev + curr.r;
 		},0);
-		global_totalArc = totalArc;
 		
 		//Clear bound element
 		//Not sure why this is done like so.
@@ -79,7 +60,8 @@ var Radar = function(){
 		}
 		
 		var centres = [
-		               [w/2, w/2, w],
+		               [w/2, w/2, w],//Centre of radar
+            //TODO - Give these reasonable explanations (top-right, bottom-left quadrant etc)?
 		               [w - scaleFactorLarge, w - scaleFactorLarge, w + scaleFactorLarge],
 		               [scaleFactorLarge, w - scaleFactorLarge, w + scaleFactorLarge],
 		               [scaleFactorLarge, w/2 - scaleFactorLarge, w + scaleFactorLarge],
@@ -91,21 +73,16 @@ var Radar = function(){
 			.attr('xmlns:xmlns:xlink','http://www.w3.org/1999/xlink')
 			.attr('width',w)
 			.attr('height',h)
-			//TODO - is this necessary?  Seems costly
-		canvas.selectAll('*').remove();
 		
-		var containerGroup = canvas.append('g').attr('class', 'containerGroup');
+		var containerGroup = canvas.append('g').attr('class', 'containerGroup').attr("transform", "translate(0,0)");
 		
 		function transition(container, start, end) {
-			var center = [w / 2, h / 2],
-			i = d3.interpolateZoom(start, end);
-			
+			var center = [w / 2, h / 2];
 			container
-			.attr("transform", transform(start))
 			.transition()
-			.delay(250)
-			.duration(i.duration * 2)
-			.attrTween("transform", function() { return function(t) { return transform(i(t)); }; });
+            .delay(250)
+			.duration(750)
+            .attr("transform", transform(end));
 
 			function transform(p) {
 				var k = h / p[2];
@@ -370,6 +347,8 @@ var Radar = function(){
 		};
 	};
 	
+   
+    
 	var _drawArc = function(svg, innerRadius, outerRadius, x, y, color) {
 		var arc=d3.svg.arc()
 			.innerRadius(innerRadius)

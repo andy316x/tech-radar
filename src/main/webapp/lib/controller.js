@@ -29,7 +29,6 @@ techRadarControllers.controller('CommonViewCtrl', function ($scope, $http, $loca
 
 
 
-
 	// Login
 	$scope.loggedin = false;
 
@@ -456,6 +455,10 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 		$scope.clickedTechnology = blip;
 		$scope.technologyModalVisible = true;
 	};
+    
+    $scope.focus = function(technology){
+		$scope.hoveredTechnology = technology;
+    };
 
 	$scope.skillLevelSelected = function(technology, skillLevel) {
 		$http.post('/radar/rest/technology/' + technology.techId + '/user', {skillLevel:skillLevel}).
