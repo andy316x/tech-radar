@@ -95,53 +95,11 @@
 		</div>
 		
 		<div class="col-md-12" style="padding:50px 10%;">
-		
 			<ng-radar id="radar" radar="selectedRadar.radar" selected-blip="selectedItem" centre-index="radarIndex" on-blip-clicked="blipClicked(blip)" editable="false"></ng-radar>
-			
-			<!-- Left technology overlay -->
-			<div ng-show="radarIndex==2" class="arc-overlay arc-overlay-left">
-				<div>
-					<div class="col-xs-6" ng-repeat="arc in quads[1].arcs">
-						<strong>{{arc.name | uppercase}}</strong>
-						<div class="summaryTech" ng-repeat="tech in arc.techs" ng-mouseover="focus(tech)">
-							{{tech.id}}. {{tech.name}}
-						</div>
-					</div>
-				</div>
-			</div>
-			<div ng-show="radarIndex==3" class="arc-overlay arc-overlay-left">
-				<div>
-					<div class="col-xs-6" ng-repeat="arc in quads[2].arcs">
-						<strong>{{arc.name | uppercase}}</strong>
-						<div class="summaryTech" ng-repeat="tech in arc.techs" ng-mouseover="focus(tech)">
-							{{tech.id}}. {{tech.name}}
-						</div>
-					</div>
-				</div>
-			</div>
-			
-			<!-- Right technology overlay -->
-			<div ng-show="radarIndex==1" class="arc-overlay arc-overlay-right">
-				<div>
-					<div class="col-xs-6" ng-repeat="arc in quads[0].arcs">
-						<strong>{{arc.name | uppercase}}</strong>
-						<div class="summaryTech" ng-repeat="tech in arc.techs" ng-mouseover="focus(tech)">
-							{{tech.id}}. {{tech.name}}
-						</div>
-					</div>
-				</div>
-			</div>
-			<div ng-show="radarIndex==4" class="arc-overlay arc-overlay-right">
-				<div>
-					<div class="col-xs-6" ng-repeat="arc in quads[3].arcs">
-						<strong>{{arc.name | uppercase}}</strong>
-						<div class="summaryTech" ng-repeat="tech in arc.techs" ng-mouseover="focus(tech)">
-							{{tech.id}}. {{tech.name}}
-						</div>
-					</div>
-				</div>
-			</div>
-			
+			<tr-tech-overlay ng-show="radarIndex===1" side="right" quads="quads[0]"></tr-tech-overlay>
+			<tr-tech-overlay ng-show="radarIndex===2" side="left"  quads="quads[1]"></tr-tech-overlay>
+			<tr-tech-overlay ng-show="radarIndex===3" side="left"  quads="quads[2]"></tr-tech-overlay>
+			<tr-tech-overlay ng-show="radarIndex===4" side="right" quads="quads[3]"></tr-tech-overlay>
 		</div>
 		
 	</div>
