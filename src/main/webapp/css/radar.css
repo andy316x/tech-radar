@@ -686,11 +686,23 @@ border-radius: 2px;
   margin: 0;
 }
 
+.technology-list-wrapper {
+  background-color: #FFFFFF;
+  margin: 4px 0px 0px 0px;
+  border: 1px solid #CCC;
+  border-radius: 4px;
+  height: 550px;
+  overflow-x: none;
+  overflow-y: auto;
+}
+
 .technology-wrapper {
   background-color: #FFFFFF;
   margin: 4px 0px 0px 0px;
   border: 1px solid #CCC;
   border-radius: 4px;
+  overflow-x: none;
+  overflow-y: auto;
 }
 
 .modal .modal-body .technology-wrapper {
