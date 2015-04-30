@@ -1,9 +1,9 @@
-<svg svg-width="{{scaleFactor*1000}}" svg-height="{{scaleFactor*(highest*40 + 100)}}" version="1.1" xmlns="http://www.w3.org/2000/svg">
+<svg width="100%" viewBox="0 0 1000 200" version="1.1" xmlns="http://www.w3.org/2000/svg">
     <g ng-repeat="skillLevel in skills">
-        <text svg-x="{{scaleFactor*(100+$index*200)}}" svg-y="{{scaleFactor*(highest*40 + 10)}}" text-anchor="middle">{{skillLevel.name}}</text>
+        <text ng-attr-x="{{100+$index*200}}" ng-attr-y="{{(highest*40 + 10)}}" text-anchor="middle">{{skillLevel.name}}</text>
         <g ng-repeat="sl in skillLevel.technologies">
-            <rect svg-x="{{scaleFactor*(10+$parent.$index*200)}}" svg-y="{{scaleFactor*((highest*40 - 40)-($index*35))}}" svg-rx="{{scaleFactor*5}}" svg-ry="{{scaleFactor*5}}" svg-width="{{scaleFactor*190}}" svg-height="{{scaleFactor*30}}" svg-fill="{{skillLevel.fill}}" svg-stroke="{{skillLevel.stroke}}" stroke-width="1"></rect>
-            <text svg-x="{{scaleFactor*(100+$parent.$index*200)}}" svg-y="{{scaleFactor*((highest*40 - 20)-($index*35))}}" text-anchor="middle" svg-fill="{{skillLevel.textFill}}">{{sl.name}}</text>
+            <rect ng-attr-x="{{10+$parent.$index*200}}" ng-attr-y="{{((highest*40 - 40)-($index*35))}}" rx="5" ry="5" width="190" height="30" ng-attr-fill="{{skillLevel.fill}}" ng-attr-stroke="{{skillLevel.stroke}}" stroke-width="1"></rect>
+            <text ng-attr-x="{{100+$parent.$index*200}}" ng-attr-y="{{((highest*40 - 20)-($index*35))}}" text-anchor="middle" ng-attr-fill="{{skillLevel.textFill}}">{{sl.name}}</text>
         </g>
     </g>
 </svg>
