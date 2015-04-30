@@ -23,7 +23,13 @@ function longestChild(prev, list){
 }
 
 var Radar = function(element, radar, editable, callback){
-    var _getAllRails = function(){
+	var containerGroup;
+    //TODO - fit into parent (i.e. min of parent width/height)?
+	var w = element.offsetWidth;
+	var h = w;
+	var canvas;
+	
+    function _getAllRails(){
         var allRails = [];
 		for(var i = 0; i < radar.quadrants.length; i++) {
 			var quadrant = radar.quadrants[i];
@@ -40,97 +46,48 @@ var Radar = function(element, radar, editable, callback){
         return allRails;
     };
     
+	function transition(container, start, end) {
+		var center = [w / 2, h / 2];
+		container
+		.transition()
+        .delay(250)
+		.duration(750)
+        .attr("transform", transform(end));
+
+		function transform(p) {
+			var k = h / p[2];
+			return "translate(" + (center[0] - p[0] * k) + "," + (center[1] - p[1] * k) + ")scale(" + k + ")";
+		}
+	};
+	
+	var scaleFactor = w/1000;
+	var scaleFactorLarge = scaleFactor*6;
+    var oldZoom = 0;
+	var allRails = _getAllRails();
+	var totalArc = radar.arcs.reduce(function(prev, curr){
+		return prev + curr.r;
+	},0);
+	
+	var centres = [
+	               [w/2, w/2, w],//Centre of radar
+        //TODO - Give these reasonable explanations (top-right, bottom-left quadrant etc)?
+	               [w - scaleFactorLarge, w - scaleFactorLarge, w + scaleFactorLarge],
+	               [scaleFactorLarge, w - scaleFactorLarge, w + scaleFactorLarge],
+	               [scaleFactorLarge, w/2 - scaleFactorLarge, w + scaleFactorLarge],
+	               [w - scaleFactorLarge, w/2 - scaleFactorLarge, w + scaleFactorLarge],
+	               ];
+	while (element.firstChild) {
+		element.removeChild(element.firstChild);
+	}
+	initSvg();
+
 	this.draw = function() {
-		var w = element.offsetWidth;
-		//TODO - fit into parent (i.e. min of parent width/height)?
-		var h = w;
-		
-		var scaleFactor = w/1000;
-		var scaleFactorLarge = scaleFactor*6;
-		var allRails = _getAllRails();
-		
-		var totalArc = radar.arcs.reduce(function(prev, curr){
-			return prev + curr.r;
-		},0);
-		
-		//Clear bound element
-		//Not sure why this is done like so.
-		while (element.firstChild) {
-			element.removeChild(element.firstChild);
-		}
-		
-		var centres = [
-		               [w/2, w/2, w],//Centre of radar
-            //TODO - Give these reasonable explanations (top-right, bottom-left quadrant etc)?
-		               [w - scaleFactorLarge, w - scaleFactorLarge, w + scaleFactorLarge],
-		               [scaleFactorLarge, w - scaleFactorLarge, w + scaleFactorLarge],
-		               [scaleFactorLarge, w/2 - scaleFactorLarge, w + scaleFactorLarge],
-		               [w - scaleFactorLarge, w/2 - scaleFactorLarge, w + scaleFactorLarge],
-		               ];
-		
-		var canvas=d3.select(element)
-			.insert('svg',':first-child')
-			.attr('xmlns:xmlns:xlink','http://www.w3.org/1999/xlink')
-			.attr('width',w)
-			.attr('height',h)
-		
-		var containerGroup = canvas.append('g').attr('class', 'containerGroup').attr("transform", "translate(0,0)");
-		
-		function transition(container, start, end) {
-			var center = [w / 2, h / 2];
-			container
-			.transition()
-            .delay(250)
-			.duration(750)
-            .attr("transform", transform(end));
-
-			function transform(p) {
-				var k = h / p[2];
-				return "translate(" + (center[0] - p[0] * k) + "," + (center[1] - p[1] * k) + ")scale(" + k + ")";
-			}
-		}
-		
-		// filters go in defs element
-		var defs = containerGroup.append("defs");
-
-		// create filter with id #drop-shadow
-		// height=130% so that the shadow is not clipped
-		var filter = defs.append("filter")
-		    .attr("id", "drop-shadow")
-		    .attr("height", "150%");
-
-		// SourceAlpha refers to opacity of graphic that this filter will be applied to
-		// convolve that with a Gaussian with standard deviation 3 and store result
-		// in blur
-		filter.append("feGaussianBlur")
-		    .attr("in", "SourceAlpha")
-		    .attr("stdDeviation", 2)
-		    .attr("result", "blur");
-
-		// translate output of Gaussian blur to the right and downwards with 2px
-		// store result in offsetBlur
-		filter.append("feOffset")
-		    .attr("in", "blur")
-		    .attr("dx", 1)
-		    .attr("dy", 1)
-		    .attr("result", "offsetBlur");
-
-		// overlay original SourceGraphic over translated blurred opacity by using
-		// feMerge filter. Order of specifying inputs is important!
-		var feMerge = filter.append("feMerge");
-
-		feMerge.append("feMergeNode")
-		    .attr("in", "offsetBlur")
-		feMerge.append("feMergeNode")
-		    .attr("in", "SourceGraphic");
-		
 		var cumulativeArc = 0;
 		var arcMap = {};
 		var arcs = [];
 		var self = this;
 		radar.arcs.forEach(function(_arc){
 			var r = (_arc.r / totalArc)*(w/2);
-			
 			_drawArc(containerGroup, cumulativeArc, cumulativeArc + r, w/2, h/2, _arc.color);
 			
 			var arc = {
@@ -145,20 +102,7 @@ var Radar = function(element, radar, editable, callback){
 			cumulativeArc = cumulativeArc + r;
 		});
 		
-		var axisWidth = scaleFactor*25;
-		containerGroup.append('rect')
-			.attr('x',0)
-			.attr('y',(h/2)-(axisWidth/2))
-			.attr('width',w)
-			.attr('height',scaleFactor*axisWidth)
-			.attr('fill','rgb(236,236,236)');
-		
-		containerGroup.append('rect')
-			.attr('x',(w/2)-(axisWidth/2))
-			.attr('y',0)
-			.attr('width',scaleFactor*axisWidth)
-			.attr('height',h)
-			.attr('fill','rgb(236,236,236)');
+		_drawAxes();
 		
 		radar.arcs.forEach(function(_arc){
 			var arc = arcMap[_arc.id];
@@ -327,69 +271,82 @@ var Radar = function(element, radar, editable, callback){
 			quadrant.endAngle = angle;
 		}
 		_drawBlips(containerGroup,blips,radar.quadrants,arcs,w,h,editable,callback);
-		
-		var context = {
-			oldZoom: 0	
-		};
-		
-		return {
-			selectBlip: function(blip) {
-				d3.selectAll('a circle, a path').attr('opacity',0.3);
-				d3.select('#blip-'+blip.id).selectAll('circle, path').attr('opacity',1.0);
-			},
-			unselectBlip: function(blip) {
-				d3.selectAll('a circle, a path').attr('opacity',1.0);
-			},
-			zoom: function(index) {
-				containerGroup.call(transition, centres[context.oldZoom], centres[index]);
-				context.oldZoom = index;
-			}
-		};
 	};
 	
-   
+	this.selectBlip = function(blip) {
+		d3.selectAll('a circle, a path').attr('opacity',0.3);
+		d3.select('#blip-'+blip.id).selectAll('circle, path').attr('opacity',1.0);
+	};
+	this.unselectBlip = function(blip) {
+		d3.selectAll('a circle, a path').attr('opacity',1.0);
+	},
+	this.zoom = function(index) {
+		containerGroup.call(transition, centres[oldZoom], centres[index]);
+		oldZoom = index;
+	};
     
-	var _drawArc = function(svg, innerRadius, outerRadius, x, y, color) {
-		var arc=d3.svg.arc()
-			.innerRadius(innerRadius)
-			.outerRadius(outerRadius)
-			.startAngle(rad(0))
-			.endAngle(rad(360));
-
-		svg.append('path')
-			.attr('d',arc)
-			.attr('fill',color)
-			.attr('transform','translate('+x+', '+y+')');
-	};
+	function initSvg(){
+		canvas=d3.select(element)
+		.insert('svg',':first-child')
+		.attr('xmlns:xmlns:xlink','http://www.w3.org/1999/xlink')
+		.attr('width',w)
+		.attr('height',h)
 	
-	var _drawArcQuad = function(svg, innerRadius, outerRadius, x, y, color, quadrantNo) {
-		var startAngle;
-		var endAngle;
+		containerGroup = canvas.append('g').attr('class', 'containerGroup').attr("transform", "translate(0,0)");
+	    
+		// filters go in defs element
+		var defs = containerGroup.append("defs");
+	
+		// create filter with id #drop-shadow
+		// height=130% so that the shadow is not clipped
+		var filter = defs.append("filter")
+		    .attr("id", "drop-shadow")
+		    .attr("height", "150%");
+	
+		// SourceAlpha refers to opacity of graphic that this filter will be applied to
+		// convolve that with a Gaussian with standard deviation 3 and store result
+		// in blur
+		filter.append("feGaussianBlur")
+		    .attr("in", "SourceAlpha")
+		    .attr("stdDeviation", 2)
+		    .attr("result", "blur");
+	
+		// translate output of Gaussian blur to the right and downwards with 2px
+		// store result in offsetBlur
+		filter.append("feOffset")
+		    .attr("in", "blur")
+		    .attr("dx", 1)
+		    .attr("dy", 1)
+		    .attr("result", "offsetBlur");
+	
+		// overlay original SourceGraphic over translated blurred opacity by using
+		// feMerge filter. Order of specifying inputs is important!
+		var feMerge = filter.append("feMerge");
+	
+		feMerge.append("feMergeNode")
+		    .attr("in", "offsetBlur")
+		feMerge.append("feMergeNode")
+		    .attr("in", "SourceGraphic");
+	}
+   
+    function _drawAxes(){
+        var axisWidth = scaleFactor*25;
+		containerGroup.append('rect')
+			.attr('x',0)
+			.attr('y',(h/2)-(axisWidth/2))
+			.attr('width',w)
+			.attr('height',scaleFactor*axisWidth)
+			.attr('fill','rgb(236,236,236)');
 		
-		switch (quadrantNo){
-			case 0:
-				startAngle = 0;
-				endAngle = 90;
-				x = 0;
-				y = 0;
-				break;
-			case 1:
-				startAngle = 90;
-				endAngle = 180;
-				y = 0;
-				break;
-			case 2:
-				startAngle = 180;
-				endAngle = 270;
-				y = y;
-				break;
-			case 3:
-				startAngle = 270;
-				endAngle = 0;
-				x = 0;
-				y = y;
-				break;
-		}
+		containerGroup.append('rect')
+			.attr('x',(w/2)-(axisWidth/2))
+			.attr('y',0)
+			.attr('width',scaleFactor*axisWidth)
+			.attr('height',h)
+			.attr('fill','rgb(236,236,236)');
+    };
+    
+	function _drawArc(svg, innerRadius, outerRadius, x, y, color) {
 		var arc=d3.svg.arc()
 			.innerRadius(innerRadius)
 			.outerRadius(outerRadius)
@@ -402,7 +359,7 @@ var Radar = function(element, radar, editable, callback){
 			.attr('transform','translate('+x+', '+y+')');
 	};
 	
-	var _drawArcAxisText = function(svg, innerRadius, outerRadius, totalWidth, totalHeight, text, sf) {
+	function _drawArcAxisText(svg, innerRadius, outerRadius, totalWidth, totalHeight, text, sf) {
 		var x = (totalWidth/2)+innerRadius+((outerRadius-innerRadius)/2);
 		var y = totalHeight/2;
 		svg.append('text')
@@ -417,42 +374,7 @@ var Radar = function(element, radar, editable, callback){
 			.text(text.charAt(0).toUpperCase() + text.slice(1));
 	};
 	
-	var _drawArcAxisTextQuad = function(svg, innerRadius, outerRadius, totalWidth, totalHeight, text, sf, quadrantNo, hMin) {
-		var x;
-		var y;
-		
-		switch (quadrantNo){
-		case 0:
-			y = hMin/2;
-			x = innerRadius+((outerRadius-innerRadius)/2);
-			break;
-		case 1:
-			x = totalWidth - outerRadius+((outerRadius-innerRadius)/2);;
-			y = hMin/2;
-			break;
-		case 2:
-			x = totalWidth - outerRadius+((outerRadius-innerRadius)/2);;;
-			y = totalHeight - hMin/4;
-			break;
-		case 3:
-			x = innerRadius+((outerRadius-innerRadius)/2);;
-			y = totalHeight - hMin/4;
-			break;
-	}
-		
-		svg.append('text')
-			.attr({'x':x,'y':y+sf*3,'text-anchor':'middle','fill':'#000'})
-			.style({'font-size':(sf*12) + 'px','font-weight':900})
-			.text(text);
-		
-		var x2 = (totalWidth/2)-(innerRadius+((outerRadius-innerRadius)/2));
-		svg.append('text')
-		.attr({'x':x,'y':y+sf*3,'text-anchor':'middle','fill':'#000'})
-		.style({'font-size':(sf*12) + 'px','font-weight':900})
-		.text(text);
-	};
-	
-	var _drawBlips = function(svg,blipGroups,quadrants,arcs,w,h,editable,callback) {
+	function _drawBlips(svg,blipGroups,quadrants,arcs,w,h,editable,callback) {
 		var blipsList = blipGroups.reduce(function(prev, curr){
 			return prev.concat(curr);
 		},[]);
@@ -553,7 +475,7 @@ var Radar = function(element, radar, editable, callback){
 		
 	};
 	
-	var _drawKey = function(svg,w,h,sf){
+	function _drawKey(svg,w,h,sf){
 		var x=w-(sf*125);
 		var y=sf*60;
 		var triangleKey="New or moved";
@@ -575,50 +497,6 @@ var Radar = function(element, radar, editable, callback){
 			.attr('cy',y+sf*22);
 		svg.append('text')
 			.attr({'x':x+sf*20,'y':y+sf*26,'fill':colour,'font-size':(sf*0.8)+'em'})
-			.text(circleKey);
-	};
-	
-	var _drawKeyQuad = function(svg,w,h,sf, quadrantNo){
-		var x;
-		var y;
-		
-		switch (quadrantNo){
-			case 0:
-				x = w/2-(sf*100);
-				y = h-(sf*100);
-				break;
-			case 1:
-				x = w/2+(sf*100);
-				y = h-(sf*100);
-				break;
-			case 2:
-				x = w/2+(sf*100);
-				y = (sf*100);
-				break;
-			case 3:
-				x = w/2-(sf*100);
-				y = (sf*100);
-				break;
-		}
-		
-		var triangleKey="New or moved";
-		var circleKey="Unchanged";
-		
-		var scale=sf*10;
-		var colour = 'black';
-		svg.append('path')
-			.attr('d','M412.201,311.406c0.021,0,0.042,0,0.063,0c0.067,0,0.135,0,0.201,0c4.052,0,6.106-0.051,8.168-0.102c2.053-0.051,4.115-0.102,8.176-0.102h0.103c6.976-0.183,10.227-5.306,6.306-11.53c-3.988-6.121-4.97-5.407-8.598-11.224c-1.631-3.008-3.872-4.577-6.179-4.577c-2.276,0-4.613,1.528-6.48,4.699c-3.578,6.077-3.26,6.014-7.306,11.723C402.598,306.067,405.426,311.406,412.201,311.406')
-			.attr('fill',colour)
-			.attr('transform','scale('+(scale/34)+') translate('+(-404+x*(34/scale)-17)+', '+(-282+(y-sf*10)*(34/scale)-17)+')');
-		svg.append('text')
-			.attr({'x':x+sf*10,'y':y-sf*5,'fill':colour,'font-size':(sf*0.8)+'em'})
-			.text(triangleKey);
-		svg.append('path')
-			.attr('d',"M420.084,282.092c-1.073,0-2.16,0.103-3.243,0.313c-6.912,1.345-13.188,8.587-11.423,16.874c1.732,8.141,8.632,13.711,17.806,13.711c0.025,0,0.052,0,0.074-0.003c0.551-0.025,1.395-0.011,2.225-0.109c4.404-0.534,8.148-2.218,10.069-6.487c1.747-3.886,2.114-7.993,0.913-12.118C434.379,286.944,427.494,282.092,420.084,282.092")
-			.attr('fill',colour)
-			.attr('transform','scale('+(scale/34)+') translate('+(-404+x*(34/scale)-17)+', '+(-282+(y+sf*10)*(34/scale)-17)+')');
-		svg.append('text')
-			.attr({'x':x+sf*10,'y':y+sf*15,'fill':colour,'font-size':(sf*0.8)+'em'})
 			.text(circleKey);
 	};
 	

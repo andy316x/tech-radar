@@ -39,7 +39,8 @@ techRadarDirectives.directive('ngRadar', function ($routeParams) {
             };
 
 			var doDraw = function(r) {
-                $scope.theRadar = new Radar(el, r, $scope.editable, interactions).draw();
+                $scope.theRadar = new Radar(el, r, $scope.editable, interactions);
+                $scope.theRadar.draw();
             };
 
 			if($scope.radar) {
