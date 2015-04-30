@@ -62,6 +62,8 @@ var Radar = function(element, radar, editable, callback){
 	};
 	
     var oldZoom = 0;
+	var arcs = [];
+	var quadrants = radar.quadrants;
 	var allRails = _getAllRails();
 	var totalArc = radar.arcs.reduce(function(prev, curr){
 		return prev + curr.r;
@@ -89,8 +91,7 @@ var Radar = function(element, radar, editable, callback){
 		}
 		var cumulativeArc = 0;
 		var arcMap = {};
-		var arcs = [];
-		
+		arcs = [];
 		radar.arcs.forEach(function(_arc){
 			var r = (_arc.r / totalArc)*(w/2);
 			_drawArc(containerGroup, cumulativeArc, cumulativeArc + r, w/2, h/2, _arc.color);
@@ -420,7 +421,7 @@ var Radar = function(element, radar, editable, callback){
               }
 
               for(var i = 0; i < arcs.length; i++) {
-                  if(arcs[i].innerRadius < 1 && 1 < arcs[i].outerRadius) {
+                  if(arcs[i].innerRadius < r && r < arcs[i].outerRadius) {
                       callback.onblipmove({name:d.item.name,techGrouping:quadrants[index].name,arc:arcs[i].name});
                   }
               }
