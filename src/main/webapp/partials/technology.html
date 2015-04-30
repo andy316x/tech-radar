@@ -109,7 +109,7 @@
 					<div style="padding: 10px; border-bottom: 1px solid #CCCCCC">
 						<h4>Personnel Skills</h4>
 						<p ng-show="selectedTechnology.ratings.length == 0">No personnel use this technology.</p>
-						<div ng-show="selectedTechnology.ratings.length > 0" ng-tech-ratings="" ratings="selectedTechnology.ratings"></div>
+						<ng-tech-ratings ng-show="selectedTechnology.ratings.length > 0" ratings="selectedTechnology.ratings"></ng-tech-ratings>
 					</div>
 					
 					<div class="clearfix">
