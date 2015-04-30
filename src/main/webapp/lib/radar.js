@@ -25,10 +25,11 @@ function longestChild(prev, list){
 var Radar = function(element, radar, editable, callback){
 	var containerGroup;
     //TODO - fit into parent (i.e. min of parent width/height)?
-	var w = element.offsetWidth;
-	var h = w;
+	var w = 1000;
+	var h = 1000;
 	var canvas;
-	
+    this.blips = [];
+    
     function _getAllRails(){
         var allRails = [];
 		for(var i = 0; i < radar.quadrants.length; i++) {
@@ -60,8 +61,6 @@ var Radar = function(element, radar, editable, callback){
 		}
 	};
 	
-	var scaleFactor = w/1000;
-	var scaleFactorLarge = scaleFactor*6;
     var oldZoom = 0;
 	var allRails = _getAllRails();
 	var totalArc = radar.arcs.reduce(function(prev, curr){
@@ -71,21 +70,27 @@ var Radar = function(element, radar, editable, callback){
 	var centres = [
 	               [w/2, w/2, w],//Centre of radar
         //TODO - Give these reasonable explanations (top-right, bottom-left quadrant etc)?
-	               [w - scaleFactorLarge, w - scaleFactorLarge, w + scaleFactorLarge],
-	               [scaleFactorLarge, w - scaleFactorLarge, w + scaleFactorLarge],
-	               [scaleFactorLarge, w/2 - scaleFactorLarge, w + scaleFactorLarge],
-	               [w - scaleFactorLarge, w/2 - scaleFactorLarge, w + scaleFactorLarge],
-	               ];
+	               [w - 6, w - 6, w + 6],
+	               [6, w - 6, w + 6],
+	               [6, w/2 - 6, w + 6],
+	               [w - 6, w/2 - 6, w + 6],
+               ];
+    
 	while (element.firstChild) {
 		element.removeChild(element.firstChild);
 	}
+    
 	initSvg();
 
+	var self = this;
 	this.draw = function() {
+		if(self.blips.length){
+			return;
+		}
 		var cumulativeArc = 0;
 		var arcMap = {};
 		var arcs = [];
-		var self = this;
+		
 		radar.arcs.forEach(function(_arc){
 			var r = (_arc.r / totalArc)*(w/2);
 			_drawArc(containerGroup, cumulativeArc, cumulativeArc + r, w/2, h/2, _arc.color);
@@ -106,171 +111,171 @@ var Radar = function(element, radar, editable, callback){
 		
 		radar.arcs.forEach(function(_arc){
 			var arc = arcMap[_arc.id];
-			_drawArcAxisText(containerGroup, arc.innerRadius, arc.outerRadius, w, h, _arc.name, scaleFactor);
+			_drawArcAxisText(containerGroup, arc.innerRadius, arc.outerRadius, w, h, _arc.name, 1);
 		});
 		
 		var translation = [[1, 1, 'end', 1, 0], [-1, 1, 'start', 0, 1], [-1, -1, 'start', 0, 1], [1, -1, 'end', 1, 0]];
 		
-		var blips = [];
 		var quadrantMap = {};
 		var angle = 0;
-		for(var i = 0; i < radar.quadrants.length; i++) {
-			var quadrant = radar.quadrants[i];
-			quadrantMap[quadrant.id] = quadrant;
-			quadrant.startAngle = angle;
-			
-			var labelx = (w/2) + translation[i][0]*(w/2);
-			var labely = (h/2) + translation[i][1]*0.95*(h/2);
-			var textElement = containerGroup.append('text')
-				.attr({'x':labelx+translation[i][4]*scaleFactor*20,'y':labely,'font-size':scaleFactor*18,'font-weight':'bold','fill':'#333'})
-				.style({'text-anchor':translation[i][2]})
-				.text(quadrant.name);
-			
-			//label colour marker
-			containerGroup.append('circle')
-			.attr('r',scaleFactorLarge)
-			.attr('fill',quadrant.color)
-			.attr('cx',labelx+scaleFactor*10-translation[i][3]*(scaleFactor*20+textElement.node().getComputedTextLength()))
-			.attr('cy',labely-scaleFactorLarge);
-			
-			var arcRails = allRails[i];
-			
-			for(var j = 0; j < arcRails.length; j++) {
-				var rails = arcRails[j];
-				blips.push([]);
-				
-				var poisson_dist = [];
-				var queue = [];
-				var queueSize = 0;
-				var radius = maxRadius;
-				var radius2 = radius*radius;
-				var R = 3*radius;
-				var quadNo = i;
-				var arcNo = j;
-				
-				function sample(){
-					var a = Math.random() * queueSize | 0;
-					var s = queue[a];
-					var b = 0;
-					genCandidate(s);
-					
-					function genCandidate(s){
-						if (++b > maxSample){
-							return rejectActive();
-						}
-						
-						var c = 2 * Math.PI * Math.random();
-						var r = Math.sqrt(Math.random() * R + radius2);
-						var x = s[0] + r * Math.cos(c);
-						var y = s[1] + r * Math.sin(c);
-						
-						if(outside(x,y,quadNo,arcNo, radius)) return genCandidate(s);
-						
-						if (far(x,y)){
-							return acceptCandidate(x,y);
-						}else{
-							return genCandidate(s);
-						}
-						
-						function rejectActive(){
-							queue[a] = queue[--queueSize];
-							queue.length = queueSize;
-						}
-					}
-				}
+        self.blips = [];
+        for(var i = 0; i < radar.quadrants.length; i++) {
+                var quadrant = radar.quadrants[i];
+                quadrantMap[quadrant.id] = quadrant;
+                quadrant.startAngle = angle;
 
-				function far(x,y){
-					for(var i = 0; i < poisson_dist.length; i++){
-						var dx = poisson_dist[i][0] - x;
-						var dy = poisson_dist[i][1] - y;
-						if(dx*dx + dy*dy < radius2){
-							return false;
-						}
-					}
-					return true;
-				}
+                var labelx = (w/2) + translation[i][0]*(w/2);
+                var labely = (h/2) + translation[i][1]*0.95*(h/2);
+                var textElement = containerGroup.append('text')
+                    .attr({'x':labelx+translation[i][4]*20,'y':labely,'font-size':18,'font-weight':'bold','fill':'#333'})
+                    .style({'text-anchor':translation[i][2]})
+                    .text(quadrant.name);
 
-				function acceptCandidate(x,y){
-					queue.push([x,y]);
-					++queueSize;
-					poisson_dist.push([x,y]);
-					return [x,y];
-				}
-				
-				function outside(x,y,quad,arc,radius){
-					var w = canvas.attr("width")/2;
-					var h = canvas.attr("height")/2;
-					
-					var innerRadius = arcs[arcNo].innerRadius + radius/2;
-					var outerRadius = arcs[arcNo].outerRadius - radius/2;
-					
-					var innerx = w + (x - w)/Math.sqrt(Math.pow(x - w,2) + Math.pow(y - h,2))*innerRadius;
-					var outerx = w + (x - w)/Math.sqrt(Math.pow(x - w,2) + Math.pow(y - h,2))*outerRadius;
-					var innery = h + (y - h)/Math.sqrt(Math.pow(x - w,2) + Math.pow(y - h,2))*innerRadius;
-					var outery = h + (y - h)/Math.sqrt(Math.pow(x - w,2) + Math.pow(y - h,2))*outerRadius;
-					
-					if(Math.abs(x - w) < Math.abs(innerx - w) || Math.abs(x - w) > Math.abs(outerx - w)){
-						return true;
-					}
-					
-					if(Math.abs(y - h) < Math.abs(innery - h) || Math.abs(y - h) > Math.abs(outery - h)){
-						return true;
-					}
-					
-					if((quad == 0 || quad == 3) && x < w + radius/2 ){
-						return true;
-					}else if((quad == 1 || quad == 2) && x > w - radius/2){
-						return true;
-					}
-					
-					if((quad == 2 || quad == 3) && y > h - radius/2){
-						return true;
-					}else if((quad == 0 || quad == 1) && y < h + radius/2){
-						return true;
-					}
-					
-					return false;
-				}
-				
-				while(poisson_dist.length < rails.length){
-					if(poisson_dist.length > 0 && queueSize == 0){
-						poisson_dist = [];
-						queue = [];
-						queueSize = 0;
-						radius -= 2;
-						radius2 = radius*radius;
-						R = 3*radius;
-					}
-					
-					while(queueSize == 0){
-						var innerRadius = arcs[arcNo].innerRadius;
-						var outerRadius = arcs[arcNo].outerRadius;
-						
-						var r = ((outerRadius-innerRadius)/2)+innerRadius;
-						var x = (w/2) + r*Math.cos(rad(90/2 + angle));
-						var y = (h/2) + r*Math.sin(rad(90/2 + angle));
-						
-						if(!outside(x,y,quadNo,arcNo, 0)){
-							acceptCandidate(x,y);
-						}else{
-							//return;
-						}
-					}
-					sample();
-				}
-				
-				for(var k = 0; k < rails.length; k++) {
-					var x = poisson_dist[k][0];
-					var y = poisson_dist[k][1];
-					
-					blips[j+i*arcRails.length].push({'item':arcRails[j][k],'x':x,'y':y, 'color':quadrant.color, 'scaleFactor': scaleFactor, 'arc': j, 'quad' : i});
-				}
-			}
-			
-			angle = angle + 90;
-			quadrant.endAngle = angle;
-		}
-		_drawBlips(containerGroup,blips,radar.quadrants,arcs,w,h,editable,callback);
+                //label colour marker
+                containerGroup.append('circle')
+                .attr('r',6)
+                .attr('fill',quadrant.color)
+                .attr('cx',labelx+10-translation[i][3]*(20+textElement.node().getComputedTextLength()))
+                .attr('cy',labely-6);
+
+                var arcRails = allRails[i];
+
+                for(var j = 0; j < arcRails.length; j++) {
+                    var rails = arcRails[j];
+                    self.blips.push([]);
+
+                    var poisson_dist = [];
+                    var queue = [];
+                    var queueSize = 0;
+                    var radius = maxRadius;
+                    var radius2 = radius*radius;
+                    var R = 3*radius;
+                    var quadNo = i;
+                    var arcNo = j;
+
+                    function sample(){
+                        var a = Math.random() * queueSize | 0;
+                        var s = queue[a];
+                        var b = 0;
+                        genCandidate(s);
+
+                        function genCandidate(s){
+                            if (++b > maxSample){
+                                return rejectActive();
+                            }
+
+                            var c = 2 * Math.PI * Math.random();
+                            var r = Math.sqrt(Math.random() * R + radius2);
+                            var x = s[0] + r * Math.cos(c);
+                            var y = s[1] + r * Math.sin(c);
+
+                            if(outside(x,y,quadNo,arcNo, radius)) return genCandidate(s);
+
+                            if (far(x,y)){
+                                return acceptCandidate(x,y);
+                            }else{
+                                return genCandidate(s);
+                            }
+
+                            function rejectActive(){
+                                queue[a] = queue[--queueSize];
+                                queue.length = queueSize;
+                            }
+                        }
+                    }
+
+                    function far(x,y){
+                        for(var i = 0; i < poisson_dist.length; i++){
+                            var dx = poisson_dist[i][0] - x;
+                            var dy = poisson_dist[i][1] - y;
+                            if(dx*dx + dy*dy < radius2){
+                                return false;
+                            }
+                        }
+                        return true;
+                    }
+
+                    function acceptCandidate(x,y){
+                        queue.push([x,y]);
+                        ++queueSize;
+                        poisson_dist.push([x,y]);
+                        return [x,y];
+                    }
+
+                    function outside(x,y,quad,arc,radius){
+                        var w = 500;
+                        var h = 500;
+
+                        var innerRadius = arcs[arcNo].innerRadius + radius/2;
+                        var outerRadius = arcs[arcNo].outerRadius - radius/2;
+
+                        var innerx = w + (x - w)/Math.sqrt(Math.pow(x - w,2) + Math.pow(y - h,2))*innerRadius;
+                        var outerx = w + (x - w)/Math.sqrt(Math.pow(x - w,2) + Math.pow(y - h,2))*outerRadius;
+                        var innery = h + (y - h)/Math.sqrt(Math.pow(x - w,2) + Math.pow(y - h,2))*innerRadius;
+                        var outery = h + (y - h)/Math.sqrt(Math.pow(x - w,2) + Math.pow(y - h,2))*outerRadius;
+
+                        if(Math.abs(x - w) < Math.abs(innerx - w) || Math.abs(x - w) > Math.abs(outerx - w)){
+                            return true;
+                        }
+
+                        if(Math.abs(y - h) < Math.abs(innery - h) || Math.abs(y - h) > Math.abs(outery - h)){
+                            return true;
+                        }
+
+                        if((quad == 0 || quad == 3) && x < w + radius/2 ){
+                            return true;
+                        }else if((quad == 1 || quad == 2) && x > w - radius/2){
+                            return true;
+                        }
+
+                        if((quad == 2 || quad == 3) && y > h - radius/2){
+                            return true;
+                        }else if((quad == 0 || quad == 1) && y < h + radius/2){
+                            return true;
+                        }
+
+                        return false;
+                    }
+
+                    while(poisson_dist.length < rails.length){
+                        if(poisson_dist.length > 0 && queueSize == 0){
+                            poisson_dist = [];
+                            queue = [];
+                            queueSize = 0;
+                            radius -= 2;
+                            radius2 = radius*radius;
+                            R = 3*radius;
+                        }
+
+                        while(queueSize == 0){
+                            var innerRadius = arcs[arcNo].innerRadius;
+                            var outerRadius = arcs[arcNo].outerRadius;
+
+                            var r = ((outerRadius-innerRadius)/2)+innerRadius;
+                            var x = (w/2) + r*Math.cos(rad(90/2 + angle));
+                            var y = (h/2) + r*Math.sin(rad(90/2 + angle));
+
+                            if(!outside(x,y,quadNo,arcNo, 0)){
+                                acceptCandidate(x,y);
+                            }else {
+                            	
+                            }
+                        }
+                        sample();
+                    }
+
+                    for(var k = 0; k < rails.length; k++) {
+                        var x = poisson_dist[k][0];
+                        var y = poisson_dist[k][1];
+
+                        self.blips[j+i*arcRails.length].push({'item':arcRails[j][k],'x':x,'y':y, 'color':quadrant.color, 'arc': j, 'quad' : i});
+                    }
+                }
+
+                angle = angle + 90;
+                quadrant.endAngle = angle;
+            }
+		_drawBlips(containerGroup,self.blips,radar.quadrants,arcs,w,h,editable,callback);
 	};
 	
 	this.selectBlip = function(blip) {
@@ -288,9 +293,10 @@ var Radar = function(element, radar, editable, callback){
 	function initSvg(){
 		canvas=d3.select(element)
 		.insert('svg',':first-child')
+        .attr('width', '100%')
 		.attr('xmlns:xmlns:xlink','http://www.w3.org/1999/xlink')
-		.attr('width',w)
-		.attr('height',h)
+		.attr('viewBox', '0 0 1000 1000')
+		.attr('preserveAspectRatio', 'xMinYMin meet');
 	
 		containerGroup = canvas.append('g').attr('class', 'containerGroup').attr("transform", "translate(0,0)");
 	    
@@ -330,18 +336,18 @@ var Radar = function(element, radar, editable, callback){
 	}
    
     function _drawAxes(){
-        var axisWidth = scaleFactor*25;
+        var axisWidth = 25;
 		containerGroup.append('rect')
 			.attr('x',0)
 			.attr('y',(h/2)-(axisWidth/2))
 			.attr('width',w)
-			.attr('height',scaleFactor*axisWidth)
+			.attr('height',axisWidth)
 			.attr('fill','rgb(236,236,236)');
 		
 		containerGroup.append('rect')
 			.attr('x',(w/2)-(axisWidth/2))
 			.attr('y',0)
-			.attr('width',scaleFactor*axisWidth)
+			.attr('width',axisWidth)
 			.attr('height',h)
 			.attr('fill','rgb(236,236,236)');
     };
@@ -374,60 +380,58 @@ var Radar = function(element, radar, editable, callback){
 			.text(text.charAt(0).toUpperCase() + text.slice(1));
 	};
 	
+    var dragGroup = d3.behavior.drag()
+        .origin(function(d,i) { 
+            var t = d3.select(this);
+            return {
+                x: t.attr("x") + d3.transform(t.attr("transform")).translate[0],
+                y: t.attr("y") + d3.transform(t.attr("transform")).translate[1]
+            };
+        })
+        .on('dragstart', function(d, i) {
+            d3.selectAll('.blip').attr('opacity',0.3);
+            d3.select('#blip-'+d.item.id).attr('opacity',1.0);
+          }).on('drag', function(d, i) {
+            d.x = d3.event.x;
+            d.y = d3.event.y;
+            d3.select(this).attr("transform", "translate("+d3.event.x+","+d3.event.y+")");
+          }).on('dragend', function(d, i) {
+              var g = d3.select(this);
+              var text = g.select('text');
+              var x = ((parseInt(text.attr('x')) + d3.transform(g.attr("transform")).translate[0]) - (w/2));
+              var y = -1*((parseInt(text.attr('y')) + d3.transform(g.attr("transform")).translate[1]) - (h/2));
+
+              var r = Math.sqrt(x*x + y*y);
+              var theta = deg(Math.atan(y / x));
+              var offset = 0;
+              var index = 0;
+              if(x < 0 && y < 0) {
+                  index = 1;
+                  offset = 180;
+              } else if(x < 0 && y > 0) {
+                  index = 2;
+                  offset = 180;
+              } else if(x > 0 && y < 0) {
+                  index = 0;
+                  offset = 360;
+              } else if(x > 0 && y > 0) {
+                  index = 3;
+                  offset = 0;
+              }
+
+              for(var i = 0; i < arcs.length; i++) {
+                  if(arcs[i].innerRadius < 1 && 1 < arcs[i].outerRadius) {
+                      callback.onblipmove({name:d.item.name,techGrouping:quadrants[index].name,arc:arcs[i].name});
+                  }
+              }
+
+              d3.selectAll('.blip').attr('opacity',1.0);
+          });
+    
 	function _drawBlips(svg,blipGroups,quadrants,arcs,w,h,editable,callback) {
 		var blipsList = blipGroups.reduce(function(prev, curr){
 			return prev.concat(curr);
 		},[]);
-		
-		if(editable) {
-			var dragGroup = d3.behavior.drag()
-			.origin(function(d,i) { 
-				var t = d3.select(this);
-			    return {
-			        x: t.attr("x") + d3.transform(t.attr("transform")).translate[0],
-			        y: t.attr("y") + d3.transform(t.attr("transform")).translate[1]
-			    };
-			})
-			.on('dragstart', function(d, i) {
-			    d3.selectAll('.blip').attr('opacity',0.3);
-				d3.select('#blip-'+d.item.id).attr('opacity',1.0);
-			  }).on('drag', function(d, i) {
-			    d.x = d3.event.x;
-			    d.y = d3.event.y;
-			    d3.select(this).attr("transform", "translate("+d3.event.x+","+d3.event.y+")");
-			  }).on('dragend', function(d, i) {
-				  var g = d3.select(this);
-				  var text = g.select('text');
-				  var x = ((parseInt(text.attr('x')) + d3.transform(g.attr("transform")).translate[0]) - (w/2))/d.scaleFactor;
-				  var y = -1*((parseInt(text.attr('y')) + d3.transform(g.attr("transform")).translate[1]) - (h/2))/d.scaleFactor;
-				  
-				  var r = Math.sqrt(x*x + y*y);
-				  var theta = deg(Math.atan(y / x));
-				  var offset = 0;
-				  var index = 0;
-				  if(x < 0 && y < 0) {
-					  index = 1;
-					  offset = 180;
-				  } else if(x < 0 && y > 0) {
-					  index = 2;
-					  offset = 180;
-				  } else if(x > 0 && y < 0) {
-					  index = 0;
-					  offset = 360;
-				  } else if(x > 0 && y > 0) {
-					  index = 3;
-					  offset = 0;
-				  }
-				  
-				  for(var i = 0; i < arcs.length; i++) {
-					  if(arcs[i].innerRadius < r*d.scaleFactor && r*d.scaleFactor < arcs[i].outerRadius) {
-						  callback.onblipmove({name:d.item.name,techGrouping:quadrants[index].name,arc:arcs[i].name});
-					  }
-				  }
-				  
-				  d3.selectAll('.blip').attr('opacity',1.0);
-			  });
-		}
 		
 		var selection = svg.selectAll('g').data(blipsList);
 		
@@ -456,7 +460,7 @@ var Radar = function(element, radar, editable, callback){
 	
 		var blip = link.append('circle');
 		//TODO - what's the appropriate radius?
-		blip.attr('r', function(d){return d.scaleFactor * 13;})
+		blip.attr('r', 13)
 		.attr('cx',function(d){return d.x;})
 		.attr('cy', function(d){return d.y})
 		.attr('fill',function(d){ return d.color;});
@@ -465,8 +469,8 @@ var Radar = function(element, radar, editable, callback){
 	
 		link.append('text')
 			.attr('x',function(d){ return d.x;})
-			.attr('y',function(d){ return d.y+(d.scaleFactor*4);})
-			.attr('font-size',function(d){ return d.scaleFactor*12;})
+			.attr('y',function(d){ return d.y+4;})
+			.attr('font-size',12)
 			.attr({'font-style':'italic','font-weight':'bold','fill':'white'})
 			.text(function(d){return d.item.id;})
 			.style({'text-anchor':'middle'})
