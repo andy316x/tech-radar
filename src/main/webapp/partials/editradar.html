@@ -88,7 +88,6 @@
 	
 	<div ng-add-tech="" visible="addTechVisible" on-save="addTechs(techs)" on-cancel="addTechVisible=false" selected-radar="selectedRadar"></div>
 	
-	
 	<iframe id="theframe" name="theframe" style="display:none;"></iframe>
 
 	<div class="col-md-12" style="background-color:#EFEFEF;padding:25px 20px;">
@@ -133,7 +132,7 @@
 		</div>
 		
 		<div class="col-md-12" style="padding:50px 100px;">
-			<div id="radar" ng-radar="" radar="selectedRadar.radar" selected-blip="selectedItem" on-blip-moved="blipMoved(blip)" editable="true"></div>
+			<ng-radar radar="selectedRadar.radar" selected-blip="selectedItem" on-blip-moved="blipMoved(blip)" editable="true"></ng-radar>
 		</div>
 		
 	</div>
