@@ -458,6 +458,7 @@ techRadarDirectives.directive('ngTechMaturities', function ($window) {
 		},
 		templateUrl: 'templates/tech-maturities.html',
 		link: function ($scope, element, attrs) {
+			var aggregateLimit = 4;
 			$scope.imageDimension = 64;
 			
 			$scope.$watch("selectedTech", function (n, o) {
@@ -488,14 +489,13 @@ techRadarDirectives.directive('ngTechMaturities', function ($window) {
 			
 			function addRef(newRef){
 				var toAdd = newRef;
-				if(currentMaturityCount(newRef.maturity) === 4){
+				if(currentMaturityCount(newRef.maturity) === aggregateLimit){
 					var matching = $scope.otherRefs.filter(function(ref){
 						return ref.maturity == newRef.maturity;
 					});
-					var filtered = $scope.otherRefs.filter(function(ref){
+					$scope.otherRefs = $scope.otherRefs.filter(function(ref){
 						return ref.maturity !== newRef.maturity;
 					})
-					$scope.otherRefs = filtered;
 					toAdd = {
 							maturity: newRef.maturity,
 							x: maturityX[newRef.maturity],
@@ -505,6 +505,7 @@ techRadarDirectives.directive('ngTechMaturities', function ($window) {
 					matching.forEach(function(m){
 						toAdd.radars.push(m.radar);
 					});
+					toAdd.radars.push(newRef.radar);
 				}
 				$scope.otherRefs.push(toAdd);
 			}
