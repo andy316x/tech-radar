@@ -1,12 +1,12 @@
-<svg svg-width="{{scaleFactor*1000}}" svg-height="{{scaleFactor*400}}" version="1.1" xmlns="http://www.w3.org/2000/svg">
-    <rect svg-x="{{scaleFactor*5}}"   svg-y="{{scaleFactor*(10+(300-300*(watching.length/max)))}}"  svg-rx="{{scaleFactor*20}}" svg-ry="{{scaleFactor*20}}" svg-width="{{scaleFactor*(190)}}" svg-height="{{scaleFactor*(300*(watching.length/max))}}"  svg-fill="#FFFFFF" stroke-width="1" svg-stroke="#CCCCCC"></rect>
-    <rect svg-x="{{scaleFactor*205}}" svg-y="{{scaleFactor*(10+(300-300*(learning.length/max)))}}"  svg-rx="{{scaleFactor*20}}" svg-ry="{{scaleFactor*20}}" svg-width="{{scaleFactor*190}}"   svg-height="{{scaleFactor*(300*(learning.length/max))}}"  svg-fill="#428BCA" stroke-width="1" svg-stroke="#428BCA"></rect>
-    <rect svg-x="{{scaleFactor*405}}" svg-y="{{scaleFactor*(10+(300-300*(competent.length/max)))}}" svg-rx="{{scaleFactor*20}}" svg-ry="{{scaleFactor*20}}" svg-width="{{scaleFactor*190}}"   svg-height="{{scaleFactor*(300*(competent.length/max))}}" svg-fill="#5BC0DE" stroke-width="1" svg-stroke="#5BC0DE"></rect>
-    <rect svg-x="{{scaleFactor*605}}" svg-y="{{scaleFactor*(10+(300-300*(expert.length/max)))}}"    svg-rx="{{scaleFactor*20}}" svg-ry="{{scaleFactor*20}}" svg-width="{{scaleFactor*190}}"   svg-height="{{scaleFactor*(300*(expert.length/max))}}"    svg-fill="#F0AD4E" stroke-width="1" svg-stroke="#F0AD4E"></rect>
-    <rect svg-x="{{scaleFactor*805}}" svg-y="{{scaleFactor*(10+(300-300*(leader.length/max)))}}"    svg-rx="{{scaleFactor*20}}" svg-ry="{{scaleFactor*20}}" svg-width="{{scaleFactor*190}}"   svg-height="{{scaleFactor*(300*(leader.length/max))}}"    svg-fill="#5CB85C" stroke-width="1" svg-stroke="#5CB85C"></rect>
-    <text svg-x="{{scaleFactor*100}}" svg-y="{{scaleFactor*350}}" style="font-size: {{scaleFactor*20}}px;">Watching</text>
-    <text svg-x="{{scaleFactor*300}}" svg-y="{{scaleFactor*350}}" style="font-size: {{scaleFactor*20}}px;">Learning</text>
-    <text svg-x="{{scaleFactor*500}}" svg-y="{{scaleFactor*350}}" style="font-size: {{scaleFactor*20}}px;">Competent</text>
-    <text svg-x="{{scaleFactor*700}}" svg-y="{{scaleFactor*350}}" style="font-size: {{scaleFactor*20}}px;">Expert</text>
-    <text svg-x="{{scaleFactor*900}}" svg-y="{{scaleFactor*350}}" style="font-size: {{scaleFactor*20}}px;">Leader</text>
+<svg width="100%" viewBox="0 0 1000 400" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <rect x="5"   y="{{(10+(300-300*(watching.length/max)))}}"  rx="20" ry="20" width="190"   ng-attr-height="{{(300*(watching.length/max))}}"  fill="#FFFFFF" stroke-width="1" stroke="#CCCCCC"></rect>
+    <rect x="205" y="{{(10+(300-300*(learning.length/max)))}}"  rx="20" ry="20" width="190"   ng-attr-height="{{(300*(learning.length/max))}}"  fill="#428BCA" stroke-width="1" stroke="#428BCA"></rect>
+    <rect x="405" y="{{(10+(300-300*(competent.length/max)))}}" rx="20" ry="20" width="190"   ng-attr-height="{{(300*(competent.length/max))}}" fill="#5BC0DE" stroke-width="1" stroke="#5BC0DE"></rect>
+    <rect x="605" y="{{(10+(300-300*(expert.length/max)))}}"    rx="20" ry="20" width="190"   ng-attr-height="{{(300*(expert.length/max))}}"    fill="#F0AD4E" stroke-width="1" stroke="#F0AD4E"></rect>
+    <rect x="805" y="{{(10+(300-300*(leader.length/max)))}}"    rx="20" ry="20" width="190"   ng-attr-height="{{(300*(leader.length/max))}}"    fill="#5CB85C" stroke-width="1" stroke="#5CB85C"></rect>
+    <text x="100" y="350" style="font-size: 20px;">Watching</text>
+    <text x="300" y="350" style="font-size: 20px;">Learning</text>
+    <text x="500" y="350" style="font-size: 20px;">Competent</text>
+    <text x="700" y="350" style="font-size: 20px;">Expert</text>
+    <text x="900" y="350" style="font-size: 20px;">Leader</text>
 </svg>
