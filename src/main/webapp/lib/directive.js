@@ -408,15 +408,9 @@ techRadarDirectives.directive('ngTechRatings', function ($http) {
 		templateUrl: 'templates/tech-ratings.html',
 		link: function ($scope, element, attrs) {
 
-			$scope.scaleFactor = 1;
-
 			$scope.getWidth = function () {
 				return element[0].offsetWidth;
 			};
-
-			$scope.$watch($scope.getWidth, function (width) {
-				$scope.scaleFactor = width/1000;
-			});
 
 			$scope.$watch('ratings', function (newVal, oldVal, scope) {
 				repopulateRatings(newVal);
@@ -463,7 +457,6 @@ techRadarDirectives.directive('ngTechMaturities', function ($window) {
 		templateUrl: 'templates/tech-maturities.html',
 		link: function ($scope, element, attrs) {
 			$scope.imageDimension = 64;
-			$scope.scaleFactor = 1;
 			
 			$scope.$watch("selectedTech", function (n, o) {
 				layout();
@@ -562,8 +555,6 @@ techRadarDirectives.directive('ngSkillLevel', function () {
 					'Watching':4,
 			};
 
-			$scope.scaleFactor = 1;
-
 			$scope.getWidth = function () {
 				return element[0].offsetWidth;
 			};
@@ -581,10 +572,6 @@ techRadarDirectives.directive('ngSkillLevel', function () {
 				}
 				$scope.highest = theMax;
 			}, true);
-			
-			$scope.$watch($scope.getWidth, function (width) {
-				$scope.scaleFactor = width/1000;
-			});
 			
 		}
 	};
