@@ -307,9 +307,6 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 	$scope.msgs = [];
 	
 	$scope.addTechVisible = false;
-	
-	$scope.theUrl = window.location.href;
-
 	$scope.selectedQuad = $routeParams.quadrant;
 
 	if($scope.selectedQuad == null || typeof $scope.selectedQuad === "undefined"){
