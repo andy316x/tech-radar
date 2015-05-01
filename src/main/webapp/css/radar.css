@@ -13,36 +13,35 @@ li {
 	margin: 2px 0;
 }
 
+#uploadform {
+	display: inline;
+}
 
-#file_browse_wrapper {
-background-color: #5cb85c;
-border: 1px solid #4cae4c;
-display: inline;
-margin: 0 4px 0 0;
-border-radius: 2px;
-color: #fff;
-padding: 5px 8px 9px 10px;
-cursor: pointer;
-position: relative;
-overflow: visible;
+.file_browse_wrapper {
+	background-color: #5cb85c;
+	border: 1px solid #4cae4c;
+	display: inline;
+	margin: 0 4px 0 0;
+	border-radius: 2px;
+	color: #fff;
+	padding: 5px 8px 9px 10px;
+	cursor: pointer;
+	position: relative;
+	overflow: visible;
 }
-#file_browse_wrapper:hover {
-background-color: #47a447;
-border-color: #398439;
+.file_browse_wrapper label {
+	font-weight: 100;
+	cursor: pointer;
 }
-#file_browse_wrapper:active {
-background-image: none;
+.file_browse_wrapper:hover {
+	background-color: #47a447;
+	border-color: #398439;
 }
-#fileinput {
-left: 1px;
-opacity: 0;
--ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
-position: absolute;
-top: 0px;
-width: 92px;
-height: 32px;
-cursor: pointer;
+.file_browse_wrapper:active {
+	background-image: none;
+}
+.file_browse_wrapper input {
+	display: none;
 }
 
 ng-radar {
