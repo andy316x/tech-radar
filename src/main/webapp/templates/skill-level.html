@@ -1,4 +1,4 @@
-<svg width="100%" viewBox="0 0 1000 200" version="1.1" xmlns="http://www.w3.org/2000/svg">
+<svg width="100%" ng-vbox="0 0 1000 {{(highest+1) * 40}}" preserveAspectRatio="xMinYMin meet" version="1.1" xmlns="http://www.w3.org/2000/svg">
     <g ng-repeat="skillLevel in skills">
         <text ng-attr-x="{{100+$index*200}}" ng-attr-y="{{(highest*40 + 10)}}" text-anchor="middle">{{skillLevel.name}}</text>
         <g ng-repeat="sl in skillLevel.technologies">

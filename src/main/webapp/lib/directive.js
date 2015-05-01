@@ -793,3 +793,15 @@ techRadarDirectives.filter('prettydate', function() {
 		return 'on ' + then.getDate() + ' ' + months[then.getMonth()] + ' \'' + ('' + then.getFullYear()).substring(2, 4);
 	};
 });
+
+techRadarDirectives.directive('ngVbox', function() {
+	  return {
+		restrict: 'A',
+	    link: function(scope, element, attrs) {
+	      attrs.$observe('ngVbox', function(value) {
+	    	  console.log('go');
+              element.context.setAttribute('viewBox', value);
+	      });
+	    }
+	  };
+	});
