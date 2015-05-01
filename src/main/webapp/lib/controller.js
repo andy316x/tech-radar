@@ -366,7 +366,6 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 	$scope.addTechs = function (techs) {
 		$scope.addTechVisible = false;
 		
-		console.log(techs);
 		
 		$scope.selectedRadar.technologies = techs;
 		
