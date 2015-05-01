@@ -1,122 +1,121 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html xmlns:xlink="http://www.w3.org/1999/xlink" lang="en" ng-app="techRadar">
-<head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="">
-	<meta name="author" content="">
-	<link rel="shortcut icon" href="../../assets/ico/favicon.ico">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
 
-	<title>Tech Radar (beta)</title>
+        <title>Tech Radar (beta)</title>
 
-	<!-- Bootstrap core CSS -->
-	<link href="/radar/css/font-awesome.min.css" rel="stylesheet">
-	<link href="/radar/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Bootstrap core CSS -->
+        <link href="/radar/css/font-awesome.min.css" rel="stylesheet">
+        <link href="/radar/css/bootstrap.min.css" rel="stylesheet">
 
-	<link href="//fonts.googleapis.com/css?family=PT+Sans:400italic,400,700italic,700" rel="stylesheet" type="text/css">
+        <link href="//fonts.googleapis.com/css?family=PT+Sans:400italic,400,700italic,700" rel="stylesheet" type="text/css">
 
-	<!-- Custom styles for this template -->
-	<link href="/radar/css/radar.css" rel="stylesheet">
-</head>
-<body ng-controller="CommonViewCtrl">
+        <!-- Custom styles for this template -->
+        <link href="/radar/css/radar.css" rel="stylesheet">
+    </head>
+    <body ng-controller="CommonViewCtrl">
 
- 	<script type="text/ng-template" id="myModalContent.html">
-        <div class="modal-header">
-            <h3 class="modal-title">I'm a modal!</h3>
+        <script type="text/ng-template" id="myModalContent.html">
+            <div class="modal-header">
+                <h3 class="modal-title">I'm a modal!</h3>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    <li ng-repeat="item in items">
+                        <a ng-click="selected.item = item">{{ item }}</a>
+                    </li>
+                </ul>
+                Selected: <b>{{ selected.item }}</b>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" ng-click="ok()">OK</button>
+                <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+            </div>
+        </script>
+
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed"
+                            data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#"><strong>tech</strong><span>radar</span> <code>{beta}</code></a>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li ng-class="{active: activePage('radar')}"><a href="#/radar">Radars</a></li>
+                        <li ng-class="{active: activePage('technology')}"><a href="#/technology">Technologies</a></li>
+                        <li ng-class="{active: activePage('skill')}"><a href="#/skill">Skills Profile</a></li>
+                        <li ng-show="loggedin"><a>{{name}}  <img ng-click="loginclick=!loginclick" class="img img-rounded" src="/radar/img/128.jpg"></a></li>
+                        <li ng-show="!loggedin" ng-class="{active: loginclick}">
+                            <a  ng-click="loginclick=!loginclick">Sign in  <img class="img img-rounded" src="/radar/img/icon_8204.png"></a>
+                            <div ng-show="loginclick" class="login-form popover fade bottom in">
+                                <div class="arrow" style="margin-left:87px"></div>
+                                <h3 class="popover-title">Sign in</h3>
+                                <div class="popover-content form-group">
+                                    <iframe id="loginframe" src="loginsuccess.html"></iframe>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
-        <div class="modal-body">
-            <ul>
-                <li ng-repeat="item in items">
-                    <a ng-click="selected.item = item">{{ item }}</a>
-                </li>
-            </ul>
-            Selected: <b>{{ selected.item }}</b>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-primary" ng-click="ok()">OK</button>
-            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-        </div>
-    </script>
-    
-    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-	<div class="container-fluid">
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle collapsed"
-				data-toggle="collapse" data-target=".navbar-collapse">
-				<span class="sr-only">Toggle navigation</span> <span
-					class="icon-bar"></span> <span class="icon-bar"></span> <span
-					class="icon-bar"></span>
-			</button>
-			<a class="navbar-brand" href="#"><strong>tech</strong><span>radar</span> <code>{beta}</code></a>
-		</div>
-		<div class="navbar-collapse collapse">
-			<ul class="nav navbar-nav navbar-right">
-				<li ng-class="{active: activePage('radar')}"><a href="#/radar">Radars</a></li>
-				<li ng-class="{active: activePage('technology')}"><a href="#/technology">Technologies</a></li>
-				<li ng-class="{active: activePage('skill')}"><a href="#/skill">Skills Profile</a></li>
-				<li ng-show="loggedin==true"><a>{{name}}  <img ng-click="loginclick=!loginclick" class="img img-rounded" src="/radar/img/128.jpg"></a></li>
-				<li ng-show="loggedin==false">
-					<a  ng-click="loginclick=!loginclick">Sign in  <img class="img img-rounded" src="/radar/img/icon_8204.png"></a>
-					<div ng-show="loginclick==true" class="popover fade bottom in" style="position: absolute;z-index: 100;top: 38px;left: -185px;display: block;width: 300px;padding: 16px 0px 0px 0px;">
-      					<div class="arrow" style="margin-left:87px"></div>
-      					<h3 class="popover-title" style="background-color: #FFF;color: #333;padding-top: 0;">Sign in</h3>
-      					<div class="popover-content form-group">
-      						<iframe id="loginframe" src="loginsuccess.html" style="width: 100%;height: 265px;border: none;overflow: hidden;"></iframe>
-      					</div>
-    				</div>
-				</li>
-			</ul>
-		</div>
-	</div>
-</div>
 
-	<div ng-view></div>
-	
-	<footer class="baefooter">
-		<section class="mainFooter">
-			<a href="http://www.baesystems.com/home?r=ai" title="Home - BAE Systems Applied Intelligence"><img src="/radar/img/baesystemsai.png"></img></a>
-			<div class="row">
-				<div class="col-sm-6" style="padding-top:10px;">
-					<ul class="nav nav-pills">
-						<li><a href="#">Accessibility</a></li>
-						<li><a href="#">Terms and conditions</a></li>
-						<li><a href="#">Privacy</a></li>
-						<li><a href="#">Contact</a></li>
-					</ul>
-				</div>
-				<div class="col-sm-6">
-					<ul class="social-icon-list">
-						<li class="youtube-icon"><a href="https://www.youtube.com/BAESystemsAI"></a></li>
-						<li class="flickr-icon"><a href="https://www.flickr.com/photos/bae_systemsplc"></a></li>
-						<li class="in-icon"><a href="http://www.linkedin.com/company/baesystemsai"></a></li>
-						<li class="fb-icon"><a href="https://www.facebook.com/baesystemsappliedintelligence"></a></li>
-						<li class="twitter-icon"><a href="https://twitter.com/baesystems_ai"></a></li>
-					</ul>
-				</div>
-			</div>
-		</section>
-	</footer>
+        <div ng-view></div>
 
-	<!-- Bootstrap core JavaScript
-    ================================================== -->
-	<!-- Placed at the end of the document so the pages load faster -->
-	<script src="/radar/lib/jquery-1.11.1.min.js"></script>
-	<script src="/radar/lib/angular.min.js"></script>
-	<script src="/radar/lib/angular-animate.js"></script>
-	
-	
-	<script src="/radar/lib/bootstrap.min.js"></script>
-	<script src="/radar/lib/ui-bootstrap.min.js"></script>
-	<script src="/radar/lib/d3.min.js" charset="utf-8"></script>
-	<script src="/radar/lib/radar.js"></script>
-	<script src="/radar/lib/controller.js"></script>
-	<script src="/radar/lib/directive.js"></script>
-	<script src="/radar/lib/directives/tech-overlay.js"></script>
-	<script src="/radar/lib/app.js"></script>
-	<script src="/radar/lib/angular-route.min.js"></script>
-	<script src="/radar/lib/typeahead.js"></script>
+        <footer class="baefooter">
+            <section class="mainFooter">
+                <a href="http://www.baesystems.com/home?r=ai" title="Home - BAE Systems Applied Intelligence">
+                	<img src="/radar/img/baesystemsai.png"></img>
+                </a>
+            <div class="row">
+                <div class="col-sm-6" style="padding-top:10px;">
+                    <ul class="nav nav-pills">
+                        <li><a href="#">Accessibility</a></li>
+                        <li><a href="#">Terms and conditions</a></li>
+                        <li><a href="#">Privacy</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-sm-6">
+                    <ul class="social-icon-list">
+                        <li class="youtube-icon"><a href="https://www.youtube.com/BAESystemsAI"></a></li>
+                        <li class="flickr-icon"><a href="https://www.flickr.com/photos/bae_systemsplc"></a></li>
+                        <li class="in-icon"><a href="http://www.linkedin.com/company/baesystemsai"></a></li>
+                        <li class="fb-icon"><a href="https://www.facebook.com/baesystemsappliedintelligence"></a></li>
+                        <li class="twitter-icon"><a href="https://twitter.com/baesystems_ai"></a></li>
+                    </ul>
+                </div>
+            </div>
+            </section>
+        </footer>
 
-</body>
+    <!-- Bootstrap core JavaScript
+================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/radar/lib/jquery-1.11.1.min.js"></script>
+    <script src="/radar/lib/angular.min.js"></script>
+    <script src="/radar/lib/angular-animate.js"></script>
+
+
+    <script src="/radar/lib/bootstrap.min.js"></script>
+    <script src="/radar/lib/ui-bootstrap.min.js"></script>
+    <script src="/radar/lib/d3.min.js" charset="utf-8"></script>
+    <script src="/radar/lib/radar.js"></script>
+    <script src="/radar/lib/controller.js"></script>
+    <script src="/radar/lib/directive.js"></script>
+    <script src="/radar/lib/directives/tech-overlay.js"></script>
+    <script src="/radar/lib/app.js"></script>
+    <script src="/radar/lib/angular-route.min.js"></script>
+    <script src="/radar/lib/typeahead.js"></script>
+
+    </body>
 </html>
-	
