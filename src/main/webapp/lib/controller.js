@@ -307,6 +307,7 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 	$scope.errors = [];
 	$scope.warnings = [];
 	$scope.msgs = [];
+	$scope.editing = $location.url().match('edit$');
 	
 	$scope.addTechVisible = false;
 	$scope.selectedQuad = $routeParams.quadrant;

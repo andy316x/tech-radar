@@ -14,12 +14,8 @@
 	
 	<div class="col-md-12" style="margin-bottom: 0;border-bottom: 1px solid #CCC;padding-bottom: 10px;">
 		<div class="clearfix">
-			<div class="col-md-6">
-				<h1>
-					<i class="glyphicon glyphicon-ok" ng-show="selectedRadar.published == true" style="color:green;"></i>
-					<i class="glyphicon glyphicon-pencil" ng-show="selectedRadar.published != true" style="color:red;"></i>
-					<span> {{selectedRadar.name}}</span><span class="text-muted"> {{selectedRadar.businessUnit}}</span><span class="text-muted"><small> v{{selectedRadar.majorVersion}}.{{selectedRadar.minorVersion}}</small></span>
-				</h1>
+       		<div class="col-md-6">
+				<tr-radar-title></tr-radar-title>
 			</div>
 			<div class="col-md-6 text-right actions">
 				<div class="btn btn-default" ng-click="exportCsv(selectedRadar.id)"><span>Download Data</span></div>
