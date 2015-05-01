@@ -38,9 +38,6 @@ techRadarApp.config(['$routeProvider',function($routeProvider) {
 	})
 
 	// Default
-	.otherwise({
-		templateUrl: 'partials/radar.html',
-		controller: 'RadarsCtrl'
-	});
+	.otherwise({redirectTo: "/radar"});
 	
 }]);
