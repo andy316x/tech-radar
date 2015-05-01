@@ -320,7 +320,7 @@ techRadarDirectives.directive('ngAddTech', function ($http) {
 
 techRadarDirectives.directive('ngTechnologyModal', function ($http) {
 	return {
-		restrict: 'A',
+		restrict: 'E',
 		scope: {
 			visible: '=',
 			technology: '=',
