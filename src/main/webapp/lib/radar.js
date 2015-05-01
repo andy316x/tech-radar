@@ -294,7 +294,9 @@ var Radar = function(element, radar, editable, callback){
 	function initSvg(){
 		canvas=d3.select(element)
 		.insert('svg',':first-child')
-        .attr('width', '100%')
+        .style('position', 'absolute')
+        .style('top',0)
+        .style('left',0)
 		.attr('xmlns:xmlns:xlink','http://www.w3.org/1999/xlink')
 		.attr('viewBox', '0 0 1000 1000')
 		.attr('preserveAspectRatio', 'xMinYMin meet');
@@ -466,7 +468,7 @@ var Radar = function(element, radar, editable, callback){
 		.attr('cy', function(d){return d.y})
 		.attr('fill',function(d){ return d.color;});
 		
-		blip.style("filter", "url(#drop-shadow)");
+//		blip.style("filter", "url(#drop-shadow)");
 	
 		link.append('text')
 			.attr('x',function(d){ return d.x;})

@@ -574,7 +574,10 @@ techRadarDirectives.directive('ngSkillLevel', function () {
 					});
 				}
 				$scope.highest = theMax;
+				element.css('padding-top', (theMax * 40 * 10/100)+'%');
 			}, true);
+			
+		
 			
 		}
 	};
@@ -799,7 +802,6 @@ techRadarDirectives.directive('ngVbox', function() {
 		restrict: 'A',
 	    link: function(scope, element, attrs) {
 	      attrs.$observe('ngVbox', function(value) {
-	    	  console.log('go');
               element.context.setAttribute('viewBox', value);
 	      });
 	    }
