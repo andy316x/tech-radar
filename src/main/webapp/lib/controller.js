@@ -3,7 +3,9 @@ var techRadarControllers = angular.module('techRadarControllers', ['ui.bootstrap
 techRadarControllers.controller('CommonViewCtrl', function ($scope, $http, $location, $routeParams, $modal, $log) {
 
 	// Stuff that all views will need
-
+	$scope.activePage = function(page){
+		return $location.url().match(page);
+	}
 
 	$scope.items = ['item1', 'item2', 'item3'];
 
