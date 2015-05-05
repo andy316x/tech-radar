@@ -15,17 +15,15 @@
 					<tr-radar-title></tr-radar-title>
 				</div>
 				<div class="col-md-6 text-right">
+					<a class="btn btn-default" ng-click="go('/radar/'+selectedRadar.id)">Cancel</a>
+					<button class="btn btn-success" ng-click="addTechVisible=true">Edit	Technologies</button>
 					<form id="uploadform" action="/radar/uploadcsv" method="post"
 						target="theframe" enctype="multipart/form-data">
-						<a class="btn btn-default"
-							ng-click="go('/radar/'+selectedRadar.id)">Cancel</a>
-						<button class="btn btn-success" ng-click="addTechVisible=true">Edit
-							Technologies</button>
 						<input id="id" name="id" type="hidden"></input>
 						<div class='file_browse_wrapper'>
 							<label for='fileinput'>Upload Data</label> <input type='file'
 								id='fileinput' name="fileinput"></input>
-							<div ng-show="uploadingTechnologies==true"
+							<div ng-show="uploadingTechnologies"
 								class="popover fade bottom in"
 								style="position: absolute; z-index: 100; top: 38px; left: -68px; display: block; width: 235px; padding: 16px 0px 0px 0px;">
 								<div class="arrow"></div>
