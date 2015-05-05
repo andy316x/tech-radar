@@ -226,15 +226,7 @@ techRadarDirectives.directive('ngAddTech', function ($http) {
 			};
 			
 			$scope.technologies = [];
-			$http({method: 'GET', url: '/radar/rest/technology?nocache=' + (new Date()).getTime()}).
-			success(function(data) {
-                $scope.technologies = $scope.technologies.concat(data);
-				setTechnologySelection();
-			}).
-			error(function(data) {
-				console.log('error getting technology list');
-			});
-			
+						
 			$scope.technologySelected = function(technology) {
 				technology.selected = !(technology.selected);
 			};
@@ -268,8 +260,19 @@ techRadarDirectives.directive('ngAddTech', function ($http) {
 
 			$scope.$watch('visible', function (newVal, oldVal, scope) {
 				if(newVal != oldVal) {
-					if(newVal == true) {
+					if(newVal) {
 						element.children(":first").modal('show');
+						if(!$scope.fetched){
+							$http({method: 'GET', url: '/radar/rest/technology?nocache=' + (new Date()).getTime()}).
+							success(function(data) {
+								$scope.fetched = true;
+				                $scope.technologies = data;
+								setTechnologySelection();
+							}).
+							error(function(data) {
+								console.log('error getting technology list');
+							});
+						}
 					} else {
 						element.children(":first").modal('hide');
 					}

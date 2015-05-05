@@ -10,13 +10,13 @@
                 <div class="container-fluid main-content">
                     <div ng-show="stage=='1'" class="row">
                         <div class="col-md-12">
-
                             <div class="search-wrapper">
-                                <input ng-model="searchText" type="text" class="form-control typeahead" placeholder="Filter technologies..."></input>
+                                <input ng-disabled="!fetched" ng-model="searchText" type="text" class="form-control typeahead" placeholder="Filter technologies..."></input>
                             <i class="glyphicon glyphicon-search"></i>
                         </div>
 
-                        <div class="technology-wrapper">
+						<span ng-show='!fetched'>Fetching Technologies</span>
+                        <div ng-show='fetched' class="technology-wrapper">
                             <div ng-repeat="technology in technologies | filter:{name:searchText}" class="technology-card" ng-class="{active: technology.selected}" ng-click="technologySelected(technology)">
                                 <span>{{technology.name}}</span>
                             </div>
