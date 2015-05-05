@@ -468,7 +468,7 @@ var Radar = function(element, radar, editable, callback){
 		.attr('cy', function(d){return d.y})
 		.attr('fill',function(d){ return d.color;});
 		
-//		blip.style("filter", "url(#drop-shadow)");
+		blip.style("filter", "url(#drop-shadow)");
 	
 		link.append('text')
 			.attr('x',function(d){ return d.x;})
