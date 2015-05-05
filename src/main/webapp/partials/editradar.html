@@ -1,94 +1,105 @@
 <div class="container-fluid main-content">
-    <div class="row">
-        <form id="pdfExportForm" action="/radar/export/pdf" method="post">
-            <input hidden="true" id="id" name="id" value=""></input>
-        </form>
+	<div class="row">
+		<form id="pdfExportForm" action="/radar/export/pdf" method="post">
+			<input hidden="true" id="id" name="id" value=""></input>
+		</form>
 
-        <form id="csvExportForm" action="/radar/export/csv" method="post">
-            <input hidden="true" id="id" name="id" value=""></input>
-        </form>
-    </div>
+		<form id="csvExportForm" action="/radar/export/csv" method="post">
+			<input hidden="true" id="id" name="id" value=""></input>
+		</form>
 
-    <div class="col-md-12 clearfix" style="margin-bottom: 0;border-bottom: 1px solid #CCC;padding-bottom: 20px;overflow:visible;">
-        <div class="clearfix">
-       		<div class="col-md-6">
-        		<tr-radar-title></tr-radar-title>
-           	</div>
-            <div class="col-md-6 text-right">
-	            <form id="uploadform" action="/radar/uploadcsv" method="post" target="theframe" enctype="multipart/form-data">
-	                <a class="btn btn-default" ng-click="go('/radar/'+selectedRadar.id)">Cancel</a>
-	                <button class="btn btn-success" ng-click="addTechVisible=true">Edit Technologies</button>
-	                <input id="id" name="id" type="hidden"></input>
-	                <div class='file_browse_wrapper'>
-	                    <label for='fileinput'>Upload Data</label>
-	                    <input type='file' id='fileinput' name="fileinput"></input>
-	                 <div ng-show="uploadingTechnologies==true" class="popover fade bottom in" style="position: absolute;z-index: 100;top: 38px;left: -68px;display: block;width: 235px;padding: 16px 0px 0px 0px;">
-	                     <div class="arrow"></div>
-	                     <h3 class="popover-title" style="background-color: #FFF;color: #333;padding-top: 0;">Building radar</h3>
-	                     <div class="popover-content">
-	                         <div class="progress" style="margin: 0px 0px 5px 0px;">
-	                             <div class="progress-bar progress-bar-striped progress-bar-success active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
-	                                 <span class="sr-only">100% Complete</span>
-	                             </div>
-	                         </div>
-	                     </div>
-	                 </div>
-	                </div>
-				</form>
-	            <button class="btn btn-default" ng-click="doDelete(selectedRadar.id)">Delete</button>
-	            <button class="btn btn-primary" ng-click="doSave()">Save</button>
-	            <button class="btn btn-success" ng-click="doPublish(selectedRadar.id)">Publish</button>
-            </div>
-	   	</div>
-   </div>
-   <div style="margin-top:10px;">
-       <span>{{selectedRadar.description}}</span>
-   </div>
+		<div class="col-md-12 clearfix"
+			style="margin-bottom: 0; border-bottom: 1px solid #CCC; padding-bottom: 20px; overflow: visible;">
+			<div class="clearfix">
+				<div class="col-md-6">
+					<tr-radar-title></tr-radar-title>
+				</div>
+				<div class="col-md-6 text-right">
+					<form id="uploadform" action="/radar/uploadcsv" method="post"
+						target="theframe" enctype="multipart/form-data">
+						<a class="btn btn-default"
+							ng-click="go('/radar/'+selectedRadar.id)">Cancel</a>
+						<button class="btn btn-success" ng-click="addTechVisible=true">Edit
+							Technologies</button>
+						<input id="id" name="id" type="hidden"></input>
+						<div class='file_browse_wrapper'>
+							<label for='fileinput'>Upload Data</label> <input type='file'
+								id='fileinput' name="fileinput"></input>
+							<div ng-show="uploadingTechnologies==true"
+								class="popover fade bottom in"
+								style="position: absolute; z-index: 100; top: 38px; left: -68px; display: block; width: 235px; padding: 16px 0px 0px 0px;">
+								<div class="arrow"></div>
+								<h3 class="popover-title"
+									style="background-color: #FFF; color: #333; padding-top: 0;">Building
+									radar</h3>
+								<div class="popover-content">
+									<div class="progress" style="margin: 0px 0px 5px 0px;">
+										<div
+											class="progress-bar progress-bar-striped progress-bar-success active"
+											role="progressbar" aria-valuenow="100" aria-valuemin="0"
+											aria-valuemax="100" style="width: 100%;">
+											<span class="sr-only">100% Complete</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+					<button class="btn btn-default"
+						ng-click="doDelete(selectedRadar.id)">Delete</button>
+					<button class="btn btn-primary" ng-click="doSave()">Save</button>
+					<button class="btn btn-success"
+						ng-click="doPublish(selectedRadar.id)">Publish</button>
+				</div>
+			</div>
+		</div>
+
+		<div ng-add-tech="" visible="addTechVisible" on-save="addTechs(techs)"
+			on-cancel="addTechVisible=false" selected-radar="selectedRadar"></div>
+
+		<iframe id="theframe" name="theframe" style="display: none;"></iframe>
+
+		<div class="col-md-12"
+			style="background-color: #EFEFEF; padding: 25px 20px;">
+			<div class="col-md-12">
+				<div class="alert alert-success" role="alert"
+					ng-repeat="msg in msgs">{{msg}}</div>
+			</div>
+			<div class="col-md-12">
+				<div class="alert alert-danger" role="alert"
+					ng-repeat="error in errors">{{error}}</div>
+			</div>
+			<div class="col-md-12">
+				<div class="alert alert-warning" role="alert"
+					ng-repeat="warning in warnings">{{warning}}</div>
+			</div>
+			<div class="col-md-12">
+				<div class="col-md-6">
+					<ul class="nav nav-pills nav-radar">
+						<li ng-class="radarIndex == 0 ? 'active' : ''"><a
+							href="javascript:void(0)" ng-click="selectIndex(0)">All</a></li>
+						<li ng-repeat="quadrant in selectedRadar.radar.quadrants"
+							ng-class="(radarIndex == $index+1 ? 'active' : '') + ' quad' + ($index+1)">
+							<a href="javascript:void(0)" ng-click="selectIndex($index+1)">{{quadrant.name}}</a>
+						</li>
+					</ul>
+				</div>
+				<div class="col-md-6 text-right" style="padding: 10px;">
+					<div class="col-xs-6" style="padding: 8px 0;">
+						<span>Highest Skills</span>
+					</div>
+					<div class="col-xs-6">
+						<select class="form-control">
+							<option value="None">None</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-12" style="padding: 50px 100px;">
+				<ng-radar radar="selectedRadar.radar" selected-blip="selectedItem"
+					on-blip-moved="blipMoved(blip)" editable="true"></ng-radar>
+			</div>
+		</div>
+	</div>
 </div>
 
-
-    <div ng-add-tech="" visible="addTechVisible" on-save="addTechs(techs)" on-cancel="addTechVisible=false" selected-radar="selectedRadar"></div>
-
-    <iframe id="theframe" name="theframe" style="display:none;"></iframe>
-
-    <div class="col-md-12" style="background-color:#EFEFEF;padding:25px 20px;">
-        <div class="col-md-12">
-            <div class="alert alert-success" role="alert" ng-repeat="msg in msgs">
-                {{msg}}
-            </div>
-        </div>
-        <div class="col-md-12">
-            <div class="alert alert-danger" role="alert" ng-repeat="error in errors">
-                {{error}}
-            </div>
-        </div>
-        <div class="col-md-12">
-            <div class="alert alert-warning" role="alert" ng-repeat="warning in warnings">
-                {{warning}}
-            </div>
-        </div>
-        <div class="col-md-12">
-            <div class="col-md-6">
-                <ul class="nav nav-pills nav-radar">
-                    <li ng-class="radarIndex == 0 ? 'active' : ''"><a href="javascript:void(0)" ng-click="selectIndex(0)">All</a></li>
-                    <li ng-repeat="quadrant in selectedRadar.radar.quadrants" ng-class="(radarIndex == $index+1 ? 'active' : '') + ' quad' + ($index+1)">
-                        <a href="javascript:void(0)" ng-click="selectIndex($index+1)">{{quadrant.name}}</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="col-md-6 text-right" style="padding:10px;">
-                <div class="col-xs-6" style="padding:8px 0;">
-                    <span>Highest Skills</span>
-                </div>
-                <div class="col-xs-6">
-                    <select class="form-control">
-                        <option value="None">None</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-12" style="padding:50px 100px;">
-            <ng-radar radar="selectedRadar.radar" selected-blip="selectedItem" on-blip-moved="blipMoved(blip)" editable="true"></ng-radar>
-        </div>
-    </div>
-</div>
