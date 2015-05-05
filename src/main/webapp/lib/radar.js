@@ -49,11 +49,13 @@ var Radar = function(element, radar, editable, callback){
     
 	function transition(container, start, end) {
 		var center = [w / 2, h / 2];
+		i = d3.interpolateZoom(start, end);
 		container
+		.attr("transform", transform(start))
 		.transition()
-        .delay(250)
-		.duration(750)
-        .attr("transform", transform(end));
+		.delay(250)
+		.duration(i.duration * 2)
+		.attrTween("transform", function() { return function(t) { return transform(i(t)); }; });
 
 		function transform(p) {
 			var k = h / p[2];
