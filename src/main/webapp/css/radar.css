@@ -944,10 +944,6 @@ tr-tech-overlay {
 
 
 tr-tech-overlay.ng-hide {
-  -webkit-transition:2.5s linear all;
-  -moz-transition:2.5s linear all;
-  -o-transition:2.5s linear all;
-  transition:2.5s linear all;
   opacity:0;
   z-index: -1;
   display: none;

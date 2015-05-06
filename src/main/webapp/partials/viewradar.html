@@ -57,10 +57,10 @@
 		
 		<div class="col-md-12" style="padding:50px 10%;">
 			<ng-radar radar="selectedRadar.radar" selected-blip="selectedItem" centre-index="radarIndex" on-blip-clicked="blipClicked(blip)" editable="false"></ng-radar>
-			<tr-tech-overlay ng-show="radarIndex===1" side="right" quads="quads[0]" focus="focusTech"></tr-tech-overlay>
-			<tr-tech-overlay ng-show="radarIndex===2" side="left"  quads="quads[1]" focus="focusTech"></tr-tech-overlay>
-			<tr-tech-overlay ng-show="radarIndex===3" side="left"  quads="quads[2]" focus="focusTech"></tr-tech-overlay>
-			<tr-tech-overlay ng-show="radarIndex===4" side="right" quads="quads[3]" focus="focusTech"></tr-tech-overlay>
+			<tr-tech-overlay class="ng-hide" ng-show="radarIndex===1" side="right" quads="quads[0]" focus="focusTech"></tr-tech-overlay>
+			<tr-tech-overlay class="ng-hide" ng-show="radarIndex===2" side="left"  quads="quads[1]" focus="focusTech"></tr-tech-overlay>
+			<tr-tech-overlay class="ng-hide" ng-show="radarIndex===3" side="left"  quads="quads[2]" focus="focusTech"></tr-tech-overlay>
+			<tr-tech-overlay class="ng-hide" ng-show="radarIndex===4" side="right" quads="quads[3]" focus="focusTech"></tr-tech-overlay>
 		</div>
 		
 	</div>
