@@ -9,6 +9,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 import com.ai.techradar.database.entities.SkillLevelEnum;
+import com.ai.techradar.database.entities.TechGrouping;
 import com.ai.techradar.database.entities.UserTechnology;
 import com.ai.techradar.database.hibernate.HibernateUtil;
 import com.ai.techradar.service.MeService;
@@ -39,6 +40,7 @@ public class MeServiceImpl implements MeService {
 					.add(Projections.property("user.username"))
 					.add(Projections.property("technology.name"))
 					.add(Projections.property("skillLevel"))
+					.add(Projections.property("technology.techGrouping"))
 					);
 			
 			for(final Object[] row : (List<Object[]>)query.list()) {
@@ -46,6 +48,7 @@ public class MeServiceImpl implements MeService {
 				ut.setUser((String)row[0]);
 				ut.setTechnology((String)row[1]);
 				ut.setSkillLevel((SkillLevelEnum)row[2]);
+				ut.setTechGroup(((TechGrouping)row[3]).getName()); 
 
 				skillLevels.add(ut);
 			}

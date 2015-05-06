@@ -2,7 +2,8 @@ techRadarDirectives.directive('ngSkillLevel', function () {
 	return {
 		restrict: 'E',
 		scope: {
-			skillLevels: '='
+			skillLevels: '=',
+			selectedGrouping: '='
 		},
 		templateUrl: 'templates/skill-level.html',
 		link: function ($scope, element, attrs) {
@@ -24,13 +25,18 @@ techRadarDirectives.directive('ngSkillLevel', function () {
 			$scope.getWidth = function () {
 				return element[0].offsetWidth;
 			};
-
+			
+			$scope.isActiveGrouping = function(tech){
+				return !$scope.selectedGrouping || tech.techGroup === $scope.selectedGrouping;
+			};
+			
+	
 			$scope.$watch('skillLevels', function (newval, oldval) {
 				var theMax = 0;
 				if(newval){
 					newval.forEach(function(skill){
 						var idx = indexes[skill.skillLevel];
-						$scope.skills[idx].technologies.push({name:skill.technology});
+						$scope.skills[idx].technologies.push({name:skill.technology, techGroup: skill.techGroup});
 					});
 					$scope.skills.forEach(function(skill){
 						theMax = Math.max(theMax, skill.technologies.length);

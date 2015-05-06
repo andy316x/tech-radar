@@ -23,19 +23,20 @@
 		</div>
 		
 		<div class="col-md-12" style="background-color:#EFEFEF;padding:25px 20px;">
-		
 			<div>
-				<ul class="nav nav-pills">
-					<li class="active"><a href="#/skill">All</a></li>
-					<li><a href="#/skill">Platforms</a></li>
-					<li><a href="#/skill">Solutions</a></li>
-					<li><a href="#/skill">Languages &amp; Frameworks</a></li>
-					<li><a href="#/skill">Techniques</a></li>
-					<li><a href="#/skill">Tools</a></li>
+				<ul class="nav nav-pills techgroups">
+					<li ng-click="activeGrouping = null" ng-class="{active: !activeGrouping}">
+						<a ng-click="activeGrouping = techGrouping.name">All</a>
+					</li>
+					<li ng-repeat="techGrouping in techGroupings" ng-class="{active: techGrouping.name===activeGrouping}">
+						<a ng-click="$parent.activeGrouping = techGrouping.name">
+							{{techGrouping.name}}
+						</a>
+					</li>
 				</ul>
 			</div>
 			
-			<ng-skill-level skill-levels="skillLevels"></ng-skill-level>
+			<ng-skill-level skill-levels="skillLevels" selected-grouping="activeGrouping"></ng-skill-level>
 			
 		</div>
 
