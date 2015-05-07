@@ -96,30 +96,32 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 	};
 	
 	$scope.doPublish = function ( radarId ) {
-		var updateRadar = {
-			id: $scope.selectedRadar.id,
-			name: $scope.selectedRadar.name,
-			description: $scope.selectedRadar.description,
-			businessUnit: $scope.selectedRadar.businessUnit,
-			published: true,
-			lastPublishedDate: new Date().getTime(),
-			approved: $scope.selectedRadar.approved,
-			majorVersion: $scope.selectedRadar.majorVersion+1,
-			minorVersion: 0,
-			dateCreated: $scope.selectedRadar.dateCreated
-		};
-		
-		$http.put('/radar/rest/radar/' + radarId, updateRadar).
-		success(function(data, status, headers, config) {
-			$scope.selectedRadar.published = data.published;
-			$scope.selectedRadar.lastPublishedDate = data.lastPublishedDate;
-			$scope.selectedRadar.majorVersion = data.majorVersion;
-			$scope.selectedRadar.minorVersion = data.minorVersion;
-		}).
-		error(function(data, status, headers, config) {
-			$log.error('Failed to publish radar');
-			$log.error(data);
-		});
+		if (confirm("Are you sure?")){
+			var updateRadar = {
+				id: $scope.selectedRadar.id,
+				name: $scope.selectedRadar.name,
+				description: $scope.selectedRadar.description,
+				businessUnit: $scope.selectedRadar.businessUnit,
+				published: true,
+				lastPublishedDate: new Date().getTime(),
+				approved: $scope.selectedRadar.approved,
+				majorVersion: $scope.selectedRadar.majorVersion+1,
+				minorVersion: 0,
+				dateCreated: $scope.selectedRadar.dateCreated
+			};
+			
+			$http.put('/radar/rest/radar/' + radarId, updateRadar).
+			success(function(data, status, headers, config) {
+				$scope.selectedRadar.published = data.published;
+				$scope.selectedRadar.lastPublishedDate = data.lastPublishedDate;
+				$scope.selectedRadar.majorVersion = data.majorVersion;
+				$scope.selectedRadar.minorVersion = data.minorVersion;
+			}).
+			error(function(data, status, headers, config) {
+				$log.error('Failed to publish radar');
+				$log.error(data);
+			});
+		}
 	};
 	
 	$scope.blipMoved = function(blip) {
