@@ -83,14 +83,16 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 	};
 
 	$scope.doDelete = function ( radarId ) {
-		$http({method:'DELETE', url:'/radar/rest/radar/' + radarId}).
-		success(function(data, status, headers, config) {
-			$location.path('/radar');
-		}).
-		error(function(data, status, headers, config) {
-			$log.error('Failed to delete radar');
-			$log.error(data);
-		});
+		if (confirm("Are you sure?")){
+			$http({method:'DELETE', url:'/radar/rest/radar/' + radarId}).
+			success(function(data, status, headers, config) {
+				$location.path('/radar');
+			}).
+			error(function(data, status, headers, config) {
+				$log.error('Failed to delete radar');
+				$log.error(data);
+			});
+		}
 	};
 	
 	$scope.doPublish = function ( radarId ) {
