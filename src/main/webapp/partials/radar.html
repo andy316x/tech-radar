@@ -4,10 +4,10 @@
 	
 		<div class="col-md-12 clearfix" style="margin-bottom: 0;border-bottom: 1px solid #CCC;padding-bottom: 20px;">
 			<div class="col-md-6">
-				<ul class="nav nav-pills">
-					<li class="{{filter=='All'?'active':''}}"><a href="#" ng-click="filter = 'All'">All</a></li>
-					<li class="{{filter==businessUnit.name?'active':''}}" ng-repeat="businessUnit in businessUnits"><a href="#" ng-click="$parent.filter = businessUnit.name">{{businessUnit.name}}</a></li>
-					<li class="{{filter=='My Radars'?'active':''}}" ng-show="uid != null"><a href="#" ng-click="filter = 'My Radars'">My Radars</a></li>
+				<ul class="nav nav-pills empty-links">
+					<li ng-class="{active: filter=='All'}"><a ng-click="filter = 'All'">All</a></li>
+					<li ng-class="{active: filter===businessUnit.name}" ng-repeat="businessUnit in businessUnits"><a ng-click="$parent.filter = businessUnit.name">{{businessUnit.name}}</a></li>
+					<li ng-class="{active: filter==='My Radars'}" ng-show="uid != null"><a ng-click="filter = 'My Radars'">My Radars</a></li>
 				</ul>
 			</div>
 			<div class="col-md-3">

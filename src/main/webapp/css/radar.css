@@ -957,7 +957,7 @@ tr-tech-overlay.ng-hide-remove {
 	display: block !important;
 }
 
-.techgroups a {
+.empty-links a {
 	cursor: pointer;
 	user-select: none;
 	-webkit-user-select: none;
