@@ -47,6 +47,7 @@ techRadarDirectives.directive('ngRadar', function ($routeParams) {
 
 			$scope.$watch('radar', function (newVal, oldVal, scope) {
 				if(newVal) {
+					$scope.theRadar = new Radar(el, newVal, $scope.editable, interactions);
 					doDraw(newVal);
 				}
 			}, true);
