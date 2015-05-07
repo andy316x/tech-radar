@@ -116,6 +116,7 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 				$scope.selectedRadar.lastPublishedDate = data.lastPublishedDate;
 				$scope.selectedRadar.majorVersion = data.majorVersion;
 				$scope.selectedRadar.minorVersion = data.minorVersion;
+				$location.path("/radar/"+radarId);
 			}).
 			error(function(data, status, headers, config) {
 				$log.error('Failed to publish radar');
