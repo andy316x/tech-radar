@@ -9,6 +9,7 @@ techRadarControllers.controller('RadarsCtrl', function ($scope, $http, $location
 	$scope.onRadarCreated = function(radar) {
 		$scope.newRadarVisible = false;
 		$scope.radars.push(radar);
+		$location.path("/radar/"+radar.id+"/edit")
 	};
 	
 	var filterPredicates = [{
