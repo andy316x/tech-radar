@@ -810,6 +810,28 @@ border-radius: 2px;
     font-weight: bold;
 }
 
+.nav-pills li.disabledlink a{
+	opacity: 0.5;
+}
+
+.nav-pills li.disabledlink:hover {
+	color: grey;	
+	border-bottom: none;
+	font-weight: normal;
+}
+
+.nav-pills li.disabledlink a:hover {
+	font-weight: normal;
+}
+
+.nav-pills li.disabledlink a:focus {
+	font-weight: normal;
+}
+
+.nav-pills li.disabledlink a:active {
+	font-weight: normal;
+}
+
 .form-control {
 	border: 1px solid #ddd;
 	border-radius: 2px;
@@ -962,3 +984,4 @@ tr-tech-overlay.ng-hide-remove {
 	user-select: none;
 	-webkit-user-select: none;
 }
+
