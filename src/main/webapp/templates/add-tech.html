@@ -32,20 +32,18 @@
 
             <div ng-show="stage=='2'" class="row">
                 <div class="col-md-12">
-
                     <div class="clearfix" style="margin-bottom:10px;">
                         <div class="col-sm-4"><strong>Technology</strong></div>
                         <div class="col-sm-4"><strong>Maturity</strong></div>
                         <div class="col-sm-4"><strong>Tech Grouping</strong></div>
                     </div>
                     <div style="overflow-y:scroll;overflow-x:hidden;height:340px;">
-                        <div ng-repeat="technology in technologies | filter:{name:searchText}" class="clearfix" ng-show="technology.selected==true">
+                        <div ng-repeat="technology in technologies" class="clearfix" ng-show="technology.selected==true">
                             <div class="col-sm-4"><span>{{technology.name}}</span></div>
                             <div class="col-sm-4"><select class="form-control" ng-model="technology.maturity" ng-options="maturity.label as maturity.value for maturity in $parent.maturityOptions"></select></div>
                             <div class="col-sm-4"><select class="form-control" ng-model="technology.quadrant" ng-options="quadrant.label as quadrant.value for quadrant in $parent.quadrantOptions"></select></div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
