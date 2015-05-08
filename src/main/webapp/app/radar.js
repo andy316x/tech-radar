@@ -23,6 +23,9 @@ function longestChild(prev, list){
 }
 
 var Radar = function(element, radar, editable, callback){
+	var tip = d3.tip().attr('class', 'd3-tip').html(function(d) { 
+		return d.item.name; 
+		});
 	var containerGroup;
     //TODO - fit into parent (i.e. min of parent width/height)?
 	var w = 1000;
@@ -304,7 +307,7 @@ var Radar = function(element, radar, editable, callback){
 		.attr('preserveAspectRatio', 'xMinYMin meet');
 	
 		containerGroup = canvas.append('g').attr('class', 'containerGroup').attr("transform", "translate(0,0)");
-	    
+	    canvas.call(tip);
 		// filters go in defs element
 		var defs = containerGroup.append("defs");
 	
@@ -384,8 +387,8 @@ var Radar = function(element, radar, editable, callback){
 			.style({'font-size':(sf*13) + 'px','font-weight':900})
 			.text(text.charAt(0).toUpperCase() + text.slice(1));
 	};
-	
-    var dragGroup = d3.behavior.drag()
+
+	var dragGroup = d3.behavior.drag()
         .origin(function(d,i) { 
             var t = d3.select(this);
             return {
@@ -449,11 +452,13 @@ var Radar = function(element, radar, editable, callback){
 		})
 		.on('mouseover', function(d) {
 			callback.onbliphover(d.item);
+			tip.show(d);
 		})
 		.on('mouseleave', function(d) {
 			callback.onblipleave(d.item);
-		})
-		
+			tip.hide(d);
+		});
+
 		//Update
 		selection.classed('hovered', function(d){
 			return d.hovered;
@@ -478,9 +483,7 @@ var Radar = function(element, radar, editable, callback){
 			.attr('font-size',12)
 			.attr({'font-style':'italic','font-weight':'bold','fill':'white'})
 			.text(function(d){return d.item.id;})
-			.style({'text-anchor':'middle'})
-			.append("svg:title")
-			.text(function(d){return d.item.name;});
+			.style({'text-anchor':'middle', 'pointer-events': 'none'})
 		
 	};
 	
