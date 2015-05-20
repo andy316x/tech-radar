@@ -16,12 +16,12 @@ var Radar = {
 		
 	draw: function(element, radar, editable, callback) {
 		
-		var w = element.offsetWidth;
+		var w = 1000;
 		var h = w;
 		
 		global_radar = radar;
 
-		var scaleFactor = w/1000;
+		var scaleFactor = 1;
 		var allRails = [];
 		var maxBlips = new Array(radar.arcs.length);
 		for(var i = 0; i < radar.quadrants.length; i++) {
@@ -83,11 +83,14 @@ var Radar = {
 		               [w - scaleFactor*6, w/2 - scaleFactor*6, w + scaleFactor*6],
 		               ];
 		
+		var parentWidth = element.offsetWidth;
 		var canvas=d3.select(element)
 			.insert('svg',':first-child')
 			.attr('xmlns:xmlns:xlink','http://www.w3.org/1999/xlink')
-			.attr('width',w)
-			.attr('height',h)
+			.attr('width','100%')
+			.attr('height','100%')
+			.attr('style','position:absolute;top:0;left:0;')
+			.attr('viewBox', '0 0 1000 1000')
 		canvas.selectAll('*').remove();
 		
 		var svg = canvas.append('g');
@@ -206,10 +209,10 @@ var Radar = {
 				.text(quadrant.name);
 			
 			svg.append('circle')
-			.attr('r',scaleFactor*6)
-			.attr('fill',quadrant.color)
-			.attr('cx',labelx+scaleFactor*10-translation[i][3]*(scaleFactor*20+textElement.node().getComputedTextLength()))
-			.attr('cy',labely-scaleFactor*6);
+				.attr('r',scaleFactor*6)
+				.attr('fill',quadrant.color)
+				.attr('cx',labelx+scaleFactor*10-translation[i][3]*(scaleFactor*20+textElement.node().getComputedTextLength()))
+				.attr('cy',labely-scaleFactor*6);
 			
 			var arcRails = allRails[i];
 			
@@ -276,8 +279,8 @@ var Radar = {
 				}
 				
 				function outside(x,y,quad,arc,radius){
-					var w = canvas.attr("width")/2;
-					var h = canvas.attr("height")/2;
+					var w = 1000/2;
+					var h = w;
 					
 					var innerRadius = arcs[arcNo].innerRadius + radius/2;
 					var outerRadius = arcs[arcNo].outerRadius - radius/2;
@@ -426,13 +429,13 @@ var Radar = {
 		var x = (totalWidth/2)+innerRadius+((outerRadius-innerRadius)/2);
 		var y = totalHeight/2;
 		svg.append('text')
-			.attr({'x':x,'y':y+sf*3,'text-anchor':'middle','fill':'#000'})
+			.attr({'x':x,'y':y+sf*4,'text-anchor':'middle','fill':'#000'})
 			.style({'font-size':(sf*13) + 'px','font-weight':900})
 			.text(text.charAt(0).toUpperCase() + text.slice(1));
 		
 		var x2 = (totalWidth/2)-innerRadius-((outerRadius-innerRadius)/2);
 		svg.append('text')
-			.attr({'x':x2,'y':y+sf*3,'text-anchor':'middle','fill':'#000'})
+			.attr({'x':x2,'y':y+sf*4,'text-anchor':'middle','fill':'#000'})
 			.style({'font-size':(sf*13) + 'px','font-weight':900})
 			.text(text.charAt(0).toUpperCase() + text.slice(1));
 	},
@@ -556,27 +559,18 @@ var Radar = {
 		var blip = link.append('path');
 	
 		blip.attr('d', function(d){
-			//if (d.item.movement == 'c'){
-			//	return "M5,82.9422876 C32.8460969,99.0192375 67.1539031,99.0192375 95,82.9422876 C95.0000034,50.7883845 77.8460999,21.0769515 50,5 C22.1539001,21.0769515 4.99999658,50.7883845 5,82.9422876 L5,82.9422876 Z";
-			//}else{
-				return 'M420.084,282.092c-1.073,0-2.16,0.103-3.243,0.313c-6.912,1.345-13.188,8.587-11.423,16.874c1.732,8.141,8.632,13.711,17.806,13.711c0.025,0,0.052,0,0.074-0.003c0.551-0.025,1.395-0.011,2.225-0.109c4.404-0.534,8.148-2.218,10.069-6.487c1.747-3.886,2.114-7.993,0.913-12.118C434.379,286.944,427.494,282.092,420.084,282.092';
-			//}
+			return 'M420.084,282.092c-1.073,0-2.16,0.103-3.243,0.313c-6.912,1.345-13.188,8.587-11.423,16.874c1.732,8.141,8.632,13.711,17.806,13.711c0.025,0,0.052,0,0.074-0.003c0.551-0.025,1.395-0.011,2.225-0.109c4.404-0.534,8.148-2.218,10.069-6.487c1.747-3.886,2.114-7.993,0.913-12.118C434.379,286.944,427.494,282.092,420.084,282.092';
 		});
 	
 		blip.attr('fill',function(d){ return d.color;})
 			.attr('transform',function(d){
-				//if(d.item.movement == 'c') {
-				//	return 'scale('+d.scaleFactor*0.32+') translate(' + (d.x - d.scaleFactor*15)/(d.scaleFactor*0.32) + ', ' + (d.y - d.scaleFactor*17)/(d.scaleFactor*0.32) + ')';
-				//} else {
-					return 'scale('+((d.scaleFactor*30)/34)+') translate('+(-404+d.x*(34/(d.scaleFactor*30))-17)+', '+(-282+d.y*(34/(d.scaleFactor*30))-17)+')';
-				//}
+				return 'scale('+((d.scaleFactor*30)/34)+') translate('+(-404+d.x*(34/(d.scaleFactor*30))-17)+', '+(-282+d.y*(34/(d.scaleFactor*30))-17)+')';
 			});
 		
 		blip.style("filter", "url(#drop-shadow)");
 	
 		link.append('text')
 			.attr('x',function(d){ return d.x;})
-			//.attr('y',function(d){ return d.item.movement=='c'?d.y+(d.scaleFactor*6):d.y+(d.scaleFactor*4);})
 			.attr('y',function(d){ return d.y+(d.scaleFactor*4);})
 			.attr('font-size',function(d){ return d.scaleFactor*12;})
 			.attr({'font-style':'italic','font-weight':'bold','fill':'white'})
@@ -585,75 +579,162 @@ var Radar = {
 			.append("svg:title")
 			.text(function(d){return d.item.name;});
 		
-	},
+	}
 	
-	_drawKey: function(svg,w,h,sf){
-		var x=w-(sf*125);
-		var y=sf*60;
-		var triangleKey="New or moved";
-		var circleKey="Unchanged";
+};
+
+var CreateRadar = {
 		
-		var scale=sf*5;
-		var colour = 'black';
-		svg.append('path')
-			.attr('d','M5,82.9422876 C32.8460969,99.0192375 67.1539031,99.0192375 95,82.9422876 C95.0000034,50.7883845 77.8460999,21.0769515 50,5 C22.1539001,21.0769515 4.99999658,50.7883845 5,82.9422876 L5,82.9422876 Z')
-			.attr('fill',colour)
-			.attr('transform','scale('+(scale/34)+') translate('+x*(34/scale)+', '+(y-sf*10)*(34/scale)+')');
-		svg.append('text')
-			.attr({'x':x+sf*20,'y':y+sf*1,'fill':colour,'font-size':(sf*0.8)+'em'})
-			.text(triangleKey);
-		svg.append('circle')
-			.attr('r',sf*7)
-			.attr('fill',colour)
-			.attr('cx',x+sf*7)
-			.attr('cy',y+sf*22);
-		svg.append('text')
-			.attr({'x':x+sf*20,'y':y+sf*26,'fill':colour,'font-size':(sf*0.8)+'em'})
-			.text(circleKey);
-	},
-	
-	_drawKeyQuad: function(svg,w,h,sf, quadrantNo){
-		var x;
-		var y;
+		draw: function(element, config, callback) {
+			
+			var colours = ['rgb(223,223,223)', 'rgb(166,167,169)', 'rgb(190,191,193)', 'rgb(209,209,209)', 'rgb(223,223,223)'];
+			
+			var w = 1000;
+			var h = w;
+			var axisWidth = 25;
+			var minArcWidth = 50;
+			var resizeHeight = 20;
+			var resizeWidth = 4;
+			
+			var canvas=d3.select(element)
+				.insert('svg',':first-child')
+				.attr('xmlns:xmlns:xlink','http://www.w3.org/1999/xlink')
+				.attr('width','100%')
+				.attr('height','100%')
+				.attr('style','position:absolute;top:0;left:0;')
+				.attr('viewBox', '0 0 1000 1000')
+			canvas.selectAll('*').remove();
 		
-		switch (quadrantNo){
-			case 0:
-				x = w/2-(sf*100);
-				y = h-(sf*100);
-				break;
-			case 1:
-				x = w/2+(sf*100);
-				y = h-(sf*100);
-				break;
-			case 2:
-				x = w/2+(sf*100);
-				y = (sf*100);
-				break;
-			case 3:
-				x = w/2-(sf*100);
-				y = (sf*100);
-				break;
+			var group1 = canvas.append('g');
+			var group2 = canvas.append('g');
+			var group3 = canvas.append('g');
+			var group4 = canvas.append('g');
+			var group4 = canvas.append('g');
+			
+			var circles = [];
+			
+			for(var i = config.maturityOptions.length-1; i > -1; i--) {
+				var arcWidth = (w/2)/config.maturityOptions.length;
+				
+				circles.push({
+					name: config.maturityOptions[i].name,
+					colour: colours[i%colours.length],
+					min: arcWidth*i,
+					max: arcWidth*(i+1)
+				});
+			}
+			
+			for(var i = circles.length - 1; i > -1; i--) {
+				if(i > 0) {
+					circles[i].next = circles[i-1];
+				}
+				if(i < circles.length - 1) {
+					circles[i].previous = circles[i+1];
+				}
+			}
+			
+			var theCircs = group1.selectAll('circle').data(circles);
+			
+			theCircs.enter().append('circle')
+				.attr('cx',function(d){return w/2;})
+				.attr('cy',function(d){return h/2;})
+				.attr('r',function(d){return d.max;})
+				.attr('fill',function(d){return d.colour;})
+				.attr('stroke',function(d){return 'black';})
+				.attr('stroke-width',function(d){return 2;})
+				.attr('stroke-dasharray',function(d){return '15, 10, 5, 10';});
+			
+			group2.append('rect')
+				.attr('width',w)
+				.attr('height',axisWidth)
+				.attr('x',0)
+				.attr('y',h/2-(axisWidth/2))
+				.attr('fill','rgb(236,236,236)');
+			
+			group2.append('rect')
+				.attr('width',axisWidth)
+				.attr('height',h)
+				.attr('x',w/2-(axisWidth/2))
+				.attr('y',0)
+				.attr('fill','rgb(236,236,236)');
+			
+			function dragstarted(d) {
+				d3.event.sourceEvent.stopPropagation();
+				d3.select(this).classed("dragging", true);
+			}
+			
+			function dragged(d) {
+				var newMax = d.max + d3.event.dx;
+				if(typeof d.next != 'undefined') {
+					if(d.next.max - newMax > minArcWidth && newMax > minArcWidth && (typeof d.previous == 'undefined' || newMax - d.previous.max > minArcWidth)) {
+						d.max = newMax;
+						d.next.min = newMax;
+						d3.select(this).attr('x', (w/2)+d.max-(resizeWidth/2));
+						theLabels.attr('x',function(d){
+							if(typeof d.previous != 'undefined') {
+								return (w/2)+d.min+(d.max-d.previous.max)/2;
+							} else {
+								return (w/2)+d.max/2;
+							}
+						});
+					}
+				}
+			}
+			
+			function dragended(d) {
+				d3.select(this).classed('dragging', false);
+				theCircs.transition(1500).attr('r', function(d) {return d.max;}).ease('sin');
+				
+				var newData = [];
+				for(var i = circles.length - 1; i > -1; i--) {
+					newData.push({
+						name: circles[i].name,
+						percentage: circles[i].max/(w/2)*100
+					});
+				}
+				console.log(newData);
+			}
+			
+			var drag = d3.behavior.drag()
+		    	.origin(function(d) { return d; })
+		    	.on("dragstart", dragstarted)
+		    	.on("drag", dragged)
+		    	.on("dragend", dragended);
+			
+			group3.selectAll('rect').data(circles).enter().append('rect')
+				.attr('x', function(d){return (w/2)+d.max-(resizeWidth/2);})
+				.attr('y', function(d){return (h/2)-(resizeHeight/2);})
+				.attr('width', function(d){return resizeWidth;})
+				.attr('height', function(d){return resizeHeight;})
+				.attr('rx', function(d){return 2;})
+				.attr('ry', function(d){return 2;})
+				.attr('cursor', function(d){return 'ew-resize';})
+				.attr('fill', function(d){return '#AAA';})
+				.attr('visibility', function(d){
+					if(typeof d.next != 'undefined') {
+						return 'visible';
+					} else {
+						return 'hidden';
+					}
+				})
+				.call(drag);
+			
+			var theLabels = group4.selectAll('text').data(circles);
+			
+			theLabels.enter().append('text')
+				.attr('x',function(d){
+					if(typeof d.previous != 'undefined') {
+						return (w/2)+d.min+(d.max-d.previous.max)/2;
+					} else {
+						return (w/2)+d.max/2;
+					}
+				})
+				.attr('y',function(d){return (h/2)+3;})
+				.attr('text-anchor',function(d){return 'middle';})
+				.attr('font-size',function(d){return '13px';})
+				.attr('font-weight',function(d){return '900';})
+				.text(function(d){ return d.name; });
+			
 		}
-		
-		var triangleKey="New or moved";
-		var circleKey="Unchanged";
-		
-		var scale=sf*10;
-		var colour = 'black';
-		svg.append('path')
-			.attr('d','M412.201,311.406c0.021,0,0.042,0,0.063,0c0.067,0,0.135,0,0.201,0c4.052,0,6.106-0.051,8.168-0.102c2.053-0.051,4.115-0.102,8.176-0.102h0.103c6.976-0.183,10.227-5.306,6.306-11.53c-3.988-6.121-4.97-5.407-8.598-11.224c-1.631-3.008-3.872-4.577-6.179-4.577c-2.276,0-4.613,1.528-6.48,4.699c-3.578,6.077-3.26,6.014-7.306,11.723C402.598,306.067,405.426,311.406,412.201,311.406')
-			.attr('fill',colour)
-			.attr('transform','scale('+(scale/34)+') translate('+(-404+x*(34/scale)-17)+', '+(-282+(y-sf*10)*(34/scale)-17)+')');
-		svg.append('text')
-			.attr({'x':x+sf*10,'y':y-sf*5,'fill':colour,'font-size':(sf*0.8)+'em'})
-			.text(triangleKey);
-		svg.append('path')
-			.attr('d',"M420.084,282.092c-1.073,0-2.16,0.103-3.243,0.313c-6.912,1.345-13.188,8.587-11.423,16.874c1.732,8.141,8.632,13.711,17.806,13.711c0.025,0,0.052,0,0.074-0.003c0.551-0.025,1.395-0.011,2.225-0.109c4.404-0.534,8.148-2.218,10.069-6.487c1.747-3.886,2.114-7.993,0.913-12.118C434.379,286.944,427.494,282.092,420.084,282.092")
-			.attr('fill',colour)
-			.attr('transform','scale('+(scale/34)+') translate('+(-404+x*(34/scale)-17)+', '+(-282+(y+sf*10)*(34/scale)-17)+')');
-		svg.append('text')
-			.attr({'x':x+sf*10,'y':y+sf*15,'fill':colour,'font-size':(sf*0.8)+'em'})
-			.text(circleKey);
-	},
-	
+
 };

@@ -94,10 +94,33 @@ techRadarDirectives.directive('ngRadar', function ($routeParams) {
 					$scope.theRadar.zoom(newVal);
 				}
 			}, false);
+		}
+	};
+});
 
-			window.addEventListener('resize', function() {
-				doDraw($scope.radar);
-			}, true);
+techRadarDirectives.directive('ngCreateRadar', function ($routeParams) {
+	return {
+		restrict: 'A',
+		scope: {
+			maturityOptions: '='
+		},
+		link: function ($scope, element, attrs) {
+			var el = element[0];
+			
+			var doDraw = function() {
+				if($scope.maturityOptions != null && typeof $scope.maturityOptions != 'undefined' && $scope.maturityOptions.length > 0) {
+					var config = {
+							maturityOptions: $scope.maturityOptions
+					};
+					var theRadar = CreateRadar.draw(el, config, {});
+				}
+			};
+			
+			doDraw();
+			
+			$scope.$watch('maturityOptions', function (newVal, oldVal, scope) {
+				doDraw();
+			}, false);
 		}
 	};
 });
@@ -130,7 +153,7 @@ techRadarDirectives.directive('ngNewRadar', function ($http) {
 		'          <select class="form-control" ng-model="businessUnit" ng-options="businessUnit.label as businessUnit.label for businessUnit in businessUnitOptions"></select>' +
 		'        </div>' +
 		'        <div style="position:relative;">' +
-		'          <img src="/radar/img/radar_175.svg" style="width: 100%;">' +
+		'          <img src="/radar/img/radar_175.svg" style="width: 560px;height: 560px;"></img>' +
 		'          <span style="position:absolute;right:110px;bottom:150px;">' + 
 		'            <div class="dropdown">' + 
 		'              <button class="btn btn-link" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">{{techGrouping1}} <span class="caret"></button></span>' +
@@ -512,7 +535,7 @@ techRadarDirectives.directive('ngTechnologyModal', function ($http) {
 		'    <div class="modal-content">' +
 		'      <div class="modal-header">' +
 		'        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>' +
-		'        <h4 class="modal-title">{{technology.name}}</h4>' +
+		'        <h4 class="modal-title">{{technology.name}} <small class="text-muted">{{technology.techGrouping}}</small></h4>' +
 		'      </div>' +
 		'      <div class="modal-body clearfix">' +
 		'        <div class="col-sm-6">' + 

@@ -92,1835 +92,2036 @@
 ],
 
 
-"technologies":[ {
-  "name" : "Bamboo",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : "https://www.atlassian.com/software/bamboo?_mid=3d70cbc3514c9939834e58b5e93de810&gclid=CObdjfnCmsECFcoBwwodIq0ALg",
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Atlassian continuous integration product"
-}, {
-  "name" : "C++",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : "http://en.wikipedia.org/wiki/C%2B%2B",
-  "blipSize" : 11,
-  "detailUrl" : "http://connect/communities/sigs/cplus/pages/default.aspx",
-  "customerStrategic" : true,
-  "description" : null
-}, {
-  "name" : ".Net",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : "http://www.microsoft.com/net",
-  "blipSize" : 20,
-  "detailUrl" : "http://connect/communities/sigs/net/Pages/default.aspx",
-  "customerStrategic" : false,
-  "description" : "<quality issue> .NET Framework is a software framework developed by Microsoft that runs primarily on Microsoft Windows. It includes a large class library known as Framework Class Library (FCL) and provides language interoperability (each language can use code written in other languages) across several programming languages. (source Wikipedia)"
-}, {
-  "name" : "C#",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 9,
-  "detailUrl" : null,
-  "customerStrategic" : true,
-  "description" : "Microsoft programming language"
-}, {
-  "name" : "Java EE",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 12,
-  "detailUrl" : "http://connect/Communities/SIGs/Java/Pages/default.aspx",
-  "customerStrategic" : true,
-  "description" : "Java Platform, Enterprise Edition or Java EE is Oracle's enterprise Java computing platform. The platform provides an API and runtime environment for developing and running enterprise software, including network and web services, and other large-scale, multi-tiered, scalable, reliable, and secure network applications. Java EE extends the Java Platform, Standard Edition (Java SE), providing an API for object-relational mapping, distributed and multi-tier architectures, and web services. (source Wikipedia)"
-}, {
-  "name" : "Java SE",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 17,
-  "detailUrl" : "http://connect/Communities/SIGs/Java/Pages/default.aspx",
-  "customerStrategic" : true,
-  "description" : "Java Platform, Standard Edition is a widely used platform for development and deployment of portable applications for desktop and server environments. Java SE uses the object-oriented Java programming language (Source Wikipedia)"
-}, {
-  "name" : "Python",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 13,
-  "detailUrl" : "http://connect/communities/sigs/python/Pages/default.aspx",
-  "customerStrategic" : false,
-  "description" : "Python is a widely used general-purpose, high-level programming language. Its design philosophy emphasizes code readability, and its syntax allows programmers to express concepts in fewer lines of code than would be possible in languages such as C. (Source Wikipedia)"
-}, {
-  "name" : "Shell Script",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 16,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "SQL",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 10,
-  "detailUrl" : null,
-  "customerStrategic" : true,
-  "description" : null
-}, {
-  "name" : "XPath",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 3,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "XPath, the XML Path Language, is a query language for selecting nodes from an XML document."
-}, {
-  "name" : "XSD",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 4,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "XSLT",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 5,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "XSLT (Extensible Stylesheet Language Transformations) is a language for transforming XML documents into other XML documents, or other objects such as HTML for web pages, plain text or into XSL Formatting Objects which can then be converted to PDF, PostScript and PNG.(Source Wikipedia)"
-}, {
-  "name" : "COM/ActiveX",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 2,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "EMITE",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "XMPP extensions"
-}, {
-  "name" : "Hessian",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : "http://en.wikipedia.org/wiki/Hessian_(Web_service_protocol)",
-  "blipSize" : 2,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Binary web service protocol"
-}, {
-  "name" : "Owl",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : "http://www.w3.org/2001/sw/wiki/OWL",
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "The W3C Web Ontology Language (OWL) is a Semantic Web language designed to represent rich and complex knowledge about things, groups of things, and relations between things."
-}, {
-  "name" : "PL/SQL",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 12,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "PL/SQL (Procedural Language/Structured Query Language) is Oracle Corporation's procedural language extension for SQL and the Oracle relational database (source Wikipedia)"
-}, {
-  "name" : "Ruby",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 3,
-  "detailUrl" : null,
-  "customerStrategic" : true,
-  "description" : "Ruby is a dynamic, reflective, object-oriented, general-purpose programming language. (Source Wikipedia)"
-}, {
-  "name" : "Stored Procedures",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 9,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "VB",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : true,
-  "description" : null
-}, {
-  "name" : "VB.NET",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 3,
-  "detailUrl" : null,
-  "customerStrategic" : true,
-  "description" : "Visual Basic .NET (VB.NET) is a multi-paradigm, high level programming language, implemented on the .NET Framework.(Source Wikipedia)"
-}, {
-  "name" : "VBA",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : "http://connect/Communities/SIGs/Bytesize/Documents/MS%20VBA%20Part1%20-%20What%20and%20why.wav",
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "Jira",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : "https://www.atlassian.com/software/jira",
-  "blipSize" : 34,
-  "detailUrl" : "http://connect/communities/sigs/jira/Pages/default.aspx",
-  "customerStrategic" : false,
-  "description" : "Jira is a proprietary issue tracking product, developed by Atlassian. It provides bug tracking, issue tracking, and project management functions. (source Wikipedia)"
-}, {
-  "name" : "Maven",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 13,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Maven is a build automation tool used primarily for Java projects. Maven addresses two aspects of building software: First, it describes how software is built, and second, it describes its dependencies.  (Source Wikipedia)"
-}, {
-  "name" : "Puppet",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : "http://puppetlabs.com/",
-  "blipSize" : 5,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Puppet Enterprise helps you automate repetitive tasks, make rapid changes and deploy critical applications, on prem or in the cloud. "
-}, {
-  "name" : "Sonotype Nexus",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : "http://www.sonatype.com/nexus",
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "Swagger",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : "https://helloreverb.com/developers/swagger",
-  "blipSize" : 2,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Swagger is a specification for defining the interface of a REST Web Service (source Wikipedia)"
-}, {
-  "name" : "Enterprise Architect",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : "http://www.sparxsystems.com/products/ea/",
-  "blipSize" : 23,
-  "detailUrl" : "http://connect/Communities/SIGs/Bytesize/Documents/An%20Intro%20to%20Sparx%20Enterprise%20Architect.wav",
-  "customerStrategic" : false,
-  "description" : "Sparx Systems Enterprise Architect is a visual modeling and design tool "
-}, {
-  "name" : "Git",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 22,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Git is a distributed revision control and source code management system with an emphasis on speed, data integrity, and support for distributed, non-linear workflows.(sourced Wikipedia)"
-}, {
-  "name" : "Jenkins",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 20,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Jenkins is an open source continuous integration tool written in Java. The project was forked from Hudson after a dispute with Oracle. (source Wikipedia)"
-}, {
-  "name" : "MSBuild",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 5,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "build system for Visual Studio"
-}, {
-  "name" : "Eclipse",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 18,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Eclipse is an integrated development environment (IDE). It contains a base workspace and an extensible plug-in system for customizing the environment. (source Wikipedia)"
-}, {
-  "name" : "Visual Studio",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 17,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Microsoft Visual Studio is an integrated development environment (IDE) from Microsoft. It is used to develop computer programs for Microsoft Windows, as well as web sites, web applications and web services. (source Wikipedia)"
-}, {
-  "name" : "MooD",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 3,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "XML Spy",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 10,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "XMLSpy is an XML editor and integrated development environment (IDE) developed by Altova. XMLSpy allows developers to create XML-based and Web services applications using technologies such as XML, XBRL, XML Schema, XSLT, XPath, XQuery, WSDL and SOAP. (source Wikipedia)"
-}, {
-  "name" : "TortoiseSVN",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 5,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "TortoiseSVN is a windows source controll tool built around Apache SVN. TortoiseMerge is a diff / merge software tool for windows with a tight integration for TortoiseSVN"
-}, {
-  "name" : "IBM RTC",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 3,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Rational Team Concert is a software development team collaboration tool developed by the Rational Software brand of IBM. (Source Wikipedia)"
-}, {
-  "name" : "Team Foundation Server",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 6,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Team Foundation Server (commonly abbreviated to TFS) is a Microsoft product which provides source code management (either via Team Foundation Version Control or Git), reporting, requirements management, project management (for both agile software development and waterfall teams), automated builds, lab management, testing and release management capabilities. It covers the entire Application Lifecycle Management. (Source Wikipedia)"
-}, {
-  "name" : "Trac",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 2,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "Hudson",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Hudson is a continuous integration (CI) tool written in Java, which runs in a servlet container, such as Apache Tomcat. Wikipedia, http://hudson-ci.org/  "
-}, {
-  "name" : "Team Foundation Server_b",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 5,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Team Foundation Server (commonly abbreviated to TFS) is a Microsoft product which provides source code management (either via Team Foundation Version Control or Git), reporting, requirements management, project management (for both agile software development and waterfall teams), automated builds, lab management, testing and release management capabilities. It covers the entire Application Lifecycle Management. (Source Wikipedia)"
-}, {
-  "name" : "NetBeans",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 4,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "NetBeans is an integrated development environment (IDE) for developing primarily with Java, but also with other languages, in particular PHP, C/C++, and HTML5 (source Wikipedia)"
-}, {
-  "name" : "Perforce",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 12,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Git is a distributed revision control and source code management system with an emphasis on speed, data integrity, and support for distributed, non-linear workflows.(sourced Wikipedia).\nGit is internet-based but there is an Enterprise Git for corporate use and related tools like Stash, which Atlassian's variant"
-}, {
-  "name" : "Team Foundation Server_c",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 14,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Team Foundation Server (commonly abbreviated to TFS) is a Microsoft product which provides source code management (either via Team Foundation Version Control or Git), reporting, requirements management, project management (for both agile software development and waterfall teams), automated builds, lab management, testing and release management capabilities. It covers the entire Application Lifecycle Management. (Source Wikipedia)"
-}, {
-  "name" : "Chef",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "npm",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 3,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "Lumension",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 3,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "Drupal",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : "https://www.drupal.org/",
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "CMS"
-}, {
-  "name" : "Sharepoint",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Microsoft Document management system"
-}, {
-  "name" : "Apache",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 4,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "Jboss",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 5,
-  "detailUrl" : null,
-  "customerStrategic" : true,
-  "description" : "Jboss is commonly used to refer to the open source Java application server."
-}, {
-  "name" : "Microsoft IIS",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 12,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Internet Information Services is an extensible web server created by Microsoft for use with Windows NT family. IIS supports HTTP, HTTPS, FTP, FTPS, SMTP and NNTP. (source Wikipedia)"
-}, {
-  "name" : "Oracle Weblogic",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 2,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Oracle WebLogic Server is a Java EE application server currently developed by Oracle Corporation. (Source Wikipedia)"
-}, {
-  "name" : "Tomcat",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 11,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Apache Tomcat is an open source web server and servlet container developed by the Apache Software Foundation. Tomcat implements the Java Servlet and the JavaServer Pages (JSP) specifications from Sun Microsystems, and provides a \"pure Java\" HTTP web server environment for Java code to run in. (source Wikipedia)"
-}, {
-  "name" : "Citrix",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 3,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "VirtualBox",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 6,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "VMWare",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 18,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "<quality issue> This could be one of Workstation/Fusion/Player/vSphere/Server"
-}, {
-  "name" : "Alfresco",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : "https://www.atlassian.com/software/bamboo?_mid=3d70cbc3514c9939834e58b5e93de810&gclid=CObdjfnCmsECFcoBwwodIq0ALg",
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "open platform for business critical document management / content management"
-}, {
-  "name" : "ESRI ArcGIS Server",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 3,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "GIS application server for map / geo applications"
-}, {
-  "name" : "Linux",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 26,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Linux is a Unix-like and mostly POSIX-compliant computer operating system assembled under the model of free and open source software development and distribution. (source Wikipedia)"
-}, {
-  "name" : "Windows Server",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 24,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Windows Server is a brand name for a group of server operating systems released by Microsoft. It includes all Windows operating systems that have \"Windows Server\" (apart from Home and MultiPoint) in their names, plus Windows 2000, but not any other Microsoft product. (source Wikipedia)"
-}, {
-  "name" : "Oracle Application Server",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 2,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "Palantir",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Data analysis environment"
-}, {
-  "name" : "SAS",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "SAS Dataflux",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "SAS Enterprise Guide",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 2,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "Splunk",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 3,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "Wildfly",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "JEE Application server replacing JBoss"
-}, {
-  "name" : "Amazon AWS",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "Infosphere MDM",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "MapReduce",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "MapReduce is a programming model and an associated implementation for processing and generating large data sets with a parallel, distributed algorithm on a cluster"
-}, {
-  "name" : "QlikView",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 5,
-  "detailUrl" : "http://connect/Communities/SIGs/Bytesize/Documents/What%20makes%20Qlikview%20different.pptx",
-  "customerStrategic" : false,
-  "description" : "The QlikView Business Discovery platform aims to deliver self-service BI.(Source Wikipedia)"
-}, {
-  "name" : "Oracle BPEL",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 3,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Oracle BPEL Process Manager is a BPEL engine that is a member of the Oracle Fusion Middleware family of products. It enables enterprises to orchestrate disparate applications and Web services into business processes. The ability to quickly build and deploy these processes in a standards-based manner delivers critical functionality for developing a Service-Oriented Architecture (source Wikipedia)"
-}, {
-  "name" : "Oracle BPMN",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "Allegro Graph",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : "http://franz.com/agraph/allegrograph/",
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "Elastic Search",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : "http://www.elasticsearch.org/",
-  "blipSize" : 7,
-  "detailUrl" : null,
-  "customerStrategic" : true,
-  "description" : "Elasticsearch is a search server based on Lucene. It provides a distributed, multitenant-capable full-text search engine with a RESTful web interface and schema-free JSON documents. (Source Wikipedia)"
-}, {
-  "name" : "Hadoop",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 2,
-  "detailUrl" : "http://connect/Communities/SIGs/Bytesize/Documents/Bytesize%20Hadoop%20and%20MapReduce%20-%20An%20Overview.ppt",
-  "customerStrategic" : true,
-  "description" : "Apache Hadoop is an open-source software framework for storage and large-scale processing of data-sets on clusters of commodity hardware. (Source Wikipedia)"
-}, {
-  "name" : "SQL Server",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 9,
-  "detailUrl" : null,
-  "customerStrategic" : true,
-  "description" : "Microsoft SQL Server is a relational database management system developed by Microsoft (sourced Wikipedia)"
-}, {
-  "name" : "Talend",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : "https://www.talend.com/",
-  "blipSize" : 2,
-  "detailUrl" : "http://connect/teamshare/DataPractice/Accelerating%20Data%20Value/Intro%20to%20ETL%20-%202008.ppt",
-  "customerStrategic" : false,
-  "description" : "Talend�s data integration products provide an extensible, highly-performant, open source set of tools to access, transform and integrate data from any business system in real time or batch to meet both operational and analytical data integration needs"
-}, {
-  "name" : "ActiveMQ",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "Camel",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : "http://camel.apache.org/",
-  "blipSize" : 5,
-  "detailUrl" : null,
-  "customerStrategic" : true,
-  "description" : "Apache Camel is a rule-based routing and mediation engine that provides a Java object-based implementation of the Enterprise Integration Patterns using an API (or declarative Java Domain Specific Language) to configure routing and mediation rules. (sourced Wikipedia)"
-}, {
-  "name" : "Jersey",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 2,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "Logstash",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 2,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "logstash is a tool for managing events and logs. You can use it to collect logs, parse them, and store them for later use (like, for searching)."
-}, {
-  "name" : "REST",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 4,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "WebAPI",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "ASP.NET Web API is a framework that makes it easy to build HTTP services that reach a broad range of clients, including browsers and mobile devices."
-}, {
-  "name" : "AngularJS",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : "https://angularjs.org/#!/",
-  "blipSize" : 5,
-  "detailUrl" : null,
-  "customerStrategic" : true,
-  "description" : "AngularJS is an open-source web application framework, maintained by Google and community, that assists with creating single-page applications, one-page web applications that only require HTML, CSS, and JavaScript on the client side. Its goal is to augment web applications with model�view�controller (MVC) capability, in an effort to make both development and testing easier. (Source Wikipedia)"
-}, {
-  "name" : "CSS",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 13,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Cascading Style Sheets (CSS) is a style sheet language used for describing the look and formatting of a document written in a markup language."
-}, {
-  "name" : "D3",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : "http://d3js.org/",
-  "blipSize" : 3,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "HTML5",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 9,
-  "detailUrl" : null,
-  "customerStrategic" : true,
-  "description" : "HTML5 is the fifth revision of the core technology markup language of the Internet used for structuring and presenting content for the World Wide Web.  Its core aims have been to improve the language with support for the latest multimedia while keeping it easily readable by humans and consistently understood by computers and devices (web browsers, parsers, etc.). HTML5 is intended to subsume not only HTML 4, but also XHTML. (Source Wikipedia)"
-}, {
-  "name" : "Javascript",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 19,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "JavaScript (JS) is a dynamic computer programming language.[5] It is most commonly used as part of web browsers, whose implementations allow client-side scripts to interact with the user, control the browser, communicate asynchronously, and alter the document content that is displayed.[5] It is also being used in server-side network programming (with Node.js), game development and the creation of desktop and mobile applications. (Source Wikipedia)"
-}, {
-  "name" : "Experian QuickAddress",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "InfoSphere Streams",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : "http://www-01.ibm.com/software/data/infosphere/stream-computing/",
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Streaming analytics platform"
-}, {
-  "name" : "Active Directory",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 14,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Active Directory (AD) is a directory service that Microsoft developed for Windows domain networks and is included in most Windows Server operating systems as a set of processes and services.(Source Wikipedia)"
-}, {
-  "name" : "MySQL",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 4,
-  "detailUrl" : null,
-  "customerStrategic" : true,
-  "description" : null
-}, {
-  "name" : "Oracle ",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 27,
-  "detailUrl" : null,
-  "customerStrategic" : true,
-  "description" : "Oracle is an mature commercial industrial strength Relational Database Management System"
-}, {
-  "name" : "IBM MQ",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 6,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "IBM WebSphere MQ is a Message Oriented Middleware offering. It allows independent and potentially non-concurrent applications on a distributed system to communicate with each other. (sourced Wikipedia)"
-}, {
-  "name" : "Rabbit MQ",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : "http://www.rabbitmq.com/",
-  "blipSize" : 2,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "XMPP",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 2,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Instant Chat messaging protocol"
-}, {
-  "name" : "AutoMapper",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "EJB3",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 3,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Enterprise JavaBeans (EJB) is a managed, server-side component architecture for modular construction of enterprise applications. (Source Wikipedia)"
-}, {
-  "name" : "EntityFramework",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 2,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Entity Framework (EF) is an object-relational mapper that enables .NET developers to work with relational data using domain-specific objects."
-}, {
-  "name" : "Exchange",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 2,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Microsoft Exchange Server APIs"
-}, {
-  "name" : "log4j",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 4,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Apache log4j is a Java-based logging utility (source Wikipedia)"
-}, {
-  "name" : "log4net",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 7,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "The Apache log4net library is a tool to help the programmer output log statements to a variety of output targets. log4net is a port of the excellent Apache log4j framework to the Microsoft .NET runtime."
-}, {
-  "name" : "OpenFire",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "XMPP server"
-}, {
-  "name" : "Quartz",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 2,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Java based scheduling library"
-}, {
-  "name" : "Spring",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 3,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "The Spring Framework is an open source application framework and inversion of control container for the Java platform. The framework's core features can be used by any Java application, but there are extensions for building web applications on top of the Java EE platform. Although the framework does not impose any specific programming model, it has become popular in the Java community as an alternative to, replacement for, or even addition to the Enterprise JavaBean (EJB) model. (Source Wikipedia)"
-}, {
-  "name" : "Tika",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 3,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "The Apache Tika toolkit detects and extracts metadata and text content from various documents - from PPT to CSV to PDF - using existing parser libraries"
-}, {
-  "name" : "Windows Communication Foundation (WCF)",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 3,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "The Windows Communication Foundation (or WCF), is a runtime and a set of APIs in the .NET Framework for building connected, service-oriented applications(Source Wikipedia)"
-}, {
-  "name" : "ESRI ArcGIS Client API",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 3,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Esri's ArcGIS is a geographic information system (GIS) for working with maps and geographic information. It is used for: creating and using maps; compiling geographic data; analyzing mapped information; sharing and discovering geographic information; using maps and geographic information in a range of applications; and managing geographic information in a database (Source Wikipedia)"
-}, {
-  "name" : "HTML",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 23,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "<quality issue> HyperText Markup Language is the standard markup language used to create web pages."
-}, {
-  "name" : "jQuery",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 12,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "jQuery is a cross-platform JavaScript library designed to simplify the client-side scripting of HTML.(sourced Wikipedia)"
-}, {
-  "name" : "Kibana",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 2,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "By exploring these networks, you will be able to understand your data in whole new ways,"
-}, {
-  "name" : "Oracle APEX",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "Windows Presentation Foundation (WPF)",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 2,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "i2 Analysts Notebook",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : "http://www-03.ibm.com/software/products/en/analysts-notebook/",
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "IBM network oriented analysis tool popular with police forces, used in Soda"
-}, {
-  "name" : "Mapfish Print",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "Rocket AeroText",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "Oracle Internet Directory",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 2,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "OWSM",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "Autonomy",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "Cassandra",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "Lucene",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 6,
-  "detailUrl" : null,
-  "customerStrategic" : true,
-  "description" : "Apache Lucene is a free/open source information retrieval software library(sourced Wikipedia)"
-}, {
-  "name" : "Oracle Text",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 5,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Oracle Text is a tool that enables building text query applications and document classification applications. Oracle Text provides indexing, word and theme searching, and viewing capabilities for text."
-}, {
-  "name" : "SAS Data Integration Studio",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 3,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "SAS Data Integration Studio is a visual design tool that simplifies the construction, execution and maintenance of enterprise data integration processes."
-}, {
-  "name" : "ASN.1",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "Microsoft (MSMQ)",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "Software AG",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "Apache Axis2",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "Hibernate",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 10,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Hibernate ORM is an object-relational mapping library for the Java language, providing a framework for mapping an object-oriented domain model to a traditional relational database. (source Wikipedia)"
-}, {
-  "name" : "JSP",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 2,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "Newtonsoft JSON.NET",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "High-performance JSON framework for .NET "
-}, {
-  "name" : "NLog",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "NLog is a free logging platform for .NET, Silverlight and Windows Phone."
-}, {
-  "name" : "Apache MyFaces",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 2,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "Apache Tomahawk",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "Apache Trinidad",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "ASP.Net",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 6,
-  "detailUrl" : null,
-  "customerStrategic" : true,
-  "description" : "ASP.NET is an open source server-side Web application framework designed for Web development to produce dynamic Web pages. It was developed by Microsoft to allow programmers to build dynamic web sites, web applications and web services (source Wikipedia)"
-}, {
-  "name" : "DevExpress",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 2,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "Eclipse RCP",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : true,
-  "description" : null
-}, {
-  "name" : "GWT",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "Java SWT",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "JavaFX",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "JFace",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "JSF",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 6,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "JavaServer Faces (JSF) is a Java specification for building component-based user interfaces for web applications. It was formalized as a standard through the Java Community Process and is part of the Java Platform, Enterprise Edition. (sourced Wikipedia)"
-}, {
-  "name" : "Prime Faces",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "Swing",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "Vaadin",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Vaadin is a Java framework for building modern web applications. https://vaadin.com/home"
-}, {
-  "name" : "VB.NET Winforms",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Windows GUI framework"
-}, {
-  "name" : "yFiles",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "yFiles for Java is an extensive Java� class librarythat provides algorithms and components enabling the analysis, visualization, and the automatic layout of graphs, diagrams, and networks. http://www.yworks.com/en/products_yfiles_about.html "
-}, {
-  "name" : "OpenNLP",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : "https://opennlp.apache.org/",
-  "blipSize" : 2,
-  "detailUrl" : "http://connect/communities/sigs/naturallanguageprocessing/Pages/default.aspx",
-  "customerStrategic" : false,
-  "description" : "The Apache OpenNLP library is a machine learning based toolkit for the processing of natural language text."
-}, {
-  "name" : "Tableau",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "\"Excel on steroids\" - BI / analysis platform"
-}, {
-  "name" : "YarcData",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "The YarcData Urika graph appliance is a purpose built solution for Big Data relationship analytics."
-}, {
-  "name" : "Apache Accumulo",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : true,
-  "description" : "Apache Accumulo is a computer software project that developed a sorted, distributed key/value store based on the BigTable technology from Google.[1] It is a system built on top of Apache Hadoop, Apache ZooKeeper, and Apache Thrift. Written in Java, Accumulo has cell-level access labels and server-side programming mechanisms."
-}, {
-  "name" : "h2",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "H2 is a relational database management system written in Java. It can be embedded in Java applications or run in the client-server mode.[1] The disk footprint (size of the jar file) is about 1.5 MB"
-}, {
-  "name" : "MongoDB",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 5,
-  "detailUrl" : "http://connect/Communities/SIGs/Bytesize/Documents/Introduction%20to%20MongoDB_V1%200.pptx",
-  "customerStrategic" : true,
-  "description" : "MongoDB (from \"humongous\") is a cross-platform document-oriented database. Classified as a NoSQL database, MongoDB eschews the traditional table-based relational database structure in favor of JSON-like documents with dynamic schemas (MongoDB calls the format BSON), making the integration of data in certain types of applications easier and faster. (sourced Wikipedia)"
-}, {
-  "name" : "Neo4j",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Native graph database (Property Graph model)"
-}, {
-  "name" : "PostGIS",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 1,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "PostGIS is a spatial database extender for PostgreSQL object-relational database. It adds support for geographic objects allowing location queries to be run in SQL "
-}, {
-  "name" : "Denodo",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : "http://www.denodo.com/en/index.php",
-  "blipSize" : 2,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name" : "Kapow",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : "http://www.kapowsoftware.com/",
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Data integration platform"
-}, {
-  "name" : "NodeJS",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : "http://nodejs.org/",
-  "blipSize" : 2,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Serverside Javascript see http://www.toptal.com/nodejs/why-the-hell-would-i-use-node-js"
-}, {
-  "name" : "Bootstrap",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 4,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : "Bootstrap is a free collection of tools for creating websites and web applications. It contains HTML and CSS-based design templates for typography, forms, buttons, navigation and other interface components, as well as optional JavaScript extensions.  (sourced Wikipedia)"
-}, {
-  "name" : "Foundation",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"WorldWind",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"BASIS Technology",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"UIMA",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"React",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"Stanford CoreNLP",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"Apache Jena",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"Apache Flume",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"OpenCV",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"RESTEasy",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"Oozie",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"JUNG",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"Prefuse",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"Apache Kafka",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"Lexalytics",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"Google Knoweledge Vault",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"SWT (standard widget toolkit)",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"GATE",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"EmberJS",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"LibreOffice",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"FRED",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"Leidos DigitalEdge",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"JMS",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"Text-Analysis",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"Apache Camel",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"Apache Spark",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"Apache Clerezza",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"NetOwl",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"Apache Nutch",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"Groovy",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"PostgreSQL",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"Tinkerpop",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"Apache Lucene",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"NLTK",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"Pingar",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"ElasticSearch",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"Language-Detection",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"Apache Stanbol",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"Hadoop Ecosystem",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"Hawt.io",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"Linkurious",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}, {
-  "name":"OrientDB",
-  "techGrouping" : "Solution Technology",
-  "id" : null,
-  "url" : null,
-  "blipSize" : 0,
-  "detailUrl" : null,
-  "customerStrategic" : false,
-  "description" : null
-}
-
-
- ]
+"technologies":[
+  {
+    "name": "Bamboo",
+    "id": 1,
+    "description": "Atlassian continuous integration product",
+    "url": "https://www.atlassian.com/software/bamboo?_mid=3d70cbc3514c9939834e58b5e93de810&gclid=CObdjfnCmsECFcoBwwodIq0ALg",
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Dev Tool"
+  },
+  {
+    "name": "C++",
+    "id": 2,
+    "description": "C++ is a general-purpose programming language. It has imperative, object-oriented and generic programming features, while also providing the facilities for low-level memory manipulation.",
+    "url": "http://en.wikipedia.org/wiki/C%2B%2B",
+    "blipSize": 11,
+    "detailUrl": "http://connect/communities/sigs/cplus/pages/default.aspx",
+    "customerStrategic": true,
+    "techGrouping": "Dev Language"
+  },
+  {
+    "name": ".Net",
+    "id": 3,
+    "description": ".NET Framework is a software framework developed by Microsoft that runs primarily on Microsoft Windows. It includes a large class library known as Framework Class Library (FCL) and provides language interoperability (each language can use code written in other languages) across several programming languages. (source Wikipedia)",
+    "url": "http://www.microsoft.com/net",
+    "blipSize": 20,
+    "detailUrl": "http://connect/communities/sigs/net/Pages/default.aspx",
+    "customerStrategic": false,
+    "techGrouping": "Dev Language"
+  },
+  {
+    "name": "C#",
+    "id": 4,
+    "description": "Microsoft programming language",
+    "url": null,
+    "blipSize": 9,
+    "detailUrl": null,
+    "customerStrategic": true,
+    "techGrouping": "Dev Language"
+  },
+  {
+    "name": "Java EE",
+    "id": 5,
+    "description": "Java Platform, Enterprise Edition or Java EE is Oracle's enterprise Java computing platform. The platform provides an API and runtime environment for developing and running enterprise software, including network and web services, and other large-scale, multi-tiered, scalable, reliable, and secure network applications. Java EE extends the Java Platform, Standard Edition (Java SE), providing an API for object-relational mapping, distributed and multi-tier architectures, and web services. (source Wikipedia)",
+    "url": null,
+    "blipSize": 12,
+    "detailUrl": "http://connect/Communities/SIGs/Java/Pages/default.aspx",
+    "customerStrategic": true,
+    "techGrouping": "Dev Language"
+  },
+  {
+    "name": "Java SE",
+    "id": 6,
+    "description": "Java Platform, Standard Edition is a widely used platform for development and deployment of portable applications for desktop and server environments. Java SE uses the object-oriented Java programming language (Source Wikipedia)",
+    "url": null,
+    "blipSize": 17,
+    "detailUrl": "http://connect/Communities/SIGs/Java/Pages/default.aspx",
+    "customerStrategic": true,
+    "techGrouping": "Dev Language"
+  },
+  {
+    "name": "Python",
+    "id": 7,
+    "description": "Python is a widely used general-purpose, high-level programming language. Its design philosophy emphasizes code readability, and its syntax allows programmers to express concepts in fewer lines of code than would be possible in languages such as C. (Source Wikipedia)",
+    "url": null,
+    "blipSize": 13,
+    "detailUrl": "http://connect/communities/sigs/python/Pages/default.aspx",
+    "customerStrategic": false,
+    "techGrouping": "Dev Language"
+  },
+  {
+    "name": "Shell Script",
+    "id": 8,
+    "description": "A shell script is a computer program designed to be run by the Unix shell, a command line interpreter. The various dialects of shell scripts are considered to be scripting languages. Typical operations performed by shell scripts include file manipulation, program execution, and printing text.",
+    "url": "http://en.wikipedia.org/wiki/Shell_script",
+    "blipSize": 16,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Dev Language"
+  },
+  {
+    "name": "SQL",
+    "id": 9,
+    "description": "SQL is a special-purpose programming language designed for managing data held in a relational database management system (RDBMS), or for stream processing in a relational data stream management system (RDSMS).",
+    "url": "http://en.wikipedia.org/wiki/SQL",
+    "blipSize": 10,
+    "detailUrl": null,
+    "customerStrategic": true,
+    "techGrouping": "Dev Language"
+  },
+  {
+    "name": "XPath",
+    "id": 10,
+    "description": "XPath, the XML Path Language, is a query language for selecting nodes from an XML document.",
+    "url": null,
+    "blipSize": 3,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Dev Language"
+  },
+  {
+    "name": "XSD",
+    "id": 11,
+    "description": "XSD (XML Schema Definition), a recommendation of the World Wide Web Consortium (W3C), specifies how to formally describe the elements in an Extensible Markup Language (XML) document. It can be used by programmers to verify each piece of item content in a document.",
+    "url": "http://en.wikipedia.org/wiki/XML_Schema_%28W3C%29",
+    "blipSize": 4,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Dev Language"
+  },
+  {
+    "name": "XSLT",
+    "id": 12,
+    "description": "XSLT (Extensible Stylesheet Language Transformations) is a language for transforming XML documents into other XML documents, or other objects such as HTML for web pages, plain text or into XSL Formatting Objects which can then be converted to PDF, PostScript and PNG.(Source Wikipedia)",
+    "url": null,
+    "blipSize": 5,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Dev Language"
+  },
+  {
+    "name": "COM/ActiveX",
+    "id": 13,
+    "description": "ActiveX is a software framework created by Microsoft that adapts its earlier Component Object Model (COM) and Object Linking and Embedding (OLE) technologies for content downloaded from a network, particularly in the context of the World Wide Web. It was introduced in 1996 and is commonly used in its Windows operating system. In principle it is not dependent on Microsoft Windows, but in practice, most ActiveX controls require either Microsoft Windows or a Windows emulator. Most also require the client to be running on Intel x86 hardware, because they contain compiled code.",
+    "url": "http://en.wikipedia.org/wiki/ActiveX",
+    "blipSize": 2,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Dev Language"
+  },
+  {
+    "name": "EMITE",
+    "id": 14,
+    "description": "XMPP extensions",
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Hessian",
+    "id": 15,
+    "description": "Binary web service protocol",
+    "url": "http://en.wikipedia.org/wiki/Hessian_(Web_service_protocol)",
+    "blipSize": 2,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Owl",
+    "id": 16,
+    "description": "The W3C Web Ontology Language (OWL) is a Semantic Web language designed to represent rich and complex knowledge about things, groups of things, and relations between things.",
+    "url": "http://www.w3.org/2001/sw/wiki/OWL",
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "PL/SQL",
+    "id": 17,
+    "description": "PL/SQL (Procedural Language/Structured Query Language) is Oracle Corporation's procedural language extension for SQL and the Oracle relational database (source Wikipedia)",
+    "url": null,
+    "blipSize": 12,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Ruby",
+    "id": 18,
+    "description": "Ruby is a dynamic, reflective, object-oriented, general-purpose programming language. (Source Wikipedia)",
+    "url": null,
+    "blipSize": 3,
+    "detailUrl": null,
+    "customerStrategic": true,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Stored Procedures",
+    "id": 19,
+    "description": "A stored procedure is a subroutine available to applications that access a relational database system. A stored procedure (sometimes called a proc, storp, sproc, StoPro, StoredProc, StoreProc, sp or SP) is actually stored in the database data dictionary. Typical use for stored procedures include data validation (integrated into the database) or access control mechanisms. Furthermore, stored procedures can consolidate and centralize logic that was originally implemented in applications. Extensive or complex processing that requires execution of several SQL statements is moved into stored procedures, and all applications call the procedures. One can use nested stored procedures by executing one stored procedure from within another.",
+    "url": "http://en.wikipedia.org/wiki/Stored_procedure",
+    "blipSize": 9,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "VB",
+    "id": 20,
+    "description": "Visual Basic is a third-generation event-driven programming language and integrated development environment (IDE) from Microsoft for its COM programming model first released in 1991. Microsoft intended Visual Basic to be relatively easy to learn and use. Visual Basic was derived from BASIC and enables the rapid application development (RAD) of graphical user interface (GUI) applications, access to databases using Data Access Objects, Remote Data Objects, or ActiveX Data Objects, and creation of ActiveX controls and objects.",
+    "url": "http://en.wikipedia.org/wiki/Visual_Basic",
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": true,
+    "techGrouping": "Dev Language"
+  },
+  {
+    "name": "VB.NET",
+    "id": 21,
+    "description": "Visual Basic .NET (VB.NET) is a multi-paradigm, high level programming language, implemented on the .NET Framework.(Source Wikipedia)",
+    "url": "http://en.wikipedia.org/wiki/Visual_Basic_.NET",
+    "blipSize": 3,
+    "detailUrl": null,
+    "customerStrategic": true,
+    "techGrouping": "Dev Language"
+  },
+  {
+    "name": "VBA",
+    "id": 22,
+    "description": "Visual Basic for Applications (VBA) is an implementation of Microsoft's event-driven programming language, Visual Basic 6, and its associated integrated development environment (IDE). Visual Basic for Applications enables building user-defined functions (UDFs), automating processes and accessing Windows API and other low-level functionality through dynamic-link libraries (DLLs). It supersedes and expands on the abilities of earlier application-specific macro programming languages such as Word's WordBasic. It can be used to control many aspects of the host application, including manipulating user interface features, such as menus and toolbars, and working with custom user forms or dialog boxes.",
+    "url": "http://en.wikipedia.org/wiki/Visual_Basic_for_Applications",
+    "blipSize": 0,
+    "detailUrl": "http://connect/Communities/SIGs/Bytesize/Documents/MS%20VBA%20Part1%20-%20What%20and%20why.wav",
+    "customerStrategic": false,
+    "techGrouping": "Dev Language"
+  },
+  {
+    "name": "Jira",
+    "id": 23,
+    "description": "Jira is a proprietary issue tracking product, developed by Atlassian. It provides bug tracking, issue tracking, and project management functions. (source Wikipedia)",
+    "url": "https://www.atlassian.com/software/jira",
+    "blipSize": 34,
+    "detailUrl": "http://connect/communities/sigs/jira/Pages/default.aspx",
+    "customerStrategic": false,
+    "techGrouping": "Dev Tool"
+  },
+  {
+    "name": "Maven",
+    "id": 24,
+    "description": "Maven is a build automation tool used primarily for Java projects. Maven addresses two aspects of building software: First, it describes how software is built, and second, it describes its dependencies.  (Source Wikipedia)",
+    "url": null,
+    "blipSize": 13,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Dev Tool"
+  },
+  {
+    "name": "Puppet",
+    "id": 25,
+    "description": "Puppet Enterprise helps you automate repetitive tasks, make rapid changes and deploy critical applications, on prem or in the cloud. ",
+    "url": "http://puppetlabs.com/",
+    "blipSize": 5,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Sonotype Nexus",
+    "id": 26,
+    "description": "Nexus is a repository manager. It allows you to proxy, collect, and manage your dependencies so that you are not constantly juggling a collection of JARs. It makes it easy to distribute your software. Internally, you configure your build to publish artifacts to Nexus and they then become available to other developers. You get the benefits of having your own ‘central’, and there is no easier way to collaborate.",
+    "url": "http://www.sonatype.com/nexus",
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Dev Tool"
+  },
+  {
+    "name": "Swagger",
+    "id": 27,
+    "description": "Swagger is a specification for defining the interface of a REST Web Service (source Wikipedia)",
+    "url": "https://helloreverb.com/developers/swagger",
+    "blipSize": 2,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Dev Tool"
+  },
+  {
+    "name": "Enterprise Architect",
+    "id": 28,
+    "description": "Sparx Systems Enterprise Architect is a visual modeling and design tool ",
+    "url": "http://www.sparxsystems.com/products/ea/",
+    "blipSize": 23,
+    "detailUrl": "http://connect/Communities/SIGs/Bytesize/Documents/An%20Intro%20to%20Sparx%20Enterprise%20Architect.wav",
+    "customerStrategic": false,
+    "techGrouping": "Dev Tool"
+  },
+  {
+    "name": "Git",
+    "id": 29,
+    "description": "Git is a distributed revision control and source code management system with an emphasis on speed, data integrity, and support for distributed, non-linear workflows.(sourced Wikipedia)",
+    "url": null,
+    "blipSize": 22,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Dev Tool"
+  },
+  {
+    "name": "Jenkins",
+    "id": 30,
+    "description": "Jenkins is an open source continuous integration tool written in Java. The project was forked from Hudson after a dispute with Oracle. (source Wikipedia)",
+    "url": null,
+    "blipSize": 20,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Dev Tool"
+  },
+  {
+    "name": "MSBuild",
+    "id": 31,
+    "description": "build system for Visual Studio",
+    "url": null,
+    "blipSize": 5,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Dev Tool"
+  },
+  {
+    "name": "Eclipse",
+    "id": 32,
+    "description": "Eclipse is an integrated development environment (IDE). It contains a base workspace and an extensible plug-in system for customizing the environment. (source Wikipedia)",
+    "url": null,
+    "blipSize": 18,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Dev Tool"
+  },
+  {
+    "name": "Visual Studio",
+    "id": 33,
+    "description": "Microsoft Visual Studio is an integrated development environment (IDE) from Microsoft. It is used to develop computer programs for Microsoft Windows, as well as web sites, web applications and web services. (source Wikipedia)",
+    "url": null,
+    "blipSize": 17,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Dev Tool"
+  },
+  {
+    "name": "MooD",
+    "id": 34,
+    "description": "MooD is a tool certified by TOGAF architecture. It allows modelling capabilities architecture and also building organisational knowledge repository. This tool differs from others because of its features that help the interactive support of the work sessions. With Mood, it is possible to model the Organisation at different levels during the sessions, without using a piece of paper, in any phase of the projects. The information is easily released in a PowerPoint presentation, HTLM file or published in the Company’s intranet.",
+    "url": null,
+    "blipSize": 3,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Dev Tool"
+  },
+  {
+    "name": "XML Spy",
+    "id": 35,
+    "description": "XMLSpy is an XML editor and integrated development environment (IDE) developed by Altova. XMLSpy allows developers to create XML-based and Web services applications using technologies such as XML, XBRL, XML Schema, XSLT, XPath, XQuery, WSDL and SOAP. (source Wikipedia)",
+    "url": null,
+    "blipSize": 10,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Dev Tool"
+  },
+  {
+    "name": "TortoiseSVN",
+    "id": 36,
+    "description": "TortoiseSVN is a windows source controll tool built around Apache SVN. TortoiseMerge is a diff / merge software tool for windows with a tight integration for TortoiseSVN",
+    "url": null,
+    "blipSize": 5,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Dev Tool"
+  },
+  {
+    "name": "IBM RTC",
+    "id": 37,
+    "description": "Rational Team Concert is a software development team collaboration tool developed by the Rational Software brand of IBM. (Source Wikipedia)",
+    "url": null,
+    "blipSize": 3,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Dev Tool"
+  },
+  {
+    "name": "Team Foundation Server",
+    "id": 38,
+    "description": "Team Foundation Server (commonly abbreviated to TFS) is a Microsoft product which provides source code management (either via Team Foundation Version Control or Git), reporting, requirements management, project management (for both agile software development and waterfall teams), automated builds, lab management, testing and release management capabilities. It covers the entire Application Lifecycle Management. (Source Wikipedia)",
+    "url": null,
+    "blipSize": 6,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Trac",
+    "id": 39,
+    "description": "Trac is an enhanced wiki and issue tracking system for software development projects. Trac uses a minimalistic approach to web-based software project management. Trac should impose as little as possible on a team's established development process and policies. It provides an interface to ​Subversion and ​Git (or other version control systems), an integrated Wiki and convenient reporting facilities.",
+    "url": "http://trac.edgewall.org/",
+    "blipSize": 2,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Dev Tool"
+  },
+  {
+    "name": "Hudson",
+    "id": 40,
+    "description": "Hudson is a continuous integration (CI) tool written in Java, which runs in a servlet container, such as Apache Tomcat. Wikipedia, http://hudson-ci.org/  ",
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Team Foundation Server_b",
+    "id": 41,
+    "description": "Team Foundation Server (commonly abbreviated to TFS) is a Microsoft product which provides source code management (either via Team Foundation Version Control or Git), reporting, requirements management, project management (for both agile software development and waterfall teams), automated builds, lab management, testing and release management capabilities. It covers the entire Application Lifecycle Management. (Source Wikipedia)",
+    "url": null,
+    "blipSize": 5,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "NetBeans",
+    "id": 42,
+    "description": "NetBeans is an integrated development environment (IDE) for developing primarily with Java, but also with other languages, in particular PHP, C/C++, and HTML5 (source Wikipedia)",
+    "url": null,
+    "blipSize": 4,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Dev Tool"
+  },
+  {
+    "name": "Perforce",
+    "id": 43,
+    "description": "Perforce is a commercial, proprietary revision control system developed by Perforce Software, Inc.",
+    "url": "http://www.perforce.com",
+    "blipSize": 12,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Dev Tool"
+  },
+  {
+    "name": "Team Foundation Server_c",
+    "id": 44,
+    "description": "Team Foundation Server (commonly abbreviated to TFS) is a Microsoft product which provides source code management (either via Team Foundation Version Control or Git), reporting, requirements management, project management (for both agile software development and waterfall teams), automated builds, lab management, testing and release management capabilities. It covers the entire Application Lifecycle Management. (Source Wikipedia)",
+    "url": null,
+    "blipSize": 14,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Chef",
+    "id": 45,
+    "description": "Chef is a configuration management tool written in Ruby and Erlang. It uses a pure-Ruby, domain-specific language (DSL) for writing system configuration \"recipes\". Chef is used to streamline the task of configuring and maintaining a company's servers, and can integrate with cloud-based platforms such as Rackspace, Internap, Amazon EC2, Google Cloud Platform, OpenStack, SoftLayer, and Microsoft Azure to automatically provision and configure new machines. Chef contains solutions for both small and large scale systems, with features and pricing for the respective ranges.",
+    "url": "http://en.wikipedia.org/wiki/Chef_%28software%29",
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Dev Tool"
+  },
+  {
+    "name": "npm",
+    "id": 46,
+    "description": "npm is a package manager for JavaScript, and is the default for Node.js. As of Node.js version 0.6.3, npm is bundled and installed automatically with the environment. npm runs through the command line and manages dependencies for an application. It also allows users to install Node.js applications that are available on the npm registry. npm is written entirely in JavaScript and was developed by Isaac Z. Schlueter as a result of the frustrations he had experienced while working with CommonJS, and with inspiration from similar projects for PHP (PEAR) and Perl (CPAN).",
+    "url": "https://www.npmjs.com/",
+    "blipSize": 3,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Dev Tool"
+  },
+  {
+    "name": "Lumension",
+    "id": 47,
+    "description": "Lumension® Endpoint Management and Security Suite unifies the functions of IT operations and security through a single console, server and agent architecture to seamlessly and more effectively address IT risk and systems management requirements across the enterprise.",
+    "url": "https://www.lumension.com/endpoint-management-security-suite.aspx",
+    "blipSize": 3,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Platform"
+  },
+  {
+    "name": "Drupal",
+    "id": 48,
+    "description": "CMS",
+    "url": "https://www.drupal.org/",
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Sharepoint",
+    "id": 49,
+    "description": "Microsoft Document management system",
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Apache",
+    "id": 50,
+    "description": "The Apache HTTP Server Project is an effort to develop and maintain an open-source HTTP server for modern operating systems including UNIX and Windows NT. The goal of this project is to provide a secure, efficient and extensible server that provides HTTP services in sync with the current HTTP standards. Apache httpd was launched in 1995, has been the most popular web server on the Internet since April 1996, and celebrates its 20th birthday as a project this February.",
+    "url": "http://httpd.apache.org",
+    "blipSize": 4,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Platform"
+  },
+  {
+    "name": "Jboss",
+    "id": 51,
+    "description": "Jboss is commonly used to refer to the open source Java application server.",
+    "url": null,
+    "blipSize": 5,
+    "detailUrl": null,
+    "customerStrategic": true,
+    "techGrouping": "Platform"
+  },
+  {
+    "name": "Microsoft IIS",
+    "id": 52,
+    "description": "Internet Information Services is an extensible web server created by Microsoft for use with Windows NT family. IIS supports HTTP, HTTPS, FTP, FTPS, SMTP and NNTP. (source Wikipedia)",
+    "url": null,
+    "blipSize": 12,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Platform"
+  },
+  {
+    "name": "Oracle Weblogic",
+    "id": 53,
+    "description": "Oracle WebLogic Server is a Java EE application server currently developed by Oracle Corporation. (Source Wikipedia)",
+    "url": null,
+    "blipSize": 2,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Platform"
+  },
+  {
+    "name": "Tomcat",
+    "id": 54,
+    "description": "Apache Tomcat is an open source web server and servlet container developed by the Apache Software Foundation. Tomcat implements the Java Servlet and the JavaServer Pages (JSP) specifications from Sun Microsystems, and provides a \"pure Java\" HTTP web server environment for Java code to run in. (source Wikipedia)",
+    "url": null,
+    "blipSize": 11,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Platform"
+  },
+  {
+    "name": "Citrix",
+    "id": 55,
+    "description": "Citrix Systems, Inc. is an American multinational software company founded in 1989 that provides server, application and desktop virtualization, networking, software-as-a-service (SaaS), and cloud computing technologies, including Xen open-source products. Citrix currently services around 330,000 organizations worldwide and is based in Fort Lauderdale, Florida, in the Miami metropolitan area, with subsidiary operations in California and Massachusetts, and additional development centers in Canada, Germany, Denmark, the United Kingdom, India and Australia.",
+    "url": "http://www.citrix.com",
+    "blipSize": 3,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Platform"
+  },
+  {
+    "name": "VirtualBox",
+    "id": 56,
+    "description": "VirtualBox is a powerful x86 and AMD64/Intel64 virtualization product for enterprise as well as home use. Not only is VirtualBox an extremely feature rich, high performance product for enterprise customers, it is also the only professional solution that is freely available as Open Source Software under the terms of the GNU General Public License (GPL) version 2.",
+    "url": "https://www.virtualbox.org",
+    "blipSize": 6,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Platform"
+  },
+  {
+    "name": "VMWare",
+    "id": 57,
+    "description": "This could be one of Workstation/Fusion/Player/vSphere/Server",
+    "url": "http://www.vmware.com/uk",
+    "blipSize": 18,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Platform"
+  },
+  {
+    "name": "Alfresco",
+    "id": 58,
+    "description": "open platform for business critical document management / content management",
+    "url": "https://www.atlassian.com/software/bamboo?_mid=3d70cbc3514c9939834e58b5e93de810&gclid=CObdjfnCmsECFcoBwwodIq0ALg",
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "ESRI ArcGIS Server",
+    "id": 59,
+    "description": "GIS application server for map / geo applications",
+    "url": null,
+    "blipSize": 3,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Platform"
+  },
+  {
+    "name": "Linux",
+    "id": 60,
+    "description": "Linux is a Unix-like and mostly POSIX-compliant computer operating system assembled under the model of free and open source software development and distribution. (source Wikipedia)",
+    "url": null,
+    "blipSize": 26,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Platform"
+  },
+  {
+    "name": "Windows Server",
+    "id": 61,
+    "description": "Windows Server is a brand name for a group of server operating systems released by Microsoft. It includes all Windows operating systems that have \"Windows Server\" (apart from Home and MultiPoint) in their names, plus Windows 2000, but not any other Microsoft product. (source Wikipedia)",
+    "url": null,
+    "blipSize": 24,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Platform"
+  },
+  {
+    "name": "Oracle Application Server",
+    "id": 62,
+    "description": "Oracle Internet Application Server provides a single integrated packaged solution for middleware infrastructure including Oracle Containers for J2EE, Oracle Web Cache, Oracle HTTP Server, Oracle Forms, Oracle Reports, Oracle Portal and Oracle Discoverer. Also included in this infrastructure are integrated security, management and integration technologies.",
+    "url": "http://www.oracle.com/technetwork/middleware/ias/overview/index.html",
+    "blipSize": 2,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Platform"
+  },
+  {
+    "name": "Palantir",
+    "id": 63,
+    "description": "Data analysis environment",
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "SAS",
+    "id": 64,
+    "description": "SAS (Statistical Analysis System) is a software suite developed by SAS Institute for advanced analytics, business intelligence, data management, and predictive analytics.",
+    "url": "http://www.sas.com",
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "SAS Dataflux",
+    "id": 65,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "SAS Enterprise Guide",
+    "id": 66,
+    "description": null,
+    "url": null,
+    "blipSize": 2,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Splunk",
+    "id": 67,
+    "description": "Splunk captures, indexes and correlates real-time data in a searchable repository from which it can generate graphs, reports, alerts, dashboards and visualizations.",
+    "url": "http://www.splunk.com",
+    "blipSize": 3,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Platform"
+  },
+  {
+    "name": "Wildfly",
+    "id": 68,
+    "description": "JEE Application server replacing JBoss",
+    "url": null,
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Platform"
+  },
+  {
+    "name": "Amazon AWS",
+    "id": 69,
+    "description": "Amazon Web Services (AWS) is a collection of remote computing services, also called web services, that make up a cloud computing platform offered by Amazon.com. These services are based out of 11 geographical regions across the world. The most central and well-known of these services are Amazon EC2 and Amazon S3. These products are marketed to large and small companies as a service to provide large computing capacity much faster and cheaper than the client company building an actual physical server farm. (which typically means many servers)",
+    "url": "http://aws.amazon.com",
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Platform"
+  },
+  {
+    "name": "Infosphere MDM",
+    "id": 70,
+    "description": "InfoSphere Master Data Management (MDM) is the most complete, proven and powerful MDM solution with collaborative and operational capabilities. InfoSphere MDM manages master data for single or multiple domains – customers, patients, citizens, suppliers, locations, products, services offerings, accounts and more – for improving application & business process effectiveness.",
+    "url": "http://www-03.ibm.com/software/products/en/infosphere-master-data-management",
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "MapReduce",
+    "id": 71,
+    "description": "MapReduce is a programming model and an associated implementation for processing and generating large data sets with a parallel, distributed algorithm on a cluster",
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "QlikView",
+    "id": 72,
+    "description": "The QlikView Business Discovery platform aims to deliver self-service BI.(Source Wikipedia)",
+    "url": null,
+    "blipSize": 5,
+    "detailUrl": "http://connect/Communities/SIGs/Bytesize/Documents/What%20makes%20Qlikview%20different.pptx",
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Oracle BPEL",
+    "id": 73,
+    "description": "Oracle BPEL Process Manager is a BPEL engine that is a member of the Oracle Fusion Middleware family of products. It enables enterprises to orchestrate disparate applications and Web services into business processes. The ability to quickly build and deploy these processes in a standards-based manner delivers critical functionality for developing a Service-Oriented Architecture (source Wikipedia)",
+    "url": null,
+    "blipSize": 3,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Oracle BPM",
+    "id": 74,
+    "description": "Oracle Business Process Management (BPM), a member of the Oracle Business Process Management Suite, is a complete set of tools for creating, executing, and optimizing business processes. The suite enables unparalleled collaboration between business and IT to automate and optimize business processes.",
+    "url": "http://www.oracle.com/technetwork/middleware/bpm/overview/index.html",
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "AllegroGraph",
+    "id": 75,
+    "description": "AllegroGraph® is a modern, high-performance, persistent graph database. AllegroGraph uses efficient memory utilization in combination with disk-based storage, enabling it to scale to billions of quads while maintaining superior performance. AllegroGraph supports SPARQL, RDFS++, and Prolog reasoning from numerous client applications.",
+    "url": "http://franz.com/agraph/allegrograph",
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Elastic Search",
+    "id": 76,
+    "description": "Elasticsearch is a search server based on Lucene. It provides a distributed, multitenant-capable full-text search engine with a RESTful web interface and schema-free JSON documents. (Source Wikipedia)",
+    "url": "http://www.elasticsearch.org/",
+    "blipSize": 7,
+    "detailUrl": null,
+    "customerStrategic": true,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Hadoop",
+    "id": 77,
+    "description": "Apache Hadoop is an open-source software framework for storage and large-scale processing of data-sets on clusters of commodity hardware. (Source Wikipedia)",
+    "url": null,
+    "blipSize": 2,
+    "detailUrl": "http://connect/Communities/SIGs/Bytesize/Documents/Bytesize%20Hadoop%20and%20MapReduce%20-%20An%20Overview.ppt",
+    "customerStrategic": true,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "SQL Server",
+    "id": 78,
+    "description": "Microsoft SQL Server is a relational database management system developed by Microsoft (sourced Wikipedia)",
+    "url": null,
+    "blipSize": 9,
+    "detailUrl": null,
+    "customerStrategic": true,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Talend",
+    "id": 79,
+    "description": "Talend�s data integration products provide an extensible, highly-performant, open source set of tools to access, transform and integrate data from any business system in real time or batch to meet both operational and analytical data integration needs",
+    "url": "https://www.talend.com/",
+    "blipSize": 2,
+    "detailUrl": "http://connect/teamshare/DataPractice/Accelerating%20Data%20Value/Intro%20to%20ETL%20-%202008.ppt",
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Apache ActiveMQ",
+    "id": 80,
+    "description": "Apache ActiveMQ is an open source message broker written in Java together with a full Java Message Service (JMS) client. It provides \"Enterprise Features\" which in this case means fostering the communication from more than one client or server. Supported clients include Java via JMS 1.1 as well as several other \"cross language\" clients. The communication is managed with features such as computer clustering and ability to use any database as a JMS persistence provider besides virtual memory, cache, and journal persistency.",
+    "url": "http://activemq.apache.org",
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Camel",
+    "id": 81,
+    "description": "Apache Camel is a rule-based routing and mediation engine that provides a Java object-based implementation of the Enterprise Integration Patterns using an API (or declarative Java Domain Specific Language) to configure routing and mediation rules. (sourced Wikipedia)",
+    "url": "http://camel.apache.org/",
+    "blipSize": 5,
+    "detailUrl": null,
+    "customerStrategic": true,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Jersey",
+    "id": 82,
+    "description": "Jersey RESTful Web Services framework is an open source, production quality framework for developing RESTful Web Services in Java that provides support for JAX-RS APIs and serves as a JAX-RS (JSR 311 & JSR 339) Reference Implementation.",
+    "url": "https://jersey.java.net",
+    "blipSize": 2,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Logstash",
+    "id": 83,
+    "description": "logstash is a tool for managing events and logs. You can use it to collect logs, parse them, and store them for later use (like, for searching).",
+    "url": null,
+    "blipSize": 2,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "ReST",
+    "id": 84,
+    "description": "Representational State Transfer (ReST) is a software architecture style consisting of guidelines and best practices for creating scalable web services.",
+    "url": "http://en.wikipedia.org/wiki/Representational_state_transfer",
+    "blipSize": 4,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "WebAPI",
+    "id": 85,
+    "description": "ASP.NET Web API is a framework that makes it easy to build HTTP services that reach a broad range of clients, including browsers and mobile devices.",
+    "url": null,
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "AngularJS",
+    "id": 86,
+    "description": "AngularJS is an open-source web application framework, maintained by Google and community, that assists with creating single-page applications, one-page web applications that only require HTML, CSS, and JavaScript on the client side. Its goal is to augment web applications with model�view�controller (MVC) capability, in an effort to make both development and testing easier. (Source Wikipedia)",
+    "url": "https://angularjs.org/#!/",
+    "blipSize": 5,
+    "detailUrl": null,
+    "customerStrategic": true,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "CSS",
+    "id": 87,
+    "description": "Cascading Style Sheets (CSS) is a style sheet language used for describing the look and formatting of a document written in a markup language.",
+    "url": null,
+    "blipSize": 13,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "D3",
+    "id": 88,
+    "description": "D3.js (or just D3 for Data-Driven Documents) is a JavaScript library for producing dynamic, interactive data visualizations in web browsers. It makes use of the widely implemented SVG, HTML5, and CSS standards. It is the successor to the earlier Protovis framework. In contrast to many other libraries, D3 allows great control over the final visual result. Its development was noted in 2011, as version 2.0.0 was released in August 2011.",
+    "url": "http://d3js.org",
+    "blipSize": 3,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "HTML5",
+    "id": 89,
+    "description": "HTML5 is the fifth revision of the core technology markup language of the Internet used for structuring and presenting content for the World Wide Web.  Its core aims have been to improve the language with support for the latest multimedia while keeping it easily readable by humans and consistently understood by computers and devices (web browsers, parsers, etc.). HTML5 is intended to subsume not only HTML 4, but also XHTML. (Source Wikipedia)",
+    "url": null,
+    "blipSize": 9,
+    "detailUrl": null,
+    "customerStrategic": true,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Javascript",
+    "id": 90,
+    "description": "JavaScript (JS) is a dynamic computer programming language.[5] It is most commonly used as part of web browsers, whose implementations allow client-side scripts to interact with the user, control the browser, communicate asynchronously, and alter the document content that is displayed.[5] It is also being used in server-side network programming (with Node.js), game development and the creation of desktop and mobile applications. (Source Wikipedia)",
+    "url": null,
+    "blipSize": 19,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Experian QuickAddress",
+    "id": 91,
+    "description": null,
+    "url": null,
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "InfoSphere Streams",
+    "id": 92,
+    "description": "Streaming analytics platform",
+    "url": "http://www-01.ibm.com/software/data/infosphere/stream-computing/",
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Active Directory",
+    "id": 93,
+    "description": "Active Directory (AD) is a directory service that Microsoft developed for Windows domain networks and is included in most Windows Server operating systems as a set of processes and services.(Source Wikipedia)",
+    "url": null,
+    "blipSize": 14,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "MySQL",
+    "id": 94,
+    "description": "MySQL is the world's second most widely used relational database management system (RDBMS) and most widely used open-source RDBMS. It is named after co-founder Michael Widenius's daughter, My. The SQL acronym stands for Structured Query Language.",
+    "url": "https://www.mysql.com",
+    "blipSize": 4,
+    "detailUrl": null,
+    "customerStrategic": true,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Oracle ",
+    "id": 95,
+    "description": "Oracle is an mature commercial industrial strength Relational Database Management System",
+    "url": null,
+    "blipSize": 27,
+    "detailUrl": null,
+    "customerStrategic": true,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "IBM MQ",
+    "id": 96,
+    "description": "IBM WebSphere MQ is a Message Oriented Middleware offering. It allows independent and potentially non-concurrent applications on a distributed system to communicate with each other. (sourced Wikipedia)",
+    "url": null,
+    "blipSize": 6,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "RabbitMQ",
+    "id": 97,
+    "description": "RabbitMQ is open source message broker software (sometimes called message-oriented middleware) that implements the Advanced Message Queuing Protocol (AMQP). The RabbitMQ server is written in the Erlang programming language and is built on the Open Telecom Platform framework for clustering and failover. Client libraries to interface with the broker are available for all major programming languages.",
+    "url": "http://www.rabbitmq.com",
+    "blipSize": 2,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "XMPP",
+    "id": 98,
+    "description": "Instant Chat messaging protocol",
+    "url": null,
+    "blipSize": 2,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "AutoMapper",
+    "id": 99,
+    "description": null,
+    "url": null,
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "EJB3",
+    "id": 100,
+    "description": "Enterprise JavaBeans (EJB) is a managed, server-side component architecture for modular construction of enterprise applications. (Source Wikipedia)",
+    "url": null,
+    "blipSize": 3,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "EntityFramework",
+    "id": 101,
+    "description": "Entity Framework (EF) is an object-relational mapper that enables .NET developers to work with relational data using domain-specific objects.",
+    "url": null,
+    "blipSize": 2,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Exchange",
+    "id": 102,
+    "description": "Microsoft Exchange Server APIs",
+    "url": null,
+    "blipSize": 2,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "log4j",
+    "id": 103,
+    "description": "Apache log4j is a Java-based logging utility (source Wikipedia)",
+    "url": null,
+    "blipSize": 4,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "log4net",
+    "id": 104,
+    "description": "The Apache log4net library is a tool to help the programmer output log statements to a variety of output targets. log4net is a port of the excellent Apache log4j framework to the Microsoft .NET runtime.",
+    "url": null,
+    "blipSize": 7,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "OpenFire",
+    "id": 105,
+    "description": "XMPP server",
+    "url": null,
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Quartz",
+    "id": 106,
+    "description": "Java based scheduling library",
+    "url": null,
+    "blipSize": 2,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Spring",
+    "id": 107,
+    "description": "The Spring Framework is an open source application framework and inversion of control container for the Java platform. The framework's core features can be used by any Java application, but there are extensions for building web applications on top of the Java EE platform. Although the framework does not impose any specific programming model, it has become popular in the Java community as an alternative to, replacement for, or even addition to the Enterprise JavaBean (EJB) model. (Source Wikipedia)",
+    "url": null,
+    "blipSize": 3,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Tika",
+    "id": 108,
+    "description": "The Apache Tika toolkit detects and extracts metadata and text content from various documents - from PPT to CSV to PDF - using existing parser libraries",
+    "url": null,
+    "blipSize": 3,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Windows Communication Foundation (WCF)",
+    "id": 109,
+    "description": "The Windows Communication Foundation (or WCF), is a runtime and a set of APIs in the .NET Framework for building connected, service-oriented applications(Source Wikipedia)",
+    "url": null,
+    "blipSize": 3,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "ESRI ArcGIS Client API",
+    "id": 110,
+    "description": "Esri's ArcGIS is a geographic information system (GIS) for working with maps and geographic information. It is used for: creating and using maps; compiling geographic data; analyzing mapped information; sharing and discovering geographic information; using maps and geographic information in a range of applications; and managing geographic information in a database (Source Wikipedia)",
+    "url": null,
+    "blipSize": 3,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "HTML",
+    "id": 111,
+    "description": "HyperText Markup Language, commonly referred to as HTML, is the standard markup language used to create web pages. It is written in the form of HTML elements consisting of tags enclosed in angle brackets (like <html> ).",
+    "url": "http://en.wikipedia.org/wiki/HTML",
+    "blipSize": 23,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "jQuery",
+    "id": 112,
+    "description": "jQuery is a cross-platform JavaScript library designed to simplify the client-side scripting of HTML.(sourced Wikipedia)",
+    "url": null,
+    "blipSize": 12,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Kibana",
+    "id": 113,
+    "description": "By exploring these networks, you will be able to understand your data in whole new ways,",
+    "url": null,
+    "blipSize": 2,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Oracle APEX",
+    "id": 114,
+    "description": null,
+    "url": null,
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Windows Presentation Foundation (WPF)",
+    "id": 115,
+    "description": null,
+    "url": null,
+    "blipSize": 2,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "i2 Analysts Notebook",
+    "id": 116,
+    "description": "IBM network oriented analysis tool popular with police forces, used in Soda",
+    "url": "http://www-03.ibm.com/software/products/en/analysts-notebook/",
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Mapfish Print",
+    "id": 117,
+    "description": null,
+    "url": null,
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Rocket AeroText",
+    "id": 118,
+    "description": null,
+    "url": null,
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Oracle Internet Directory",
+    "id": 119,
+    "description": null,
+    "url": null,
+    "blipSize": 2,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "OWSM",
+    "id": 120,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Autonomy",
+    "id": 121,
+    "description": null,
+    "url": null,
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Apache Cassandra",
+    "id": 122,
+    "description": "Apache Cassandra is an open source distributed database management system designed to handle large amounts of data across many commodity servers, providing high availability with no single point of failure. Cassandra offers robust support for clusters spanning multiple datacenters, with asynchronous masterless replication allowing low latency operations for all clients.",
+    "url": "http://cassandra.apache.org",
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Lucene",
+    "id": 123,
+    "description": "Apache Lucene is a free/open source information retrieval software library(sourced Wikipedia)",
+    "url": null,
+    "blipSize": 6,
+    "detailUrl": null,
+    "customerStrategic": true,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Oracle Text",
+    "id": 124,
+    "description": "Oracle Text is a tool that enables building text query applications and document classification applications. Oracle Text provides indexing, word and theme searching, and viewing capabilities for text.",
+    "url": null,
+    "blipSize": 5,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "SAS Data Integration Studio",
+    "id": 125,
+    "description": "SAS Data Integration Studio is a visual design tool that simplifies the construction, execution and maintenance of enterprise data integration processes.",
+    "url": null,
+    "blipSize": 3,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "ASN.1",
+    "id": 126,
+    "description": null,
+    "url": null,
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Microsoft (MSMQ)",
+    "id": 127,
+    "description": null,
+    "url": null,
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Software AG",
+    "id": 128,
+    "description": null,
+    "url": null,
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Apache Axis2",
+    "id": 129,
+    "description": null,
+    "url": null,
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Hibernate",
+    "id": 130,
+    "description": "Hibernate ORM is an object-relational mapping library for the Java language, providing a framework for mapping an object-oriented domain model to a traditional relational database. (source Wikipedia)",
+    "url": null,
+    "blipSize": 10,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "JSP",
+    "id": 131,
+    "description": "JavaServer Pages (JSP) is a technology that helps software developers create dynamically generated web pages based on HTML, XML, or other document types. Released in 1999 by Sun Microsystems, JSP is similar to PHP, but it uses the Java programming language. To deploy and run JavaServer Pages, a compatible web server with a servlet container, such as Apache Tomcat or Jetty, is required.",
+    "url": "http://en.wikipedia.org/wiki/JavaServer_Pages",
+    "blipSize": 2,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Newtonsoft JSON.NET",
+    "id": 132,
+    "description": "High-performance JSON framework for .NET ",
+    "url": null,
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "NLog",
+    "id": 133,
+    "description": "NLog is a free logging platform for .NET, Silverlight and Windows Phone.",
+    "url": null,
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Apache MyFaces",
+    "id": 134,
+    "description": null,
+    "url": null,
+    "blipSize": 2,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Apache Tomahawk",
+    "id": 135,
+    "description": null,
+    "url": null,
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Apache Trinidad",
+    "id": 136,
+    "description": null,
+    "url": null,
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "ASP.Net",
+    "id": 137,
+    "description": "ASP.NET is an open source server-side Web application framework designed for Web development to produce dynamic Web pages. It was developed by Microsoft to allow programmers to build dynamic web sites, web applications and web services (source Wikipedia)",
+    "url": null,
+    "blipSize": 6,
+    "detailUrl": null,
+    "customerStrategic": true,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "DevExpress",
+    "id": 138,
+    "description": null,
+    "url": null,
+    "blipSize": 2,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Eclipse RCP",
+    "id": 139,
+    "description": null,
+    "url": null,
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": true,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "GWT",
+    "id": 140,
+    "description": null,
+    "url": null,
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Java SWT",
+    "id": 141,
+    "description": null,
+    "url": null,
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "JavaFX",
+    "id": 142,
+    "description": null,
+    "url": null,
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "JFace",
+    "id": 143,
+    "description": null,
+    "url": null,
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "JSF",
+    "id": 144,
+    "description": "JavaServer Faces (JSF) is a Java specification for building component-based user interfaces for web applications. It was formalized as a standard through the Java Community Process and is part of the Java Platform, Enterprise Edition. (sourced Wikipedia)",
+    "url": null,
+    "blipSize": 6,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Prime Faces",
+    "id": 145,
+    "description": null,
+    "url": null,
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Swing",
+    "id": 146,
+    "description": null,
+    "url": null,
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Vaadin",
+    "id": 147,
+    "description": "Vaadin is a Java framework for building modern web applications. https://vaadin.com/home",
+    "url": null,
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "VB.NET Winforms",
+    "id": 148,
+    "description": "Windows GUI framework",
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "yFiles",
+    "id": 149,
+    "description": "yFiles for Java is an extensive Java� class librarythat provides algorithms and components enabling the analysis, visualization, and the automatic layout of graphs, diagrams, and networks. http://www.yworks.com/en/products_yfiles_about.html ",
+    "url": null,
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "OpenNLP",
+    "id": 150,
+    "description": "The Apache OpenNLP library is a machine learning based toolkit for the processing of natural language text.",
+    "url": "https://opennlp.apache.org/",
+    "blipSize": 2,
+    "detailUrl": "http://connect/communities/sigs/naturallanguageprocessing/Pages/default.aspx",
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Tableau",
+    "id": 151,
+    "description": "\"Excel on steroids\" - BI / analysis platform",
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "YarcData",
+    "id": 152,
+    "description": "The YarcData Urika graph appliance is a purpose built solution for Big Data relationship analytics.",
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Apache Accumulo",
+    "id": 153,
+    "description": "Apache Accumulo is a computer software project that developed a sorted, distributed key/value store based on the BigTable technology from Google.[1] It is a system built on top of Apache Hadoop, Apache ZooKeeper, and Apache Thrift. Written in Java, Accumulo has cell-level access labels and server-side programming mechanisms.",
+    "url": null,
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": true,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "h2",
+    "id": 154,
+    "description": "H2 is a relational database management system written in Java. It can be embedded in Java applications or run in the client-server mode.[1] The disk footprint (size of the jar file) is about 1.5 MB",
+    "url": null,
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "MongoDB",
+    "id": 155,
+    "description": "MongoDB (from \"humongous\") is a cross-platform document-oriented database. Classified as a NoSQL database, MongoDB eschews the traditional table-based relational database structure in favor of JSON-like documents with dynamic schemas (MongoDB calls the format BSON), making the integration of data in certain types of applications easier and faster. (sourced Wikipedia)",
+    "url": null,
+    "blipSize": 5,
+    "detailUrl": "http://connect/Communities/SIGs/Bytesize/Documents/Introduction%20to%20MongoDB_V1%200.pptx",
+    "customerStrategic": true,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Neo4j",
+    "id": 156,
+    "description": "Native graph database (Property Graph model)",
+    "url": null,
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "PostGIS",
+    "id": 157,
+    "description": "PostGIS is a spatial database extender for PostgreSQL object-relational database. It adds support for geographic objects allowing location queries to be run in SQL ",
+    "url": null,
+    "blipSize": 1,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Denodo",
+    "id": 158,
+    "description": null,
+    "url": "http://www.denodo.com/en/index.php",
+    "blipSize": 2,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Kapow",
+    "id": 159,
+    "description": "Data integration platform",
+    "url": "http://www.kapowsoftware.com/",
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "NodeJS",
+    "id": 160,
+    "description": "Serverside Javascript see http://www.toptal.com/nodejs/why-the-hell-would-i-use-node-js",
+    "url": "http://nodejs.org/",
+    "blipSize": 2,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Bootstrap",
+    "id": 161,
+    "description": "Bootstrap is a free collection of tools for creating websites and web applications. It contains HTML and CSS-based design templates for typography, forms, buttons, navigation and other interface components, as well as optional JavaScript extensions.  (sourced Wikipedia)",
+    "url": null,
+    "blipSize": 4,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Foundation",
+    "id": 162,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "WorldWind",
+    "id": 163,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "BASIS Technology",
+    "id": 164,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "UIMA",
+    "id": 165,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "React",
+    "id": 166,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Stanford CoreNLP",
+    "id": 167,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Apache Jena",
+    "id": 168,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Apache Flume",
+    "id": 169,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "OpenCV",
+    "id": 170,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "RESTEasy",
+    "id": 171,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Oozie",
+    "id": 172,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "JUNG",
+    "id": 173,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Prefuse",
+    "id": 174,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Apache Kafka",
+    "id": 175,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Lexalytics",
+    "id": 176,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Google Knoweledge Vault",
+    "id": 177,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "SWT (standard widget toolkit)",
+    "id": 178,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "GATE",
+    "id": 179,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "EmberJS",
+    "id": 180,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "LibreOffice",
+    "id": 181,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "FRED",
+    "id": 182,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Leidos DigitalEdge",
+    "id": 183,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "JMS",
+    "id": 184,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Text-Analysis",
+    "id": 185,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Apache Camel",
+    "id": 186,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Apache Spark",
+    "id": 187,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Apache Clerezza",
+    "id": 188,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "NetOwl",
+    "id": 189,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Apache Nutch",
+    "id": 190,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Groovy",
+    "id": 191,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "PostgreSQL",
+    "id": 192,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Tinkerpop",
+    "id": 193,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Apache Lucene",
+    "id": 194,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "NLTK",
+    "id": 195,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Pingar",
+    "id": 196,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "ElasticSearch",
+    "id": 197,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Language-Detection",
+    "id": 198,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Apache Stanbol",
+    "id": 199,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Hadoop Ecosystem",
+    "id": 200,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Hawt.io",
+    "id": 201,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "Linkurious",
+    "id": 202,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  },
+  {
+    "name": "OrientDB",
+    "id": 203,
+    "description": null,
+    "url": null,
+    "blipSize": 0,
+    "detailUrl": null,
+    "customerStrategic": false,
+    "techGrouping": "Solution Technology"
+  }
+]
 }

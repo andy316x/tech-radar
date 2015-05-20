@@ -40,7 +40,11 @@ public class TechnologyServiceImpl implements TechnologyService {
 		query.setProjection(Projections.projectionList()
 				.add(Projections.property("id"))
 				.add(Projections.property("name"))
+				.add(Projections.property("usageCount"))
+				.add(Projections.property("url"))
 				.add(Projections.property("description"))
+				.add(Projections.property("detailUrl"))
+				.add(Projections.property("customerStrategic"))
 				.add(Projections.property("techGrouping.name"))
 				);
 
@@ -49,8 +53,12 @@ public class TechnologyServiceImpl implements TechnologyService {
 			final TechnologyTO t = new TechnologyTO();
 			t.setId((Long)row[0]);
 			t.setName((String)row[1]);
-			t.setDescription((String)row[2]);
-			t.setTechGrouping((String)row[3]);
+			t.setBlipSize((Integer)row[2]);
+			t.setUrl((String)row[3]);
+			t.setDescription((String)row[4]);
+			t.setDetailUrl((String)row[5]);
+			t.setCustomerStrategic((Boolean)row[6]);
+			t.setTechGrouping((String)row[7]);
 
 			ts.add(t);
 		}

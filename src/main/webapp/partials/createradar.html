@@ -1,0 +1,140 @@
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed"
+				data-toggle="collapse" data-target=".navbar-collapse">
+				<span class="sr-only">Toggle navigation</span> <span
+					class="icon-bar"></span> <span class="icon-bar"></span> <span
+					class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="#"><strong>tech</strong><span>radar</span> <code>{beta}</code></a>
+		</div>
+		<div class="navbar-collapse collapse">
+			<ul class="nav navbar-nav navbar-right">
+				<li class="active"><a href="#/radar">Radars</a></li>
+				<li><a href="#/technology">Technologies</a></li>
+				<li><a href="#/skill">Skills Profile</a></li>
+				<li ng-show="loggedin==true"><a>{{name}}  <img ng-click="loginclick=!loginclick" class="img img-rounded" src="/radar/img/128.jpg"></a></li>
+				<li ng-show="loggedin==false">
+					<a  ng-click="loginclick=!loginclick">Sign in  <img class="img img-rounded" src="/radar/img/icon_8204.png"></a>
+					<div ng-show="loginclick==true" class="popover fade bottom in" style="position: absolute;z-index: 100;top: 38px;left: -185px;display: block;width: 300px;padding: 16px 0px 0px 0px;">
+      					<div class="arrow" style="margin-left:87px"></div>
+      					<h3 class="popover-title" style="background-color: #FFF;color: #333;padding-top: 0;">Sign in</h3>
+      					<div class="popover-content form-group">
+      						<iframe id="loginframe" src="loginsuccess.html" style="width: 100%;height: 265px;border: none;overflow: hidden;"></iframe>
+      					</div>
+    				</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="container-fluid main-content">
+	
+	<div class="row">
+	
+	<form id="pdfExportForm" action="/radar/export/pdf" method="post">
+		<input hidden="true" id="id" name="id" value=""></input>
+	</form>	
+	
+	<form id="csvExportForm" action="/radar/export/csv" method="post">
+		<input hidden="true" id="id" name="id" value=""></input>
+	</form>	
+	
+	<div class="col-md-12 clearfix" style="margin-bottom: 0;border-bottom: 1px solid #CCC;padding-bottom: 20px;overflow:visible;">
+		<div class="clearfix">
+			<div class="col-md-6">
+				<h1>
+					<i class="glyphicon glyphicon-pencil" style="color:red;"></i>
+					<strong>Create new radar</strong>
+				</h1>
+			</div>
+			<div class="col-md-6 text-right">
+				<button class="btn btn-success" ng-click="create()">Create</button>
+			</div>
+		</div>
+	</div>
+	
+	<div class="col-md-12" style="background-color:#EFEFEF;padding:25px 20px;">
+		<div ng-repeat="error in errors" class="alert alert-danger" role="alert">
+			<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+			<span class="sr-only">Error:</span>
+			{{error}}
+		</div>
+	
+		<div class="col-md-12">
+			<div style="padding:5px;" class="clearfix">
+				<div class="col-md-4 text-right">
+					<label>Name</label>
+				</div>
+				<div class="col-md-4">
+					<input type="text" class="form-control" ng-model="newRadarName" placeholder="Enter name"></input>
+				</div>
+				<div class="col-md-4">
+				</div>
+			</div>
+			<div style="padding:5px;" class="clearfix">
+				<div class="col-md-4 text-right">
+					<label>Description</label>
+				</div>
+				<div class="col-md-4">
+					<textarea class="form-control" ng-model="newRadarDescription" placeholder="Enter description"></textarea>
+				</div>
+				<div class="col-md-4">
+				</div>
+			</div>
+			<div style="padding:5px;" class="clearfix">
+				<div class="col-md-4 text-right">
+					<label>Business Unit</label>
+				</div>
+				<div class="col-md-4">
+					<select class="form-control" ng-model="newRadarBusinessUnit" ng-options="businessUnit.label as businessUnit.label for businessUnit in businessUnitOptions"></select>
+				</div>
+				<div class="col-md-4">
+				</div>
+			</div>
+		</div>
+		
+		<div class="col-md-12" style="padding:50px 100px;">
+			<div style="position: relative;">
+				<div style="position:relative;height:0;padding-bottom:100%;" ng-create-radar="" maturity-options="maturityOptions"></div>
+				<span style="position:absolute;right:0px;bottom:0px;">
+					<div class="dropdown">
+						<button style="font-weight:bold;font-size:18px;" class="btn btn-link" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">{{techGrouping1}} <span class="caret"></button></span>
+						<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+							<li ng-repeat="techGroupingOption in techGroupingOptions"role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" ng-click="selectGrouping(1, techGroupingOption.label)">{{techGroupingOption.label}}</a></li>
+						</ul>
+					</div>
+				</span>
+				<span style="position:absolute;left:0px;bottom:0px;">
+					<div class="dropdown">
+						<button style="font-weight:bold;font-size:18px;" class="btn btn-link" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">{{techGrouping2}} <span class="caret"></button></span>
+						<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+							<li ng-repeat="techGroupingOption in techGroupingOptions"role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" ng-click="selectGrouping(2, techGroupingOption.label)">{{techGroupingOption.label}}</a></li>
+						</ul>
+					</div>
+				</span>
+				<span style="position:absolute;left:0px;top:0px;">
+					<div class="dropdown">
+						<button style="font-weight:bold;font-size:18px;" class="btn btn-link" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">{{techGrouping3}} <span class="caret"></button></span>
+						<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+							<li ng-repeat="techGroupingOption in techGroupingOptions"role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" ng-click="selectGrouping(3, techGroupingOption.label)">{{techGroupingOption.label}}</a></li>
+						</ul>
+					</div>
+				</span>
+				<span style="position:absolute;right:0px;top:0px;">
+					<div class="dropdown">
+						<button style="font-weight:bold;font-size:18px;" class="btn btn-link" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">{{techGrouping4}} <span class="caret"></button></span>
+						<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+							<li ng-repeat="techGroupingOption in techGroupingOptions"role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" ng-click="selectGrouping(4, techGroupingOption.label)">{{techGroupingOption.label}}</a></li>
+						</ul>
+					</div>
+				</span>
+			</div>
+		</div>
+		
+	</div>
+		
+	</div>
+</div>
