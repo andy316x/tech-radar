@@ -7,10 +7,12 @@ import com.ai.techradar.database.entities.SkillLevelEnum;
 public class UserTechnologyTO implements Serializable {
 
 	private static final long serialVersionUID = -7949844211235033682L;
-	
+
 	private String user;
 
 	private String technology;
+
+	private String techGroup;
 
 	private SkillLevelEnum skillLevel;
 
@@ -42,4 +44,11 @@ public class UserTechnologyTO implements Serializable {
 		this.skillLevel = skillLevel;
 	}
 
+	public void setTechGroup(String techGroup) {
+		this.techGroup = techGroup;
+	}
+
+	public String getTechGroup() {
+		return techGroup;
+	}
 }

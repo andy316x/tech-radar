@@ -1,35 +1,3 @@
-<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-	<div class="container-fluid">
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle collapsed"
-				data-toggle="collapse" data-target=".navbar-collapse">
-				<span class="sr-only">Toggle navigation</span> <span
-					class="icon-bar"></span> <span class="icon-bar"></span> <span
-					class="icon-bar"></span>
-			</button>
-			<a class="navbar-brand" href="#"><strong>tech</strong><span>radar</span> <code>{beta}</code></a>
-		</div>
-		<div class="navbar-collapse collapse">
-			<ul class="nav navbar-nav navbar-right">
-				<li><a href="#/radar">Radars</a></li>
-				<li class="active"><a href="#/technology">Technologies</a></li>
-				<li><a href="#/skill">Skills Profile</a></li>
-				<li ng-show="loggedin==true"><a>{{name}}  <img ng-click="loginclick=!loginclick" class="img img-rounded" src="/radar/img/128.jpg"></a></li>
-				<li ng-show="loggedin==false">
-					<a  ng-click="loginclick=!loginclick">Sign in  <img class="img img-rounded" src="/radar/img/icon_8204.png"></a>
-					<div ng-show="loginclick==true" class="popover fade bottom in" style="position: absolute;z-index: 100;top: 38px;left: -185px;display: block;width: 300px;padding: 16px 0px 0px 0px;">
-      					<div class="arrow" style="margin-left:87px"></div>
-      					<h3 class="popover-title" style="background-color: #FFF;color: #333;padding-top: 0;">Sign in</h3>
-      					<div class="popover-content form-group">
-      						<iframe id="loginframe" src="loginsuccess.html" style="width: 100%;height: 265px;border: none;overflow: hidden;"></iframe>
-      					</div>
-    				</div>
-				</li>
-			</ul>
-		</div>
-	</div>
-</div>
-
 <div class="container-fluid main-content">
 
 
@@ -40,7 +8,7 @@
 			<div class="col-md-6">
 				<ul class="nav nav-pills">
 					<li  class="active"><a href="/radar/#/technology">Technologies</a></li>
-					<li><a href="/radar/#/technology">Nominations</a></li>
+					<li class="disabledlink"><a href="/radar/#/technology">Nominations</a></li>
 				</ul>
 			</div>
 			<div class="col-md-3">
@@ -50,7 +18,7 @@
 				</div>
 			</div>
 			<div class="col-md-3 text-right">
-				<button class="btn btn-success" ng-click="newRadarVisible=true" ng-show="loggedin==true">Nominate Technology</button>
+				<button class="btn btn-success" ng-click="newRadarVisible=true" ng-show="loggedin==true" disabled>Nominate Technology</button>
 			</div>
 		</div>
 		
@@ -63,7 +31,7 @@
 					<i class="glyphicon glyphicon-search"></i>
 				</div>
 				
-				<div class="technology-wrapper">
+				<div class="technology-list-wrapper">
 				
 					<div ng-repeat="techGrouping in techGroupings">
 						<div style="border-bottom: 1px solid #CCC;padding: 10px 5px;"><strong>{{techGrouping.name}}</strong></div>
@@ -85,8 +53,8 @@
 							<p style="margin:0"><small class="text-muted">{{selectedTechnology.techGrouping}}</small></p>
 						</div>
 						<div class="col-xs-6 text-right">
-							<button class="btn btn-default">Edit</button>
-							<button class="btn btn-default">Delete</button>
+							<button class="btn btn-default" disabled>Edit</button>
+							<button class="btn btn-default" disabled>Delete</button>
 						</div>
 					</div>
 					
@@ -95,21 +63,21 @@
 						<p>{{selectedTechnology.description}}</p>
 					</div>
 					
-					<div style="padding: 10px; border-bottom: 1px solid #CCCCCC; min-height:120px;">
+					<div class="advocate" style="padding: 10px; border-bottom: 1px solid #CCCCCC; min-height:120px;">
 						<h4>Advocate</h4>
-						<img src="/radar/img/icon_8204.png" style="width: 50px;border-radius: 25px;margin: 5px;padding: 1px;position: absolute;border: 1px solid black;opacity: 0.2;"></img>
+						<img src="/radar/img/icon_8204.png" style="width: 50px;border-radius: 25px;margin: 5px;padding: 1px;position: absolute;border: 1px solid black;opacity: 0.2;">
 						<p style="padding-left: 70px"><em>"{{selectedTechnology.description}}"</em></p>
 					</div>
 					
 					<div style="padding: 10px; border-bottom: 1px solid #CCCCCC">
 						<h4>Maturity</h4>
-						<div ng-tech-maturities=""></div>
+						<ng-tech-maturities selected-tech="selectedTechnology"></ng-tech-maturities>
 					</div>
 					
 					<div style="padding: 10px; border-bottom: 1px solid #CCCCCC">
 						<h4>Personnel Skills</h4>
 						<p ng-show="selectedTechnology.ratings.length == 0">No personnel use this technology.</p>
-						<div ng-show="selectedTechnology.ratings.length > 0" ng-tech-ratings="" ratings="selectedTechnology.ratings"></div>
+						<ng-tech-ratings ng-show="selectedTechnology.ratings.length > 0" ratings="selectedTechnology.ratings"></ng-tech-ratings>
 					</div>
 					
 					<div class="clearfix">
@@ -117,7 +85,7 @@
 							<h4>Skilled Personnel</h4>
 							<p ng-show="selectedTechnology.ratings.length == 0">No personnel use this technology.</p>
 							<div ng-show="selectedTechnology.ratings.length > 0" style="margin-bottom:10px">
-								<img ng-repeat="rating in selectedTechnology.ratings" src="/radar/img/icon_8204.png" title="{{rating.user + ' - ' + rating.skillLevel}}" data-toggle="tooltip" data-placement="bottom" tooltip="" style="width: 50px;border-radius: 25px;background-color: #DEDEDE;margin: 5px;padding: 1px;box-shadow: 1px 1px 1px #333;"></img>
+								<img ng-repeat="rating in selectedTechnology.ratings" src="/radar/img/icon_8204.png" title="{{rating.user + ' - ' + rating.skillLevel}}" data-toggle="tooltip" data-placement="bottom" tooltip="" style="width: 50px;border-radius: 25px;background-color: #DEDEDE;margin: 5px;padding: 1px;box-shadow: 1px 1px 1px #333;">
 							</div>
 						</div>
 						<div class="col-xs-6" style="padding: 10px">

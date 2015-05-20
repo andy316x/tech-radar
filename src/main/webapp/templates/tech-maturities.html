@@ -1,0 +1,26 @@
+<svg style="position: absolute; top: 0; left: 0;" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 32">
+    <defs>
+        <pattern id="image" x="-4" y="-4" patternUnits="userSpaceOnUse" height="64" width="64">
+            <image x="0" y="0" height="8" width="8" xlink:href="../radar/img/128.jpg" />
+        </pattern>
+    </defs>
+    <g class="arcs">
+	    <circle r="95" cx="100" cy="15" fill="hsl(160,0%,90%)"></circle>
+	    <circle r="78" cx="100" cy="15" fill="hsl(160,0%,80%)"></circle>
+	    <circle r="58" cx="100" cy="15" fill="hsl(160,0%,70%)"></circle>
+	    <circle r="38" cx="100" cy="15" fill="hsl(160,0%,60%)"></circle>
+	    <circle r="18" cx="100" cy="15" fill="hsl(160,0%,50%)"></circle>
+    </g>
+    <g class="mention" ng-repeat="mention in otherRefs" tooltip ng-attr-transform="translate({{mention.x}}, {{mention.y}})">
+    	<title ng-if="mention.radars">Radars: {{mention.radars}}</title>
+    	<title ng-if="!(mention.radars)">Radar: {{mention.radar}}</title>
+        <circle r="3" fill="{{mention.radars? '#D32F2F' : 'url(#image)'}}" stroke="#fff"></circle>
+        <text x="0" y="0" ng-show="mention.radars">{{mention.radars.length}}</text>
+    </g>
+    <rect height="2" width="100" x="0" y="30" fill="#FFF"></rect>
+    <text transform="translate(91,32)">Phase out</text>
+    <text transform="translate(72,32)">Maintain</text>
+    <text transform="translate(50,32)">Invest</text>
+    <text transform="translate(30,32)">Assess</text>
+    <text transform="translate(11,32)">Watch</text>
+</svg>

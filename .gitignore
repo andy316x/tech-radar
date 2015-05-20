@@ -3,3 +3,4 @@ build/
 /.project
 /.classpath
 /target
+node_modules
