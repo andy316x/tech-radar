@@ -12,6 +12,10 @@ techRadarApp.config(['$routeProvider',function($routeProvider) {
 		templateUrl: 'partials/radar.html',
 		controller: 'RadarsCtrl'
 	})
+	.when('/radar/create', {
+		templateUrl: 'partials/createradar.html',
+		controller: 'RadarCtrl'
+	})
 	.when('/radar/:radarid', {
 		templateUrl: 'partials/viewradar.html',
 		controller: 'RadarCtrl'
