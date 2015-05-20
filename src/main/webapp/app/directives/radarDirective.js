@@ -55,8 +55,10 @@ techRadarDirectives.directive('ngRadar', function ($routeParams) {
 			$scope.$watch('selectedBlip', function (newVal, oldVal, scope) {
                 //TODO - oldVal/scope parameters redundant?
 				if($scope.theRadar) {
-					if(newVal) {
+					if(oldVal){
 						$scope.theRadar.unselectBlip(oldVal);
+					}
+					if(newVal) {
 						$scope.theRadar.selectBlip(newVal);
 					}
 				}

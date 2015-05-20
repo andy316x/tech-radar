@@ -285,11 +285,11 @@ var Radar = function(element, radar, editable, callback){
 	};
 	
 	this.selectBlip = function(blip) {
-		d3.selectAll('a circle, a path').attr('opacity',0.3);
+		d3.selectAll('circle.blip').attr('opacity',0.3);
 		d3.select('#blip-'+blip.id).selectAll('circle, path').attr('opacity',1.0);
 	};
 	this.unselectBlip = function(blip) {
-		d3.selectAll('a circle, a path').attr('opacity',1.0);
+		d3.selectAll('circle.blip').attr('opacity',1.0);
 	},
 	this.zoom = function(index) {
 		containerGroup.call(transition, centres[oldZoom], centres[index]);
@@ -452,10 +452,13 @@ var Radar = function(element, radar, editable, callback){
 		})
 		.on('mouseover', function(d) {
 			callback.onbliphover(d.item);
+			svg.selectAll('circle.blip').attr('opacity',0.3);
+			svg.select('#blip-'+d.item.id).selectAll('circle, path').attr('opacity',1.0);
 			tip.show(d);
 		})
 		.on('mouseleave', function(d) {
 			callback.onblipleave(d.item);
+			svg.selectAll('circle.blip').attr('opacity',1.0);
 			tip.hide(d);
 		});
 
@@ -473,7 +476,8 @@ var Radar = function(element, radar, editable, callback){
 		blip.attr('r', 13)
 		.attr('cx',function(d){return d.x;})
 		.attr('cy', function(d){return d.y})
-		.attr('fill',function(d){ return d.color;});
+		.attr('fill',function(d){ return d.color;})
+		.attr('class',function(d){ return 'blip';});
 		
 		blip.style("filter", "url(#drop-shadow)");
 	

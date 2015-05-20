@@ -6,8 +6,13 @@ techRadarDirectives.directive('trTechOverlay', function () {
 		scope: {
             side: "@",
             quads: "=",
+            focus: "&",
+            selectedTechId: "="
 		},
 		link: function ($scope, element, attrs) {
+			$scope.doFocus = function(tech) {
+				$scope.focus({tech:tech});
+			};
 		}
 	};
 });

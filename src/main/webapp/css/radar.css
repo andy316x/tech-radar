@@ -572,11 +572,44 @@ h1,.h1 {
 	border-radius: 25px;
 }
 
-.summaryTech:hover {
-	color: red;
+.summaryTech {
+	padding: 3px 2px;
+}
+
+.summaryTech:hover,
+.summaryTechActive {
+	color: #FFFFFF;
 	user-select: none;
 	-webkit-user-select: none;
 	cursor: pointer;
+}
+
+.quadoverlay1 .summaryTech:hover,
+.quadoverlay1 .summaryTechActive {
+    background-color: #428bca;
+}
+
+.quadoverlay2 .summaryTech:hover,
+.quadoverlay2 .summaryTechActive {
+    background-color: #d9534f;
+}
+
+.quadoverlay3 .summaryTech:hover,
+.quadoverlay3 .summaryTechActive {
+    background-color: #5cb85c;
+}
+
+.quadoverlay4 .summaryTech:hover,
+.quadoverlay4 .summaryTechActive {
+    background-color: #f0ad4e;
+}
+
+.summaryTechDetail {
+	margin-bottom: 5px;
+	padding: 25px 0 25px 15px;
+	border-top: 1px solid #333333;
+	border-bottom: 1px solid #333333;
+	color: #888888;
 }
 
 .left-inner-addon i {

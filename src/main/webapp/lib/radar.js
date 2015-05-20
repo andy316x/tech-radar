@@ -547,9 +547,12 @@ var Radar = {
 		})
 		.on('mouseover', function(d) {
 			callback.onbliphover(d.item);
+			d3.selectAll('a circle, a path').attr('opacity',0.3);
+			d3.select('#blip-'+d.item.id).selectAll('circle, path').attr('opacity',1.0);
 		})
 		.on('mouseleave', function(d) {
 			callback.onblipleave(d.item);
+			d3.selectAll('a circle, a path').attr('opacity',1.0);
 		})
 		
 		if(editable === true) {

@@ -146,11 +146,11 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 	};
 
 	$scope.mouseOver = function(item) {
-		$scope.selectedItem = angular.copy(item);
+		$scope.hoveredTechnology = angular.copy(item);
 	};
 
 	$scope.mouseOut = function(item) {
-		$scope.selectedItem = null;
+		$scope.hoveredTechnology = null;
 	};
 
 	$scope.blipClicked = function(blip) {
@@ -158,7 +158,7 @@ techRadarControllers.controller('RadarCtrl', function ($scope, $http, $location,
 		$scope.technologyModalVisible = true;
 	};
     
-    $scope.focus = function(technology){
+    $scope.focusTech = function(technology){
 		$scope.hoveredTechnology = technology;
     };
 
