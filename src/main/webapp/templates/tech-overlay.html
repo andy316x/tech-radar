@@ -1,14 +1,25 @@
 <div class="arc-overlay arc-overlay-{{side}}">
-    <div>
-        <div ng-repeat="arc in quads.arcs | orderBy:'-name'" ng-show="arc.techs.length > 0">
-            <strong>{{arc.name | uppercase}}</strong>
-            <div ng-repeat="tech in arc.techs" ng-mouseover="doFocus(tech)" ng-mouseleave="doFocus(null)">
-                <div class="summaryTech" ng-class="{summaryTechActive:selectedTechId==tech.id}" ng-click="tech.$show=!tech.$show">{{tech.id}}. {{tech.name}}</div>
-                <div class="summaryTechDetail" ng-show="tech.$show">
-                	<div>{{tech.description}}</div>
-                	<div class="summaryTechMore" ng-show="tech.url.length>0"><a target="_blank" ng-href="{{tech.url}}">more</a></div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+	<div>
+		<div ng-repeat="arc in quads.arcs | orderBy:'-name'"
+			ng-show="arc.techs.length > 0" class="arc-section">
+			<div class="header" ng-click="collapsed=!collapsed">
+				<strong>{{arc.name | uppercase}} ({{arc.techs.length}})</strong>
+				<i class="fa" ng-class="{'fa-caret-down':collapsed, 'fa-caret-up':!collapsed}" style="float: right;"></i>
+			</div>
+			<div class="arc-section" ng-hide="collapsed">
+				<ul>
+				<li ng-repeat="tech in arc.techs" ng-mouseover="doFocus(tech)" ng-mouseleave="doFocus(null)">
+					<div
+						class="summaryTech {{selectedTechId==tech.id?'summaryTechActive':''}}"
+						ng-click="tech.$show=!tech.$show">{{tech.id}}. {{tech.name}}</div>
+					<div class="summaryTechDetail" ng-show="tech.$show==true">
+						<div>{{tech.description}}</div>
+						<div class="summaryTechMore" ng-show="tech.url.length>0">
+							<a target="_blank" ng-href="{{tech.url}}">more</a>
+						</div>
+					</div>
+				</li>
+				</ul>
+			</div>
+		</div>
+	</div>

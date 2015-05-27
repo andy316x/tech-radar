@@ -997,9 +997,23 @@ tr-tech-overlay {
   transition:2.5s linear all;
 }
 
+tr-tech-overlay .header {
+	background-color: white;	
+	padding: 10px 10px;
+	cursor: pointer;
+}
+
+tr-tech-overlay .arc-section ul {
+	padding: 0 10px;
+}
+
+tr-tech-overlay .arc-section {
+	background-color: hsla(0,0%,95%,1);
+	margin-bottom: 20px;
+}
 
 tr-tech-overlay.ng-hide {
-  opacity:0;
+  opacity: 0;
   z-index: -1;
   display: none;
 }
