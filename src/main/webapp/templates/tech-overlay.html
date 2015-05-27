@@ -2,11 +2,11 @@
     <div>
         <div ng-repeat="arc in quads.arcs | orderBy:'-name'" ng-show="arc.techs.length > 0">
             <strong>{{arc.name | uppercase}}</strong>
-            <div ng-repeat="tech in arc.techs">
-                <div class="summaryTech {{selectedTechId==tech.id?'summaryTechActive':''}}" ng-mouseover="doFocus(tech)" ng-mouseleave="doFocus(null)" ng-click="tech.$show=!tech.$show">{{tech.id}}. {{tech.name}}</div>
-                <div class="summaryTechDetail" ng-show="tech.$show==true">
+            <div ng-repeat="tech in arc.techs" ng-mouseover="doFocus(tech)" ng-mouseleave="doFocus(null)">
+                <div class="summaryTech" ng-class="{summaryTechActive:selectedTechId==tech.id}" ng-click="tech.$show=!tech.$show">{{tech.id}}. {{tech.name}}</div>
+                <div class="summaryTechDetail" ng-show="tech.$show">
                 	<div>{{tech.description}}</div>
-                	<div class="summaryTechMore" ng-show="tech.url.length>0"><a ng-href="{{tech.url}}">more</a></div>
+                	<div class="summaryTechMore" ng-show="tech.url.length>0"><a target="_blank" ng-href="{{tech.url}}">more</a></div>
                 </div>
             </div>
         </div>
