@@ -989,13 +989,11 @@ ng-tech-maturities svg g.mention text {
 	padding: 25px 20px;
 }
 
-
-tr-tech-overlay {
-  -webkit-transition:2.5s linear all;
-  -moz-transition:2.5s linear all;
-  -o-transition:2.5s linear all;
-  transition:2.5s linear all;
+.mask {
+	fill: rgb(236,236,236);
+	stroke: rgb(236,236,236);
 }
+
 
 tr-tech-overlay .header {
 	background-color: white;	
@@ -1013,17 +1011,8 @@ tr-tech-overlay .arc-section {
 }
 
 tr-tech-overlay.ng-hide {
-  opacity: 0;
   z-index: -1;
   display: none;
-}
-
-tr-tech-overlay.ng-hide-add {
-	display: block !important;
-}
-
-tr-tech-overlay.ng-hide-remove {
-	display: block !important;
 }
 
 .empty-links a {

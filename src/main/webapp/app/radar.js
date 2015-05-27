@@ -30,7 +30,7 @@ var Radar = function(element, radar, editable, callback){
     //TODO - fit into parent (i.e. min of parent width/height)?
 	var w = 1000;
 	var h = 1000;
-	var canvas;
+	var canvas, maskGroup;
     this.blips = [];
     
     function _getAllRails(){
@@ -50,20 +50,11 @@ var Radar = function(element, radar, editable, callback){
         return allRails;
     };
     
-	function transition(container, start, end) {
-		var center = [w / 2, h / 2];
-		i = d3.interpolateZoom(start, end);
+	function transition(container, target) {
 		container
-		.attr("transform", transform(start))
 		.transition()
-		.delay(250)
-		.duration(i.duration * 2)
-		.attrTween("transform", function() { return function(t) { return transform(i(t)); }; });
-
-		function transform(p) {
-			var k = h / p[2];
-			return "translate(" + (center[0] - p[0] * k) + "," + (center[1] - p[1] * k) + ")scale(" + k + ")";
-		}
+		.duration(350)
+		.attr("transform", "translate("+target[0]+","+target[1]+")");
 	};
 	
     var oldZoom = 0;
@@ -75,12 +66,11 @@ var Radar = function(element, radar, editable, callback){
 	},0);
 	
 	var centres = [
-	               [w/2, w/2, w],//Centre of radar
-        //TODO - Give these reasonable explanations (top-right, bottom-left quadrant etc)?
-	               [w - 6, w - 6, w + 6],
-	               [6, w - 6, w + 6],
-	               [6, w/2 - 6, w + 6],
-	               [w - 6, w/2 - 6, w + 6],
+	               [0,],//Centre of radar
+   	               [0, -w/2 + 7], //BR
+   	               [w/2, -w/2 + 7], //BL
+   	               [w/2, 0],//TL
+   	               [0, 0],//TR
                ];
     
 	while (element.firstChild) {
@@ -282,6 +272,7 @@ var Radar = function(element, radar, editable, callback){
                 quadrant.endAngle = angle;
             }
 		_drawBlips(containerGroup,self.blips,radar.quadrants,arcs,w,h,editable,callback);
+		_drawMasks();
 	};
 	
 	this.selectBlip = function(blip) {
@@ -292,8 +283,13 @@ var Radar = function(element, radar, editable, callback){
 		d3.selectAll('circle.blip').attr('opacity',1.0);
 	},
 	this.zoom = function(index) {
-		containerGroup.call(transition, centres[oldZoom], centres[index]);
-		oldZoom = index;
+		if(index){
+			maskGroup.style('display', 'block')
+		}else{
+			maskGroup.style('display', 'none')
+		}
+		containerGroup.call(transition, centres[index]);
+ 		oldZoom = index;
 	};
     
 	function initSvg(){
@@ -307,6 +303,7 @@ var Radar = function(element, radar, editable, callback){
 		.attr('preserveAspectRatio', 'xMinYMin meet');
 	
 		containerGroup = canvas.append('g').attr('class', 'containerGroup').attr("transform", "translate(0,0)");
+		maskGroup = canvas.append('g').attr('class','mask').style('display','none');
 	    canvas.call(tip);
 		// filters go in defs element
 		var defs = containerGroup.append("defs");
@@ -435,6 +432,21 @@ var Radar = function(element, radar, editable, callback){
 
               d3.selectAll('.blip').attr('opacity',1.0);
           });
+	
+	function _drawMasks(){
+		var offsets = [
+		               [0,0,500,510,'top-left'],
+		               [0,506,1000,500,'bottom']
+		               ];
+		offsets.forEach(function(o){
+			maskGroup.append('rect')
+			.attr('x',o[0])
+			.attr('y',o[1])
+			.attr('width',o[2])
+			.attr('height',o[3])
+			.attr('class',o[4]);
+		});
+	}
     
 	function _drawBlips(svg,blipGroups,quadrants,arcs,w,h,editable,callback) {
 		var blipsList = blipGroups.reduce(function(prev, curr){
