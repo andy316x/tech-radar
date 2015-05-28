@@ -1,5 +1,7 @@
-techRadarControllers.controller('CommonViewCtrl', function ($scope, $http, $location, $routeParams, $modal, $log) {
+techRadarControllers.controller('CommonViewCtrl', ['$scope','$http','$location','$routeParams','$modal','$log','trBannerService',function ($scope, $http, $location, $routeParams, $modal, $log, trBannerService) {
 
+	$scope.banner = trBannerService;
+	
 	// Stuff that all views will need
 	$scope.activePage = function(page){
 		return $location.url().match(page);
@@ -89,4 +91,4 @@ techRadarControllers.controller('CommonViewCtrl', function ($scope, $http, $loca
 		$('.modal-open').removeClass('modal-open'); 
 	});
 
-});
+}]);

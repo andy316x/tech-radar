@@ -1,5 +1,8 @@
-techRadarControllers.controller('SkillsCtrl', function ($scope, $http, $location, $routeParams, $modal, $log) {
+techRadarControllers.controller('SkillsCtrl', ['$scope', '$http', '$location', '$routeParams', '$modal', '$log', 'trBannerService', function ($scope, $http, $location, $routeParams, $modal, $log, trBannerService) {
 
+	trBannerService.message = 'This view is a representation of the skills profile.';
+	trBannerService.contact = "contact@techradar.net";
+	
 	$scope.skillLevels = [];
 	$scope.activeGrouping = null;
 	
@@ -21,5 +24,8 @@ techRadarControllers.controller('SkillsCtrl', function ($scope, $http, $location
 		$log.error('Failed to load user technologies');
 	});
 	
+	$scope.$on('$destroy', function destroy() {
+		trBannerService.message='';
+	});
 
-});
+}]);

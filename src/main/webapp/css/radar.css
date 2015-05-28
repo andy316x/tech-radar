@@ -100,6 +100,17 @@ ng-radar {
 	padding-left: 15px;
 }
 
+.banner {
+	background-color: hsla(59, 86%, 80%, 1);
+	text-align: center;
+	color: hsla(202,57%,50%,1);
+}
+
+.banner a {
+	text-decoration: underline;
+}
+
+
 /* CUSTOMIZE THE CAROUSEL
 -------------------------------------------------- */
 

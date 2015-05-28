@@ -68,6 +68,7 @@
                 </div>
             </div>
         </div>
+        <div class="banner" ng-show="banner.message">{{banner.message}} <a ng-show="banner.contact" href="mailto:{{banner.contact}}?subject=Tech%20Radar%20Feedback">Send Feedback.</a></div>
 
         <div ng-view></div>
 
@@ -100,6 +101,8 @@
     <script src="/radar/lib/ui-bootstrap.min.js"></script>
     <script src="/radar/lib/d3.min.js" charset="utf-8"></script>
     <script src="/radar/app/radar.js"></script>
+    <script src="/radar/app/services.js"></script>
+    <script src="/radar/app/services/bannerService.js"></script>
     <script src="/radar/app/controller.js"></script>
     <!-- controllers:js -->
     <script src="/radar/app/controllers/commonViewController.js"></script>

@@ -1,3 +1,3 @@
-var techRadarControllers = angular.module('techRadarControllers', ['ui.bootstrap', 'ngAnimate']);
+var techRadarControllers = angular.module('techRadarControllers', ['ui.bootstrap', 'ngAnimate', 'techRadarServices']);
 
 

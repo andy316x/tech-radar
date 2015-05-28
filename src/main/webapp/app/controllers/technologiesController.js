@@ -1,7 +1,10 @@
-techRadarControllers.controller('TechnologiesCtrl', function ($scope, $http, $location, $routeParams, $log) {
+techRadarControllers.controller('TechnologiesCtrl', ['$scope', '$http', '$location', '$routeParams', '$log', 'trBannerService', function ($scope, $http, $location, $routeParams, $log, trBannerService) {
 
 	$scope.techGroupings = [];
 
+	trBannerService.message = "This view is a representation of the technology hub.";
+	trBannerService.contact = "contact@techradar.net";
+	
 	$http({method: 'GET', url: '/radar/rest/technology?nocache=' + (new Date()).getTime()}).
 	success(function(data, status, headers, config) {
 		$scope.techGroupings = [];
@@ -70,4 +73,8 @@ techRadarControllers.controller('TechnologiesCtrl', function ($scope, $http, $lo
 		$scope.selectedTechnology = technology;
 	};
 
-});
+	$scope.$on('$destroy', function destroy() {
+		trBannerService.message='';
+	});
+
+}]);

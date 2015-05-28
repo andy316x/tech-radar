@@ -1,4 +1,4 @@
-techRadarControllers.controller('RadarsCtrl', function ($scope, $http, $location, $routeParams, $modal, $log) {
+techRadarControllers.controller('RadarsCtrl', ['$scope', '$http', '$location', '$routeParams', '$modal', '$log', function ($scope, $http, $location, $routeParams, $modal, $log) {
 
 	$scope.radars = [];
 	
@@ -63,4 +63,4 @@ techRadarControllers.controller('RadarsCtrl', function ($scope, $http, $location
 		$log.error('Error getting business units');
 	});
 
-});
+}]);
