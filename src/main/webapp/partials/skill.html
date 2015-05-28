@@ -22,7 +22,7 @@
 			</div>
 		</div>
 		
-		<div class="col-md-12" style="background-color:#EFEFEF;padding:25px 20px;">
+		<div class="col-md-12" ng-show="skillLevels.length" style="background-color:#EFEFEF;padding:25px 20px;">
 			<div>
 				<ul class="nav nav-pills empty-links">
 					<li ng-click="activeGrouping = null" ng-class="{active: !activeGrouping}">
@@ -37,7 +37,10 @@
 			</div>
 			
 			<ng-skill-level skill-levels="skillLevels" selected-grouping="activeGrouping"></ng-skill-level>
-			
+		</div>
+		
+		<div class="col-md-12" ng-show="!skillLevels.length" style="background-color:#EFEFEF;padding:25px 20px;">
+			You have no skills recorded.
 		</div>
 
 		
