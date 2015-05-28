@@ -8,7 +8,7 @@
 					ng-class="{'fa-caret-down':collapsed, 'fa-caret-up':!collapsed}"
 					style="float: right;"></i>
 			</div>
-			<div class="tech-list" ng-hide="collapsed">
+			<div class="tech-list" ng-class="{'slide-up': collapsed, 'slide-down': !collapsed}">
 				<ul>
 					<li ng-repeat="tech in arc.techs" ng-mouseover="doFocus(tech)"
 						ng-mouseleave="doFocus(null)">
