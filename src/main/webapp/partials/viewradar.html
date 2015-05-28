@@ -20,14 +20,18 @@
 			<div class="col-md-6 text-right actions">
 				<div class="btn btn-default" ng-click="exportCsv(selectedRadar.id)"><span>Download Data</span></div>
 				<div class="btn btn-default" ng-click="exportPdf(selectedRadar.id)"><span>Export PDF</span></div>
-				<div class="btn btn-default" ng-click="showShare=!showShare"><span>Share</span></div>
-				<div ng-show="showShare==true" class="popover fade bottom in" style="position: absolute;z-index: 100;top: 38px;left: 353px;display: block;width: 322px;padding: 0px 0px 0px 0px;">
-      				<div class="arrow" style="margin-left:27px"></div>
-      				<div class="popover-content">
-      					<input class="form-control" ng-model="theUrl"></input>
-      				</div>
-    			</div>
-				<button class="btn btn-danger" ng-click="go('/radar/'+selectedRadar.id+'/edit')" ng-show="loggedin==true && uid==selectedRadar.createdBy">Edit</button>
+					<div class="btn btn-default" ng-click="showShare=!showShare"
+						style="position: relative;">
+						<span>Share</span>
+						<div ng-show="showShare==true" class="popover fade bottom in"
+							style="position: absolute; z-index: 100; top: 38px; left: -140px; display: block; width: 276px; padding: 0;">
+							<div class="arrow" style="margin-left: 27px"></div>
+							<div class="popover-content">
+								<input class="form-control" ng-model="theUrl" disabled></input>
+							</div>
+						</div>
+					</div>
+					<button class="btn btn-danger" ng-click="go('/radar/'+selectedRadar.id+'/edit')" ng-show="loggedin==true && uid==selectedRadar.createdBy">Edit</button>
 			</div>
 		</div>
 	</div>
