@@ -435,16 +435,15 @@ var Radar = function(element, radar, editable, callback){
 	
 	function _drawMasks(){
 		var offsets = [
-		               [0,0,500,510,'top-left'],
-		               [0,506,1000,500,'bottom']
+		               [0,0,500,510],
+		               [0,506,1000,500]
 		               ];
 		offsets.forEach(function(o){
 			maskGroup.append('rect')
 			.attr('x',o[0])
 			.attr('y',o[1])
 			.attr('width',o[2])
-			.attr('height',o[3])
-			.attr('class',o[4]);
+			.attr('height',o[3]);
 		});
 	}
     
