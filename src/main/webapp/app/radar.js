@@ -468,7 +468,7 @@ var Radar = function(element, radar, editable, callback){
 			svg.select('#blip-'+d.item.id).selectAll('circle, path').attr('opacity',1.0);
 			tip.show(d);
 		})
-		.on('mouseleave', function(d) {
+		.on('mouseout', function(d) {
 			callback.onblipleave(d.item);
 			svg.selectAll('circle.blip').attr('opacity',1.0);
 			tip.hide(d);
