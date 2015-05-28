@@ -10,6 +10,14 @@ techRadarDirectives.directive('trTechOverlay', function () {
             selectedTechId: "="
 		},
 		link: function ($scope, element, attrs) {
+			$scope.expandedTech = {id: null};
+			$scope.expandTech = function(techId){
+				if($scope.expandedTech.id == techId){
+					$scope.expandedTech.id = null;
+				}else{
+					$scope.expandedTech.id = techId;	
+				}
+			};
 			$scope.doFocus = function(tech) {
 				$scope.focus({tech:tech});
 			};

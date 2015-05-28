@@ -14,9 +14,9 @@
 						ng-mouseleave="doFocus(null)">
 						<div
 							class="summaryTech {{selectedTechId==tech.id?'summaryTechActive':''}}"
-							ng-click="tech.$show=!tech.$show">{{tech.id}}.
-							{{tech.name}}</div>
-						<div class="summaryTechDetail" ng-show="tech.$show==true">
+							ng-click="expandTech(tech.id)">
+							{{tech.id}}. {{tech.name}}</div>
+						<div class="summaryTechDetail" ng-show="expandedTech.id==tech.id">
 							<div>{{tech.description}}</div>
 							<div class="summaryTechMore" ng-show="tech.url.length>0">
 								<a target="_blank" ng-href="{{tech.url}}">more</a>
