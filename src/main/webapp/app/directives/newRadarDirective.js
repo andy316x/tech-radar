@@ -50,9 +50,7 @@ techRadarDirectives.directive('ngNewRadar', function ($http) {
 			}, false);
 
 			element.children(":first").on('hide.bs.modal', function(e) {
-				$scope.$apply(function(){
-					$scope.visible = false;
-				});
+				$scope.visible = false;
 			});
 
 			$scope.save = function() {
