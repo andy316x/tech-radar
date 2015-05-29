@@ -14,22 +14,22 @@
 		          </blockquote> 
 		          <div class="btn-group btn-group-justified" role="group" aria-label="...">
 		            <div class="btn-group" role="group">
-		              <button type="button" class="btn btn-xs btn-danger {{currentSkillLevel==null?'active':''}}" ng-click="selectSkillLevel(null)">None</button>
+		              <button type="button" class="btn btn-xs btn-danger" ng-class="{active: currentSkillLevel==null}" ng-click="selectSkillLevel(null)">None</button>
 		            </div>
 		            <div class="btn-group" role="group">
-		              <button type="button" class="btn btn-xs btn-default {{currentSkillLevel=='Watching'?'active':''}}" ng-click="selectSkillLevel('Watching')">Watching</button>
+		              <button type="button" class="btn btn-xs btn-default" ng-class="{active: currentSkillLevel=='Watching'}" ng-click="selectSkillLevel('Watching')">Watching</button>
 		            </div>
 		            <div class="btn-group" role="group">
-		              <button type="button" class="btn btn-xs btn-primary {{currentSkillLevel=='Learning'?'active':''}}" ng-click="selectSkillLevel('Learning')">Learning</button>
+		              <button type="button" class="btn btn-xs btn-primary" ng-class="{active: currentSkillLevel=='Learning'}" ng-click="selectSkillLevel('Learning')">Learning</button>
 		            </div>
 		            <div class="btn-group" role="group">
-		              <button type="button" class="btn btn-xs btn-info {{currentSkillLevel=='Competent'?'active':''}}" ng-click="selectSkillLevel('Competent')">Competent</button>
+		              <button type="button" class="btn btn-xs btn-info" ng-class="{active: currentSkillLevel=='Competent'}" ng-click="selectSkillLevel('Competent')">Competent</button>
 		            </div>
 		            <div class="btn-group" role="group">
-		              <button type="button" class="btn btn-xs btn-warning {{currentSkillLevel=='Expert'?'active':''}}" ng-click="selectSkillLevel('Expert')">Expert</button>
+		              <button type="button" class="btn btn-xs btn-warning" ng-class="{active: currentSkillLevel=='Expert'}" ng-click="selectSkillLevel('Expert')">Expert</button>
 		            </div>
 		            <div class="btn-group" role="group">
-		              <button type="button" class="btn btn-xs btn-success {{currentSkillLevel=='Leader'?'active':''}}" ng-click="selectSkillLevel('Leader')">Leader</button>
+		              <button type="button" class="btn btn-xs btn-success" ng-class="{active: currentSkillLevel=='Leader'}" ng-click="selectSkillLevel('Leader')">Leader</button>
 		            </div>
 		          </div>
 		        </div>

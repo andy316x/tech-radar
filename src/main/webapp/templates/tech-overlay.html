@@ -13,7 +13,7 @@
 					<li ng-repeat="tech in arc.techs" ng-mouseover="doFocus(tech)"
 						ng-mouseleave="doFocus(null)">
 						<div
-							class="summaryTech {{selectedTechId==tech.id?'summaryTechActive':''}}"
+							class="summaryTech" ng-class="{summaryTechActive: selectedTechId==tech.id}"
 							ng-click="expandTech(tech.id)">
 							{{tech.id}}. {{tech.name}}</div>
 						<div class="summaryTechDetail" ng-show="expandedTech.id==tech.id">
