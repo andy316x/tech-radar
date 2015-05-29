@@ -85,7 +85,7 @@
 							<h4>Skilled Personnel</h4>
 							<p ng-show="selectedTechnology.ratings.length == 0">No personnel use this technology.</p>
 							<div ng-show="selectedTechnology.ratings.length > 0" style="margin-bottom:10px">
-								<img ng-repeat="rating in selectedTechnology.ratings" src="/radar/img/icon_8204.png" title="{{rating.user + ' - ' + rating.skillLevel}}" data-toggle="tooltip" data-placement="bottom" tooltip="" style="width: 50px;border-radius: 25px;background-color: #DEDEDE;margin: 5px;padding: 1px;box-shadow: 1px 1px 1px #333;">
+								<img ng-repeat="rating in selectedTechnology.ratings" src="/radar/img/icon_8204.png" tooltip-title="{{rating.user + ' - ' + rating.skillLevel}}" data-toggle="tooltip" data-placement="bottom" tooltip="" style="width: 50px;border-radius: 25px;background-color: #DEDEDE;margin: 5px;padding: 1px;box-shadow: 1px 1px 1px #333;">
 							</div>
 						</div>
 						<div class="col-xs-6" style="padding: 10px">

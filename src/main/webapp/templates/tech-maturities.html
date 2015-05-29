@@ -11,7 +11,7 @@
 	    <circle r="38" cx="100" cy="15" fill="hsl(160,0%,60%)"></circle>
 	    <circle r="18" cx="100" cy="15" fill="hsl(160,0%,50%)"></circle>
     </g>
-    <g class="mention" ng-repeat="mention in otherRefs" tooltip ng-attr-transform="translate({{mention.x}}, {{mention.y}})">
+    <g class="mention" ng-repeat="mention in otherRefs" ng-attr-transform="translate({{mention.x}}, {{mention.y}})">
     	<title ng-if="mention.radars">Radars: {{mention.radars}}</title>
     	<title ng-if="!(mention.radars)">Radar: {{mention.radar}}</title>
         <circle r="3" fill="{{mention.radars? '#D32F2F' : 'url(#image)'}}" stroke="#fff"></circle>
