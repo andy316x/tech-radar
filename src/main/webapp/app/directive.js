@@ -1,5 +1,14 @@
 var techRadarDirectives = angular.module('techRadarDirectives', []);
 
+techRadarDirectives.filter('reverse', function() {
+	  return function(items) {
+		  if(items){
+			  return items.slice().reverse();
+		  }
+		  return items;
+	  };
+	});
+
 techRadarDirectives.directive('svgWidth', function () {
 	return {
 		restrict: 'A',

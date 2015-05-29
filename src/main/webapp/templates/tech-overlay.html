@@ -1,6 +1,6 @@
 <div class="arc-overlay arc-overlay-{{side}}">
 	<div>
-		<div ng-repeat="arc in quads.arcs | orderBy:'-name'"
+		<div ng-repeat="arc in quads.arcs | reverse"
 			ng-show="arc.techs.length > 0" class="arc-section">
 			<div class="header" ng-click="collapsed=!collapsed">
 				<strong>{{arc.name | uppercase}} ({{arc.techs.length}})</strong> <i
