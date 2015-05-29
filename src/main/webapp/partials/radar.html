@@ -38,7 +38,7 @@
 					<span class="badge" ng-show="radar.approved == true" style="margin-top:-95px;background-color:#5cb85c">Approved radar</span>
 				</div>
 				<div class="radar-card-footer">
-					<img class="img img-rounded" src="/radar/img/128.jpg">
+					<img class="img img-rounded" src="{{userService.getUserImage(radar.createdBy)}}">
 					<div style="padding-left:60px;">
 						<div><strong>{{radar.createdBy}}</strong></div>
 						<div><small>({{radar.businessUnit}})</small></div>

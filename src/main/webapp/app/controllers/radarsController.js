@@ -1,6 +1,7 @@
-techRadarControllers.controller('RadarsCtrl', ['$scope', '$http', '$location', '$routeParams', '$modal', '$log', function ($scope, $http, $location, $routeParams, $modal, $log) {
+techRadarControllers.controller('RadarsCtrl', ['$scope', '$http', '$location', '$routeParams', '$modal', '$log', 'trUserService', function ($scope, $http, $location, $routeParams, $modal, $log, userService) {
 
 	$scope.radars = [];
+	$scope.userService = userService;
 	
 	$scope.filter = 'All';
 

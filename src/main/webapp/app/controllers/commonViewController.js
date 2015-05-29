@@ -1,6 +1,7 @@
-techRadarControllers.controller('CommonViewCtrl', ['$scope','$http','$location','$routeParams','$modal','$log','trBannerService',function ($scope, $http, $location, $routeParams, $modal, $log, trBannerService) {
+techRadarControllers.controller('CommonViewCtrl', ['$scope','$http','$location','$routeParams','$modal','$log','trBannerService', 'trUserService',function ($scope, $http, $location, $routeParams, $modal, $log, trBannerService, userService) {
 
 	$scope.banner = trBannerService;
+	$scope.userService = userService;
 	
 	// Stuff that all views will need
 	$scope.activePage = function(page){

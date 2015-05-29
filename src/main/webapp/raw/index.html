@@ -53,7 +53,7 @@
                         <li ng-class="{active: activePage('radar')}"><a href="#/radar">Radars</a></li>
                         <li ng-class="{active: activePage('technology')}"><a href="#/technology">Technologies</a></li>
                         <li ng-class="{active: activePage('skill')}"><a href="#/skill">Skills Profile</a></li>
-                        <li ng-show="loggedin"><a>{{name}}  <img ng-click="loginclick=!loginclick" class="img img-rounded" src="/radar/img/128.jpg"></a></li>
+                        <li ng-show="loggedin"><a>{{name}}  <img ng-click="loginclick=!loginclick" class="img img-rounded" src="{{userService.getUserImage(uid)}}"></a></li>
                         <li ng-show="!loggedin" ng-class="{active: loginclick}">
                             <a  ng-click="loginclick=!loginclick">Sign in  <img class="img img-rounded" src="/radar/img/icon_8204.png"></a>
                             <div ng-show="loginclick" class="login-form popover fade bottom in">
@@ -103,6 +103,7 @@
     <script src="/radar/app/radar.js"></script>
     <script src="/radar/app/services.js"></script>
     <script src="/radar/app/services/bannerService.js"></script>
+    <script src="/radar/app/services/userService.js"></script>
     <script src="/radar/app/controller.js"></script>
     <!-- controllers:js -->
     <!-- endinject -->

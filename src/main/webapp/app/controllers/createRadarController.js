@@ -1,5 +1,5 @@
-techRadarControllers.controller('CreateRadarCtrl', function ($scope, $http, $location, $routeParams, $modal, $log) {
-	
+techRadarControllers.controller('CreateRadarCtrl', ['$scope', '$http', '$location', '$routeParams', '$modal', '$log', 'trUserService', function ($scope, $http, $location, $routeParams, $modal, $log, userService) {
+	$scope.userService = userService;
 	$scope.maturityOptions = [
 	                             {name: 'phase out'},
 	                             {name: 'maintain'},
@@ -94,5 +94,5 @@ techRadarControllers.controller('CreateRadarCtrl', function ($scope, $http, $loc
 		});
 	};
 	
-});
+}]);
 
